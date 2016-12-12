@@ -1,0 +1,72 @@
+<div class="container d-table">
+    <div class="d-100vh-va-middle">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card mx-2">
+                    <div class="card-block p-2">
+                        <h1>Registrazione</h1>
+                        <p class="text-muted">Crea il tuo account</p>
+                        <form name="form" (ngSubmit)="f.form.valid && register()" #f="ngForm" novalidate>
+
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !userName.valid }">
+                                <div class="input-group mb-1">
+                                    <span class="input-group-addon">#</span>
+                                    <input type="text" class="form-control" name="userName" placeholder="Nome utente"
+                                           [(ngModel)]="model.userName" #userName="ngModel" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !firstName.valid }">
+                                <div class="input-group mb-1">
+                                    <span class="input-group-addon"><i class="icon-user"></i> </span>
+                                    <input type="text" class="form-control" name="firstName" placeholder="Nome"
+                                           [(ngModel)]="model.firstName" #firstName="ngModel" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !lastName.valid }">
+                                <div class="input-group mb-1">
+                                    <span class="input-group-addon"><i class="icon-user"></i> </span>
+                                    <input type="text" class="form-control" name="lastName" placeholder="Cognome"
+                                           [(ngModel)]="model.lastName" #lastName="ngModel" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !eMail.valid }">
+                                <div class="input-group mb-1">
+                                    <span class="input-group-addon">@</span>
+                                    <input type="text" class="form-control" name="eMail" placeholder="Email"
+                                           [(ngModel)]="model.eMail" #eMail="ngModel" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !password.valid }">
+                                <div class="input-group mb-1">
+                                    <span class="input-group-addon"><i class="icon-lock"></i> </span>
+                                    <input type="password" class="form-control" name="password" placeholder="Password"
+                                           [(ngModel)]="model.password" #password="ngModel" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !repeatPassword.valid }">
+                                <div class="input-group mb-2">
+                                    <span class="input-group-addon"><i class="icon-lock"></i> </span>
+                                    <input type="password" class="form-control" name="repeatPassword" placeholder="Ripeti password"
+                                           [(ngModel)]="model.repeatPassword" #repeatPassword="ngModel" required>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-block btn-success mb-2">Crea Account</button>
+
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div *ngIf="error" class="alert alert-danger" role="alert">{{error}}</div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
