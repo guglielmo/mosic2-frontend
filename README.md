@@ -10,8 +10,6 @@
   [Hot Module Replacement](https://webpack.github.io/docs/hot-module-replacement-with-webpack.html), a
   nd [Webpack 2](http://webpack.github.io/).
   
-> This is a seed version of Sing App with Angular Final Release support. Full version release date is set to October 2, 2016.
-Till then you can use a version of Sing App with Angular rc4 support available in seed and full versions.
 
 This seed repo serves as an Angular 2 starter for anyone looking to get up and running with Angular 2 and TypeScript fast.
  Using a [Webpack 2](http://webpack.github.io/) for building our files and assisting with boilerplate. 
@@ -29,7 +27,7 @@ This seed repo serves as an Angular 2 starter for anyone looking to get up and r
 
 ```bash
 # change directory to our repo
-cd sing/angular2-final-seed
+cd mosic2-frontend
 
 # install the repo with npm
 npm install
@@ -190,13 +188,6 @@ If you're importing a module that uses Node.js modules which are CommonJS you ne
 import * as _ from 'lodash';
 ```
 
-# Support, Questions, or Feedback
-> Contact us anytime for anything about this Sing App or Angular 2 consulting.
-
-* [Twitter: @Flatlogic](https://twitter.com/Flatlogic)
-* [Email: contact@flatlogic.com](mailto:contact@flatlogic.com)
-
 # License
-[Wrapbootstrap licence](http://support.wrapbootstrap.com/knowledge_base/topics/usage-licenses).
 
-Sing App 3.2.0 is based on [angular2-webpack-starter](https://github.com/AngularClass/angular2-webpack-starter).
+Mo.Si.C. 2.0 is based on [angular2-webpack-starter](https://github.com/AngularClass/angular2-webpack-starter).
