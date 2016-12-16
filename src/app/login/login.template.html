@@ -1,0 +1,61 @@
+<div class="container">
+  <main id="content" class="widget-login-container" role="main">
+    <div class="row">
+      <div class="col-xl-4 col-md-6 col-xs-10 offset-xl-4 offset-md-3 offset-xs-1">
+        <h5 class="widget-login-logo animated fadeInUp">
+          Mo.Si.C. 2.0
+        </h5>
+        <section class="widget widget-login animated fadeInUp">
+          <header>
+            <h3>Login</h3>
+          </header>
+          <div class="widget-body">
+            <form class="mt-lg" name="form" (ngSubmit)="f.form.valid && login()" #f="ngForm" novalidate>
+              <div class="row">
+                <div class="col-xs-12">
+                  <div *ngIf="error" class="alert alert-danger mb-1" role="alert">{{error}}</div>
+                </div>
+              </div>
+              <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !eMail.valid }">
+                <div class="input-group mb-1">
+                  <span class="input-group-addon">@</span>
+                  <input type="text" class="form-control" placeholder="Email"
+                         name="username" [(ngModel)]="model.eMail" #eMail="ngModel" required/>
+                </div>
+              </div>
+              <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !password.valid }">
+                <div class="input-group mb-2">
+                  <span class="input-group-addon"><i class="icon-lock"></i> </span>
+                  <input type="password" class="form-control" placeholder="Password"
+                         name="password" [(ngModel)]="model.password" #password="ngModel" required/>
+                </div>
+              </div>
+              <div class="clearfix">
+                <div class="btn-toolbar pull-xs-right m-t-1">
+                  <button type="button" class="btn btn-secondary btn-sm" [routerLink]="['/signup'] ">Crea un account</button>
+                  <button type="submit" class="btn btn-inverse btn-sm" [disabled]="loading">Login</button>
+                </div>
+              </div>
+              <div class="row m-t-1">
+                <div class="col-md-6 push-md-6">
+                  <div class="clearfix">
+                    <div class="abc-checkbox widget-login-info pull-xs-right">
+                      <input type="checkbox" id="checkbox1" value="1">
+                      <label for="checkbox1">Ricordami</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 pull-md-6">
+                  <a class="mr-n-lg" href="#">Password dimenticata?</a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+  <footer class="page-footer">
+    2016 &copy; Presidenza del Consiglio dei Ministri.
+  </footer>
+</div>

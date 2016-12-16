@@ -1,0 +1,90 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="widget">
+                <header>
+                    <h6>Registro - <span class="fw-semi-bold">Crea nuovo</span></h6>
+                </header>
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <legend><strong>Protocollo di arrivo</strong></legend>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Protocollo_Arrivo">Numero</label>
+                                        <input type="text" class="form-control" id="Protocollo_Arrivo" placeholder="numero del protocollo">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Data_Arrivo">Data</label>
+                                        <my-date-picker [options]="myDatePickerNormalOptions" (dateChanged)="onDateChanged($event)"
+                                                        (inputFieldChanged)="onInputFieldChanged($event)"
+                                                        (calendarViewChanged)="onCalendarViewChanged($event)"
+                                                        [selDate]="selectedDateNormal" [locale]="it"></my-date-picker>
+                                        <input type="text" class="form-control hide" id="Data_Arrivo" placeholder="data del protocollo">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <legend><strong>Protocollo mittente</strong></legend>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Protocollo_Mittente">Numero</label>
+                                        <input type="text" class="form-control" id="Protocollo_Mittente" placeholder="numero del protocollo">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="Data_Mittente">Data</label>
+                                        <my-date-picker [options]="myDatePickerNormalOptions" (dateChanged)="onDateChanged($event)"
+                                                        (inputFieldChanged)="onInputFieldChanged($event)"
+                                                        (calendarViewChanged)="onCalendarViewChanged($event)"
+                                                        [selDate]="selectedDateNormal" [locale]="it"></my-date-picker>
+                                        <input type="text" class="form-control hide" id="Data_Mittente" placeholder="data del protocollo">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <legend><strong>Oggetto</strong></legend>
+                                <textarea rows="3" class="autogrow form-control transition-height" id="elastic-textarea"
+                                          autosize
+                                          placeholder="Scrivi l'oggetto del registro..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <legend><strong>Titolario</strong></legend>
+                                <select2 id="titolario-select"
+                                         class="full-width-select"
+                                         (valueChanged)="select2Changed($event)"
+                                         [data]="getTitolari()" [theme]="'bootstrap'"></select2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <legend><strong>Fascicolo</strong></legend>
+                                <select2 id="fascicolo-select"
+                                         class="full-width-select"
+                                         (valueChanged)="select2Changed($event)"
+                                         [data]="getFascicoli()" [theme]="'bootstrap'"></select2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+

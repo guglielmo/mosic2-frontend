@@ -1,0 +1,91 @@
+<div class="js-sidebar-content">
+    <header class="logo hidden-sm-down">
+        <a href="index.html">{{config.name}}</a>
+    </header>
+    <!-- main notification links are placed inside of .sidebar-nav -->
+    <ul class="sidebar-nav">
+        <li><a [routerLink]="['dashboard']"><span class="icon"><i class="fa fa-child"></i></span> Bacheca </a></li>
+<!--
+        <li><a [routerLink]=" ['another-page'] "> <span class="icon"> <i class="fa fa-tree"></i> </span> Another Page </a></li>
+        <li>
+            <a class="collapsed" data-target="#sidebar-forms" data-toggle="collapse" data-parent="#sidebar">
+                <span class="icon"><i class="glyphicon glyphicon-align-right"></i></span>
+                Forms
+                <i class="toggle fa fa-angle-down"></i>
+            </a>
+            <ul id="sidebar-forms" class="collapse">
+                <li><a [routerLink]=" ['forms/elements'] ">Form Elements</a></li>
+                <li><a [routerLink]=" ['forms/validation'] ">Form Validation</a></li>
+                <li><a [routerLink]=" ['forms/wizard'] ">Form Wizard</a></li>
+            </ul>
+        </li>
+ -->
+        <li>
+            <a class="collapsed" data-target="#sidebar-register" data-toggle="collapse" data-parent="#sidebar">
+                <span class="icon"><i class="simpleicon icon-docs"></i></span>
+                Registro
+                <i class="toggle fa fa-angle-down"></i>
+            </a>
+            <ul id="sidebar-register" class="collapse">
+                <li><a [routerLink]=" ['register/list'] ">Tutto il registro</a></li>
+                <li><a [routerLink]=" ['register/create'] ">Crea nuovo</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="collapsed" data-target="#sidebar-file" data-toggle="collapse" data-parent="#sidebar">
+                <span class="icon"><i class="simpleicon icon-folder"></i></span>
+                Fascicolo
+                <i class="toggle fa fa-angle-down"></i>
+            </a>
+            <ul id="sidebar-file" class="collapse">
+                <li><a [routerLink]=" ['fascicoli/list'] ">Tutti i fascicoli</a></li>
+                <li><a [routerLink]=" ['fascicoli/create'] ">Crea nuovo</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="collapsed" data-target="#sidebar-filingplan" data-toggle="collapse" data-parent="#sidebar">
+                <span class="icon"><i class="simpleicon icon-drawer"></i></span>
+                Titolario
+                <i class="toggle fa fa-angle-down"></i>
+            </a>
+            <ul id="sidebar-filingplan" class="collapse">
+                <li><a [routerLink]=" ['titolari/list'] ">Tutto il titolario</a></li>
+                <li><a [routerLink]=" ['titolari/create'] ">Crea nuovo</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="collapsed" data-target="#sidebar-precipe" data-toggle="collapse" data-parent="#sidebar">
+                <span class="icon"><i class="simpleicon icon-bubbles"></i></span>
+                pre-CIPE
+                <i class="toggle fa fa-angle-down"></i>
+            </a>
+            <ul id="sidebar-precipe" class="collapse">
+                <li><a [routerLink]=" ['pre-cipe/list'] ">Tutti i pre-CIPE</a></li>
+                <li><a [routerLink]=" ['pre-cipe/create'] ">Crea nuovo</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="collapsed" data-target="#sidebar-cipe" data-toggle="collapse" data-parent="#sidebar">
+                <span class="icon"><i class="fa fa-gavel"></i></span>
+                CIPE
+                <i class="toggle fa fa-angle-down"></i>
+            </a>
+            <ul id="sidebar-cipe" class="collapse">
+                <li><a [routerLink]=" ['cipe/list'] ">Tutti i CIPE</a></li>
+                <li><a [routerLink]=" ['cipe/create'] ">Crea nuovo</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="collapsed" data-target="#sidebar-users" data-toggle="collapse" data-parent="#sidebar">
+                <span class="icon"><i class="simpleicon icon-people"></i></span>
+                Utenti
+                <i class="toggle fa fa-angle-down"></i>
+            </a>
+            <ul id="sidebar-users" class="collapse">
+                <li><a [routerLink]=" ['users/list'] ">Tutti gli utenti</a></li>
+                <li><a [routerLink]=" ['users/create'] ">Crea nuovo</a></li>
+            </ul>
+        </li>
+    </ul>
+
+</div>
