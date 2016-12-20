@@ -11,6 +11,8 @@ import { TitolariService, FascicoliService } from '../../_services/index';
 })
 export class RegisterCreateComponent implements OnInit, OnDestroy {
 
+    model: any;
+
     injector: Injector;
     domSharedStylesHost: any;
     selected: any;
@@ -18,6 +20,7 @@ export class RegisterCreateComponent implements OnInit, OnDestroy {
     titolariSelect: Select2OptionData[] = [];
     fascicoli: Fascicoli[] = [];
     fascicoliSelect: Select2OptionData[] = [];
+    date: Date = new Date(2016, 5, 10);
 
     constructor(
         injector: Injector,
@@ -64,55 +67,6 @@ export class RegisterCreateComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         // detach custom hook
         this.domSharedStylesHost.onStylesAdded = this.domSharedStylesHost.__onStylesAdded__;
-    }
-
-    private myDatePickerNormalOptions = {
-        dayLabels: {su: 'Dom', mo: 'Lun', tu: 'Mar', we: 'Mer', th: 'Gio', fr: 'Ven', sa: 'Sab'},
-        monthLabels: { 1: 'Gen', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'Mag', 6: 'Giu', 7: 'Lug', 8: 'Ago', 9: 'Set', 10: 'Ott', 11: 'Nov', 12: 'Dic' },
-        todayBtnTxt: 'Oggi',
-        dateFormat: 'dd/mm/yyyy',
-        firstDayOfWeek: 'mo',
-        sunHighlight: true,
-        showCurrentDay: true,
-        height: '34px',
-        selectionTxtFontSize: '14px',
-        alignSelectorRight: false,
-        indicateInvalidDate: true,
-        showDateFormatPlaceholder: true,
-        editableMonthAndYear: true,
-        minYear: 1900,
-        componentDisabled: false
-    };
-
-    private selectedDateNormal:string = '';
-    private selectedTextNormal: string = '';
-    private border: string = 'none';
-
-    onDateChanged(event:any) {
-        console.log('onDateChanged(): ', event.date, ' - jsdate: ', new Date(event.jsdate).toLocaleDateString(), ' - formatted: ', event.formatted, ' - epoc timestamp: ', event.epoc);
-        if(event.formatted !== '') {
-            this.selectedTextNormal = 'Formatted: ' + event.formatted + ' - epoc timestamp: ' + event.epoc;
-            this.border = '1px solid #CCC';
-
-            this.selectedDateNormal = event.formatted;
-        }
-        else {
-            this.selectedTextNormal = '';
-            this.border = 'none';
-        }
-    }
-
-    onInputFieldChanged(event:any) {
-        console.log('onInputFieldChanged(): Value: ', event.value, ' - dateFormat: ', event.dateFormat, ' - valid: ', event.valid);
-    }
-
-    onCalendarViewChanged(event:any) {
-        this.border = '1px solid #66afe9';
-        console.log('onCalendarViewChanged(): Year: ', event.year, ' - month: ', event.month, ' - first: ', event.first, ' - last: ', event.last);
-    }
-
-    getCopyOfOptions() {
-        return JSON.parse(JSON.stringify(this.myDatePickerNormalOptions));
     }
 
     getTitolari(): Select2OptionData[] {

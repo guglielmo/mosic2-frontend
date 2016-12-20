@@ -5,7 +5,6 @@ import { FormsModule,
 
 import { RouterModule } from '@angular/router';
 
-import { Autosize } from 'angular2-autosize';
 import { ModalModule } from 'ng2-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DataTableModule } from 'angular2-datatable';
@@ -37,7 +36,6 @@ export const routes = [
     RouterModule.forChild(routes)
   ],
   declarations: [
-      Autosize,
       TitolariListComponent,
       TitolariEditComponent
   ]

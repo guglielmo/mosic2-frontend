@@ -4,8 +4,10 @@ import { NgModule }      from '@angular/core';
 import { CommonModule }  from '@angular/common';
 import { FormsModule }  from '@angular/forms';
 import { TooltipModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { Autosize } from 'angular2-autosize';
 
 import { ROUTES }       from './layout.routes';
+
 
 import { Layout } from './layout.component';
 import { Sidebar } from './sidebar/sidebar.component';
@@ -28,6 +30,7 @@ import { Navbar } from './navbar/navbar.component';
     Layout,
     Sidebar,
     Navbar,
+    Autosize
     //ChatSidebar,
     //SearchPipe,
     //Notifications,

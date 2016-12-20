@@ -19,11 +19,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="Data_Arrivo">Data</label>
-                                        <my-date-picker [options]="myDatePickerNormalOptions" (dateChanged)="onDateChanged($event)"
-                                                        (inputFieldChanged)="onInputFieldChanged($event)"
-                                                        (calendarViewChanged)="onCalendarViewChanged($event)"
-                                                        [selDate]="selectedDateNormal" [locale]="it"></my-date-picker>
-                                        <input type="text" class="form-control hide" id="Data_Arrivo" placeholder="data del protocollo">
+                                        <datetime id="Data_Arrivo" [(ngModel)]="date" [datepicker]="{language: 'it'}" [timepicker]="false"></datetime>
                                     </div>
                                 </div>
                             </div>
@@ -40,11 +36,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="Data_Mittente">Data</label>
-                                        <my-date-picker [options]="myDatePickerNormalOptions" (dateChanged)="onDateChanged($event)"
-                                                        (inputFieldChanged)="onInputFieldChanged($event)"
-                                                        (calendarViewChanged)="onCalendarViewChanged($event)"
-                                                        [selDate]="selectedDateNormal" [locale]="it"></my-date-picker>
-                                        <input type="text" class="form-control hide" id="Data_Mittente" placeholder="data del protocollo">
+                                        <datetime id="Data_Mittente" [(ngModel)]="date" [datepicker]="{language: 'it'}" [timepicker]="false"></datetime>
                                     </div>
                                 </div>
                             </div>
