@@ -20,7 +20,7 @@ export class StickThead implements OnInit, OnDestroy {
         let $header = this.$el.find('thead');
         let $fixedHeader = jQuery("#header-fixed").empty().append($header.clone());
 
-        jQuery(window).on('scroll.stickthead', () => {
+        jQuery(window).on('scroll.stickthead resize.stickthead', () => {
             let offset = jQuery(window).scrollTop();
 
             if (offset >= tableOffset && $fixedHeader.is(":hidden")) {
@@ -63,7 +63,7 @@ export class StickThead implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        jQuery(window).off('scroll.stickthead');
+        jQuery(window).off('scroll.stickthead resize.stickthead');
         jQuery(document).off('expandNavigation.stickthead collapseNavigation.stickthead');
         jQuery("#header-fixed").empty().hide();
         //console.log(`OnDestroy`);
