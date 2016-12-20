@@ -5,19 +5,21 @@ import { FormsModule,
 
 import { RouterModule } from '@angular/router';
 
+import { Autosize } from 'angular2-autosize';
 import { ModalModule } from 'ng2-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DataTableModule } from 'angular2-datatable';
 
 import { TitolariListComponent } from './list/titolari-list.component';
-import { TitolariCreateComponent } from './edit/titolari-edit.component';
+import { TitolariEditComponent } from './edit/titolari-edit.component';
 
 import { WidgetModule } from '../layout/widget/widget.module';
 
 export const routes = [
   {path: '', redirectTo: 'list', pathMatch: 'full'},
   {path: 'list', component: TitolariListComponent},
-  {path: 'create', component: TitolariCreateComponent},
+  {path: 'edit', component: TitolariEditComponent},
+  {path: 'edit/:id', component: TitolariEditComponent},
 ];
 
 
@@ -35,8 +37,9 @@ export const routes = [
     RouterModule.forChild(routes)
   ],
   declarations: [
+      Autosize,
       TitolariListComponent,
-      TitolariCreateComponent
+      TitolariEditComponent
   ]
 })
 export default class TitolariModule {

@@ -17,6 +17,10 @@ export let fakeBackendProvider = {
             // wrap in timeout to simulate server api call
             setTimeout(() => {
 
+                console.log('---------------- Fake Backend intercepted request ----------------');
+                console.log(connection.request);
+                console.log('------------------------------------------------------------------');
+
                 /**
                  * AUTHENTICATE
                  */
@@ -179,11 +183,64 @@ export let fakeBackendProvider = {
                     }
                 }
 
+                // get titolari by id
+                if (connection.request.url.match(/\/api\/titolari\/\d+$/) && connection.request.method === RequestMethod.Get) {
+                    // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
+                    if (connection.request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+                        // find user by id in users array
+                        let urlParts = connection.request.url.split('/');
+                        let id = parseInt(urlParts[urlParts.length - 1]);
+                        let matchedTitolari = titolari.filter(titolari => { return titolari.id == id; });
+                        let titolario = matchedTitolari.length ? matchedTitolari[0] : null;
+
+                        // respond 200 OK with user
+                        connection.mockRespond(new Response(new ResponseOptions({ status: 200, body: titolario })));
+                    } else {
+                        // return 401 not authorised if token is null or invalid
+                        connection.mockRespond(new Response(new ResponseOptions({ status: 401 })));
+                    }
+                }
+
+                // create titolari
+                if (connection.request.url.endsWith('/api/titolari') && connection.request.method === RequestMethod.Post) {
+
+                    console.log('creating new titolario');
+                    // get new titolario object from post body
+                    let newTitolario = JSON.parse(connection.request.getBody());
+                    console.log(newTitolario);
+
+                    // validation
+                    if ( isNaN(newTitolario.codice) || ( parseFloat(newTitolario.codice) != parseInt(newTitolario.codice) ) ) {
+                        return connection.mockError(new Error('Il Codice deve essere un numero intero'));
+                    }
+
+                    // save new titolario
+                    newTitolario.id = titolari.length + 1;
+                    titolari.push(newTitolario);
+                    localStorage.setItem('titolari', JSON.stringify(titolari));
+
+                    // respond 200 OK
+                    connection.mockRespond(new Response(new ResponseOptions({ status: 200 })));
+                }
+
+
+                // update titolari
+                if (connection.request.url.match(/\/api\/titolari\/\d+$/) && connection.request.method === RequestMethod.Put) {
+                    // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
+                    if (connection.request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+
+                        // THIS MUST BE VALIDATED ON THE SERVERSIDE!!!
+                        let updatedTitolario = JSON.parse(connection.request.getBody());
+                        console.log(updatedTitolario);
+                    }
+
+                }
+
                 /**
                  * FASCICOLO
                  */
 
-                // get titolari
+                // get fascicoli
                 if (connection.request.url.endsWith('/api/fascicoli') && connection.request.method === RequestMethod.Get) {
                     // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
                     if (connection.request.headers.get('Authorization') === 'Bearer fake-jwt-token') {

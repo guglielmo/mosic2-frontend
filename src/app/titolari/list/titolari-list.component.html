@@ -34,7 +34,8 @@
                         <td>{{titolario.denominazione}}</td>
                         <td>{{titolario.descrizione}}</td>
                         <td>
-                            <a (click)="askDeleteTitolari(myModal, user)"><i class="fa fa-trash-o"> </i></a>
+                            <a (click)="askDeleteTitolari(myModal, titolario)"><i class="fa fa-trash-o"> </i></a>
+                            <a [routerLink]="['/app/titolari/edit', titolario.id]"><i class="fa fa-edit"> </i></a>
                         </td>
                     </tr>
                     </tbody>

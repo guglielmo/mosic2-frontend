@@ -21,7 +21,7 @@ export class TitolariService {
     }
 
     create(titolari: Titolari) {
-        return this.http.post( this.config.baseAPIURL + '/api/titolari/', titolari, this.jwt()).map((response: Response) => response.json());
+        return this.http.post( this.config.baseAPIURL + '/api/titolari', titolari, this.jwt()).map((response: Response) => response.json());
     }
 
     update(titolari: Titolari) {
