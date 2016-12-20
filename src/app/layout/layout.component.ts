@@ -1,234 +1,254 @@
-import { Component, ViewEncapsulation, ElementRef } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { AppConfig } from '../app.config';
+import {Component, ViewEncapsulation, ElementRef} from '@angular/core';
+import {Router, NavigationEnd} from '@angular/router';
+import {AppConfig} from '../app.config';
+
 
 declare var jQuery: any;
 declare var Hammer: any;
 declare var Raphael: any;
 
 @Component({
-  selector: 'layout',
-  encapsulation: ViewEncapsulation.None,
-  templateUrl: './layout.template.html',
-  host: {
-    '[class.nav-static]' : 'config.state["nav-static"]',
-    '[class.chat-sidebar-opened]' : 'chatOpened',
-    '[class.app]' : 'true',
-    id: 'app'
-  }
+    selector: 'layout',
+    encapsulation: ViewEncapsulation.None,
+    templateUrl: './layout.template.html',
+    host: {
+        '[class.nav-static]': 'config.state["nav-static"]',
+        '[class.chat-sidebar-opened]': 'chatOpened',
+        '[class.app]': 'true',
+        id: 'app'
+    }
 })
 export class Layout {
-  config: any;
-  configFn: any;
-  $sidebar: any;
-  el: ElementRef;
-  router: Router;
-  chatOpened: boolean = false;
+    config: any;
+    configFn: any;
+    $sidebar: any;
+    el: ElementRef;
+    router: Router;
+    chatOpened: boolean = false;
 
-  constructor(config: AppConfig,
-              el: ElementRef,
-              router: Router) {
-    Raphael.prototype.safari = function(): any { return; };
-    this.el = el;
-    this.config = config.getConfig();
-    this.configFn = config;
-    this.router = router;
-  }
-
-  toggleSidebarListener(state): void {
-    let toggleNavigation = state === 'static'
-      ? this.toggleNavigationState
-      : this.toggleNavigationCollapseState;
-    toggleNavigation.apply(this);
-    localStorage.setItem('nav-static', this.config.state['nav-static']);
-  }
-
-  toggleChatListener(): void {
-    jQuery(this.el.nativeElement).find('.chat-notification-sing').remove();
-    this.chatOpened = !this.chatOpened;
-
-    setTimeout(() => {
-      // demo: add class & badge to indicate incoming messages from contact
-      // .js-notification-added ensures notification added only once
-      jQuery('.chat-sidebar-user-group:first-of-type ' +
-        '.list-group-item:first-child:not(.js-notification-added)')
-        .addClass('active js-notification-added')
-        .find('.fa-circle')
-        .after('<span class="badge tag-danger ' +
-          'pull-right animated bounceInDown">3</span>');
-    }, 1000);
-  }
-
-  toggleNavigationState(): void {
-    this.config.state['nav-static'] = !this.config.state['nav-static'];
-    if (!this.config.state['nav-static']) {
-      this.collapseNavigation();
+    constructor(config: AppConfig,
+                el: ElementRef,
+                router: Router) {
+        Raphael.prototype.safari = function (): any {
+            return;
+        };
+        this.el = el;
+        this.config = config.getConfig();
+        this.configFn = config;
+        this.router = router;
     }
-  }
 
-  expandNavigation(): void {
-    // this method only makes sense for non-static navigation state
-    if (this.isNavigationStatic()
-      && (this.configFn.isScreen('lg') || this.configFn.isScreen('xl'))) { return; }
+    toggleSidebarListener(state): void {
+        let toggleNavigation = state === 'static'
+            ? this.toggleNavigationState
+            : this.toggleNavigationCollapseState;
+        toggleNavigation.apply(this);
+        localStorage.setItem('nav-static', this.config.state['nav-static']);
+    }
 
-    jQuery('layout').removeClass('nav-collapsed');
-    this.$sidebar.find('.active .active').closest('.collapse').collapse('show')
-      .siblings('[data-toggle=collapse]').removeClass('collapsed');
-    jQuery(document).trigger('expandNavigation');
-  }
+    toggleChatListener(): void {
+        jQuery(this.el.nativeElement).find('.chat-notification-sing').remove();
+        this.chatOpened = !this.chatOpened;
 
-  collapseNavigation(): void {
-    // this method only makes sense for non-static navigation state
-    if (this.isNavigationStatic()
-      && (this.configFn.isScreen('lg') || this.configFn.isScreen('xl'))) { return; }
-
-    jQuery('layout').addClass('nav-collapsed');
-    this.$sidebar.find('.collapse.in').collapse('hide')
-      .siblings('[data-toggle=collapse]').addClass('collapsed');
-    jQuery(document).trigger('collapseNavigation');
-
-  }
-
-  /**
-   * Check and set navigation collapse according to screen size and navigation state
-   */
-  checkNavigationState(): void {
-    if (this.isNavigationStatic()) {
-      if (this.configFn.isScreen('sm')
-        || this.configFn.isScreen('xs') || this.configFn.isScreen('md')) {
-        this.collapseNavigation();
-      }
-    } else {
-      if (this.configFn.isScreen('lg') || this.configFn.isScreen('xl')) {
         setTimeout(() => {
-          this.collapseNavigation();
-        }, this.config.settings.navCollapseTimeout);
-      } else {
-        this.collapseNavigation();
-      }
+            // demo: add class & badge to indicate incoming messages from contact
+            // .js-notification-added ensures notification added only once
+            jQuery('.chat-sidebar-user-group:first-of-type ' +
+                '.list-group-item:first-child:not(.js-notification-added)')
+                .addClass('active js-notification-added')
+                .find('.fa-circle')
+                .after('<span class="badge tag-danger ' +
+                    'pull-right animated bounceInDown">3</span>');
+        }, 1000);
     }
-  }
 
-  isNavigationStatic(): boolean {
-    return this.config.state['nav-static'] === true;
-  }
-
-  toggleNavigationCollapseState(): void {
-    if (jQuery('layout').is('.nav-collapsed')) {
-      this.expandNavigation();
-    } else {
-      this.collapseNavigation();
-    }
-  }
-
-  _sidebarMouseEnter(): void {
-    if (this.configFn.isScreen('lg') || this.configFn.isScreen('xl')) {
-      this.expandNavigation();
-    }
-  }
-  _sidebarMouseLeave(): void {
-    if (this.configFn.isScreen('lg') || this.configFn.isScreen('xl')) {
-      this.collapseNavigation();
-    }
-  }
-
-  enableSwipeCollapsing(): void {
-    let swipe = new Hammer(document.getElementById('content-wrap'));
-    let d = this;
-
-    swipe.on('swipeleft', () => {
-      setTimeout(() => {
-        if (d.configFn.isScreen('md')) { return; }
-
-        if (!jQuery('layout').is('.nav-collapsed')) {
-          d.collapseNavigation();
+    toggleNavigationState(): void {
+        this.config.state['nav-static'] = !this.config.state['nav-static'];
+        if (!this.config.state['nav-static']) {
+            this.collapseNavigation();
         }
-      });
-    });
-
-    swipe.on('swiperight', () => {
-      if (d.configFn.isScreen('md')) { return; }
-
-      if (jQuery('layout').is('.chat-sidebar-opened')) { return; }
-
-      if (jQuery('layout').is('.nav-collapsed')) {
-        d.expandNavigation();
-      }
-    });
-  }
-
-  collapseNavIfSmallScreen(): void {
-    if (this.configFn.isScreen('xs')
-      || this.configFn.isScreen('sm') || this.configFn.isScreen('md')) {
-      this.collapseNavigation();
-    }
-  }
-
-  ngOnInit(): void {
-
-    if (localStorage.getItem('nav-static') === 'true') {
-      this.config.state['nav-static'] = true;
     }
 
-    let $el = jQuery(this.el.nativeElement);
-    this.$sidebar = $el.find('[sidebar]');
+    expandNavigation(): void {
+        // this method only makes sense for non-static navigation state
+        if (this.isNavigationStatic()
+            && (this.configFn.isScreen('lg') || this.configFn.isScreen('xl'))) {
+            return;
+        }
 
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        setTimeout(() => {
-          this.collapseNavIfSmallScreen();
-          window.scrollTo(0, 0);
+        jQuery('layout').removeClass('nav-collapsed');
+        this.$sidebar.find('.active .active').closest('.collapse').collapse('show')
+            .siblings('[data-toggle=collapse]').removeClass('collapsed');
+        jQuery(document).trigger('expandNavigation');
+    }
 
-    $el.find('a[href="#"]').on('click', (e) => {
-      e.preventDefault();
-          });
+    collapseNavigation(): void {
+        // this method only makes sense for non-static navigation state
+        if (this.isNavigationStatic()
+            && (this.configFn.isScreen('lg') || this.configFn.isScreen('xl'))) {
+            return;
+        }
+
+        jQuery('layout').addClass('nav-collapsed');
+        this.$sidebar.find('.collapse.in').collapse('hide')
+            .siblings('[data-toggle=collapse]').addClass('collapsed');
+        jQuery(document).trigger('collapseNavigation');
+
+    }
+
+    /**
+     * Check and set navigation collapse according to screen size and navigation state
+     */
+    checkNavigationState(): void {
+        if (this.isNavigationStatic()) {
+            if (this.configFn.isScreen('sm')
+                || this.configFn.isScreen('xs') || this.configFn.isScreen('md')) {
+                this.collapseNavigation();
+            }
+        } else {
+            if (this.configFn.isScreen('lg') || this.configFn.isScreen('xl')) {
+                setTimeout(() => {
+                    this.collapseNavigation();
+                }, this.config.settings.navCollapseTimeout);
+            } else {
+                this.collapseNavigation();
+            }
+        }
+    }
+
+    isNavigationStatic(): boolean {
+        return this.config.state['nav-static'] === true;
+    }
+
+    toggleNavigationCollapseState(): void {
+        if (jQuery('layout').is('.nav-collapsed')) {
+            this.expandNavigation();
+        } else {
+            this.collapseNavigation();
+        }
+    }
+
+    _sidebarMouseEnter(): void {
+        if (this.configFn.isScreen('lg') || this.configFn.isScreen('xl')) {
+            this.expandNavigation();
+        }
+    }
+
+    _sidebarMouseLeave(): void {
+        if (this.configFn.isScreen('lg') || this.configFn.isScreen('xl')) {
+            this.collapseNavigation();
+        }
+    }
+
+    enableSwipeCollapsing(): void {
+        let swipe = new Hammer(document.getElementById('content-wrap'));
+        let d = this;
+
+        swipe.on('swipeleft', () => {
+            setTimeout(() => {
+                if (d.configFn.isScreen('md')) {
+                    return;
+                }
+
+                if (!jQuery('layout').is('.nav-collapsed')) {
+                    d.collapseNavigation();
+                }
+            });
         });
-      }
-    });
 
-    this.$sidebar.on('mouseenter', this._sidebarMouseEnter.bind(this));
-    this.$sidebar.on('mouseleave', this._sidebarMouseLeave.bind(this));
+        swipe.on('swiperight', () => {
+            if (d.configFn.isScreen('md')) {
+                return;
+            }
 
-    this.checkNavigationState();
+            if (jQuery('layout').is('.chat-sidebar-opened')) {
+                return;
+            }
 
-    this.$sidebar.on('click', () => {
-      if (jQuery('layout').is('.nav-collapsed')) {
-        this.expandNavigation();
-      }
-    });
-
-    this.router.events.subscribe(() => {
-      this.collapseNavIfSmallScreen();
-      window.scrollTo(0, 0);
-    });
-
-    if ('ontouchstart' in window) {
-      this.enableSwipeCollapsing();
+            if (jQuery('layout').is('.nav-collapsed')) {
+                d.expandNavigation();
+            }
+        });
     }
 
-    this.$sidebar.find('.collapse').on('show.bs.collapse', function(e): void {
-      // execute only if we're actually the .collapse element initiated event
-      // return for bubbled events
-      if (e.target !== e.currentTarget) { return; }
+    collapseNavIfSmallScreen(): void {
+        if (this.configFn.isScreen('xs')
+            || this.configFn.isScreen('sm') || this.configFn.isScreen('md')) {
+            this.collapseNavigation();
+        }
+    }
 
-      let $triggerLink = jQuery(this).prev('[data-toggle=collapse]');
-      jQuery($triggerLink.data('parent'))
-        .find('.collapse.in').not(jQuery(this)).collapse('hide');
-    })
-    /* adding additional classes to navigation link li-parent
-     for several purposes. see navigation styles */
-      .on('show.bs.collapse', function(e): void {
-        // execute only if we're actually the .collapse element initiated event
-        // return for bubbled events
-        if (e.target !== e.currentTarget) { return; }
+    ngOnInit(): void {
 
-        jQuery(this).closest('li').addClass('open');
-      }).on('hide.bs.collapse', function(e): void {
-      // execute only if we're actually the .collapse element initiated event
-      // return for bubbled events
-      if (e.target !== e.currentTarget) { return; }
+        if (localStorage.getItem('nav-static') === 'true') {
+            this.config.state['nav-static'] = true;
+        }
 
-      jQuery(this).closest('li').removeClass('open');
-    });
-  }
+        let $el = jQuery(this.el.nativeElement);
+        this.$sidebar = $el.find('[sidebar]');
+
+        this.router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                setTimeout(() => {
+                    this.collapseNavIfSmallScreen();
+                    window.scrollTo(0, 0);
+
+                    $el.find('a[href="#"]').on('click', (e) => {
+                        e.preventDefault();
+                    });
+                });
+            }
+        });
+
+        this.$sidebar.on('mouseenter', this._sidebarMouseEnter.bind(this));
+        this.$sidebar.on('mouseleave', this._sidebarMouseLeave.bind(this));
+
+        this.checkNavigationState();
+
+        this.$sidebar.on('click', () => {
+            if (jQuery('layout').is('.nav-collapsed')) {
+                this.expandNavigation();
+            }
+        });
+
+        this.router.events.subscribe(() => {
+            this.collapseNavIfSmallScreen();
+            window.scrollTo(0, 0);
+        });
+
+        if ('ontouchstart' in window) {
+            this.enableSwipeCollapsing();
+        }
+
+        this.$sidebar.find('.collapse').on('show.bs.collapse', function (e): void {
+            // execute only if we're actually the .collapse element initiated event
+            // return for bubbled events
+            if (e.target !== e.currentTarget) {
+                return;
+            }
+
+            let $triggerLink = jQuery(this).prev('[data-toggle=collapse]');
+            jQuery($triggerLink.data('parent'))
+                .find('.collapse.in').not(jQuery(this)).collapse('hide');
+        })
+        /* adding additional classes to navigation link li-parent
+         for several purposes. see navigation styles */
+            .on('show.bs.collapse', function (e): void {
+                // execute only if we're actually the .collapse element initiated event
+                // return for bubbled events
+                if (e.target !== e.currentTarget) {
+                    return;
+                }
+
+                jQuery(this).closest('li').addClass('open');
+            }).on('hide.bs.collapse', function (e): void {
+            // execute only if we're actually the .collapse element initiated event
+            // return for bubbled events
+            if (e.target !== e.currentTarget) {
+                return;
+            }
+
+            jQuery(this).closest('li').removeClass('open');
+        });
+    }
 }
