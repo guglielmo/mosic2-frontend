@@ -19,7 +19,9 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="Data_Arrivo">Data</label>
-                                        <datetime id="Data_Arrivo" [(ngModel)]="date" [datepicker]="{language: 'it'}" [timepicker]="false"></datetime>
+                                        <datetime id="Data_Arrivo" [(ngModel)]="date"
+                                                  [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true }"
+                                                  [timepicker]="false"></datetime>
                                     </div>
                                 </div>
                             </div>
@@ -36,7 +38,9 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="Data_Mittente">Data</label>
-                                        <datetime id="Data_Mittente" [(ngModel)]="date" [datepicker]="{language: 'it'}" [timepicker]="false"></datetime>
+                                        <datetime id="Data_Mittente" [(ngModel)]="date"
+                                                  [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true }"
+                                                  [timepicker]="false"></datetime>
                                     </div>
                                 </div>
                             </div>
