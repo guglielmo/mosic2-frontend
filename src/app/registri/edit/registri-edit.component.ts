@@ -6,10 +6,10 @@ import { Titolari, Fascicoli } from '../../_models/index';
 import { TitolariService, FascicoliService } from '../../_services/index';
 
 @Component({
-    templateUrl: 'register-edit.component.html',
+    templateUrl: 'registri-edit.component.html',
     encapsulation: ViewEncapsulation.None
 })
-export class RegisterCreateComponent implements OnInit, OnDestroy {
+export class RegistriEditComponent implements OnInit, OnDestroy {
 
     model: any;
 

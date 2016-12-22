@@ -1,7 +1,9 @@
 ﻿import { Http, BaseRequestOptions, Response, ResponseOptions, RequestMethod } from '@angular/http';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 
+import { TitolariMockData } from './fake-backend-data/titolari.mockdata';
 import { FascicoliMockData } from './fake-backend-data/fascicoli.mockdata';
+import { RegistriMockData } from './fake-backend-data/registri.mockdata';
 
 export let fakeBackendProvider = {
     // use fake backend in place of Http service for backend-less development
@@ -11,12 +13,12 @@ export let fakeBackendProvider = {
         let users: any[] = JSON.parse(localStorage.getItem('users')) || [];
         let titolari: any[] = JSON.parse(localStorage.getItem('titolari')) || [];
         let fascicoli: any[] = JSON.parse(localStorage.getItem('fascicoli')) || [];
+        let registri: any[] = JSON.parse(localStorage.getItem('registri')) || [];
 
         // configure fake backend
         backend.connections.subscribe((connection: MockConnection) => {
             // wrap in timeout to simulate server api call
             setTimeout(() => {
-
                 console.log('---------------- Fake Backend intercepted request ----------------');
                 console.log(connection.request);
                 console.log('------------------------------------------------------------------');
@@ -151,28 +153,7 @@ export let fakeBackendProvider = {
 
                         // create some data for the fake backend if it doesn't exist yet
                         if (titolari.length == 0) {
-                            titolari = [
-                                {id: '0',codice: '0',denominazione: 'Documenti di seduta',descrizione: 'Telex, Appunto generale, passi, etc.'},
-                                {id: '1',codice: '1',denominazione: 'Segreteria Cipe',descrizione: 'Competenze CIPE, Regolamento interno CIPE, Regolamento interno Commissioni, Altri organismi in seno al CIPE, ISTAT'},
-                                {id: '2',codice: '2',denominazione: 'Programmazione Finanziaria',descrizione: 'Cofinanziamento programmi UE, Aree depresse, Fondo art.19 D.L.vo 96/93'},
-                                {id: '3',codice: '3',denominazione: 'Ambiente',descrizione: 'Difesa acqua, difesa aria, difesa suolo, piano biodiversità'},
-                                {id: '4',codice: '4',denominazione: 'Energia',descrizione: 'Elettrica, Fonti alternative, Metanizzazione, Nucleare, Risparmio energetica'},
-                                {id: '5',codice: '5',denominazione: 'Montagna',descrizione: 'Montagna'},
-                                {id: '6',codice: '6',denominazione: 'Agricoltura',descrizione: 'Agro-forestale, Agro-industriale, Pesca e acquacoltura, Zootecnia'},
-                                {id: '7',codice: '7',denominazione: 'Industria Commercio ed Artigianato',descrizione: 'Attività estrattiva, Commercio e artigianato, Manifatturiere, Cooperazione int.le, Commercio estero'},
-                                {id: '8',codice: '8',denominazione: 'Programmazione negoziata',descrizione: 'Accordi di programma, Contratti d\'area, Contratti di programma, Intese di programma, Patti territoriali'},
-                                {id: '9',codice: '9',denominazione: 'Occupazione e lavoro',descrizione: 'Formazione professionale, Occupazione, Previdenza e assistenza, Tutela salariale'},
-                                {id: '10',codice: '10',denominazione: 'Ricerca e istruzione',descrizione: 'Istruzione, Ricerca'},
-                                {id: '11',codice: '11',denominazione: 'Infrastrutture e trasporti',descrizione: 'Aeroporti, Edilizia pubblica, Ferrovie, Interporti, Opere idriche, Porti, Strade e autostrade, Trasporto rapido di massa'},
-                                {id: '12',codice: '12',denominazione: 'Sanita',descrizione: 'Edilizia sanitaria, Fondo Sanitario Nazionale (parte corrente e capitale)'},
-                                {id: '13',codice: '13',denominazione: 'Servizi',descrizione: 'Assicurazioni, Credito, Turismo'},
-                                {id: '14',codice: '14',denominazione: 'Tariffe',descrizione: 'Acqua e depurazione, Autostradali, Ferroviarie, Telefoniche e postali'},
-                                {id: '15',codice: '15',denominazione: 'Farmaci',descrizione: 'Prezzi, Contenzioso'},
-                                {id: '16',codice: '16',denominazione: 'Terremoto',descrizione: 'Terremoto'},
-                                {id: '17',codice: '17',denominazione: 'Gestione contabile',descrizione: 'Spese in conto capitale, Spese di esercizio, Convenzioni ex Agensud'},
-                                {id: '18',codice: '18',denominazione: 'Organizzazione',descrizione: 'Pianificazione e controllo, Gestione del personale, Procedure e informatizzazione'},
-                                {id: '19',codice: '19',denominazione: 'Attività diverse',descrizione: 'Telecomunicazioni, FIO, Varie'}
-                            ];
+                            titolari = TitolariMockData;
                             localStorage.setItem('titolari', JSON.stringify(titolari));
                         }
 
@@ -262,7 +243,7 @@ export let fakeBackendProvider = {
                 }
 
                 /**
-                 * FASCICOLO
+                 * FASCICOLI
                  */
 
                 // get fascicoli
@@ -277,6 +258,30 @@ export let fakeBackendProvider = {
                         }
 
                         connection.mockRespond(new Response(new ResponseOptions({ status: 200, body: fascicoli })));
+                    } else {
+                        // return 401 not authorised if token is null or invalid
+                        connection.mockRespond(new Response(new ResponseOptions({ status: 401 })));
+                    }
+                }
+
+                /**
+                 * REGISTRI
+                 */
+
+                // get registri
+                if (connection.request.url.endsWith('/api/registri') && connection.request.method === RequestMethod.Get) {
+                    // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
+                    if (connection.request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+
+                        localStorage.setItem('registri', JSON.stringify(RegistriMockData));
+
+                        // create some data for the fake backend if it doesn't exist yet
+                        if (registri.length == 0) {
+                            registri = RegistriMockData;
+                            localStorage.setItem('registri', JSON.stringify(registri));
+                        }
+
+                        connection.mockRespond(new Response(new ResponseOptions({ status: 200, body: registri })));
                     } else {
                         // return 401 not authorised if token is null or invalid
                         connection.mockRespond(new Response(new ResponseOptions({ status: 401 })));

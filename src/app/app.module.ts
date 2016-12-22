@@ -11,6 +11,7 @@ import {
     AuthenticationService,
     TitolariService,
     FascicoliService,
+    RegistriService,
     UserService,
     AlertService
 } from './_services/index';
@@ -69,6 +70,7 @@ type StoreType = {
         AlertService,
         TitolariService,
         FascicoliService,
+        RegistriService,
         UserService,
         // Fake Backend
         fakeBackendProvider,

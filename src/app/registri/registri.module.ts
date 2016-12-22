@@ -15,13 +15,13 @@ import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js';
 import 'bootstrap-datepicker/dist/locales/bootstrap-datepicker.it.min.js';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 
-import {RegisterListComponent}       from './list/register-list.component';
-import {RegisterCreateComponent}       from './edit/register-edit.component';
+import {RegistriListComponent}       from './list/registri-list.component';
+import {RegistriEditComponent}       from './edit/registri-edit.component';
 
 export const routes = [
     {path: '', redirectTo: 'list', pathMatch: 'full'},
-    {path: 'list', component: RegisterListComponent},
-    {path: 'create', component: RegisterCreateComponent},
+    {path: 'list', component: RegistriListComponent},
+    {path: 'edit', component: RegistriEditComponent},
 ];
 
 @NgModule({
@@ -39,10 +39,10 @@ export const routes = [
     ],
     declarations: [
         Select2Component,
-        RegisterListComponent,
-        RegisterCreateComponent
+        RegistriListComponent,
+        RegistriEditComponent
     ]
 })
-export default class RegisterModule {
+export default class RegistriModule {
     static routes = routes;
 }

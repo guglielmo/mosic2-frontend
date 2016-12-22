@@ -10,7 +10,7 @@ const routes: Routes = [
     { path: 'dashboard', loadChildren: () => System.import('../dashboard/dashboard.module'), canActivate: [AuthGuard] },
     { path: 'titolari', loadChildren: () => System.import('../titolari/titolari.module'), canActivate: [AuthGuard] },
     { path: 'fascicoli', loadChildren: () => System.import('../fascicoli/fascicoli.module'), canActivate: [AuthGuard] },
-    { path: 'register', loadChildren: () => System.import('../register/register.module'), canActivate: [AuthGuard] },
+    { path: 'registri', loadChildren: () => System.import('../registri/registri.module'), canActivate: [AuthGuard] },
     { path: 'users', loadChildren: () => System.import('../users/users.module'), canActivate: [AuthGuard] }
   ]}
 ];
