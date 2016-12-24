@@ -1,7 +1,7 @@
 import { Component }        from '@angular/core';
 
 import { Fascicoli } from '../../_models/index';
-import { FascicoliService } from '../../_services/index';
+import { APICommonService } from '../../_services/index';
 
 @Component({
     templateUrl: 'fascicoli-list.component.html'
@@ -11,7 +11,7 @@ export class FascicoliListComponent {
     deletingFascicoli: Fascicoli = new Fascicoli;
     fascicoli: Fascicoli[] = [];
 
-    constructor(private fascicoliService: FascicoliService) {
+    constructor(private apiService: APICommonService) {
     }
 
     ngOnInit() {
@@ -25,15 +25,15 @@ export class FascicoliListComponent {
 
     confirmDeleteFascicoli(modal:any) {
         modal.close();
-        this.deleteFascicoli(this.deletingFascicoli.id);
+        this.deleteFascicoli(this.deletingFascicoli.numero_fascicolo);
         this.deletingFascicoli = new Fascicoli;
     }
 
     deleteFascicoli(id: number) {
-        this.fascicoliService.delete(id).subscribe(() => { this.loadAllFascicoli() });
+        this.apiService.delete('fascicoli', id).subscribe(() => { this.loadAllFascicoli() });
     }
 
     private loadAllFascicoli() {
-        this.fascicoliService.getAll().subscribe(fascicoli => { this.fascicoli = fascicoli; });
+        this.apiService.getAll('fascicoli').subscribe(fascicoli => { this.fascicoli = fascicoli; });
     }
 }

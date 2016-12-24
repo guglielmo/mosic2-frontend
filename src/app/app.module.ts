@@ -8,6 +8,7 @@ import {removeNgStyles, createNewHosts, createInputTransfer} from '@angularclass
 // Guard & Services
 import {AuthGuard} from './_guards/auth.guard';
 import {
+    APICommonService,
     AuthenticationService,
     TitolariService,
     FascicoliService,
@@ -66,6 +67,7 @@ type StoreType = {
         ENV_PROVIDERS,
         APP_PROVIDERS,
         AuthGuard,
+        APICommonService,
         AuthenticationService,
         AlertService,
         TitolariService,
