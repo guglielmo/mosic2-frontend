@@ -1,9 +1,7 @@
 ﻿import { Http, BaseRequestOptions, Response, ResponseOptions, RequestMethod } from '@angular/http';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 
-import { TitolariMockData } from './fake-backend-data/titolari.mockdata';
-import { FascicoliMockData } from './fake-backend-data/fascicoli.mockdata';
-import { RegistriMockData } from './fake-backend-data/registri.mockdata';
+import { TitolariMockData,FascicoliMockData, RegistriMockData, AmministrazioneMockData  } from './fake-backend-data/index';
 
 export let fakeBackendProvider = {
     // use fake backend in place of Http service for backend-less development
@@ -14,6 +12,7 @@ export let fakeBackendProvider = {
         let titolari: any[] = JSON.parse(localStorage.getItem('titolari')) || [];
         let fascicoli: any[] = JSON.parse(localStorage.getItem('fascicoli')) || [];
         let registri: any[] = JSON.parse(localStorage.getItem('registri')) || [];
+        let amministrazione: any[] = JSON.parse(localStorage.getItem('amministrazione')) || [];
 
         // configure fake backend
         backend.connections.subscribe((connection: MockConnection) => {
@@ -282,6 +281,28 @@ export let fakeBackendProvider = {
                         }
 
                         connection.mockRespond(new Response(new ResponseOptions({ status: 200, body: registri })));
+                    } else {
+                        // return 401 not authorised if token is null or invalid
+                        connection.mockRespond(new Response(new ResponseOptions({ status: 401 })));
+                    }
+                }
+
+                /**
+                 * AMMINISTRAZIONE
+                 */
+
+                // get titolari
+                if (connection.request.url.endsWith('/api/amministrazione') && connection.request.method === RequestMethod.Get) {
+                    // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
+                    if (connection.request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+
+                        // create some data for the fake backend if it doesn't exist yet
+                        if (amministrazione.length == 0) {
+                            amministrazione = AmministrazioneMockData;
+                            localStorage.setItem('amministrazione', JSON.stringify(amministrazione));
+                        }
+
+                        connection.mockRespond(new Response(new ResponseOptions({ status: 200, body: amministrazione })));
                     } else {
                         // return 401 not authorised if token is null or invalid
                         connection.mockRespond(new Response(new ResponseOptions({ status: 401 })));
