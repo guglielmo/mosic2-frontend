@@ -22,14 +22,20 @@
                 <table class="table table-hover table-condensed mb-0" [mfData]="registri" #mf="mfDataTable" stickthead>
                     <thead>
                     <tr>
+                        <th colspan="4"></th>
+                        <th colspan="2">Protocollo Arrivo</th>
+                        <th colspan="2">Protocollo Mittente</th>
+                        <th colspan="2"></th>
+                    </tr>
+                    <tr>
                         <th><mfDefaultSorter by="id">Codice</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="oggetto">Oggetto</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="mittente">Mittente</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="repertorio">Repertorio</mfDefaultSorter></th>
-                        <th><mfDefaultSorter by="protocollo_arrivo">Protocollo Arrivo</mfDefaultSorter></th>
-                        <th><mfDefaultSorter by="data_arrivo">Data Arrivo</mfDefaultSorter></th>
-                        <th><mfDefaultSorter by="protocollo_mittente">Protocollo Mittente</mfDefaultSorter></th>
-                        <th><mfDefaultSorter by="data_mittente">Data Mittente</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="protocollo_arrivo">Numero</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="data_arrivo">Data</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="protocollo_mittente">Numero</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="data_mittente">Data</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="allegati">Documento</mfDefaultSorter></th>
                         <th>Azioni</th>
                     </tr>
