@@ -8,7 +8,9 @@ import { RouterModule } from '@angular/router';
 import { ModalModule } from 'ng2-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DataTableModule } from 'angular2-datatable';
-import { Select2Component } from 'ng2-select2';
+
+import 'select2/dist/js/select2.full.js';
+import { Select2Module } from 'ng2-select2';
 
 // datetime picker
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js';
@@ -34,11 +36,11 @@ export const routes = [
         DataTableModule,
         StickTheadModule,
         NKDatetimeModule,
+        Select2Module,
 
         RouterModule.forChild(routes)
     ],
     declarations: [
-        Select2Component,
         RegistriListComponent,
         RegistriEditComponent
     ]
