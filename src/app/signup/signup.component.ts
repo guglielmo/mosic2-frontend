@@ -1,8 +1,6 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TitolariService } from '../_services/index';
-
-
+import { UserService } from '../_services/index';
 
 
 @Component({
@@ -21,7 +19,7 @@ export class Signup {
 
   constructor(
       private router: Router,
-      private userService: TitolariService
+      private userService: UserService
   ) { }
 
   register() {
