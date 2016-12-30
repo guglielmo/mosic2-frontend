@@ -1,4 +1,4 @@
-export const AmministrazioniMockData: any[] = [
+export const AmministrazioneMockData: any[] = [
     {
         "id": 1,
         "codice": 1,
