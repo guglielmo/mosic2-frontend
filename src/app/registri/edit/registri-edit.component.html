@@ -49,8 +49,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <legend><strong>Oggetto</strong></legend>
-                                <textarea rows="3" class="autogrow form-control transition-height" id="elastic-textarea"
+                                <label for="oggetto"><strong>Oggetto</strong></label>
+                                <textarea rows="3" class="autogrow form-control transition-height" id="oggetto"
                                           autosize
                                           placeholder="Scrivi l'oggetto del registro..."></textarea>
                             </div>
@@ -59,22 +59,55 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <legend><strong>Titolario</strong></legend>
-                                <select2 id="titolario-select"
+                                <label for="amministrazione"><strong>Amministrazione</strong></label>
+                                <select2 id="amministrazione"
                                          class="full-width-select"
+                                         [options]="select2Options"
                                          (valueChanged)="select2Changed($event)"
-                                         [data]="getTitolari()" [theme]="'bootstrap'"></select2>
+                                         [data]="getAmministrazione()"></select2>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <legend><strong>Fascicolo</strong></legend>
-                                <select2 id="fascicolo-select"
+                                <label for="titolari_id"><strong>Titolario</strong></label>
+                                <select2 id="titolari_id"
                                          class="full-width-select"
+                                         [options]="select2Options"
                                          (valueChanged)="select2Changed($event)"
-                                         [data]="getFascicoli()" [theme]="'bootstrap'"></select2>
+                                         [data]="getTitolari()"></select2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="numero_fascicolo"><strong>Fascicolo</strong></label>
+                                <select2 id="numero_fascicolo"
+                                         name="numero_fascicolo"
+                                         class="full-width-select"
+                                         [options]="select2Options"
+                                         (valueChanged)="select2Changed($event)"
+                                         [data]="getFascicoli()"></select2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="nome_documento"><strong>Nome documento</strong></label>
+                                <input type="text" class="form-control" id="nome_documento" placeholder="Inserisci il nome del documento">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="annotazioni"><strong>Annotazioni</strong></label>
+                                <textarea rows="3" class="autogrow form-control transition-height" id="annotazioni"
+                                          autosize
+                                          placeholder="Scrivi annotazioni ad uso interno..."></textarea>
                             </div>
                         </div>
                     </div>
