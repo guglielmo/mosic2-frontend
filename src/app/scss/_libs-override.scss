@@ -81,3 +81,19 @@ datetime .input-group {
     padding: .375rem .75rem .375rem .75rem;
   }
 }
+
+/**
+* select2
+**/
+
+.select2-container--bootstrap .select2-selection--single {
+  line-height: 1;
+}
+.select2-container .select2-selection--single .select2-selection__rendered {
+  padding-left: 0 !important;
+}
+
+.select2-rendered__match {
+  text-decoration: underline;
+  font-weight: bold;
+}
