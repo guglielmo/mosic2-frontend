@@ -8,10 +8,8 @@ import {removeNgStyles, createNewHosts, createInputTransfer} from '@angularclass
 // Guard & Services
 import {AuthGuard} from './_guards/auth.guard';
 import {
-    APICommonService,
     AuthenticationService,
-    TitolariService,
-    FascicoliService,
+    APICommonService,
     RegistriService,
     UserService,
     AlertService
@@ -70,8 +68,7 @@ type StoreType = {
         APICommonService,
         AuthenticationService,
         AlertService,
-        TitolariService,
-        FascicoliService,
+        APICommonService,
         RegistriService,
         UserService,
         // Fake Backend
