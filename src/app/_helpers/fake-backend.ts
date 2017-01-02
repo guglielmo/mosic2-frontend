@@ -221,7 +221,12 @@ export let fakeBackendProvider = {
 
                         // THIS MUST BE VALIDATED ON THE SERVERSIDE!!!
                         let updatedTitolario = JSON.parse(connection.request.getBody());
-                        console.log(updatedTitolario);
+
+                        titolari[updatedTitolario.id] = updatedTitolario;
+                        localStorage.setItem('titolari', JSON.stringify(titolari));
+
+                        // respond 200 OK
+                        connection.mockRespond(new Response(new ResponseOptions({ status: 200 })));
                     }
 
                 }

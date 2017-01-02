@@ -65,6 +65,7 @@ export class TitolariEditComponent implements OnInit {
                 this.apiService.update('titolari',this.model)
                     .subscribe(
                         data => {
+                            this.router.navigate(['/app/titolari/list']);
                         },
                         error => {
                             this.error = error;
