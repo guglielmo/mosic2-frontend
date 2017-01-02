@@ -1,18 +1,28 @@
 ﻿import { Http, BaseRequestOptions, Response, ResponseOptions, RequestMethod } from '@angular/http';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 
-import { TitolariMockData,FascicoliMockData, RegistriMockData, AmministrazioneMockData  } from './fake-backend-data/index';
+import { TitolariMockData,FascicoliMockData, RegistriMockData, AmministrazioneMockData, MittenteMockData  } from './fake-backend-data/index';
 
 export let fakeBackendProvider = {
     // use fake backend in place of Http service for backend-less development
     provide: Http,
     useFactory: (backend: MockBackend, options: BaseRequestOptions) => {
+
+        localStorage.setItem('titolari', JSON.stringify([]));
+        localStorage.setItem('fascicoli', JSON.stringify([]));
+        localStorage.setItem('registri', JSON.stringify([]));
+        localStorage.setItem('amministrazione', JSON.stringify([]));
+        localStorage.setItem('mittente', JSON.stringify([]));
+
         // array in local storage for registered users
         let users: any[] = JSON.parse(localStorage.getItem('users')) || [];
         let titolari: any[] = JSON.parse(localStorage.getItem('titolari')) || [];
         let fascicoli: any[] = JSON.parse(localStorage.getItem('fascicoli')) || [];
         let registri: any[] = JSON.parse(localStorage.getItem('registri')) || [];
         let amministrazione: any[] = JSON.parse(localStorage.getItem('amministrazione')) || [];
+        let mittente: any[] = JSON.parse(localStorage.getItem('mittente')) || [];
+
+
 
         // configure fake backend
         backend.connections.subscribe((connection: MockConnection) => {
@@ -125,7 +135,7 @@ export let fakeBackendProvider = {
                         let id = parseInt(urlParts[urlParts.length - 1]);
                         for (let i = 0; i < users.length; i++) {
                             let user = users[i];
-                            if (user.id === id) {
+                            if (user.id == id) {
                                 // delete user
                                 users.splice(i, 1);
                                 localStorage.setItem('users', JSON.stringify(users));
@@ -223,9 +233,11 @@ export let fakeBackendProvider = {
                         // find user by id in users array
                         let urlParts = connection.request.url.split('/');
                         let id = parseInt(urlParts[urlParts.length - 1]);
+
                         for (let i = 0; i < titolari.length; i++) {
                             let titolario = titolari[i];
-                            if (titolario.id === id) {
+                            console.log(id,titolario.id);
+                            if (titolario.id == id) {
                                 // delete titolario
                                 titolari.splice(i, 1);
                                 localStorage.setItem('titolari', JSON.stringify(titolari));
@@ -263,6 +275,32 @@ export let fakeBackendProvider = {
                     }
                 }
 
+                // delete fascicoli
+                if (connection.request.url.match(/\/api\/fascicoli\/\d+$/) && connection.request.method === RequestMethod.Delete) {
+                    // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
+                    if (connection.request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+                        // find user by id in users array
+                        let urlParts = connection.request.url.split('/');
+                        let id = parseInt(urlParts[urlParts.length - 1]);
+
+                        for (let i = 0; i < fascicoli.length; i++) {
+                            let fascicolo = fascicoli[i];
+                            if (fascicolo.id == id) {
+                                // delete fascicoli
+                                fascicoli.splice(i, 1);
+                                localStorage.setItem('fascicoli', JSON.stringify(fascicoli));
+                                break;
+                            }
+                        }
+
+                        // respond 200 OK
+                        connection.mockRespond(new Response(new ResponseOptions({ status: 200 })));
+                    } else {
+                        // return 401 not authorised if token is null or invalid
+                        connection.mockRespond(new Response(new ResponseOptions({ status: 401 })));
+                    }
+                }
+
                 /**
                  * REGISTRI
                  */
@@ -291,7 +329,7 @@ export let fakeBackendProvider = {
                  * AMMINISTRAZIONE
                  */
 
-                // get titolari
+                // get amministrazione
                 if (connection.request.url.endsWith('/api/amministrazione') && connection.request.method === RequestMethod.Get) {
                     // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
                     if (connection.request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
@@ -303,6 +341,28 @@ export let fakeBackendProvider = {
                         }
 
                         connection.mockRespond(new Response(new ResponseOptions({ status: 200, body: amministrazione })));
+                    } else {
+                        // return 401 not authorised if token is null or invalid
+                        connection.mockRespond(new Response(new ResponseOptions({ status: 401 })));
+                    }
+                }
+
+                /**
+                 * MITTENTE
+                 */
+
+                // get mittente
+                if (connection.request.url.endsWith('/api/mittente') && connection.request.method === RequestMethod.Get) {
+                    // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
+                    if (connection.request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
+
+                        // create some data for the fake backend if it doesn't exist yet
+                        if (mittente.length == 0) {
+                            mittente = MittenteMockData;
+                            localStorage.setItem('mittente', JSON.stringify(mittente));
+                        }
+
+                        connection.mockRespond(new Response(new ResponseOptions({ status: 200, body: mittente })));
                     } else {
                         // return 401 not authorised if token is null or invalid
                         connection.mockRespond(new Response(new ResponseOptions({ status: 401 })));
