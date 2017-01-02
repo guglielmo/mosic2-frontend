@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AlertService, TitolariService } from '../../_services/index';
+import { AlertService, APICommonService } from '../../_services/index';
 
 @Component({
     templateUrl: 'user-edit.component.html'
@@ -14,12 +14,12 @@ export class UserCreateComponent {
 
     constructor(
         private router: Router,
-        private userService: TitolariService,
+        private apiService: APICommonService,
         private alertService: AlertService) { }
 
     register() {
         this.loading = true;
-        this.userService.create(this.model)
+        this.apiService.create('users', this.model)
             .subscribe(
                 data => {
                     console.log(data);
