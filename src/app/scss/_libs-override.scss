@@ -85,9 +85,16 @@ datetime .input-group {
 /**
 * select2
 **/
+.select2-container .select2-selection--single {
+  height: 35px !important;
+}
+
+.select2-container--bootstrap .select2-selection--multiple .select2-search--inline .select2-search__field {
+  height: 28px !important;
+}
 
 .select2-container--bootstrap .select2-selection--single {
-  line-height: 1;
+  line-height: 21px;
 }
 .select2-container .select2-selection--single .select2-selection__rendered {
   padding-left: 0 !important;
@@ -96,4 +103,90 @@ datetime .input-group {
 .select2-rendered__match {
   text-decoration: underline;
   font-weight: bold;
+}
+
+/**
+* Awesome bootstrap checkbox
+**/
+
+.abc-checkbox { padding-left: 0; }
+
+/**
+* Dropzone
+**/
+
+.dropzone {
+    display: block;
+}
+
+.dropzone .dz-message {
+  padding: 54px;
+  display: block;
+}
+
+
+.dropzone.dz-wrapper .dz-preview {
+  width: 120px !important;
+ }
+
+.filetypes {
+  font-size: 24px;
+  height: 48px;
+  line-height: 48px;
+  width: 48px;
+}
+
+/***********************************/
+/**          NEWS LIST           **/
+/**********************************/
+
+.news-list{
+  margin-bottom: 0;
+  padding-left: 0;
+
+  li{
+    list-style: none;
+    box-sizing: content-box;
+    border-top: 1px solid $gray-lighter;
+    padding: 12px;
+    cursor: pointer;
+    @include transition(background-color .2s ease-out);
+
+    &:hover{
+      background: $body-bg-light;
+    }
+
+    &:last-child{
+      margin-bottom: -10px;
+    }
+  }
+
+  img,
+  .icon{
+    float: left;
+    height: 64px;
+    width: 64px;
+  }
+
+  .icon{
+    line-height: 64px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 28px;
+  }
+
+  .news-item-info{
+    margin-left: 78px; /*50 + 12px padding*/
+  }
+
+  .name{
+    text-transform: uppercase;
+
+    a{
+      text-decoration: none;
+      &:hover{
+        color: $link-color;
+      }
+    }
+  }
 }
