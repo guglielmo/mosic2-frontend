@@ -1,8 +1,8 @@
 import {Component, OnInit, OnDestroy, ViewEncapsulation, Injector} from '@angular/core';
 import {Select2OptionData} from 'ng2-select2';
-import {__platform_browser_private__} from '@angular/platform-browser'; // needed for select2 styles override hack
+//import {__platform_browser_private__} from '@angular/platform-browser'; // needed for select2 styles override hack
 
-import {Titolari, Fascicoli, Amministrazione} from '../../_models/index';
+import {Titolari, Fascicoli, Amministrazione, Mittente} from '../../_models/index';
 import {APICommonService} from '../../_services/index';
 import {AppConfig} from '../../app.config';
 
@@ -24,27 +24,32 @@ export class RegistriEditComponent implements OnInit, OnDestroy {
     fascicoliSelect: Select2OptionData[] = [];
     amministrazione: Amministrazione[] = [];
     amministrazioneSelect: Select2OptionData[] = [];
+    mittente: Mittente[] = [];
+    mittenteSelect: Select2OptionData[] = [];
     date: Date = new Date(2016, 5, 10);
     query: any;
 
     public select2Options: Select2Options;
+    public select2OptionsMulti: Select2Options;
 
     constructor(injector: Injector, private apiService: APICommonService, config: AppConfig) {
 
         this.select2Options = config.select2Options;
+        this.select2OptionsMulti = Object.assign({}, config.select2Options);
+        this.select2OptionsMulti['multiple'] = true;
 
         //
         // This is a hack on angular style loader to prevent ng2-select2 from adding its styles.
         // They are hard-coded into the component, so there are no other way to get rid of them
         //
-        this.domSharedStylesHost = injector.get(__platform_browser_private__.DomSharedStylesHost);
+/*        this.domSharedStylesHost = injector.get(__platform_browser_private__.DomSharedStylesHost);
         this.domSharedStylesHost.__onStylesAdded__ = this.domSharedStylesHost.onStylesAdded;
         this.domSharedStylesHost.onStylesAdded = (additions) => {
             const style = additions[0];
             if (!style || !style.trim().startsWith(".select2-container")) {
                 this.domSharedStylesHost.__onStylesAdded__(additions);
             }
-        };
+        };*/
     }
 
     ngOnInit() {
@@ -57,8 +62,6 @@ export class RegistriEditComponent implements OnInit, OnDestroy {
                 entry['id'] = entry['id'];
             });
             this.titolariSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
-
-
         });
 
         this.apiService.getAll('fascicoli').subscribe(fascicoli => {
@@ -69,7 +72,6 @@ export class RegistriEditComponent implements OnInit, OnDestroy {
                 entry['id'] = entry['numero_fascicolo'];
             });
             this.fascicoliSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
-
         });
 
         this.apiService.getAll('amministrazione').subscribe(amministrazione => {
@@ -80,13 +82,22 @@ export class RegistriEditComponent implements OnInit, OnDestroy {
                 entry['id'] = entry['id'];
             });
             this.amministrazioneSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
+        });
 
+        this.apiService.getAll('mittente').subscribe(mittente => {
+            this.mittente = mittente;
+            this.mittenteSelect = mittente as Select2OptionData[];
+            this.mittenteSelect.forEach((entry) => {
+                entry['text'] = entry['codice'] + ' - ' + entry['denominazione'];
+                entry['id'] = entry['id'];
+            });
+            this.mittenteSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
         });
     }
 
     ngOnDestroy(): void {
         // detach custom hook
-        this.domSharedStylesHost.onStylesAdded = this.domSharedStylesHost.__onStylesAdded__;
+        //this.domSharedStylesHost.onStylesAdded = this.domSharedStylesHost.__onStylesAdded__;
     }
 
     getTitolari(): Select2OptionData[] {
@@ -101,8 +112,20 @@ export class RegistriEditComponent implements OnInit, OnDestroy {
         return this.amministrazioneSelect;
     }
 
+    getMittente(): Select2OptionData[] {
+        return this.mittenteSelect;
+    }
+
     select2Changed(e: any): void {
         this.selected = e.value;
+    }
+
+    onUploadSuccess(e: any): void {
+        console.log(e);
+    }
+
+    onUploadError(e: any): void {
+
     }
 
 }

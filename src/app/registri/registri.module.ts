@@ -12,6 +12,15 @@ import { DataTableModule } from 'angular2-datatable';
 import 'select2/dist/js/select2.full.js';
 import { Select2Module } from 'ng2-select2';
 
+import { DropzoneModule } from 'angular2-dropzone-wrapper';
+import { DropzoneConfigInterface } from 'angular2-dropzone-wrapper';
+
+const DROPZONE_CONFIG: DropzoneConfigInterface = {
+    // Change this to your upload POST address:
+    server: 'https://httpbin.org/post',
+    maxFilesize: 50
+};
+
 // datetime picker
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js';
 import 'bootstrap-datepicker/dist/locales/bootstrap-datepicker.it.min.js';
@@ -37,7 +46,7 @@ export const routes = [
         StickTheadModule,
         NKDatetimeModule,
         Select2Module,
-
+        DropzoneModule.forRoot(DROPZONE_CONFIG),
         RouterModule.forChild(routes)
     ],
     declarations: [

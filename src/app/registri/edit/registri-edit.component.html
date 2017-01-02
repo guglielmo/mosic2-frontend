@@ -1,22 +1,54 @@
+<h3 class="page-title">Registro - <span class="fw-semi-bold">Crea nuovo</span></h3>
 <div class="animated fadeIn">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-6">
+
             <section class="widget">
                 <header>
-                    <h6>Registro - <span class="fw-semi-bold">Crea nuovo</span></h6>
+                    <h4><span class="fw-semi-bold">Descrizione</span></h4>
                 </header>
                 <div class="widget-body">
                     <div class="row">
-                        <div class="col-md-6">
-                            <legend><strong>Protocollo di arrivo</strong></legend>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="nome_documento"><strong>Nome documento</strong></label>
+                                <input type="text" class="form-control" id="nome_documento" placeholder="Inserisci il nome del documento">
+                            </div>
+                            <div class="form-group abc-checkbox abc-checkbox-primary">
+                                <input id="proposta_cipe" type="checkbox" checked>
+                                <label for="proposta_cipe">
+                                    Proposta CIPE
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="oggetto"><strong>Oggetto</strong></label>
+                                <textarea rows="4" class="autogrow form-control transition-height" id="oggetto"
+                                          autosize
+                                          placeholder="Scrivi l'oggetto del registro..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+        <div class="col-lg-6">
+            <section class="widget">
+                <header>
+                    <h4><span class="fw-semi-bold">Protocollo</span></h4>
+                </header>
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label><strong>Arrivo</strong></label>
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-7">
                                     <div class="form-group">
                                         <label for="Protocollo_Arrivo">Numero</label>
                                         <input type="text" class="form-control" id="Protocollo_Arrivo" placeholder="numero del protocollo">
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-5">
                                     <div class="form-group">
                                         <label for="Data_Arrivo">Data</label>
                                         <datetime id="Data_Arrivo" [(ngModel)]="date"
@@ -25,17 +57,27 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <legend><strong>Protocollo mittente</strong></legend>
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="mittente"><strong>Mittente</strong></label>
+                                        <select2 id="mittente"
+                                                 class="full-width-select"
+                                                 [options]="select2Options"
+                                                 cssImport="false"
+                                                 (valueChanged)="select2Changed($event)"
+                                                 [data]="getMittente()"></select2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-7">
                                     <div class="form-group">
                                         <label for="Protocollo_Mittente">Numero</label>
                                         <input type="text" class="form-control" id="Protocollo_Mittente" placeholder="numero del protocollo">
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-5">
                                     <div class="form-group">
                                         <label for="Data_Mittente">Data</label>
                                         <datetime id="Data_Mittente" [(ngModel)]="date"
@@ -45,72 +87,145 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="oggetto"><strong>Oggetto</strong></label>
-                                <textarea rows="3" class="autogrow form-control transition-height" id="oggetto"
-                                          autosize
-                                          placeholder="Scrivi l'oggetto del registro..."></textarea>
-                            </div>
+                        <div class="col-md-6">
+
                         </div>
                     </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <section class="widget">
+                <header>
+                    <h4><span class="fw-semi-bold">Catalogazione</span></h4>
+                </header>
+                <div class="widget-body">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="amministrazione"><strong>Amministrazione</strong></label>
                                 <select2 id="amministrazione"
                                          class="full-width-select"
-                                         [options]="select2Options"
+                                         [options]="select2OptionsMulti"
+                                         cssImport="false"
                                          (valueChanged)="select2Changed($event)"
                                          [data]="getAmministrazione()"></select2>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
                             <div class="form-group">
                                 <label for="titolari_id"><strong>Titolario</strong></label>
                                 <select2 id="titolari_id"
                                          class="full-width-select"
                                          [options]="select2Options"
+                                         cssImport="false"
                                          (valueChanged)="select2Changed($event)"
                                          [data]="getTitolari()"></select2>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
                             <div class="form-group">
                                 <label for="numero_fascicolo"><strong>Fascicolo</strong></label>
                                 <select2 id="numero_fascicolo"
                                          name="numero_fascicolo"
                                          class="full-width-select"
                                          [options]="select2Options"
+                                         cssImport="false"
                                          (valueChanged)="select2Changed($event)"
                                          [data]="getFascicoli()"></select2>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="nome_documento"><strong>Nome documento</strong></label>
-                                <input type="text" class="form-control" id="nome_documento" placeholder="Inserisci il nome del documento">
-                            </div>
-                        </div>
-                    </div>
+                </div>
+
+            </section>
+
+        </div>
+        <div class="col-lg-6">
+            <section class="widget">
+                <header>
+                    <h4><span class="fw-semi-bold">Annotazioni ad uso interno</span></h4>
+                </header>
+                <div class="widget-body">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="annotazioni"><strong>Annotazioni</strong></label>
-                                <textarea rows="3" class="autogrow form-control transition-height" id="annotazioni"
+                                <label for="annotazioni" class="hidden"><strong>Note di servizio, appunti, ecc.</strong></label>
+                                <textarea rows="8" class="autogrow form-control transition-height" id="annotazioni"
                                           autosize
                                           placeholder="Scrivi annotazioni ad uso interno..."></textarea>
                             </div>
                         </div>
                     </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+
+            <section class="widget">
+                <header>
+                    <h4><span class="fw-semi-bold">Documenti allegati</span></h4>
+                </header>
+                <div class="widget-body no-padding">
+                    <ul class="news-list stretchable">
+                        <li>
+                            <span class="icon">
+                                <i class="filetypes filetypes-txt x2"></i>
+                            </span>
+                            <div class="news-item-info">
+                                <h5 class="name no-margin mb-xs"><a href="#">First Human Colony on Mars</a></h5>
+                                <p class="fs-mini">
+                                    First 700 people will take part in building first human settlement outside of Earth.
+                                    That's awesome, right?
+                                </p>
+                                <time class="help-block">Mar 20, 18:46</time>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="icon">
+                                <i class="filetypes filetypes-pdf x2"></i>
+                            </span>
+                            <div class="news-item-info">
+                                <h5 class="name no-margin mb-xs"><a href="#">Light Blue reached $300</a></h5>
+                                <p class="fs-mini">
+                                    Light Blue Inc. shares just hit $300 price. "This was inevitable. It should
+                                    have happen sooner or later" - says NYSE expert.
+                                </p>
+                                <time class="help-block">Sep 25, 11:59</time>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="icon">
+                                <i class="filetypes filetypes-doc x2"></i>
+                            </span>
+                            <div class="news-item-info">
+                                <h5 class="name no-margin mb-xs"><a href="#">No more spying</a></h5>
+                                <p class="fs-mini">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                    incididunt ut labore et dolore magna aliqua.
+                                </p>
+                                <time class="help-block">Mar 20, 18:46</time>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-lg-6">
+
+            <section class="widget">
+                <header>
+                    <h4><span class="fw-semi-bold">Carica File</span></h4>
+                </header>
+                <div class="widget-body">
+                    <dropzone [config]="config"
+                              [message]="' Rilascia i file qui dentro per caricarli oppure fai click per selezionare i file '"
+                              (error)="onUploadError($event)"
+                              (success)="onUploadSuccess($event)">
+                    </dropzone>
                 </div>
             </section>
         </div>
