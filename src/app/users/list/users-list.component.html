@@ -1,24 +1,8 @@
-<modal #myModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteTitolari(myModal)">
-    <modal-header>
-        <h4 class="modal-title text-xs-center fw-bold mt">Conferma cancellazione utente</h4>
-    </modal-header>
-    <modal-content>
-        <h4 class="text-xs-center mt-sm">
-            Vuoi eliminare l'utente <strong>{{deletingUser.userName}}</strong><br/>
-            {{deletingUser.firstName}} {{deletingUser.lastName}} - {{deletingUser.eMail}}<br/>
-            registrato il {{deletingUser.registrationDate | date: 'dd/MM/yyyy HH:mm'}} ?
-        </h4>
-    </modal-content>
-    <modal-footer>
-    </modal-footer>
-</modal>
+<h3 class="page-title">Utenti - <span class="fw-semi-bold">Tutti gli utenti</span></h3>
 
 <div class="row">
     <div class="col-lg-12">
         <section class="widget" widget>
-            <header>
-                <h6>Utenti - <span class="fw-semi-bold">Tutti gli utenti</span></h6>
-            </header>
             <div class="widget-body">
                 <table class="table table-hover table-condensed mb-0" [mfData]="users" #mf="mfDataTable" stickthead>
                     <thead>
@@ -54,3 +38,18 @@
         </section>
     </div>
 </div>
+
+<modal #myModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteTitolari(myModal)">
+    <modal-header>
+        <h4 class="modal-title text-xs-center fw-bold mt">Conferma cancellazione utente</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="text-xs-center mt-sm">
+            Vuoi eliminare l'utente <strong>{{deletingUser.userName}}</strong><br/>
+            {{deletingUser.firstName}} {{deletingUser.lastName}} - {{deletingUser.eMail}}<br/>
+            registrato il {{deletingUser.registrationDate | date: 'dd/MM/yyyy HH:mm'}} ?
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>
