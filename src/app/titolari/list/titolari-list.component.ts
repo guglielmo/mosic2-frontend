@@ -1,7 +1,7 @@
 import { Component }        from '@angular/core';
 
 import { Titolari } from '../../_models/index';
-import { TitolariService } from '../../_services/index';
+import { APICommonService } from '../../_services/index';
 
 @Component({
     templateUrl: 'titolari-list.component.html'
@@ -11,7 +11,7 @@ export class TitolariListComponent {
     deletingTitolari: Titolari = new Titolari;
     titolari: Titolari[] = [];
 
-    constructor(private titolariService: TitolariService) {
+    constructor(private apiService: APICommonService) {
     }
 
     ngOnInit() {
@@ -30,10 +30,10 @@ export class TitolariListComponent {
     }
 
     deleteTitolari(id: number) {
-        this.titolariService.delete(id).subscribe(() => { this.loadAllTitolari() });
+        this.apiService.delete('titolari', id).subscribe(() => { this.loadAllTitolari() });
     }
 
     private loadAllTitolari() {
-        this.titolariService.getAll().subscribe(titolari => { this.titolari = titolari; });
+        this.apiService.getAll('titolari').subscribe(titolari => { this.titolari = titolari; });
     }
 }

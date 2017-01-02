@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
-import {Titolari} from '../../_models/index';
-import {TitolariService} from '../../_services/index';
+import { Titolari } from '../../_models/index';
+import { APICommonService } from '../../_services/index';
 
 declare var Messenger: any;
 
@@ -10,7 +10,7 @@ declare var Messenger: any;
     templateUrl: 'titolari-edit.component.html'
 })
 
-export class TitolariEditComponent {
+export class TitolariEditComponent implements OnInit {
     model: any = {};
     error: string = '';
     mode: string;
@@ -18,11 +18,11 @@ export class TitolariEditComponent {
     id: number;
 
     constructor(private router: Router,
-                private titolariService: TitolariService,
+                private apiService: APICommonService,
                 private route: ActivatedRoute) {
     }
 
-    private ngOnInit() {
+    ngOnInit() {
 
         this.id = +this.route.snapshot.params['id'];
         this.mode = isNaN(this.id) ? 'create' : 'update';
@@ -32,7 +32,7 @@ export class TitolariEditComponent {
                 break;
                 
             case 'update':
-                this.titolariService.getById(this.id)
+                this.apiService.getById('titolari', this.id)
                     .subscribe(
                         data => {
                             this.model = data;
@@ -50,7 +50,7 @@ export class TitolariEditComponent {
 
         switch( this.mode ) {
             case 'create':
-                this.titolariService.create(this.model)
+                this.apiService.create('titolari', this.model)
                     .subscribe(
                         data => {
                             this.router.navigate(['/app/titolari/list']);
@@ -62,7 +62,7 @@ export class TitolariEditComponent {
                 break;
 
             case 'update':
-                this.titolariService.update(this.model)
+                this.apiService.update('titolari',this.model)
                     .subscribe(
                         data => {
                         },
