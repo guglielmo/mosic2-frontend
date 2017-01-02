@@ -6,9 +6,6 @@ import {Titolari, Fascicoli, Amministrazione, Mittente} from '../../_models/inde
 import {APICommonService} from '../../_services/index';
 import {AppConfig} from '../../app.config';
 
-
-import { AlertService } from '../../_services/index';
-
 @Component({
     templateUrl: 'fascicoli-edit.component.html'
 })

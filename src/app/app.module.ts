@@ -11,8 +11,7 @@ import {
     AuthenticationService,
     APICommonService,
     RegistriService,
-    UserService,
-    AlertService
+    UserService
 } from './_services/index';
 
 
@@ -67,7 +66,6 @@ type StoreType = {
         AuthGuard,
         APICommonService,
         AuthenticationService,
-        AlertService,
         APICommonService,
         RegistriService,
         UserService,

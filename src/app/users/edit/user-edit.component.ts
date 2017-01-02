@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AlertService, APICommonService } from '../../_services/index';
+import { APICommonService } from '../../_services/index';
 
 @Component({
     templateUrl: 'user-edit.component.html'
@@ -14,8 +14,8 @@ export class UserCreateComponent {
 
     constructor(
         private router: Router,
-        private apiService: APICommonService,
-        private alertService: AlertService) { }
+        private apiService: APICommonService
+    ) { }
 
     register() {
         this.loading = true;
