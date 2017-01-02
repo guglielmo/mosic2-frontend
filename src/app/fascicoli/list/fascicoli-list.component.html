@@ -1,35 +1,23 @@
-<modal #myModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteFascicoli(myModal)">
-    <modal-header>
-        <h4 class="modal-title text-xs-center fw-bold mt">Conferma cancellazione fascicolo</h4>
-    </modal-header>
-    <modal-content>
-        <h4 class="text-xs-center mt-sm">
-            Vuoi eliminare il fascicolo <strong>{{deletingFascicoli.numero_fascicolo}} </strong><br/>
-            {{deletingFascicoli.argomento}} -
-            {{deletingFascicoli.amministrazione}} ?
-        </h4>
-    </modal-content>
-    <modal-footer>
-    </modal-footer>
-</modal>
+<h3 class="page-title">Fascicolo - <span class="fw-semi-bold">Tutti i fascicoli</span></h3>
+
 
 <div class="row">
     <div class="col-lg-12">
         <section class="widget" widget>
-            <header>
-                <h6>Fascicolo - <span class="fw-semi-bold">Tutti i fascicoli</span></h6>
-            </header>
             <div class="widget-body">
-                <table class="table table-hover table-condensed mb-0" [mfData]="fascicoli" #mf="mfDataTable" stickthead>
+                <table class="table table-hover table-condensed mb-0" [mfData]="apiService.fascicoli" #mf="mfDataTable" stickthead>
                     <thead>
                     <tr>
+                        <th><mfDefaultSorter by="titolario">Titolario</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="numero_fascicolo">Fascicolo</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="argomento">Argomento</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="amministrazione">Amministrazione</mfDefaultSorter></th>
+                        <th>Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr *ngFor="let fascicolo of mf.data">
+                        <td>{{fascicolo.titolario}}</td>
                         <td>{{fascicolo.numero_fascicolo}}</td>
                         <td>{{fascicolo.argomento}}</td>
                         <td>{{fascicolo.amministrazione}}</td>
@@ -45,3 +33,19 @@
         </section>
     </div>
 </div>
+
+
+<modal #myModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteFascicoli(myModal)">
+    <modal-header>
+        <h4 class="modal-title text-xs-center fw-bold mt">Conferma cancellazione fascicolo</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="text-xs-center mt-sm">
+            Vuoi eliminare il fascicolo <strong>{{deletingFascicoli.numero_fascicolo}} </strong><br/>
+            {{deletingFascicoli.argomento}} -
+            {{deletingFascicoli.amministrazione}} ?
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>
