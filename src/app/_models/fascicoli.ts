@@ -1,23 +1,11 @@
 export class Fascicoli {
     id: number; // INT(10)
-    codice_repertorio: number; // INT(11)
+    codice_titolario: number; // INT(11)
     numero_fascicolo: number; // INT(11)
     argomento: string; // VARCHAR(255)
     amministrazione: number; // INT(11)
-    commissione: number; // TINYINT(1)
     data_magazzino: string; // DATETIME
-    data_cipe: string; // DATETIME
-    data_cipe2: string; // DATETIME
-    data_precipe: string; // DATETIME
-    data_precipe2: string; // DATETIME
-    esito_cipe: number; // INT(11)
-    esito_cipe_specifica: string; // VARCHAR(255)
-    numero_delibera: number; // INT(11)
-    anno_delibera: number; // INT(11)
     archiviazione_repertorio: number; // INT(11)
     annotazioni: number; // INT(11)
     tags: number; // INT(11)
-    numeri_delibera_id: number; // INT(10)
-    esiti_cipe_id: number; // INT(10)
-    archivio_repertorio_id: number; // INT(10)
 }

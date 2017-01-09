@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {Router, ActivatedRoute} from '@angular/router';
 import {Select2OptionData} from 'ng2-select2';
 
-import {Titolari, Fascicoli, Amministrazione, Mittente} from '../../_models/index';
+import {Fascicoli} from '../../_models/index';
 import {APICommonService} from '../../_services/index';
 import {AppConfig} from '../../app.config';
 
@@ -10,20 +10,21 @@ import {AppConfig} from '../../app.config';
     templateUrl: 'fascicoli-edit.component.html'
 })
 
-export class FascicoliCreateComponent implements OnInit, OnDestroy {
+export class FascicoliEditComponent implements OnInit {
     model: any = {};
     error: string = '';
-    loading: boolean = false;
     mode: string;
+    loading: boolean = false;
+    id: number;
     selected: any;
 
     public select2Options: Select2Options;
     public select2OptionsMulti: Select2Options;
 
-    constructor(
-        private router: Router,
-        private apiService: APICommonService,
-        config: AppConfig
+    constructor(private router: Router,
+                private route: ActivatedRoute,
+                private apiService: APICommonService,
+                private config: AppConfig
     ) {
         this.select2Options = config.select2Options;
         this.select2OptionsMulti = Object.assign({}, config.select2Options);
@@ -32,15 +33,37 @@ export class FascicoliCreateComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
 
+        this.id = +this.route.snapshot.params['id'];
+        this.mode = isNaN(this.id) ? 'create' : 'update';
+
+        switch (this.mode) {
+            case 'create':
+                break;
+
+            case 'update':
+                this.apiService.getById('fascicoli', this.id)
+                    .subscribe(
+                        data => {
+                            this.model = data;
+                            this.model.data_magazzino = new Date(this.model.data_magazzino);
+                        },
+                        error => {
+                            this.error = error;
+                            this.loading = false;
+                        });
+                break;
+        }
+
     }
 
-    ngOnDestroy(): void {
+    cancel(event) {
+        this.router.navigate(['/app/fascicoli/list']);
     }
 
     submit() {
         this.loading = true;
 
-        switch( this.mode ) {
+        switch (this.mode) {
             case 'create':
                 this.apiService.create('fascicoli', this.model)
                     .subscribe(

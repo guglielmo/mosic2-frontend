@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { ModalModule } from 'ng2-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DataTableModule } from 'angular2-datatable';
+import { DataFilterPipe }   from '../_pipes/data-filter.pipe';
 
 import 'select2/dist/js/select2.full.js';
 import { Select2Module } from 'ng2-select2';
@@ -18,14 +19,15 @@ import 'bootstrap-datepicker/dist/locales/bootstrap-datepicker.it.min.js';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 
 import { FascicoliListComponent } from './list/fascicoli-list.component';
-import { FascicoliCreateComponent } from './edit/fascicoli-edit.component';
+import { FascicoliEditComponent } from './edit/fascicoli-edit.component';
 
 import { WidgetModule } from '../layout/widget/widget.module';
 
 export const routes = [
   {path: '', redirectTo: 'list', pathMatch: 'full'},
   {path: 'list', component: FascicoliListComponent},
-  {path: 'create', component: FascicoliCreateComponent},
+  {path: 'edit', component: FascicoliEditComponent},
+  {path: 'edit/:id', component: FascicoliEditComponent}
 ];
 
 
@@ -46,7 +48,8 @@ export const routes = [
   ],
   declarations: [
       FascicoliListComponent,
-      FascicoliCreateComponent
+      FascicoliEditComponent,
+      DataFilterPipe
   ]
 })
 export default class TitolariModule {
