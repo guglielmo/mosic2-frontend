@@ -4,8 +4,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Titolari } from '../../_models/index';
 import { APICommonService } from '../../_services/index';
 
-declare var Messenger: any;
-
 @Component({
     templateUrl: 'titolari-edit.component.html'
 })
@@ -18,8 +16,10 @@ export class TitolariEditComponent implements OnInit {
     id: number;
 
     constructor(private router: Router,
-                private apiService: APICommonService,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private apiService: APICommonService
+    ) {
+
     }
 
     ngOnInit() {
@@ -43,6 +43,10 @@ export class TitolariEditComponent implements OnInit {
                         });
                 break;
         }
+    }
+
+    cancel( event ) {
+        this.router.navigate(['/app/titolari/list']);
     }
 
     submit() {

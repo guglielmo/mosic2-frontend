@@ -10,16 +10,16 @@
                         <th><mfDefaultSorter by="codice">Codice</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="denominazione">Denominazione</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="descrizione">Descrizione</mfDefaultSorter></th>
+                        <th>Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let titolario of mf.data">
+                    <tr *ngFor="let titolario of mf.data" (click)="editId(titolario.id)" class="clickable">
                         <td>{{titolario.codice}}</td>
                         <td>{{titolario.denominazione}}</td>
                         <td>{{titolario.descrizione}}</td>
                         <td>
                             <a (click)="askDeleteTitolari(myModal, titolario)"><i class="fa fa-trash-o"> </i></a>
-                            <a [routerLink]="['/app/titolari/edit', titolario.id]"><i class="fa fa-edit"> </i></a>
                         </td>
                     </tr>
                     </tbody>
