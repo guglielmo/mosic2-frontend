@@ -19,6 +19,8 @@ export class APICommonService {
 
     amministrazione: Amministrazione[] = [];
     amministrazioneSelect: Select2OptionData[] = [];
+    amministrazioneEnum: any = {};
+
 
     mittente: Mittente[] = [];
     mittenteSelect: Select2OptionData[] = [];
@@ -57,7 +59,7 @@ export class APICommonService {
     public cacheData() {
         this.getAll('titolari').subscribe(titolari => {
             this.titolari = titolari;
-            this.titolariSelect = Object.assign([], titolari) as Select2OptionData[];
+            this.titolariSelect = $.extend(true, [], titolari) as Select2OptionData[];
             this.titolariSelect.forEach((entry) => {
                 entry.text = entry['codice'] + ' - ' + entry['denominazione'] + ' - ' + entry['descrizione'];
                 entry['id'] = entry['id'];
@@ -72,30 +74,29 @@ export class APICommonService {
                 entry['titolario'] = this.titolariEnum[entry['titolario']];
             });
             this.fascicoli = fascicoli;
-            this.fascicoliSelect = Object.assign([], fascicoli) as Select2OptionData[];
+            this.fascicoliSelect = $.extend(true, [], fascicoli) as Select2OptionData[];
             this.fascicoliSelect.forEach((entry) => {
                 entry['text'] = entry['numero_fascicolo'] + ' - ' + entry['argomento'];
-                entry['id'] = entry['numero_fascicolo'];
             });
             this.fascicoliSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
         });
 
         this.getAll('amministrazione').subscribe(amministrazione => {
             this.amministrazione = amministrazione;
-            this.amministrazioneSelect = Object.assign([], amministrazione) as Select2OptionData[];
+            this.amministrazioneSelect = $.extend(true, [], amministrazione) as Select2OptionData[];
             this.amministrazioneSelect.forEach((entry) => {
                 entry['text'] = entry['codice'] + ' - ' + entry['denominazione'];
-                entry['id'] = entry['id'];
+
+                this.amministrazioneEnum[entry['id']] = entry['denominazione'];
             });
             this.amministrazioneSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
         });
 
         this.getAll('mittente').subscribe(mittente => {
             this.mittente = mittente;
-            this.mittenteSelect = Object.assign([], mittente) as Select2OptionData[];
+            this.mittenteSelect = $.extend(true, [], mittente) as Select2OptionData[];
             this.mittenteSelect.forEach((entry) => {
                 entry['text'] = entry['codice'] + ' - ' + entry['denominazione'];
-                entry['id'] = entry['id'];
             });
             this.mittenteSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
         });
