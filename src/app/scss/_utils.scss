@@ -517,3 +517,11 @@ $z-index-variants: (more: 1, less: -1, '10': 10, '-10': -10);
 .full-width-select .select2-container {
   width: 100% !important;
 }
+
+.clickable {
+  cursor: pointer;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
