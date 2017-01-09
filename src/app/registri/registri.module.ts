@@ -9,6 +9,8 @@ import { ModalModule } from 'ng2-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DataTableModule } from 'angular2-datatable';
 
+//import 'moment/moment.js';
+
 import 'select2/dist/js/select2.full.js';
 import { Select2Module } from 'ng2-select2';
 
@@ -33,6 +35,7 @@ export const routes = [
     {path: '', redirectTo: 'list', pathMatch: 'full'},
     {path: 'list', component: RegistriListComponent},
     {path: 'edit', component: RegistriEditComponent},
+    {path: 'edit/:id', component: RegistriEditComponent}
 ];
 
 @NgModule({

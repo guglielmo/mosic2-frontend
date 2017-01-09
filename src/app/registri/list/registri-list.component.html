@@ -26,15 +26,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let registro of mf.data">
+                    <tr *ngFor="let registro of mf.data" (click)="editId(registro.id)" class="clickable">
                         <td>{{registro.id}}</td>
                         <td>{{registro.oggetto}}</td>
                         <td>{{registro.mittente}}</td>
-                        <td>{{registro.repertorio}}</td>
+                        <td>{{registro.titolario}}.{{registro.numero_fascicolo}}</td>
                         <td>{{registro.protocollo_arrivo}}</td>
-                        <td>{{registro.data_arrivo}}</td>
+                        <td class="nowrap">{{registro.data_arrivo | date: 'dd/MM/yyyy' }}</td>
                         <td>{{registro.protocollo_mittente}}</td>
-                        <td>{{registro.data_mittente}}</td>
+                        <td class="nowrap">{{registro.data_mittente | date: 'dd/MM/yyyy'}}</td>
                         <td>{{registro.allegati}}</td>
                         <td>
                             <a (click)="askDeleteTitolari(myModal, registro)"><i class="fa fa-trash-o"> </i></a>

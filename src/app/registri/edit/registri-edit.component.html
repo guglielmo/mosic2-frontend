@@ -1,5 +1,10 @@
-<h3 class="page-title">Registro - <span class="fw-semi-bold">Crea nuovo</span></h3>
-<div class="animated fadeIn">
+<h3 class="page-title">Registro -
+    <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
+    <span *ngIf="mode == 'update'" class="fw-semi-bold">{{model.titolario}}.{{model.numero_fascicolo}}/{{model.id}}</span>
+</h3>
+<h5 class="page-title"><span *ngIf="mode == 'update'">{{model.oggetto}}</span></h5>
+
+<form name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
     <div class="row">
         <div class="col-lg-6">
 
@@ -12,7 +17,10 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="nome_documento"><strong>Nome documento</strong></label>
-                                <input type="text" class="form-control" id="nome_documento" placeholder="Inserisci il nome del documento">
+                                <input id="nome_documento" name="nome_documento"
+                                       type="text" class="form-control"
+                                       placeholder="Inserisci il nome del documento"
+                                       [(ngModel)]="model.nome_documento" #nome_documento="ngModel">
                             </div>
                             <div class="form-group abc-checkbox abc-checkbox-primary">
                                 <input id="proposta_cipe" type="checkbox" checked>
@@ -22,9 +30,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="oggetto"><strong>Oggetto</strong></label>
-                                <textarea rows="4" class="autogrow form-control transition-height" id="oggetto"
+                                <textarea id="oggetto" name="oggetto"
+                                          rows="4" class="autogrow form-control transition-height"
                                           autosize
-                                          placeholder="Scrivi l'oggetto del registro..."></textarea>
+                                          placeholder="Scrivi l'oggetto del registro..."
+                                          [(ngModel)]="model.oggetto" #oggetto="ngModel" required></textarea>
                             </div>
                         </div>
                     </div>
@@ -44,16 +54,20 @@
                             <div class="row">
                                 <div class="col-sm-7">
                                     <div class="form-group">
-                                        <label for="Protocollo_Arrivo">Numero</label>
-                                        <input type="text" class="form-control" id="Protocollo_Arrivo" placeholder="numero del protocollo">
+                                        <label for="protocollo_arrivo">Numero</label>
+                                        <input id="protocollo_arrivo" name="protocollo_arrivo"
+                                               type="text" class="form-control"
+                                               placeholder="numero del protocollo"
+                                               [(ngModel)]="model.protocollo_arrivo" #protocollo_arrivo="ngModel">
                                     </div>
                                 </div>
                                 <div class="col-sm-5">
                                     <div class="form-group">
-                                        <label for="Data_Arrivo">Data</label>
-                                        <datetime id="Data_Arrivo" [(ngModel)]="date"
+                                        <label for="data_arrivo">Data</label>
+                                        <datetime id="data_arrivo" name="data_arrivo"
                                                   [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true }"
-                                                  [timepicker]="false"></datetime>
+                                                  [timepicker]="false"
+                                                  [(ngModel)]="model.data_arrivo" #data_arrivo="ngModel" required></datetime>
                                     </div>
                                 </div>
                             </div>
@@ -74,15 +88,19 @@
                                 <div class="col-sm-7">
                                     <div class="form-group">
                                         <label for="Protocollo_Mittente">Numero</label>
-                                        <input type="text" class="form-control" id="Protocollo_Mittente" placeholder="numero del protocollo">
+                                        <input id="protocollo_mittente" name="protocollo_mittente"
+                                               type="text" class="form-control"
+                                               placeholder="numero del protocollo"
+                                               [(ngModel)]="model.protocollo_mittente" #protocollo_mittente="ngModel">
                                     </div>
                                 </div>
                                 <div class="col-sm-5">
                                     <div class="form-group">
                                         <label for="Data_Mittente">Data</label>
-                                        <datetime id="Data_Mittente" [(ngModel)]="date"
+                                        <datetime id="data_mittente" name="data_mittente"
                                                   [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true }"
-                                                  [timepicker]="false"></datetime>
+                                                  [timepicker]="false"
+                                                  [(ngModel)]="model.data_mittente" #data_mittente="ngModel" required></datetime>
                                     </div>
                                 </div>
                             </div>
@@ -110,15 +128,17 @@
                                 <select2 id="amministrazione"
                                          class="full-width-select"
                                          [options]="select2OptionsMulti"
+                                         value="{{model.amministrazione}}"
                                          cssImport="false"
                                          (valueChanged)="select2Changed($event)"
                                          [data]="apiService.amministrazioneSelect"></select2>
                             </div>
                             <div class="form-group">
-                                <label for="titolari_id"><strong>Titolario</strong></label>
-                                <select2 id="titolari_id"
+                                <label for="titolario"><strong>Titolario</strong></label>
+                                <select2 id="titolario" name="titolario"
                                          class="full-width-select"
                                          [options]="select2Options"
+                                         value="{{model.titolario}}"
                                          cssImport="false"
                                          (valueChanged)="select2Changed($event)"
                                          [data]="apiService.titolariSelect"></select2>
@@ -150,9 +170,11 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="annotazioni" class="hidden"><strong>Note di servizio, appunti, ecc.</strong></label>
-                                <textarea rows="8" class="autogrow form-control transition-height" id="annotazioni"
+                                <textarea id="annotazioni" name="annotazioni"
+                                          rows="6" class="autogrow form-control transition-height"
                                           autosize
-                                          placeholder="Scrivi annotazioni ad uso interno..."></textarea>
+                                          placeholder="Scrivi annotazioni ad uso interno..."
+                                          [(ngModel)]="model.annotazioni" #annotazioni="ngModel"></textarea>
                             </div>
                         </div>
                     </div>
@@ -230,5 +252,5 @@
             </section>
         </div>
     </div>
-</div>
+</form>
 
