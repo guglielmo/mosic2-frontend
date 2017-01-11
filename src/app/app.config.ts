@@ -11,6 +11,7 @@ export class AppConfig {
         title: 'Mo.Si.C. - Monitoraggio Sistema CIPE',
         version: '2.0.0-alpha.1',
         baseAPIURL: '',
+        //baseAPIURL: 'http://testmosaicapi.tdrynx.info',
         //baseAPIURL: 'http://95.241.61.132/mosic',
         /**
          * Whether to print and alert some log information
