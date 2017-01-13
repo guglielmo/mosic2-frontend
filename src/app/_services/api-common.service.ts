@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { Select2OptionData } from 'ng2-select2';
+import {Injectable} from '@angular/core';
+import {Http, Headers, RequestOptions, Response} from '@angular/http';
+import {Select2OptionData} from 'ng2-select2';
 
 import {Titolari, Fascicoli, Amministrazione, Mittente} from '../_models/index';
 
@@ -8,26 +8,27 @@ import {AppConfig} from '../app.config';
 
 @Injectable()
 export class APICommonService {
-    config: any;
+    public config: any;
 
-    titolari: Titolari[] = [];
-    titolariSelect: Select2OptionData[] = [];
-    titolariEnum: any = {};
+    public titolari: Titolari[] = [];
+    public titolariSelect: Select2OptionData[] = [];
+    public titolariEnum: any = {};
 
-    fascicoli: Fascicoli[];
-    fascicoliSelect: Select2OptionData[] = [];
+    public fascicoli: Fascicoli[];
+    public fascicoliSelect: Select2OptionData[] = [];
 
-    amministrazione: Amministrazione[] = [];
-    amministrazioneSelect: Select2OptionData[] = [];
-    amministrazioneEnum: any = {};
+    public amministrazione: Amministrazione[] = [];
+    public amministrazioneSelect: Select2OptionData[] = [];
+    public amministrazioneEnum: any = {};
 
+    public mittente: Mittente[] = [];
+    public mittenteSelect: Select2OptionData[] = [];
 
-    mittente: Mittente[] = [];
-    mittenteSelect: Select2OptionData[] = [];
+    private commonDataLoadCount: number = 0;
+    public commonDataready: boolean = false;
 
     constructor(private http: Http, config: AppConfig) {
         this.config = config.getConfig();
-        this.cacheData();
     }
 
     ngOnInit() {
@@ -35,23 +36,23 @@ export class APICommonService {
     }
 
     getAll(apipath: string) {
-        return this.http.get( this.config.baseAPIURL + '/api/'+apipath, this.jwt()).map((response: Response) => response.json());
+        return this.http.get(this.config.baseAPIURL + '/api/' + apipath, this.jwt()).map((response: Response) => response.json());
     }
 
     getById(apipath: string, id: number) {
-        return this.http.get( this.config.baseAPIURL + '/api/'+apipath+'/' + id, this.jwt()).map((response: Response) => response.json());
+        return this.http.get(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt()).map((response: Response) => response.json());
     }
 
     create(apipath: string, data: any) {
-        return this.http.post( this.config.baseAPIURL + '/api/'+apipath, data, this.jwt()).map((response: Response) => response.json());
+        return this.http.post(this.config.baseAPIURL + '/api/' + apipath, data, this.jwt()).map((response: Response) => response.json());
     }
 
     update(apipath: string, data: any) {
-        return this.http.put( this.config.baseAPIURL + '/api/'+apipath+'/' + data.id, data, this.jwt()).map((response: Response) => response.json());
+        return this.http.put(this.config.baseAPIURL + '/api/' + apipath + '/' + data.id, data, this.jwt()).map((response: Response) => response.json());
     }
 
     delete(apipath: string, id: number) {
-        return this.http.delete( this.config.baseAPIURL + '/api/'+apipath+'/' + id, this.jwt()).map((response: Response) => response.json());
+        return this.http.delete(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt()).map((response: Response) => response.json());
     }
 
     // PUBLIC helper methods
@@ -67,6 +68,8 @@ export class APICommonService {
                 this.titolariEnum[entry['id']] = entry['denominazione'];
             });
             this.titolariSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
+
+            this.commonDataready = (++this.commonDataLoadCount == 4);
         });
 
         this.getAll('fascicoli').subscribe(fascicoli => {
@@ -79,6 +82,8 @@ export class APICommonService {
                 entry['text'] = entry['numero_fascicolo'] + ' - ' + entry['argomento'];
             });
             this.fascicoliSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
+
+            this.commonDataready = (++this.commonDataLoadCount == 4);
         });
 
         this.getAll('amministrazione').subscribe(amministrazione => {
@@ -90,6 +95,8 @@ export class APICommonService {
                 this.amministrazioneEnum[entry['id']] = entry['denominazione'];
             });
             this.amministrazioneSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
+
+            this.commonDataready = (++this.commonDataLoadCount == 4);
         });
 
         this.getAll('mittente').subscribe(mittente => {
@@ -99,6 +106,8 @@ export class APICommonService {
                 entry['text'] = entry['codice'] + ' - ' + entry['denominazione'];
             });
             this.mittenteSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
+
+            this.commonDataready = (++this.commonDataLoadCount == 4);
         });
     }
 
@@ -108,8 +117,8 @@ export class APICommonService {
         // create authorization header with jwt token
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (currentUser && currentUser.token) {
-            let headers = new Headers({ 'Authorization': 'Bearer ' + currentUser.token });
-            return new RequestOptions({ headers: headers });
+            let headers = new Headers({'Authorization': 'Bearer ' + currentUser.token});
+            return new RequestOptions({headers: headers});
         }
     }
 }
