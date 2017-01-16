@@ -35,29 +35,30 @@ export class APICommonService {
 
     }
 
-    getAll(apipath: string) {
+    // PUBLIC helper methods
+    public getAll(apipath: string) {
         return this.http.get(this.config.baseAPIURL + '/api/' + apipath, this.jwt()).map((response: Response) => response.json());
     }
 
-    getById(apipath: string, id: number) {
+    public getById(apipath: string, id: number) {
         return this.http.get(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt()).map((response: Response) => response.json());
     }
 
-    create(apipath: string, data: any) {
+    public create(apipath: string, data: any) {
         return this.http.post(this.config.baseAPIURL + '/api/' + apipath, data, this.jwt()).map((response: Response) => response.json());
     }
 
-    update(apipath: string, data: any) {
+    public update(apipath: string, data: any) {
         return this.http.put(this.config.baseAPIURL + '/api/' + apipath + '/' + data.id, data, this.jwt()).map((response: Response) => response.json());
     }
 
-    delete(apipath: string, id: number) {
+    public delete(apipath: string, id: number) {
         return this.http.delete(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt()).map((response: Response) => response.json());
     }
 
-    // PUBLIC helper methods
-
     public cacheData() {
+
+        // TITOLARI
         this.getAll('titolari').subscribe(titolari => {
             this.titolari = titolari;
             this.titolariSelect = $.extend(true, [], titolari) as Select2OptionData[];
@@ -72,6 +73,7 @@ export class APICommonService {
             this.commonDataready = (++this.commonDataLoadCount == 4);
         });
 
+        // FASCICOLI
         this.getAll('fascicoli').subscribe(fascicoli => {
             fascicoli.forEach((entry) => {
                 entry['titolario'] = this.titolariEnum[entry['titolario']];
@@ -86,6 +88,7 @@ export class APICommonService {
             this.commonDataready = (++this.commonDataLoadCount == 4);
         });
 
+        // AMMINISTRAZIONE
         this.getAll('amministrazione').subscribe(amministrazione => {
             this.amministrazione = amministrazione;
             this.amministrazioneSelect = $.extend(true, [], amministrazione) as Select2OptionData[];
@@ -99,6 +102,7 @@ export class APICommonService {
             this.commonDataready = (++this.commonDataLoadCount == 4);
         });
 
+        // MITTENTE
         this.getAll('mittente').subscribe(mittente => {
             this.mittente = mittente;
             this.mittenteSelect = $.extend(true, [], mittente) as Select2OptionData[];
