@@ -8,7 +8,8 @@ export let fakeBackendProvider = {
     provide: Http,
     useFactory: (backend: MockBackend, options: BaseRequestOptions) => {
 
-        let mockDataVersion = "1";
+        let mockDataVersion = "19";
+        let debug = false;
         let mockDataStored = localStorage.getItem('mockDataVersion');
 
         if (mockDataStored != mockDataVersion) {
@@ -31,7 +32,6 @@ export let fakeBackendProvider = {
         let amministrazione: any[] = JSON.parse(localStorage.getItem('amministrazione')) || [];
         let mittente: any[] = JSON.parse(localStorage.getItem('mittente')) || [];
 
-
         let supportedApiMetods: string[] = [
             'authenticate',
             'users',
@@ -46,9 +46,10 @@ export let fakeBackendProvider = {
         backend.connections.subscribe((connection: MockConnection) => {
             // wrap in timeout to simulate server api call
             setTimeout(() => {
-                console.log('---------------- Fake Backend intercepted request ----------------');
-                console.log(connection.request.url, connection.request);
-                console.log('------------------------------------------------------------------');
+                if(debug) {
+                    console.log('---------------- Fake Backend intercepted request ----------------');
+                    console.log(connection.request.url, connection.request);
+                }
 
                 // split the URL to catch request parameters
                 let requestUrlArr = connection.request.url.split('/');
@@ -67,6 +68,23 @@ export let fakeBackendProvider = {
                     if ( supportedApiMetods.indexOf( apiMethod ) != -1 ) {
                         // the method is supported
 
+                        if(debug) {
+                            switch(connection.request.method) {
+                                case 0: // GET
+                                    console.log('reading ' + apiMethod + ': ' + (id >=0 ? id : 'all'));
+                                    break;
+                                case 1: // POST
+                                    console.log('creating ' + apiMethod);
+                                    break;
+                                case 2: // PUT
+                                    console.log('updating ' + apiMethod + ': ' + (id >=0 ? id : 'all'));
+                                    break;
+                                case 3: // DELETE
+                                    console.log('deleting ' + apiMethod + ': ' + (id >=0  ? id : 'all'));
+                                    break;
+                            }
+                            console.log('------------------------------------------------------------------');
+                        }
 
                         if ( apiMethod === 'authenticate' && reqMethod === RequestMethod.Post ) {
 
@@ -146,12 +164,17 @@ export let fakeBackendProvider = {
 
                                         if( id >= 0) {
                                             // SINGLE
-                                            let matchedItem = methodData.filter(item => { return item.id === id; });
-                                            console.log();
-                                            let item = matchedItem.length ? matchedItem[0] : null;
+                                            let matchedItem = methodData.data.filter(item => { return item.id === id; });
+                                            let item = matchedItem.length ? Object.assign({}, matchedItem[0]) : null;
+
+                                            let response = {
+                                                "response": 200,
+                                                "total_results": 1,
+                                                "data": item
+                                            };
 
                                             // respond 200 OK with single item
-                                            connection.mockRespond(new Response(new ResponseOptions({ status: 200, body: item })));
+                                            connection.mockRespond(new Response(new ResponseOptions({ status: 200, body: response })));
                                         } else {
                                             // ALL
                                             // respond 200 OK with all items
@@ -165,15 +188,14 @@ export let fakeBackendProvider = {
                                      */
                                     case ( RequestMethod.Post ):
 
-                                        console.log('creating new ' + apiMethod);
                                         // get new titolario object from post body
                                         let newItem = JSON.parse(connection.request.getBody());
 
                                         // !!! THE REAL BACKEND MUST VALIDATE DATA BEFORE WRITING !!!
 
                                         // save new item
-                                        newItem.id = methodData.length; // bogus id for the mock! a real backend must assign a unique ID
-                                        methodData.push(newItem);
+                                        newItem.id = methodData.data.length; // bogus id for the mock! a real backend must assign a unique ID
+                                        methodData.data.push(newItem);
                                         localStorage.setItem(apiMethod, JSON.stringify(methodData));
 
                                         // respond 200 OK
@@ -191,7 +213,14 @@ export let fakeBackendProvider = {
 
                                             // !!! THE REAL BACKEND MUST VALIDATE DATA BEFORE WRITING !!!
 
-                                            methodData[updatedItem.id] = updatedItem;
+                                            for (let i = 0, l = methodData.data.length; i < l; i++) {
+
+                                                if (methodData.data[i].id == id) {
+                                                    methodData.data[i] = updatedItem;
+                                                    break;
+                                                }
+                                            }
+
                                             localStorage.setItem(apiMethod, JSON.stringify(methodData));
 
                                             // respond 200 OK
@@ -207,14 +236,16 @@ export let fakeBackendProvider = {
                                      * DELETE
                                      */
                                     case ( RequestMethod.Delete ):
-
                                         if( id >= 0 ) {
-                                            for (let i = 0; i < methodData.length; i++) {
-                                                let item = methodData[i];
+                                            for (let i = 0, l = methodData.data.length; i < l; i++) {
+                                                let item = methodData.data[i];
                                                 if (item.id == id) {
                                                     // delete item
-                                                    methodData.splice(i, 1);
+                                                    methodData.data.splice(i, 1);
                                                     localStorage.setItem(apiMethod, JSON.stringify(methodData));
+
+                                                    // respond 200 OK
+                                                    connection.mockRespond(new Response(new ResponseOptions({ status: 200 })));
                                                     break;
                                                 }
                                             }
