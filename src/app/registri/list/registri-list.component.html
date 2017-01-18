@@ -1,46 +1,169 @@
 <h3 class="page-title">Registro - <span class="fw-semi-bold">Tutti i registri</span></h3>
 
+<section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="true">
+    <header>
+        <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Filtra <span class="fw-semi-bold">registri ...</span>
+        </h5>
+        <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Filtra <span
+                class="fw-semi-bold">registri ...</span></h5>
+        <div class="widget-controls m-t-1">
+            <a data-widgster="expand" title="Apri"><i class="glyphicon glyphicon-chevron-down"></i></a>
+            <a data-widgster="collapse" title="Chiudi"><i class="glyphicon glyphicon-chevron-up"></i></a>
+        </div>
+    </header>
+    <div class="widget-body">
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="id"><strong>Codice</strong></label>
+                    <input id="id" name="id" class="form-control" [(ngModel)]="filter.id" placeholder="Numero..."/>
+                </div>
+                <div class="form-group">
+                    <label for="oggetto"><strong>Oggetto</strong></label>
+                    <input id="oggetto" name="oggetto" class="form-control" [(ngModel)]="filter.oggetto"
+                           placeholder="Digita almeno 3 caratteri..."/>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="id_titolari"><strong>Titolario</strong></label>
+                    <select2 id="id_titolari"
+                             class="full-width-select"
+                             [options]="select2Options"
+                             value="{{filter.id_titolari}}"
+                             cssImport="false"
+                             (valueChanged)="select2Changed($event,'id_titolari')"
+                             [data]="apiService.titolariSelect"></select2>
+                </div>
+                <div class="form-group">
+                    <label for="numero_fascicolo"><strong>Fascicolo</strong></label>
+                    <select2 id="numero_fascicolo"
+                             name="numero_fascicolo"
+                             class="full-width-select"
+                             [options]="select2Options"
+                             value="{{filter.numero_fascicolo}}"
+                             cssImport="false"
+                             (valueChanged)="select2Changed($event,'numero_fascicolo')"
+                             [data]="apiService.fascicoliSelect"></select2>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="mittente"><strong>Mittente</strong></label>
+                    <select2 id="mittente"
+                             class="full-width-select"
+                             [options]="select2Options"
+                             value="{{filter.mittente}}"
+                             cssImport="false"
+                             (valueChanged)="select2Changed($event,'mittente')"
+                             [data]="apiService.mittenteSelect"></select2>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label for="data_arrivo_da"><strong>Da data di arrivo</strong></label>
+                            <datetime id="data_arrivo_da" name="data_arrivo_da"
+                                      [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data' }"
+                                      [timepicker]="false"
+                                      [(ngModel)]="filter.data_arrivo_da" #data_arrivo_da="ngModel" required></datetime>
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="data_arrivo_a"><strong>A data di arrivo</strong></label>
+                            <datetime id="data_arrivo_a" name="data_arrivo_a"
+                                      [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data' }"
+                                      [timepicker]="false"
+                                      [(ngModel)]="filter.data_arrivo_a" #data_arrivo_a="ngModel" required></datetime>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="protocollo_mittente"><strong>Protocollo mittente</strong></label>
+                    <input id="protocollo_mittente" name="protocollo_mittente" class="form-control" [(ngModel)]="filter.protocollo_mittente"
+                           placeholder="Codice..."/>
+                </div>
+                <div class="form-group">
+                    <label for="protocollo_arrivo"><strong>Protocollo arrivo</strong></label>
+                    <input id="protocollo_arrivo" name="protocollo_arrivo" class="form-control" [(ngModel)]="filter.protocollo_arrivo"
+                           placeholder="Codice..."/>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
 <div class="row">
     <div class="col-lg-12">
         <section class="widget" widget>
             <div class="widget-body">
-                <table class="table table-hover table-condensed mb-0" [mfData]="registri" #mf="mfDataTable" stickthead>
+                <table class="table table-hover table-condensed mb-0"
+                       #mf="mfDataTable"
+                       [mfData]="registri | registriDataFilter : filter.id : filter.oggetto : filter.id_titolari : filter.mittente : filter.protocollo_mittente : filter.protocollo_arrivo : filter.numero_fascicolo : filter.data_arrivo_da : filter.data_arrivo_a"
+                       [mfRowsOnPage]="100"
+                       stickthead>
                     <thead>
                     <tr>
                         <th colspan="4"></th>
-                        <th colspan="2">Protocollo Arrivo</th>
-                        <th colspan="2">Protocollo Mittente</th>
+                        <th colspan="2">Protocollo&nbsp;Arrivo</th>
+                        <th colspan="2">Protocollo&nbsp;Mittente</th>
                         <th colspan="2"></th>
                     </tr>
                     <tr>
-                        <th><mfDefaultSorter by="id">Codice</mfDefaultSorter></th>
-                        <th><mfDefaultSorter by="oggetto">Oggetto</mfDefaultSorter></th>
-                        <th><mfDefaultSorter by="mittente">Mittente</mfDefaultSorter></th>
-                        <th><mfDefaultSorter by="repertorio">Repertorio</mfDefaultSorter></th>
-                        <th><mfDefaultSorter by="protocollo_arrivo">Numero</mfDefaultSorter></th>
-                        <th><mfDefaultSorter by="data_arrivo">Data</mfDefaultSorter></th>
-                        <th><mfDefaultSorter by="protocollo_mittente">Numero</mfDefaultSorter></th>
-                        <th><mfDefaultSorter by="data_mittente">Data</mfDefaultSorter></th>
-                        <th><mfDefaultSorter by="allegati">Documento</mfDefaultSorter></th>
+                        <th>
+                            <mfDefaultSorter by="id">Codice</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="oggetto">Oggetto</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="mittente">Mittente</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="repertorio">Repertorio</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="protocollo_arrivo">Numero</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="data_arrivo">Data</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="protocollo_mittente">Numero</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="data_mittente">Data</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="nome_documento">Documento</mfDefaultSorter>
+                        </th>
                         <th>Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr *ngFor="let registro of mf.data" (click)="editId(registro.id)" class="clickable">
                         <td>{{registro.id}}</td>
-                        <td>{{registro.oggetto}}</td>
+                        <td [innerHTML]="registro.oggetto | registriDataMark : filter.oggetto"></td>
                         <td>{{registro.mittente}}</td>
-                        <td>{{registro.titolario}}.{{registro.numero_fascicolo}}</td>
+                        <td>{{registro.id_titolari}}.{{registro.numero_fascicolo}}</td>
                         <td>{{registro.protocollo_arrivo}}</td>
                         <td class="nowrap">{{registro.data_arrivo | date: 'dd/MM/yyyy' }}</td>
                         <td>{{registro.protocollo_mittente}}</td>
                         <td class="nowrap">{{registro.data_mittente | date: 'dd/MM/yyyy'}}</td>
-                        <td>{{registro.allegati}}</td>
+                        <td>{{registro.nome_documento}}</td>
                         <td>
-                            <a (click)="askDeleteTitolari(myModal, registro)"><i class="fa fa-trash-o"> </i></a>
+                            <a (click)="askDeleteRegistri($event, myModal, registro)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>
                     </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="10">
+                            <mfBootstrapPaginator [rowsOnPageSet]="[100,200,500,1000]"></mfBootstrapPaginator>
+                        </td>
+                    </tr>
+                    </tfoot>
                 </table>
             </div>
             <footer>

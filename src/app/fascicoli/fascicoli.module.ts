@@ -1,14 +1,15 @@
 import { NgModule }      from '@angular/core';
 import { CommonModule }  from '@angular/common';
 import { FormsModule,
-  ReactiveFormsModule }      from '@angular/forms';
+         ReactiveFormsModule }      from '@angular/forms';
 
 import { RouterModule } from '@angular/router';
 
 import { ModalModule } from 'ng2-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DataTableModule } from 'angular2-datatable';
-import { DataFilterPipe }   from '../_pipes/data-filter.pipe';
+import { FascicoliDataFilterPipe,
+         DataMarkPipe }   from '../_pipes/index';
 
 import 'select2/dist/js/select2.full.js';
 import { Select2Module } from 'ng2-select2';
@@ -49,7 +50,8 @@ export const routes = [
   declarations: [
       FascicoliListComponent,
       FascicoliEditComponent,
-      DataFilterPipe
+      FascicoliDataFilterPipe,
+      DataMarkPipe
   ]
 })
 export default class TitolariModule {

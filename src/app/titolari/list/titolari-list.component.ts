@@ -25,7 +25,8 @@ export class TitolariListComponent {
         this.router.navigate(['/app/titolari/edit/' + id]);
     }
 
-    askDeleteTitolari(modal: any, titolari: Titolari) {
+    askDeleteTitolari(event:any, modal: any, titolari: Titolari) {
+        event.stopPropagation();
         this.deletingTitolari = titolari;
         modal.open();
     }
@@ -42,10 +43,9 @@ export class TitolariListComponent {
         });
     }
 
-    private
-    loadAllTitolari() {
-        this.apiService.getAll('titolari').subscribe(titolari => {
-            this.titolari = titolari;
+    private loadAllTitolari() {
+        this.apiService.getAll('titolari').subscribe(response => {
+            this.titolari = response.data;
         });
     }
 }

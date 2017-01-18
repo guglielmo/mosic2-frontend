@@ -1,7 +1,7 @@
 import { Component }        from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Fascicoli, Titolari } from '../../_models/index';
+import { Fascicoli } from '../../_models/index';
 import { APICommonService } from '../../_services/index';
 import { AppConfig } from '../../app.config';
 
@@ -10,9 +10,14 @@ import { AppConfig } from '../../app.config';
 })
 export class FascicoliListComponent {
 
-    public filterQuery = "";
-    deletingFascicoli: Fascicoli = new Fascicoli;
-    fascicoli: Fascicoli[] = [];
+    public filter = {
+        argomento: '',
+        codice_titolario: -1,
+        amministrazione: -1,
+        numero_fascicolo: ''
+    };
+    public deletingFascicoli: Fascicoli = new Fascicoli;
+    public fascicoli: Fascicoli[] = [];
 
     public select2Options: Select2Options;
 
@@ -24,25 +29,38 @@ export class FascicoliListComponent {
     }
 
     ngOnInit() {
+        this.loadAllFascicoli();
     }
 
-    editId(id: number) {
+    public editId(id: number) {
         this.router.navigate(['/app/fascicoli/edit/' + id]);
     }
 
-    askDeleteFascicoli(modal: any, fascicoli: Fascicoli) {
+    public askDeleteFascicoli(event: any, modal: any, fascicoli: Fascicoli) {
+        event.stopPropagation();
         this.deletingFascicoli = fascicoli;
         modal.open();
     }
 
-    confirmDeleteFascicoli(modal: any) {
+    public confirmDeleteFascicoli(modal: any) {
         modal.close();
-        this.deleteFascicoli(this.deletingFascicoli.numero_fascicolo);
+        this.deleteFascicoli(this.deletingFascicoli.id);
         this.deletingFascicoli = new Fascicoli;
     }
 
-    deleteFascicoli(id: number) {
+    private deleteFascicoli(id: number) {
         this.apiService.delete('fascicoli', id).subscribe(() => {
+            this.loadAllFascicoli()
         });
+    }
+
+    private loadAllFascicoli() {
+        this.apiService.getAll('fascicoli').subscribe(response => {
+            this.fascicoli = Object.assign([],response.data);
+        });
+    }
+
+    public select2Changed(e: any, name: string): void {
+        this.filter[name] = e.value;
     }
 }

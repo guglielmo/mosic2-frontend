@@ -1,34 +1,57 @@
-import {Component}        from '@angular/core';
-import {Router} from '@angular/router';
+import { Component }        from '@angular/core';
+import { Router } from '@angular/router';
+
+import { Observable } from 'rxjs/Observable';
+//import { ChangeDetectionStrategy } from '@angular/core';
 
 
-import {Registri} from '../../_models/index';
-import {RegistriService} from '../../_services/index';
 
-//declare var moment: any;
+import { Registri } from '../../_models/index';
+import { APICommonService } from '../../_services/index';
+import { AppConfig } from '../../app.config';
+
+import * as _ from "lodash";
+import {Select2OptionData} from 'ng2-select2';
 
 
 @Component({
-    templateUrl: 'registri-list.component.html'
+    templateUrl: 'registri-list.component.html',
+    //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegistriListComponent {
 
+    public filter = {
+        id: '',
+        oggetto: '',
+        id_titolari: -1,
+        mittente: -1,
+        protocollo_mittente: '',
+        protocollo_arrivo: '',
+        numero_fascicolo: -1,
+        data_arrivo_da: '',
+        data_arrivo_a: ''
+    };
     deletingRegistri: Registri = new Registri;
     registri: Registri[] = [];
 
-    //registriJSON: string;
+    public fascicoliSelect: Observable<Array<Select2OptionData>>;
+    public fasc: Select2OptionData[];
 
+    public select2Options: Select2Options;
 
-    constructor(private registriService: RegistriService,
-                private router: Router
+    constructor(private apiService: APICommonService,
+                private router: Router,
+                private config: AppConfig
     ) {
+        this.select2Options = config.select2Options;
     }
 
     ngOnInit() {
         this.loadAllRegistri();
     }
 
-    askDeleteRegistri(modal: any, registri: Registri) {
+    askDeleteRegistri(event: any, modal: any, registri: Registri) {
+        event.stopPropagation();
         this.deletingRegistri = registri;
         modal.open();
     }
@@ -44,22 +67,39 @@ export class RegistriListComponent {
     }
 
     deleteRegistri(id: number) {
-        this.registriService.delete(id).subscribe(() => {
+        this.apiService.delete('registri', id).subscribe(() => {
             this.loadAllRegistri()
         });
     }
 
     private loadAllRegistri() {
-        this.registriService.getAll().subscribe(registri => {
-            this.registri = registri;
+        this.apiService.getAll('registri').subscribe(response => {
+            this.registri = Object.assign([],response.data);
 
-/*            this.registri.forEach((entry) => {
-             entry['data_arrivo'] = moment(entry['data_arrivo'], "DD/MM/YYYY").format("YYYY-MM-DD");
-             entry['data_mittente'] = moment(entry['data_mittente'], "DD/MM/YYYY").format("YYYY-MM-DD");
-             });
-
-             this.registriJSON = JSON.stringify(this.registri);*/
+            /* moment(entry['data_arrivo'], "DD/MM/YYYY").format("YYYY-MM-DD"); */
 
         });
+    }
+
+    public getFascicoliByTitolario() {
+        this.fascicoliSelect = Observable.of(this.apiService.fascicoliSelect);
+        this.fasc = this.apiService.fascicoliSelect;
+        return true;
+    }
+
+    public select2Changed(e: any, name: string): void {
+        this.filter[name] = e.value;
+
+/*        console.log(name);
+        if(name == 'titolario') {
+
+            let ret = _.filter(this.apiService.fascicoliSelect, row => {
+                if (Number(e.value) != -1 && row.codice_titolario != Number(e.value)) return false;
+                return true;
+            });
+            this.fascicoliSelect = Observable.of(ret);
+            this.fasc = ret;
+            this.filter.numero_fascicolo = -1;
+        }*/
     }
 }

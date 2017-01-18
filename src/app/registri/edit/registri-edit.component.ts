@@ -54,8 +54,8 @@ export class RegistriEditComponent implements OnInit {
             case 'update':
                 this.apiService.getById('registri', this.id)
                     .subscribe(
-                        data => {
-                            this.model = data;
+                        response => {
+                            this.model = response.data;
                             this.model.data_arrivo = new Date(this.model.data_arrivo);
                             this.model.data_mittente = new Date(this.model.data_mittente);
                         },
@@ -68,8 +68,47 @@ export class RegistriEditComponent implements OnInit {
 
     }
 
-    select2Changed(e: any): void {
-        this.selected = e.value;
+    cancel( event ) {
+        this.router.navigate(['/app/registri/list']);
+    }
+
+    submit() {
+        this.loading = true;
+
+        switch (this.mode) {
+            case 'create':
+                this.apiService.create('registri', this.model)
+                    .subscribe(
+                        data => {
+                            this.router.navigate(['/app/registri/list']);
+                        },
+                        error => {
+                            this.error = error;
+                            this.loading = false;
+                        });
+                break;
+
+            case 'update':
+                this.apiService.update('registri', this.model)
+                    .subscribe(
+                        data => {
+                            this.router.navigate(['/app/registri/list']);
+                        },
+                        error => {
+                            this.error = error;
+                            this.loading = false;
+                        });
+                break;
+        }
+    }
+
+    select2Changed(e: any, name: string): void {
+        if(parseInt(e.value)) {
+            this.model[name] = Number(e.value);
+        } else {
+            this.model[name] = e.value;
+        }
+
     }
 
     onUploadSuccess(e: any): void {

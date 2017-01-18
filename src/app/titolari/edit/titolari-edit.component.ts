@@ -12,7 +12,7 @@ export class TitolariEditComponent implements OnInit {
     model: any = {};
     error: string = '';
     mode: string;
-    loading: boolean = false;
+    loading: boolean = true;
     id: number;
 
     constructor(private router: Router,
@@ -29,13 +29,16 @@ export class TitolariEditComponent implements OnInit {
 
         switch( this.mode ) {
             case 'create':
+                this.loading = false;
                 break;
                 
             case 'update':
                 this.apiService.getById('titolari', this.id)
                     .subscribe(
-                        data => {
-                            this.model = data;
+                        response => {
+                            this.model = response.data;
+                            this.loading = false;
+
                         },
                         error => {
                             this.error = error;

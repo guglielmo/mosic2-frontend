@@ -1,12 +1,9 @@
 <h3 class="page-title">Fascicolo - <span class="fw-semi-bold">Tutti i fascicoli</span></h3>
 
-<section class="widget" widget data-widgster-collapsed="true">
+<section *ngIf="apiService.commonDataready && fascicoli && fascicoli.length" class="widget" widget data-widgster-collapsed="true">
     <header>
-        <h5>
-            <a data-widgster="expand" title="Apri"><i class="fa fa-search"></i> Filtra <span class="fw-semi-bold">fascicoli ...</span> </a>
-            <a data-widgster="collapse" title="Chiudi"><i class="fa fa-search"></i> Filtra <span class="fw-semi-bold">fascicoli ...</span> </a>
-        </h5>
-
+        <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Filtra <span class="fw-semi-bold">fascicoli ...</span></h5>
+        <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Filtra <span class="fw-semi-bold">fascicoli ...</span></h5>
         <div class="widget-controls m-t-1">
             <a data-widgster="expand" title="Apri"><i class="glyphicon glyphicon-chevron-down"></i></a>
             <a data-widgster="collapse" title="Chiudi"><i class="glyphicon glyphicon-chevron-up"></i></a>
@@ -20,15 +17,22 @@
                     <select2 id="titolari_id"
                              class="full-width-select"
                              [options]="select2Options"
+                             value="{{filter.codice_titolario}}"
                              cssImport="false"
-                             (valueChanged)="select2Changed($event)"
+                             (valueChanged)="select2Changed($event,'codice_titolario')"
                              [data]="apiService.titolariSelect"></select2>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="numero_fascicolo"><strong>Fascicolo</strong></label>
+                    <input id="numero_fascicolo" name="numero_fascicolo" class="form-control" [(ngModel)]="filter.numero_fascicolo" placeholder="Numero..."/>
+                </div>
+            </div>
+            <div class="col-lg-2">
                 <div class="form-group">
                     <label for="argomento"><strong>Argomento</strong></label>
-                    <input id="argomento" name="argomento" class="form-control" [(ngModel)]="filterQuery"/>
+                    <input id="argomento" name="argomento" class="form-control" [(ngModel)]="filter.argomento" placeholder="Digita almeno 3 caratteri..."/>
                 </div>
             </div>
             <div class="col-lg-4">
@@ -37,8 +41,9 @@
                     <select2 id="amministrazione"
                              class="full-width-select"
                              [options]="select2Options"
+                             value="{{filter.amministrazione}}"
                              cssImport="false"
-                             (valueChanged)="select2Changed($event)"
+                             (valueChanged)="select2Changed($event,'amministrazione')"
                              [data]="apiService.amministrazioneSelect"></select2>
                 </div>
             </div>
@@ -50,22 +55,17 @@
     <div class="col-lg-12">
         <section class="widget" widget>
             <div class="widget-body">
-                <table class="table table-hover table-condensed mb-0" [mfData]="apiService.fascicoli | dataFilter : filterQuery" #mf="mfDataTable"
+                <table class="table table-hover table-condensed mb-0"
+                       #mf="mfDataTable"
+                       [mfData]="fascicoli | fascicoliDataFilter : filter.argomento : filter.codice_titolario : filter.amministrazione: filter.numero_fascicolo"
+                       [mfRowsOnPage]="100"
                        stickthead>
                     <thead>
                     <tr>
-                        <th>
-                            <mfDefaultSorter by="codice_titolario">Titolario</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="numero_fascicolo">Fascicolo</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="argomento">Argomento</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="amministrazione">Amministrazione</mfDefaultSorter>
-                        </th>
+                        <th><mfDefaultSorter by="codice_titolario">Titolario</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="numero_fascicolo">Fascicolo</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="argomento">Argomento</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="amministrazione">Amministrazione</mfDefaultSorter></th>
                         <th>Azioni</th>
                     </tr>
                     </thead>
@@ -73,13 +73,20 @@
                     <tr *ngFor="let fascicolo of mf.data" (click)="editId(fascicolo.id)" class="clickable">
                         <td>{{apiService.titolariEnum[fascicolo.codice_titolario]}}</td>
                         <td>{{fascicolo.numero_fascicolo}}</td>
-                        <td>{{fascicolo.argomento}}</td>
+                        <td [innerHTML]="fascicolo.argomento | dataMark : filter.argomento"></td>
                         <td>{{apiService.amministrazioneEnum[fascicolo.amministrazione]}}</td>
                         <td>
-                            <a (click)="askDeleteFascicoli(myModal, fascicolo)"><i class="fa fa-trash-o"> </i></a>
+                            <a (click)="askDeleteFascicoli($event, myModal, fascicolo)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>
                     </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            <mfBootstrapPaginator [rowsOnPageSet]="[100,200,500,1000]"></mfBootstrapPaginator>
+                        </td>
+                    </tr>
+                    </tfoot>
                 </table>
             </div>
             <footer>

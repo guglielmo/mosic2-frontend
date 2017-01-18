@@ -43,8 +43,8 @@ export class FascicoliEditComponent implements OnInit {
             case 'update':
                 this.apiService.getById('fascicoli', this.id)
                     .subscribe(
-                        data => {
-                            this.model = data;
+                        response => {
+                            this.model = response.data;
                             this.model.data_magazzino = new Date(this.model.data_magazzino);
                         },
                         error => {
@@ -63,6 +63,8 @@ export class FascicoliEditComponent implements OnInit {
     submit() {
         this.loading = true;
 
+        //todo: su fascicolo al salvataggio mancano gli id dei dati relazionali (tendine)
+
         switch (this.mode) {
             case 'create':
                 this.apiService.create('fascicoli', this.model)
@@ -80,6 +82,7 @@ export class FascicoliEditComponent implements OnInit {
                 this.apiService.update('fascicoli', this.model)
                     .subscribe(
                         data => {
+                            this.router.navigate(['/app/fascicoli/list']);
                         },
                         error => {
                             this.error = error;
@@ -89,8 +92,8 @@ export class FascicoliEditComponent implements OnInit {
         }
     }
 
-    select2Changed(e: any): void {
-        this.selected = e.value;
+    public select2Changed(e: any, name: string): void {
+        this.model[name] = Number(e.value);
     }
 
 }
