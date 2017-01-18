@@ -16,7 +16,7 @@ export class StickThead implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        let tableOffset = this.$el.offset().top;
+        let tableOffset = this.$el.offset().top+80;
         let $header = this.$el.find('thead');
         let $fixedHeader = jQuery("#header-fixed").empty().append($header.clone());
 
