@@ -8,8 +8,6 @@ export class FascicoliDataFilterPipe implements PipeTransform {
 
     transform(array: any[], query: string, titolari: number, amministrazione: number, numero_fascicolo: string): any {
 
-        console.log(query, titolari, amministrazione);
-
         let keys = query.toUpperCase().split(' ');
         let keysLen = keys.length;
         let i;
