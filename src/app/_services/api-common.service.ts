@@ -36,23 +36,23 @@ export class APICommonService {
     }
 
     // PUBLIC helper methods
-    public getAll(apipath: string) {
+    getAll(apipath: string) {
         return this.http.get(this.config.baseAPIURL + '/api/' + apipath, this.jwt()).map((response: Response) => response.json());
     }
 
-    public getById(apipath: string, id: number) {
+    getById(apipath: string, id: number) {
         return this.http.get(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt()).map((response: Response) => response.json());
     }
 
-    public create(apipath: string, data: any) {
+    create(apipath: string, data: any) {
         return this.http.post(this.config.baseAPIURL + '/api/' + apipath, data, this.jwt()).map((response: Response) => response.json());
     }
 
-    public update(apipath: string, data: any) {
+    update(apipath: string, data: any) {
         return this.http.put(this.config.baseAPIURL + '/api/' + apipath + '/' + data.id, data, this.jwt()).map((response: Response) => response.json());
     }
 
-    public delete(apipath: string, id: number) {
+    delete(apipath: string, id: number) {
         return this.http.delete(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt()).map((response: Response) => response.json());
     }
 
@@ -70,7 +70,7 @@ export class APICommonService {
             });
             this.titolariSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
 
-            this.commonDataready = (++this.commonDataLoadCount == 4);
+            this.commonDataready = (++this.commonDataLoadCount >= 4);
         });
 
         // FASCICOLI
@@ -85,7 +85,7 @@ export class APICommonService {
             });
             this.fascicoliSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
 
-            this.commonDataready = (++this.commonDataLoadCount == 4);
+            this.commonDataready = (++this.commonDataLoadCount >= 4);
         });
 
         // AMMINISTRAZIONE
@@ -99,7 +99,7 @@ export class APICommonService {
             });
             this.amministrazioneSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
 
-            this.commonDataready = (++this.commonDataLoadCount == 4);
+            this.commonDataready = (++this.commonDataLoadCount >= 4);
         });
 
         // MITTENTE
@@ -111,7 +111,56 @@ export class APICommonService {
             });
             this.mittenteSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
 
-            this.commonDataready = (++this.commonDataLoadCount == 4);
+            this.commonDataready = (++this.commonDataLoadCount >= 4);
+        });
+    }
+
+    public cacheCommon(apipath: string) {
+
+        this.getAll(apipath).subscribe(data => {
+
+            this[apipath] = data;
+            this[apipath+'Select'] = $.extend(true, [], data) as Select2OptionData[];
+            this[apipath+'Enum'] = {};
+
+            switch (apipath) {
+                case 'titolari':
+                    this.titolariSelect.forEach((entry) => {
+                        entry.text = entry['codice'] + ' - ' + entry['denominazione'] + ' - ' + entry['descrizione'];
+                        this.titolariEnum[entry['id']] = entry['denominazione'];
+                    });
+                    break;
+
+                case 'fascicoli':
+                    this.fascicoli.forEach((entry) => {
+                        entry['titolario'] = this.titolariEnum[entry['titolario']];
+                    });
+                    this.fascicoliSelect.forEach((entry) => {
+                        entry['text'] = entry['numero_fascicolo'] + ' - ' + entry['argomento'];
+                    });
+                    break;
+
+                case 'amministrazione':
+                    this.amministrazioneSelect.forEach((entry) => {
+                        entry['text'] = entry['codice'] + ' - ' + entry['denominazione'];
+                        this.amministrazioneEnum[entry['id']] = entry['denominazione'];
+                    });
+                    break;
+
+                case 'mittente':
+                    this.mittenteSelect.forEach((entry) => {
+                        entry['text'] = entry['codice'] + ' - ' + entry['denominazione'];
+                    });
+                    break;
+            }
+
+            this[apipath+'Select'].unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
+
+            this.commonDataready = (
+                this.titolari.length > 0 && this.fascicoli.length > 0 && this.amministrazione.length > 0 && this.mittente.length > 0
+            );
+
+
         });
     }
 
