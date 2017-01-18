@@ -59,7 +59,10 @@ export class APICommonService {
     public cacheData() {
 
         // TITOLARI
-        this.getAll('titolari').subscribe(titolari => {
+        this.getAll('titolari').subscribe(response => {
+
+            let titolari = response.data;
+
             this.titolari = titolari;
             this.titolariSelect = $.extend(true, [], titolari) as Select2OptionData[];
             this.titolariSelect.forEach((entry) => {
@@ -74,7 +77,10 @@ export class APICommonService {
         });
 
         // FASCICOLI
-        this.getAll('fascicoli').subscribe(fascicoli => {
+        this.getAll('fascicoli').subscribe(response => {
+
+            let fascicoli = response.data;
+
             fascicoli.forEach((entry) => {
                 entry['titolario'] = this.titolariEnum[entry['titolario']];
             });
@@ -89,7 +95,10 @@ export class APICommonService {
         });
 
         // AMMINISTRAZIONE
-        this.getAll('amministrazione').subscribe(amministrazione => {
+        this.getAll('amministrazione').subscribe(response => {
+
+            let amministrazione = response.data;
+
             this.amministrazione = amministrazione;
             this.amministrazioneSelect = $.extend(true, [], amministrazione) as Select2OptionData[];
             this.amministrazioneSelect.forEach((entry) => {
@@ -103,7 +112,10 @@ export class APICommonService {
         });
 
         // MITTENTE
-        this.getAll('mittente').subscribe(mittente => {
+        this.getAll('mittente').subscribe(response => {
+
+            let mittente = response.data;
+
             this.mittente = mittente;
             this.mittenteSelect = $.extend(true, [], mittente) as Select2OptionData[];
             this.mittenteSelect.forEach((entry) => {
