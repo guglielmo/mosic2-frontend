@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserService } from '../_services/index';
+import { APICommonService } from '../_services/index';
 
 
 @Component({
@@ -19,12 +19,12 @@ export class Signup {
 
   constructor(
       private router: Router,
-      private userService: UserService
+      private apiService: APICommonService
   ) { }
 
   register() {
     this.loading = true;
-    this.userService.create(this.model)
+    this.apiService.create('users',this.model)
         .subscribe(
             data => {
               console.log(data);
@@ -32,9 +32,13 @@ export class Signup {
               this.router.navigate(['/login']);
             },
             error => {
-              console.log(error);
-              this.error = error;
+              let response = error.json();
+              this.error = response.error.message;
               this.loading = false;
             });
+  }
+
+  cancel() {
+    this.router.navigate(['/login']);
   }
 }
