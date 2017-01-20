@@ -1,7 +1,8 @@
-import { Component }        from '@angular/core';
+import {Component}        from '@angular/core';
+import {Router} from '@angular/router';
 
 import { User } from '../../_models/index';
-import { UserService } from '../../_services/index';
+import { APICommonService } from '../../_services/index';
 
 
 @Component({
@@ -13,9 +14,9 @@ export class UsersListComponent {
     deletingUser: User = new User;
     users: User[] = [];
 
-
-
-    constructor(private userService: UserService) {
+    constructor(private apiService: APICommonService,
+                private router: Router
+    ) {
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     }
 
@@ -23,7 +24,12 @@ export class UsersListComponent {
         this.loadAllUsers();
     }
 
-    askDeleteUser( modal:any, user:User ) {
+    editId(id: number) {
+        this.router.navigate(['/app/users/edit/' + id]);
+    }
+
+    askDeleteUser( event: any, modal:any, user:User ) {
+        event.stopPropagation();
         this.deletingUser = user;
         modal.open();
     }
@@ -35,10 +41,14 @@ export class UsersListComponent {
     }
 
     deleteUser(id: number) {
-        this.userService.delete(id).subscribe(() => { this.loadAllUsers() });
+        this.apiService.delete('users',id).subscribe(() => {
+            this.loadAllUsers()
+        });
     }
 
     private loadAllUsers() {
-        this.userService.getAll().subscribe(users => { this.users = users; });
+        this.apiService.getAll('users').subscribe(response => {
+            this.users = Object.assign([],response.data);
+        });
     }
 }

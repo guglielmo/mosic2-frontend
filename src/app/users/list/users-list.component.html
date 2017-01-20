@@ -17,7 +17,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let user of mf.data">
+                    <tr *ngFor="let user of mf.data" (click)="editId(user.id)" class="clickable">
                         <td>{{user.lastName}} {{user.firstName}}</td>
                         <td>{{user.userName}}</td>
                         <td>{{user.eMail}}</td>
@@ -27,7 +27,7 @@
                             <span class="tag tag-success">Attivo</span>
                         </td>
                         <td>
-                            <a (click)="askDeleteTitolari(myModal, user)"><i class="fa fa-trash-o"> </i></a>
+                            <a (click)="askDeleteTitolari($event, myModal, user)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>
                     </tbody>
