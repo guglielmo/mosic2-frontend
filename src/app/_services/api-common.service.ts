@@ -13,6 +13,7 @@ export class APICommonService {
     public titolari: Titolari[] = [];
     public titolariSelect: Select2OptionData[] = [];
     public titolariEnum: any = {};
+    public titolariIdCodEnum: any = {};
 
     public fascicoli: Fascicoli[];
     public fascicoliSelect: Select2OptionData[] = [];
@@ -37,7 +38,7 @@ export class APICommonService {
 
     // PUBLIC helper methods
     getAll(apipath: string) {
-        return this.http.get(this.config.baseAPIURL + '/api/' + apipath, this.jwt()).map((response: Response) => response.json());
+        return this.http.get(this.config.baseAPIURL + '/api/' + apipath +'?limit=9999', this.jwt()).map((response: Response) => response.json());
     }
 
     getById(apipath: string, id: number) {
@@ -70,6 +71,7 @@ export class APICommonService {
                 entry['id'] = entry['id'];
 
                 this.titolariEnum[entry['id']] = entry['denominazione'];
+                this.titolariIdCodEnum[entry['id']] = entry['codice'];
             });
             this.titolariSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
 
