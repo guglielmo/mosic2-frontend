@@ -5,7 +5,7 @@
     </div>
 <h3 class="page-title">Fascicolo -
     <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
-    <span *ngIf="mode == 'update'" class="fw-semi-bold">{{model.codice_titolario}}.{{model.numero_fascicolo}}</span>
+    <span *ngIf="mode == 'update'" class="fw-semi-bold">{{apiService.titolariIdCodEnum[model.id_titolari]}}.{{model.numero_fascicolo}}</span>
 </h3>
 <h5 class="page-title"><span *ngIf="mode == 'update'">{{model.argomento}}</span></h5>
 
@@ -18,13 +18,13 @@
                 </header>
                 <div class="widget-body">
                     <div class="form-group">
-                        <label for="codice_titolario"><strong>Titolario</strong></label>
-                        <select2 id="codice_titolario"
+                        <label for="id_titolari"><strong>Titolario</strong></label>
+                        <select2 id="id_titolari"
                                  class="full-width-select"
                                  [options]="select2Options"
-                                 value="{{model.codice_titolario}}"
+                                 value="{{model.id_titolari}}"
                                  cssImport="false"
-                                 (valueChanged)="select2Changed($event,'codice_titolario')"
+                                 (valueChanged)="select2Changed($event,'id_titolari')"
                                  [data]="apiService.titolariSelect"></select2>
                     </div>
 
@@ -62,9 +62,9 @@
                         <select2 id="amministrazione"
                                  class="full-width-select"
                                  [options]="select2OptionsMulti"
-                                 value="{{model.amministrazione}}"
+                                 value="{{model.id_amministrazione}}"
                                  cssImport="false"
-                                 (valueChanged)="select2Changed($event,'amministrazione')"
+                                 (valueChanged)="select2Changed($event,'id_amministrazione')"
                                  [data]="apiService.amministrazioneSelect"></select2>
                     </div>
                 </div>

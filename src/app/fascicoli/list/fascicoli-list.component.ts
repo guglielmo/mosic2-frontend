@@ -12,7 +12,7 @@ export class FascicoliListComponent {
 
     public filter = {
         argomento: '',
-        codice_titolario: -1,
+        id_titolari: -1,
         amministrazione: -1,
         numero_fascicolo: ''
     };

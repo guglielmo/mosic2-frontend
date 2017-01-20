@@ -17,9 +17,9 @@
                     <select2 id="titolari_id"
                              class="full-width-select"
                              [options]="select2Options"
-                             value="{{filter.codice_titolario}}"
+                             value="{{filter.id_titolari}}"
                              cssImport="false"
-                             (valueChanged)="select2Changed($event,'codice_titolario')"
+                             (valueChanged)="select2Changed($event,'id_titolari')"
                              [data]="apiService.titolariSelect"></select2>
                 </div>
             </div>
@@ -57,12 +57,12 @@
             <div class="widget-body">
                 <table class="table table-hover table-condensed mb-0"
                        #mf="mfDataTable"
-                       [mfData]="fascicoli | fascicoliDataFilter : filter.argomento : filter.codice_titolario : filter.amministrazione: filter.numero_fascicolo"
+                       [mfData]="fascicoli | fascicoliDataFilter : filter.argomento : filter.id_titolari : filter.amministrazione: filter.numero_fascicolo"
                        [mfRowsOnPage]="100"
                        stickthead>
                     <thead>
                     <tr>
-                        <th><mfDefaultSorter by="codice_titolario">Titolario</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="id_titolari">Titolario</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="numero_fascicolo">Fascicolo</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="argomento">Argomento</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="amministrazione">Amministrazione</mfDefaultSorter></th>
@@ -71,10 +71,10 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let fascicolo of mf.data" (click)="editId(fascicolo.id)" class="clickable">
-                        <td>{{apiService.titolariEnum[fascicolo.codice_titolario]}}</td>
+                        <td>{{apiService.titolariEnum[fascicolo.id_titolari]}}</td>
                         <td>{{fascicolo.numero_fascicolo}}</td>
                         <td [innerHTML]="fascicolo.argomento | dataMark : filter.argomento"></td>
-                        <td>{{apiService.amministrazioneEnum[fascicolo.amministrazione]}}</td>
+                        <td>{{apiService.amministrazioneEnum[fascicolo.id_amministrazione]}}</td>
                         <td>
                             <a (click)="askDeleteFascicoli($event, myModal, fascicolo)"><i class="fa fa-trash-o"> </i></a>
                         </td>

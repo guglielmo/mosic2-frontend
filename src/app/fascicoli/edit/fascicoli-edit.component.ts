@@ -65,6 +65,8 @@ export class FascicoliEditComponent implements OnInit {
 
         //todo: su fascicolo al salvataggio mancano gli id dei dati relazionali (tendine)
 
+        console.log(this.model);
+
         switch (this.mode) {
             case 'create':
                 this.apiService.create('fascicoli', this.model)
@@ -93,7 +95,7 @@ export class FascicoliEditComponent implements OnInit {
     }
 
     public select2Changed(e: any, name: string): void {
-        this.model[name] = Number(e.value);
+        this.model[name] = e.value;
     }
 
 }
