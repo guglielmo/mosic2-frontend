@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { Titolari } from '../../_models/index';
 import { APICommonService } from '../../_services/index';
 
 @Component({
