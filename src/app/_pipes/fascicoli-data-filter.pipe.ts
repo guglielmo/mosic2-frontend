@@ -6,7 +6,7 @@ import {Pipe, PipeTransform} from "@angular/core";
 })
 export class FascicoliDataFilterPipe implements PipeTransform {
 
-    transform(array: any[], query: string, titolari: number, amministrazione: number, numero_fascicolo: string): any {
+    transform(array: any[], query: string, id_titolari: number, amministrazione: number, numero_fascicolo: string): any {
 
         let keys = query.toUpperCase().split(' ');
         let keysLen = keys.length;
@@ -14,13 +14,13 @@ export class FascicoliDataFilterPipe implements PipeTransform {
 
         // pre-compute some conditions to execute checks outside the loop
         let qL = query.length > 2;
-        let tL = titolari != -1;
+        let tL = id_titolari != -1;
         let aL = amministrazione != -1;
         let fL = numero_fascicolo.length > 0;
 
         return _.filter(array, row => {
 
-            if (tL && row.codice_titolario != titolari) return false;
+            if (tL && row.id_titolari != id_titolari) return false;
             if (aL && row.amministrazione != amministrazione) return false;
             if (fL && row.numero_fascicolo != numero_fascicolo) return false;
             if (qL) {
