@@ -9,16 +9,14 @@ import {removeNgStyles, createNewHosts, createInputTransfer} from '@angularclass
 import {AuthGuard} from './_guards/auth.guard';
 import {
     AuthenticationService,
-    APICommonService,
-    RegistriService,
-    UserService
+    APICommonService
 } from './_services/index';
 
 
 // Fake backend
-import {fakeBackendProvider}          from './_helpers/index';
-import {MockBackend, MockConnection}  from '@angular/http/testing';
-import {BaseRequestOptions}           from '@angular/http';
+//import {fakeBackendProvider}          from './_helpers/index';
+//import {MockBackend, MockConnection}  from '@angular/http/testing';
+//import {BaseRequestOptions}           from '@angular/http';
 
 /*
  * Platform and Environment providers/directives/pipes
@@ -67,12 +65,10 @@ type StoreType = {
         APICommonService,
         AuthenticationService,
         APICommonService,
-        RegistriService,
-        UserService,
         // Fake Backend
-        fakeBackendProvider,
-        MockBackend,
-        BaseRequestOptions
+        //fakeBackendProvider,
+        //MockBackend,
+        //BaseRequestOptions
     ]
 })
 export class AppModule {
