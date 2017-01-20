@@ -8,7 +8,7 @@ export let fakeBackendProvider = {
     provide: Http,
     useFactory: (backend: MockBackend, options: BaseRequestOptions) => {
 
-        let mockDataVersion = "19";
+        let mockDataVersion = "22";
         let debug = false;
         let mockDataStored = localStorage.getItem('mockDataVersion');
 
@@ -106,11 +106,14 @@ export let fakeBackendProvider = {
                                 connection.mockRespond(new Response(new ResponseOptions({
                                     status: 200,
                                     body: {
-                                        id: user.id,
-                                        username: user.username,
-                                        firstName: user.firstName,
-                                        lastName: user.lastName,
-                                        token: 'fake-jwt-token'
+                                        "total_results":1,
+                                        "data": {
+                                            "id": user.id,
+                                            "username": user.username,
+                                            "firstName": user.firstName,
+                                            "lastName": user.lastName,
+                                            "token": 'fake-jwt-token'
+                                        }
                                     }
                                 })));
                             } else {
