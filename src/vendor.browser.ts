@@ -18,14 +18,10 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 
 import 'jquery';
-//import 'tether';
 import 'bootstrap';
 import 'widgster';
-import 'bootstrap-select';
 import 'select2';
 import 'pace';
-
-//import 'jquery-sparkline';
 
 if ('production' === ENV) {
   // Production
