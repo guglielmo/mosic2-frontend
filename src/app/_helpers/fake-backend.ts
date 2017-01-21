@@ -8,7 +8,7 @@ export let fakeBackendProvider = {
     provide: Http,
     useFactory: (backend: MockBackend, options: BaseRequestOptions) => {
 
-        let mockDataVersion = "22";
+        let mockDataVersion = "28";
         let debug = false;
         let mockDataStored = localStorage.getItem('mockDataVersion');
 
@@ -61,12 +61,26 @@ export let fakeBackendProvider = {
                 if ( basePath && basePath === 'api' ) {
 
                     // catch API Method, Request Method, and eventual ID
-                    let apiMethod = requestUrlArr[2];
+
+                    let apiMethod, queryParams;
+
+                    if (requestUrlArr[2] && requestUrlArr[2].indexOf('?') != -1) {
+                        let methodAndParamsArr = requestUrlArr[2].split('?');
+                        apiMethod = methodAndParamsArr[0];
+                        var search = methodAndParamsArr[1];
+                        queryParams = search ? JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g,'":"') + '"}', function(key, value) { return key==="" ? value : decodeURIComponent(value) }) : {}
+                    } else {
+                        apiMethod = requestUrlArr[2];
+                        queryParams = null;
+                    }
+
                     let reqMethod = connection.request.method;
                     let id = parseInt(requestUrlArr[3]);
 
                     if ( supportedApiMetods.indexOf( apiMethod ) != -1 ) {
                         // the method is supported
+
+                        //console.log(apiMethod, queryParams);
 
                         if(debug) {
                             switch(connection.request.method) {
