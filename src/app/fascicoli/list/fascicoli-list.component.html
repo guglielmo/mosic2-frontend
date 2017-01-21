@@ -74,7 +74,7 @@
                         <td>{{apiService.titolariEnum[fascicolo.id_titolari]}}</td>
                         <td>{{fascicolo.numero_fascicolo}}</td>
                         <td [innerHTML]="fascicolo.argomento | dataMark : filter.argomento"></td>
-                        <td>{{apiService.amministrazioneEnum[fascicolo.id_amministrazione]}}</td>
+                        <td>{{apiService.amministrazioneEnum(fascicolo.id_amministrazione)}}</td>
                         <td>
                             <a (click)="askDeleteFascicoli($event, myModal, fascicolo)"><i class="fa fa-trash-o"> </i></a>
                         </td>
