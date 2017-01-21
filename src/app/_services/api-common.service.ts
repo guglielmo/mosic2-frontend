@@ -20,7 +20,7 @@ export class APICommonService {
 
     public amministrazione: Amministrazione[] = [];
     public amministrazioneSelect: Select2OptionData[] = [];
-    public amministrazioneEnum: any = {};
+    private _amministrazioneEnum: any = {};
 
     public mittente: Mittente[] = [];
     public mittenteSelect: Select2OptionData[] = [];
@@ -106,7 +106,7 @@ export class APICommonService {
             this.amministrazioneSelect.forEach((entry) => {
                 entry['text'] = entry['codice'] + ' - ' + entry['denominazione'];
 
-                this.amministrazioneEnum[entry['id']] = entry['denominazione'];
+                this._amministrazioneEnum[entry['id']] = entry['denominazione'];
             });
             this.amministrazioneSelect.unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
 
@@ -127,6 +127,20 @@ export class APICommonService {
 
             this.commonDataready = (++this.commonDataLoadCount >= 4);
         });
+    }
+
+    public amministrazioneEnum(val: string) {
+
+        if (-1 != String(val).indexOf(',') ) {
+            let ret = [];
+            String(val).split(',').forEach( item => {
+                ret.push(this._amministrazioneEnum[item]);
+            });
+            return ret.join(', ');
+
+        } else if (val) {
+            return this._amministrazioneEnum[val];
+        }
     }
 
     public cacheCommon(apipath: string) {
