@@ -1,7 +1,7 @@
 ﻿import {Http, BaseRequestOptions, Response, ResponseOptions, RequestMethod} from '@angular/http';
 import {MockBackend, MockConnection} from '@angular/http/testing';
 
-import {TitolariMockData, FascicoliMockData, RegistriMockData, AmministrazioneMockData, MittenteMockData} from './fake-backend-data/index';
+import {TitolariMockData, FascicoliMockData, RegistriMockData, AmministrazioniMockData, MittentiMockData} from './fake-backend-data/index';
 
 export let fakeBackendProvider = {
     // use fake backend in place of Http service for backend-less development
@@ -17,8 +17,8 @@ export let fakeBackendProvider = {
             localStorage.setItem('titolari', JSON.stringify(TitolariMockData));
             localStorage.setItem('fascicoli', JSON.stringify(FascicoliMockData));
             localStorage.setItem('registri', JSON.stringify(RegistriMockData));
-            localStorage.setItem('amministrazione', JSON.stringify(AmministrazioneMockData));
-            localStorage.setItem('mittente', JSON.stringify(MittenteMockData));
+            localStorage.setItem('amministrazioni', JSON.stringify(AmministrazioniMockData));
+            localStorage.setItem('mittenti', JSON.stringify(MittentiMockData));
 
             localStorage.setItem('mockDataVersion', mockDataVersion);
         }
@@ -29,8 +29,8 @@ export let fakeBackendProvider = {
         let titolari: any[] = JSON.parse(localStorage.getItem('titolari')) || [];
         let fascicoli: any[] = JSON.parse(localStorage.getItem('fascicoli')) || [];
         let registri: any[] = JSON.parse(localStorage.getItem('registri')) || [];
-        let amministrazione: any[] = JSON.parse(localStorage.getItem('amministrazione')) || [];
-        let mittente: any[] = JSON.parse(localStorage.getItem('mittente')) || [];
+        let amministrazioni: any[] = JSON.parse(localStorage.getItem('amministrazioni')) || [];
+        let mittenti: any[] = JSON.parse(localStorage.getItem('mittenti')) || [];
 
         let supportedApiMetods: string[] = [
             'authenticate',
@@ -38,8 +38,8 @@ export let fakeBackendProvider = {
             'titolari',
             'fascicoli',
             'registri',
-            'amministrazione',
-            'mittente'
+            'amministrazioni',
+            'mittenti'
         ];
 
         // configure fake backend
