@@ -2,4 +2,5 @@
 export * from './registri-data-filter.pipe';
 export * from './registri-data-mark.pipe';
 export * from './fascicoli-by-titolario-data-filter.pipe'
+export * from './file-size.pipe'
 export * from './data-mark.pipe';
