@@ -68,9 +68,7 @@ export class Layout {
     expandNavigation(): void {
         // this method only makes sense for non-static navigation state
         if (this.isNavigationStatic()
-            && (this.configFn.isScreen('lg') || this.configFn.isScreen('xl'))) {
-            return;
-        }
+      && (this.configFn.isScreen('lg') || this.configFn.isScreen('xl'))) { return; }
 
         jQuery('layout').removeClass('nav-collapsed');
         this.$sidebar.find('.active .active').closest('.collapse').collapse('show')
@@ -81,9 +79,7 @@ export class Layout {
     collapseNavigation(): void {
         // this method only makes sense for non-static navigation state
         if (this.isNavigationStatic()
-            && (this.configFn.isScreen('lg') || this.configFn.isScreen('xl'))) {
-            return;
-        }
+      && (this.configFn.isScreen('lg') || this.configFn.isScreen('xl'))) { return; }
 
         jQuery('layout').addClass('nav-collapsed');
         this.$sidebar.find('.collapse.in').collapse('hide')
@@ -142,9 +138,7 @@ export class Layout {
 
         swipe.on('swipeleft', () => {
             setTimeout(() => {
-                if (d.configFn.isScreen('md')) {
-                    return;
-                }
+        if (d.configFn.isScreen('md')) { return; }
 
                 if (!jQuery('layout').is('.nav-collapsed')) {
                     d.collapseNavigation();
@@ -153,13 +147,9 @@ export class Layout {
         });
 
         swipe.on('swiperight', () => {
-            if (d.configFn.isScreen('md')) {
-                return;
-            }
+      if (d.configFn.isScreen('md')) { return; }
 
-            if (jQuery('layout').is('.chat-sidebar-opened')) {
-                return;
-            }
+      if (jQuery('layout').is('.chat-sidebar-opened')) { return; }
 
             if (jQuery('layout').is('.nav-collapsed')) {
                 d.expandNavigation();
@@ -219,9 +209,7 @@ export class Layout {
         this.$sidebar.find('.collapse').on('show.bs.collapse', function (e): void {
             // execute only if we're actually the .collapse element initiated event
             // return for bubbled events
-            if (e.target !== e.currentTarget) {
-                return;
-            }
+      if (e.target !== e.currentTarget) { return; }
 
             let $triggerLink = jQuery(this).prev('[data-toggle=collapse]');
             jQuery($triggerLink.data('parent'))
@@ -232,17 +220,13 @@ export class Layout {
             .on('show.bs.collapse', function (e): void {
                 // execute only if we're actually the .collapse element initiated event
                 // return for bubbled events
-                if (e.target !== e.currentTarget) {
-                    return;
-                }
+        if (e.target !== e.currentTarget) { return; }
 
                 jQuery(this).closest('li').addClass('open');
             }).on('hide.bs.collapse', function (e): void {
             // execute only if we're actually the .collapse element initiated event
             // return for bubbled events
-            if (e.target !== e.currentTarget) {
-                return;
-            }
+      if (e.target !== e.currentTarget) { return; }
 
             jQuery(this).closest('li').removeClass('open');
         });
