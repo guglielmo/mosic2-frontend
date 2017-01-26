@@ -3,7 +3,7 @@ export class Fascicoli {
     codice_titolario: number; // INT(11)
     numero_fascicolo: number; // INT(11)
     argomento: string; // VARCHAR(255)
-    amministrazione: number; // INT(11)
+    amministrazioni: number; // INT(11)
     data_magazzino: string; // DATETIME
     archiviazione_repertorio: number; // INT(11)
     annotazioni: number; // INT(11)
