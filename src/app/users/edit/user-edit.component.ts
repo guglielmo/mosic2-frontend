@@ -48,7 +48,7 @@ export class UserEditComponent implements OnInit {
     }
 
     cancel( event ) {
-        this.router.navigate(['/app/titolari/list']);
+        this.router.navigate(['/app/users/list']);
     }
 
     submit() {

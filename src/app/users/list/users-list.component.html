@@ -27,7 +27,7 @@
                             <span class="tag tag-success">Attivo</span>
                         </td>
                         <td>
-                            <a (click)="askDeleteTitolari($event, myModal, user)"><i class="fa fa-trash-o"> </i></a>
+                            <a (click)="askDeleteUser($event, myModal, user)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>
                     </tbody>
@@ -39,7 +39,7 @@
     </div>
 </div>
 
-<modal #myModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteTitolari(myModal)">
+<modal #myModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteUser(myModal)">
     <modal-header>
         <h4 class="modal-title text-xs-center fw-bold mt">Conferma cancellazione utente</h4>
     </modal-header>

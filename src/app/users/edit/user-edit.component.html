@@ -3,8 +3,10 @@
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
     </div>
-    <h3 class="page-title">Utenti - <span class="fw-semi-bold">Crea nuovo</span></h3>
-
+    <h3 class="page-title">Utenti -
+        <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
+        <span *ngIf="mode == 'update'" class="fw-semi-bold">{{model.firstName}} {{model.lastName}} - {{model.eMail}} - {{model.userName}}</span>
+    </h3>
 
     <div class="animated fadeIn">
         <div class="row">
