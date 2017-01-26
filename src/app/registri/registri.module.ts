@@ -11,7 +11,8 @@ import { DataTableModule } from 'angular2-datatable';
 
 import { RegistriDataFilterPipe,
          RegistriDataMarkPipe,
-         FascicoliByTitolarioDataFilterPipe }   from '../_pipes/index';
+         FascicoliByTitolarioDataFilterPipe,
+         FileSizePipe }   from '../_pipes/index';
 
 import 'select2/dist/js/select2.full.js';
 import { Select2Module } from 'ng2-select2';
@@ -63,7 +64,8 @@ export const routes = [
         RegistriEditComponent,
         RegistriDataFilterPipe,
         RegistriDataMarkPipe,
-        FascicoliByTitolarioDataFilterPipe
+        FascicoliByTitolarioDataFilterPipe,
+        FileSizePipe
     ]
 })
 export default class RegistriModule {

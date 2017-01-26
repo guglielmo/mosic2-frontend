@@ -3,9 +3,35 @@
 <section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="true">
     <header>
         <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Filtra <span class="fw-semi-bold">registri ...</span>
+            <span *ngIf="
+            filter.id ||
+            filter.oggetto.length > 2 ||
+            filter.id_titolari != -1 ||
+            filter.id_mittenti != -1 ||
+            filter.id_fascicoli != -1 ||
+            filter.protocollo_mittente ||
+            filter.protocollo_arrivo ||
+            filter.data_arrivo_da ||
+            filter.data_arrivo_a"
+                  class="float-lg-right mr-3">
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+            </span>
         </h5>
-        <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Filtra <span
-                class="fw-semi-bold">registri ...</span></h5>
+        <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Filtra <span class="fw-semi-bold">registri ...</span>
+            <span *ngIf="
+            filter.id ||
+            filter.oggetto.length > 2 ||
+            filter.id_titolari != -1 ||
+            filter.id_mittenti != -1 ||
+            filter.id_fascicoli != -1 ||
+            filter.protocollo_mittente ||
+            filter.protocollo_arrivo ||
+            filter.data_arrivo_da ||
+            filter.data_arrivo_a"
+                  class="float-lg-right mr-3">
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+            </span>
+        </h5>
         <div class="widget-controls m-t-1">
             <a data-widgster="expand" title="Apri"><i class="glyphicon glyphicon-chevron-down"></i></a>
             <a data-widgster="collapse" title="Chiudi"><i class="glyphicon glyphicon-chevron-up"></i></a>
@@ -20,7 +46,7 @@
                 </div>
                 <div class="form-group">
                     <label for="oggetto"><strong>Oggetto</strong></label>
-                    <input id="oggetto" name="oggetto" class="form-control" [(ngModel)]="filter.oggetto"
+                    <input id="oggetto" name="oggetto" class="form-control" [formControl]="oggettoControl"
                            placeholder="Digita almeno 3 caratteri..."/>
                 </div>
             </div>
@@ -36,27 +62,27 @@
                              [data]="apiService.titolariSelect"></select2>
                 </div>
                 <div class="form-group">
-                    <label for="numero_fascicolo"><strong>Fascicolo</strong></label>
-                    <select2 id="numero_fascicolo"
-                             name="numero_fascicolo"
+                    <label for="id_fascicoli"><strong>Fascicolo</strong></label>
+                    <select2 id="id_fascicoli"
+                             name="id_fascicoli"
                              class="full-width-select"
                              [options]="select2Options"
-                             value="{{filter.numero_fascicolo}}"
+                             value="{{filter.id_fascicoli}}"
                              cssImport="false"
-                             (valueChanged)="select2Changed($event,'numero_fascicolo')"
+                             (valueChanged)="select2Changed($event,'id_fascicoli')"
                              [data]="apiService.fascicoliSelect"></select2>
                 </div>
             </div>
             <div class="col-lg-4">
                 <div class="form-group">
-                    <label for="mittente"><strong>Mittente</strong></label>
-                    <select2 id="mittente"
+                    <label for="id_mittenti"><strong>Mittente</strong></label>
+                    <select2 id="id_mittenti"
                              class="full-width-select"
                              [options]="select2Options"
-                             value="{{filter.mittente}}"
+                             value="{{filter.id_mittenti}}"
                              cssImport="false"
-                             (valueChanged)="select2Changed($event,'mittente')"
-                             [data]="apiService.mittenteSelect"></select2>
+                             (valueChanged)="select2Changed($event,'id_mittenti')"
+                             [data]="apiService.mittentiSelect"></select2>
                 </div>
                 <div class="form-group">
                     <div class="row">
@@ -79,7 +105,7 @@
             </div>
             <div class="col-lg-2">
                 <div class="form-group">
-                    <label for="protocollo_mittente"><strong>Protocollo mittente</strong></label>
+                    <label for="protocollo_mittente"><strong>Protocollo mittenti</strong></label>
                     <input id="protocollo_mittente" name="protocollo_mittente" class="form-control" [(ngModel)]="filter.protocollo_mittente"
                            placeholder="Codice..."/>
                 </div>
@@ -94,13 +120,16 @@
     </div>
 </section>
 
-<div class="row">
+
+
+<div class="row" *ngIf="apiService.commonDataready">
     <div class="col-lg-12">
+        <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
         <section class="widget" widget>
             <div class="widget-body">
                 <table class="table table-hover table-condensed mb-0"
                        #mf="mfDataTable"
-                       [mfData]="registri | registriDataFilter : filter.id : filter.oggetto : filter.id_titolari : filter.mittente : filter.protocollo_mittente : filter.protocollo_arrivo : filter.numero_fascicolo : filter.data_arrivo_da : filter.data_arrivo_a"
+                       [mfData]="apiService.registri | registriDataFilter : [filter.id, filter.oggetto, filter.id_titolari, filter.id_mittenti, filter.protocollo_mittente, filter.protocollo_arrivo, filter.id_fascicoli, filter.data_arrivo_da, filter.data_arrivo_a, filteredCount]"
                        [(mfSortBy)]="oggetto"
                        [mfRowsOnPage]="100"
                        stickthead>
@@ -119,19 +148,19 @@
                             <mfDefaultSorter by="oggetto">Oggetto</mfDefaultSorter>
                         </th>
                         <th>
-                            <mfDefaultSorter by="mittente">Mittente</mfDefaultSorter>
+                            <mfDefaultSorter by="mittenti">Mittente</mfDefaultSorter>
                         </th>
                         <th>
                             <mfDefaultSorter by="repertorio">Repertorio</mfDefaultSorter>
                         </th>
                         <th>
-                            <mfDefaultSorter by="protocollo_arrivo">Numero</mfDefaultSorter>
+                            <mfDefaultSorter by="protocollo_arrivo">Codice</mfDefaultSorter>
                         </th>
                         <th>
                             <mfDefaultSorter by="data_arrivo">Data</mfDefaultSorter>
                         </th>
                         <th>
-                            <mfDefaultSorter by="protocollo_mittente">Numero</mfDefaultSorter>
+                            <mfDefaultSorter by="protocollo_mittente">Codice</mfDefaultSorter>
                         </th>
                         <th>
                             <mfDefaultSorter by="data_mittente">Data</mfDefaultSorter>
@@ -146,8 +175,8 @@
                     <tr *ngFor="let registro of mf.data" (click)="editId(registro.id)" class="clickable">
                         <td>{{registro.id}}</td>
                         <td [innerHTML]="registro.oggetto | registriDataMark : filter.oggetto"></td>
-                        <td>{{registro.mittente}}</td>
-                        <td>{{registro.id_titolari}}.{{registro.numero_fascicolo}}</td>
+                        <td>{{apiService.mittentiEnum[registro.id_mittenti]}}</td>
+                        <td>{{apiService.titolariIdCodEnum[registro.id_titolari]}}.{{registro.numero_fascicolo}}</td>
                         <td>{{registro.protocollo_arrivo}}</td>
                         <td class="nowrap">{{registro.data_arrivo | date: 'dd/MM/yyyy' }}</td>
                         <td>{{registro.protocollo_mittente}}</td>

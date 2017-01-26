@@ -1,7 +1,13 @@
 import { Component }        from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { URLSearchParams } from '@angular/http';
+
 
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/throttleTime';
+import 'rxjs/add/observable/fromEvent';
 //import { ChangeDetectionStrategy } from '@angular/core';
 
 
@@ -24,20 +30,21 @@ export class RegistriListComponent {
         id: '',
         oggetto: '',
         id_titolari: -1,
-        mittente: -1,
+        id_mittenti: -1,
+        id_fascicoli: -1,
         protocollo_mittente: '',
         protocollo_arrivo: '',
-        numero_fascicolo: -1,
         data_arrivo_da: '',
         data_arrivo_a: ''
     };
     deletingRegistri: Registri = new Registri;
     registri: Registri[] = [];
 
+    public filteredCount = {count: 0};
     public fascicoliSelect: Observable<Array<Select2OptionData>>;
     public fasc: Select2OptionData[];
-
     public select2Options: Select2Options;
+    private oggettoControl = new FormControl();
 
     constructor(private apiService: APICommonService,
                 private router: Router,
@@ -47,7 +54,10 @@ export class RegistriListComponent {
     }
 
     ngOnInit() {
-        this.loadAllRegistri();
+        // debounce keystroke events
+        this.oggettoControl.valueChanges.debounceTime(400).subscribe(newValue => this.filter.oggetto = newValue);
+        //this.loadAllRegistri();
+        this.apiService.refreshCommonCache();
     }
 
     askDeleteRegistri(event: any, modal: any, registri: Registri) {
@@ -68,12 +78,16 @@ export class RegistriListComponent {
 
     deleteRegistri(id: number) {
         this.apiService.delete('registri', id).subscribe(() => {
-            this.loadAllRegistri()
+            //this.loadAllRegistri()
+            this.apiService.refreshCommonCache();
         });
     }
 
     private loadAllRegistri() {
-        this.apiService.getAll('registri').subscribe(response => {
+        let params = new URLSearchParams();
+        params.append('limit', '9999');
+
+        this.apiService.getAll('registri', params).subscribe(response => {
             this.registri = Object.assign([],response.data);
 
             /* moment(entry['data_arrivo'], "DD/MM/YYYY").format("YYYY-MM-DD"); */
@@ -101,5 +115,19 @@ export class RegistriListComponent {
             this.fasc = ret;
             this.filter.numero_fascicolo = -1;
         }*/
+    }
+
+    public resetFilters(): void {
+        this.filter = {
+            id: '',
+            oggetto: '',
+            id_titolari: -1,
+            id_mittenti: -1,
+            id_fascicoli: -1,
+            protocollo_mittente: '',
+            protocollo_arrivo: '',
+            data_arrivo_da: '',
+            data_arrivo_a: ''
+        };
     }
 }

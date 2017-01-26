@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 //import {__platform_browser_private__} from '@angular/platform-browser'; // needed for select2 styles override hack
 
-import {Titolari, Fascicoli, Amministrazione, Mittente} from '../../_models/index';
+import {Titolari, Fascicoli, Amministrazioni, Mittenti} from '../../_models/index';
 import {APICommonService} from '../../_services/index';
 import {AppConfig} from '../../app.config';
 
@@ -22,8 +22,8 @@ export class RegistriEditComponent implements OnInit {
 
     titolari: Titolari[] = [];
     fascicoli: Fascicoli[] = [];
-    amministrazione: Amministrazione[] = [];
-    mittente: Mittente[] = [];
+    amministrazioni: Amministrazioni[] = [];
+    mittenti: Mittenti[] = [];
 
     date: Date = new Date(2016, 5, 10);
     query: any;
@@ -43,12 +43,18 @@ export class RegistriEditComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.apiService.refreshCommonCache();
 
         this.id = +this.route.snapshot.params['id'];
         this.mode = isNaN(this.id) ? 'create' : 'update';
 
         switch (this.mode) {
             case 'create':
+                this.model = {
+                    "id_titolari": -1,
+                    "id_fascicoli": -1,
+                    "id_mittenti": -1,
+                };
                 break;
 
             case 'update':
@@ -114,7 +120,7 @@ export class RegistriEditComponent implements OnInit {
     }
 
     onUploadSuccess(e: any): void {
-        console.log(e);
+        //console.log(e);
     }
 
     onUploadError(e: any): void {
