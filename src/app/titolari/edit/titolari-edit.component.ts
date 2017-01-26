@@ -22,6 +22,7 @@ export class TitolariEditComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.apiService.refreshCommonCache();
 
         this.id = +this.route.snapshot.params['id'];
         this.mode = isNaN(this.id) ? 'create' : 'update';

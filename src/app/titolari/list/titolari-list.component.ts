@@ -1,5 +1,7 @@
 import {Component}        from '@angular/core';
 import {Router} from '@angular/router';
+import { URLSearchParams } from '@angular/http';
+
 
 import {Titolari} from '../../_models/index';
 import {APICommonService} from '../../_services/index';
@@ -18,7 +20,8 @@ export class TitolariListComponent {
     }
 
     ngOnInit() {
-        this.loadAllTitolari();
+        this.apiService.refreshCommonCache();
+        //this.loadAllTitolari();
     }
 
     editId(id: number) {
@@ -39,12 +42,17 @@ export class TitolariListComponent {
 
     deleteTitolari(id: number) {
         this.apiService.delete('titolari', id).subscribe(() => {
-            this.loadAllTitolari()
+            this.apiService.refreshCommonCache();
+            //this.loadAllTitolari()
         });
     }
 
     private loadAllTitolari() {
-        this.apiService.getAll('titolari').subscribe(response => {
+        let params = new URLSearchParams();
+        params.append('sort_by', 'codice');
+        params.append('sort_order', 'asc');
+
+        this.apiService.getAll('titolari', params).subscribe(response => {
             this.titolari = response.data;
         });
     }
