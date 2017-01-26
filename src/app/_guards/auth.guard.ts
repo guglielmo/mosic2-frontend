@@ -5,8 +5,6 @@ import { APICommonService } from '../_services/api-common.service'
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-    private cached: boolean = false;
-
     constructor(private router: Router,
                 private apiService: APICommonService
     ) { }
@@ -14,11 +12,6 @@ export class AuthGuard implements CanActivate {
     canActivate() {
         if (localStorage.getItem('currentUser')) {
             // logged in so return true
-            if(this.cached === false) {
-                this.apiService.cacheData();
-                this.cached = true;
-            }
-
             return true;
         }
 
