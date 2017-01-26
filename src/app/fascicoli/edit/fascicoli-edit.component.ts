@@ -24,20 +24,23 @@ export class FascicoliEditComponent implements OnInit {
     constructor(private router: Router,
                 private route: ActivatedRoute,
                 private apiService: APICommonService,
-                private config: AppConfig
-    ) {
+                private config: AppConfig) {
         this.select2Options = config.select2Options;
         this.select2OptionsMulti = Object.assign({}, config.select2Options);
         this.select2OptionsMulti['multiple'] = true;
     }
 
     ngOnInit() {
+        this.apiService.refreshCommonCache();
 
         this.id = +this.route.snapshot.params['id'];
         this.mode = isNaN(this.id) ? 'create' : 'update';
 
         switch (this.mode) {
             case 'create':
+                this.model = {
+                        "id_titolari": -1,
+                };
                 break;
 
             case 'update':
@@ -62,11 +65,6 @@ export class FascicoliEditComponent implements OnInit {
 
     submit() {
         this.loading = true;
-
-        //todo: su fascicolo al salvataggio mancano gli id dei dati relazionali (tendine)
-
-        console.log(this.model);
-
         switch (this.mode) {
             case 'create':
                 this.apiService.create('fascicoli', this.model)

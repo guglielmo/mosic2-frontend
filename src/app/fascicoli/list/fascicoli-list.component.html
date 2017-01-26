@@ -1,9 +1,17 @@
 <h3 class="page-title">Fascicolo - <span class="fw-semi-bold">Tutti i fascicoli</span></h3>
 
-<section *ngIf="apiService.commonDataready && fascicoli && fascicoli.length" class="widget" widget data-widgster-collapsed="true">
+<section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="true">
     <header>
-        <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Filtra <span class="fw-semi-bold">fascicoli ...</span></h5>
-        <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Filtra <span class="fw-semi-bold">fascicoli ...</span></h5>
+        <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Filtra <span class="fw-semi-bold">fascicoli ...</span>
+            <span *ngIf="filter.argomento.length > 2 || filter.id_amministrazioni != -1 || filter.id_titolari != -1 || filter.numero_fascicolo" class="float-lg-right mr-3">
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+            </span>
+        </h5>
+        <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Filtra <span class="fw-semi-bold">fascicoli ...</span>
+            <span *ngIf="filter.argomento.length > 2 || filter.id_amministrazioni != -1 || filter.id_titolari != -1 || filter.numero_fascicolo" class="float-lg-right mr-3">
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+            </span>
+        </h5>
         <div class="widget-controls m-t-1">
             <a data-widgster="expand" title="Apri"><i class="glyphicon glyphicon-chevron-down"></i></a>
             <a data-widgster="collapse" title="Chiudi"><i class="glyphicon glyphicon-chevron-up"></i></a>
@@ -37,27 +45,28 @@
             </div>
             <div class="col-lg-4">
                 <div class="form-group">
-                    <label for="amministrazione"><strong>Amministrazione</strong></label>
-                    <select2 id="amministrazione"
+                    <label for="id_amministrazioni"><strong>Amministrazione</strong></label>
+                    <select2 id="id_amministrazioni"
                              class="full-width-select"
                              [options]="select2Options"
-                             value="{{filter.amministrazione}}"
+                             value="{{filter.id_amministrazioni}}"
                              cssImport="false"
-                             (valueChanged)="select2Changed($event,'amministrazione')"
-                             [data]="apiService.amministrazioneSelect"></select2>
+                             (valueChanged)="select2Changed($event,'id_amministrazioni')"
+                             [data]="apiService.amministrazioniSelect"></select2>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<div class="row">
+<div class="row" *ngIf="apiService.commonDataready">
     <div class="col-lg-12">
+        <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
         <section class="widget" widget>
             <div class="widget-body">
                 <table class="table table-hover table-condensed mb-0"
                        #mf="mfDataTable"
-                       [mfData]="fascicoli | fascicoliDataFilter : filter.argomento : filter.id_titolari : filter.amministrazione: filter.numero_fascicolo"
+                       [mfData]="apiService.fascicoli | fascicoliDataFilter : filter.argomento : filter.id_titolari : filter.id_amministrazioni: filter.numero_fascicolo : filteredCount"
                        [mfRowsOnPage]="100"
                        stickthead>
                     <thead>
@@ -65,7 +74,7 @@
                         <th><mfDefaultSorter by="id_titolari">Titolario</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="numero_fascicolo">Fascicolo</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="argomento">Argomento</mfDefaultSorter></th>
-                        <th><mfDefaultSorter by="amministrazione">Amministrazione</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="amministrazioni">Amministrazione</mfDefaultSorter></th>
                         <th>Azioni</th>
                     </tr>
                     </thead>
@@ -74,7 +83,7 @@
                         <td>{{apiService.titolariEnum[fascicolo.id_titolari]}}</td>
                         <td>{{fascicolo.numero_fascicolo}}</td>
                         <td [innerHTML]="fascicolo.argomento | dataMark : filter.argomento"></td>
-                        <td>{{apiService.amministrazioneEnum(fascicolo.id_amministrazione)}}</td>
+                        <td>{{amministrazioniEnum(fascicolo.id_amministrazioni)}}</td>
                         <td>
                             <a (click)="askDeleteFascicoli($event, myModal, fascicolo)"><i class="fa fa-trash-o"> </i></a>
                         </td>
@@ -104,7 +113,7 @@
         <h4 class="text-xs-center mt-sm">
             Vuoi eliminare il fascicolo <strong>{{deletingFascicoli.numero_fascicolo}} </strong><br/>
             {{deletingFascicoli.argomento}} -
-            {{deletingFascicoli.amministrazione}} ?
+            {{deletingFascicoli.amministrazioni}} ?
         </h4>
     </modal-content>
     <modal-footer>
