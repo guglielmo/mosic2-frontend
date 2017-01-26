@@ -5,8 +5,8 @@ export class Registri {
     data_mittente: string; // DATETIME
     protocollo_mittente: string; // VARCHAR(255)
     oggetto: string; // VARCHAR(255)
-    id_amministrazione: number; // INT(11)
-    mittente: number; // INT(11)
+    id_amministrazioni: number; // INT(11)
+    mittenti: number; // INT(11)
     titolario: number; // INT(11)
     numero_fascicolo: number; // INT(11)
     numero_sottofascicolo: number; // INT(11)
@@ -15,6 +15,6 @@ export class Registri {
     tags: number; // INT(11)
     allegati: number; // INT(11)
     sottofascicoli_id: number; // INT(10)
-    mittente_id: number; // INT(10)
+    mittenti_id: number; // INT(10)
     id_titolari: number; // INT(10)
 }
