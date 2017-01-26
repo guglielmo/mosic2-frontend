@@ -7,33 +7,44 @@ import {Pipe, PipeTransform} from "@angular/core";
 export class RegistriDataFilterPipe implements PipeTransform {
 
     transform(array: any[],
-              id: string,
-              oggetto: string,
-              id_titolari: number,
-              mittente: number,
-              protocollo_mittente: string,
-              protocollo_arrivo: string,
-              numero_fascicolo: number,
-              data_arrivo_da: number,
-              data_arrivo_a: number): any {
+              args: any[]): any {
 
-
+        // pardon the ugly hack but angular 2.4 supports up to 10 pipe parameters, and here we need 11
+        let id = args[0];
+        let oggetto = args[1];
+        let id_titolari = args[2];
+        let id_mittenti = args[3];
+        let protocollo_mittente = args[4];
+        let protocollo_arrivo = args[5];
+        let id_fascicoli = args[6];
+        let data_arrivo_da = args[7];
+        let data_arrivo_a = args[8];
+        let filteredCount = args[9];
+        // end ugly hack
 
         let keys = oggetto.toUpperCase().split(' ');
         let keysLen = keys.length;
         let i;
 
         // pre-compute some conditions to execute checks outside the loop
-        let qL = oggetto.length > 2;
         let tL = id_titolari != -1;
-        let mL = mittente != -1;
-        let fL = numero_fascicolo > 0;
+        let mL = id_mittenti != -1;
+        let pM = protocollo_mittente.length;
+        let pA = protocollo_arrivo.length;
+        let fL = id_fascicoli > 0;
+        let dF = data_arrivo_da ? new Date(data_arrivo_da).getTime() : false;
+        let dT = data_arrivo_a ? new Date(data_arrivo_a).getTime() : false;
+        let qL = oggetto.length > 2;
 
-        return _.filter(array, row => {
+        let result = _.filter(array, row => {
             if (id && row.id != id) return false;
             if (tL && row.id_titolari != id_titolari) return false;
-            if (mL && row.mittente != mittente) return false;
-            if (fL && row.numero_fascicolo != numero_fascicolo) return false;
+            if (mL && row.id_mittenti != id_mittenti) return false;
+            if (pM && row.protocollo_mittente != protocollo_mittente) return false;
+            if (pA && row.protocollo_arrivo != protocollo_arrivo) return false;
+            if (fL && row.id_fascicoli != id_fascicoli) return false;
+            if (dF && row.data_arrivo < dF) return false;
+            if (dT && row.data_arrivo > dT) return false;
             if (qL) {
                 for (i = 0; i < keysLen; i++) {
                     if ((row.oggetto.toUpperCase()).indexOf((keys[i])) == -1) {
@@ -41,9 +52,11 @@ export class RegistriDataFilterPipe implements PipeTransform {
                     }
                 }
             }
-
             return true;
         });
+
+        filteredCount.count = result.length;
+        return result;
 
     }
 }
