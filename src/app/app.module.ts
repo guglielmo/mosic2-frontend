@@ -64,7 +64,6 @@ type StoreType = {
         AuthGuard,
         APICommonService,
         AuthenticationService,
-        APICommonService,
         // Fake Backend
         //fakeBackendProvider,
         //MockBackend,
