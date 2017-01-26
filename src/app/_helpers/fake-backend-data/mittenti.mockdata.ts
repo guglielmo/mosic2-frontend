@@ -1,4 +1,4 @@
-export const MittenteMockData: any = {
+export const MittentiMockData: any = {
     "response": 200,
     "total_results": 21,
     "data": [

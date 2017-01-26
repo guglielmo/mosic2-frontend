@@ -1,4 +1,4 @@
-export const AmministrazioneMockData: any = {
+export const AmministrazioniMockData: any = {
     "response": 200,
     "total_results": 150,
     "data": [
