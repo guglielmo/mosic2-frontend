@@ -274,7 +274,7 @@ export class AppConfig {
                     this._screenSizeCallbacks[size].enter.forEach((fn) => {
                         fn(size, prevSize);
                     });
-                    console.log('screen changed. new: ' + size + ', old: ' + prevSize);
+                    //console.log('screen changed. new: ' + size + ', old: ' + prevSize);
                 }
                 prevSize = size;
             }, 100);
