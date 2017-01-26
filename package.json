@@ -1,6 +1,6 @@
 {
   "name": "mosic",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": "Mo.Si.C. - Monitoraggio Sistema CIPE",
   "scripts": {
     "build:dev": "webpack --config config/webpack.dev.js --progress --profile",

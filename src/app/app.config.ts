@@ -9,7 +9,7 @@ export class AppConfig {
     config = {
         name: 'mosic 2.0',
         title: 'Mo.Si.C. - Monitoraggio Sistema CIPE',
-        version: '2.0.0-alpha.1',
+        version: '2.0.0-alpha.2',
         //baseAPIURL: '',
         baseAPIURL: 'http://testmosaicapi.tdrynx.info',
         //baseAPIURL: 'http://95.241.61.132/mosic',
