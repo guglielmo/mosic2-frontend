@@ -11,8 +11,8 @@ export class AppConfig {
         title: 'Mo.Si.C. - Monitoraggio Sistema CIPE',
         version: '2.0.0-alpha.2',
         //baseAPIURL: '',
-        baseAPIURL: 'http://testmosaicapi.tdrynx.info',
-        //baseAPIURL: 'http://95.241.61.132/mosic',
+        baseAPIURL: 'http://mosicapi.tdrynx.info',
+        //baseAPIURL: 'http://mosicapi.staging.celata.com',
         /**
          * Whether to print and alert some log information
          */
@@ -79,8 +79,53 @@ export class AppConfig {
             searching: (params) => {
                 // Intercept the query as it is happening
                 this.query = params;
-                return 'Ricerca…';
+                return 'Ricerca...';
+            },
+            noResults: function(){
+                return '<strong>Nessuna corrispondenza trovata</strong>';
             }
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        },
+        matcher: (term: string, text: string, option: any): boolean => {
+            if (term.trim() === '') {
+                return true;
+            }
+            let keywords = term.split(' ');
+
+            for (var i = 0; i < keywords.length; i++) {
+
+                if ((text.toUpperCase()).indexOf((keywords[i]).toUpperCase()) == -1) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    };
+
+    select2WithAddOptions = {
+        theme: 'bootstrap',
+        templateResult: (item) => {
+            // No need to template the searching text
+            if (item.loading) {
+                return item.text;
+            }
+
+            var term = this.query.term || '';
+            var $result = this.markMatch(item.text, term);
+
+            return $result;
+        },
+        language: {
+            searching: (params) => {
+                // Intercept the query as it is happening
+                this.query = params;
+                return 'Ricerca...';
+            }
+        },
+        escapeMarkup: function (markup) {
+            return markup;
         },
         matcher: (term: string, text: string, option: any): boolean => {
             if (term.trim() === '') {
@@ -106,6 +151,10 @@ export class AppConfig {
         lg: {enter: [], exit: []},
         xl: {enter: [], exit: []}
     };
+
+    notify():any {
+
+    }
 
     markMatch(text: string, term: string): any {
         let res, reg, words = [], val = $.trim(term.replace(/[<>]?/g, ""));
