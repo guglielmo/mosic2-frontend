@@ -5,9 +5,10 @@ import { FormsModule,
 
 import { RouterModule } from '@angular/router';
 
-import { ModalModule } from 'ng2-modal';
+import { ModalModule } from 'ngx-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DataTableModule } from 'angular2-datatable';
+
 
 import { RegistriDataFilterPipe,
          RegistriDataMarkPipe,
@@ -27,15 +28,9 @@ import {RegistriEditComponent}       from './edit/registri-edit.component';
 
 import { WidgetModule } from '../layout/widget/widget.module';
 
-// dropzone
-import { DropzoneModule } from 'angular2-dropzone-wrapper';
-import { DropzoneConfigInterface } from 'angular2-dropzone-wrapper';
+// ngx-uploader
+import { NgUploaderModule } from 'ngx-uploader';
 
-const DROPZONE_CONFIG: DropzoneConfigInterface = {
-    // Change this to your upload POST address:
-    server: 'https://httpbin.org/post',
-    maxFilesize: 50
-};
 
 export const routes = [
     {path: '', redirectTo: 'list', pathMatch: 'full'},
@@ -56,7 +51,7 @@ export const routes = [
         StickTheadModule,
         NKDatetimeModule,
         Select2Module,
-        DropzoneModule.forRoot(DROPZONE_CONFIG),
+        NgUploaderModule,
         RouterModule.forChild(routes)
     ],
     declarations: [
