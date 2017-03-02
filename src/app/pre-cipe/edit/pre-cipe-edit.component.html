@@ -1,0 +1,99 @@
+<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
+    <div class="pull-right">
+        <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
+        <button type="submit" class="btn btn-primary btn-save">Salva</button>
+    </div>
+    <h3 class="page-title">Titolario -
+        <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
+        <span *ngIf="mode == 'update'" class="fw-semi-bold">{{model.codice}} {{model.denominazione}}</span>
+    </h3>
+
+    <h4>Simple sortable</h4>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    O.D.G. DELLA RIUNIONE PreCipe DEL
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group" dnd-sortable-container [sortableData]="listOne">
+                        <li *ngFor="let item of listOne; let i = index" class="list-group-item" dnd-sortable [sortableIndex]="i">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !denominazione.valid }">
+                                        <label for="punto_odg">Punto o.d.g.</label>
+                                        <input type="text" class="form-control" id="punto_odg" name="punto_odg"
+                                               placeholder="..."
+                                               [(ngModel)]="item.punto_odg" #punto_odg="ngModel" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-11">
+                                    <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !descrizione.valid }">
+                                        <label for="descrizione">Descrizione</label>
+                                        <textarea rows="3" class="autogrow form-control transition-height" id="descrizione" name="descrizione"
+                                                  placeholder="Scrivi la descrizione del titolario..."
+                                                  [(ngModel)]="model.descrizione" #descrizione="ngModel" autosize required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                My prefences:<br/>
+                <span *ngFor="let item of listOne; let i = index">{{i + 1}}) {{item}}<br/></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-lg-12">
+            <section class="widget">
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !codice.valid }">
+                                <label for="codice">Codice</label>
+                                <input type="text" class="form-control" id="codice" name="codice"
+                                       placeholder="Scrivi il codice identificativo del titolario..."
+                                       [(ngModel)]="model.codice" #codice="ngModel" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-10">
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !denominazione.valid }">
+                                <label for="denominazione">Denominazione</label>
+                                <input type="text" class="form-control" id="denominazione" name="denominazione"
+                                       placeholder="Scrivi la denominazione del titolario..."
+                                       [(ngModel)]="model.denominazione" #denominazione="ngModel" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !descrizione.valid }">
+                                <label for="descrizione">Descrizione</label>
+                                <textarea rows="3" class="autogrow form-control transition-height" id="descrizione" name="descrizione"
+                                          placeholder="Scrivi la descrizione del titolario..."
+                                          [(ngModel)]="model.descrizione" #descrizione="ngModel" autosize required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div *ngIf="error" class="alert alert-danger" role="alert">{{error}}</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</form>
+
