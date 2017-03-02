@@ -7,7 +7,7 @@ import {
 
 import {RouterModule} from '@angular/router';
 
-import {ModalModule} from 'ng2-modal';
+import {ModalModule} from 'ngx-modal';
 import {StickTheadModule} from '../_directives/stickthead/stickthead.module';
 import {DataTableModule} from 'angular2-datatable';
 
