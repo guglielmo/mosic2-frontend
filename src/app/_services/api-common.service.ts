@@ -1,16 +1,19 @@
-import {Injectable} from '@angular/core';
-import {Http, Headers, RequestOptions, Response, URLSearchParams} from '@angular/http';
-import {Select2OptionData} from 'ng2-select2';
+import { Injectable } from '@angular/core';
+import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
+import { Select2OptionData } from 'ng2-select2';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/catch'
 
 
-import {Titolari, Fascicoli, Amministrazioni, Mittenti} from '../_models/index';
+import { Titolari, Fascicoli, Registri, Amministrazioni, Mittenti } from '../_models/index';
 
 import {AppConfig} from '../app.config';
-import {forEach} from "@angular/router/src/utils/collection";
+
 
 @Injectable()
 export class APICommonService {
     public config: any;
+    public configFn: any;
 
     public titolari: Titolari[] = [];
     public titolariSelect: Select2OptionData[] = [];
@@ -19,6 +22,9 @@ export class APICommonService {
 
     public fascicoli: Fascicoli[] = [];
     public fascicoliSelect: Select2OptionData[] = [];
+
+    public registri: Registri[] = [];
+    public registriSelect: Select2OptionData[] = [];
 
     public amministrazioni: Amministrazioni[] = [];
     public amministrazioniSelect: Select2OptionData[] = [];
@@ -29,6 +35,7 @@ export class APICommonService {
     public mittentiEnum: any = {};
 
     public commonDataready: boolean = false;
+    public isDirty: boolean = false;
 
     private cachedApiDataMetods: string[] = [
         'amministrazioni',
@@ -40,41 +47,75 @@ export class APICommonService {
 
     private storedLastUpdates: any = {};
 
-    constructor(private http: Http, config: AppConfig) {
+    constructor( private http: Http,
+                 config: AppConfig
+    ) {
         this.config = config.getConfig();
+        this.configFn = config;
     }
 
     ngOnInit() {
-
     }
 
     // PUBLIC helper methods
     public getAll(apipath: string, params?:URLSearchParams) {
         let query = params ? '?'+params.toString() : '';
-        return this.http.get(this.config.baseAPIURL + '/api/' + apipath + query, this.jwt()).map((response: Response) => response.json());
+        return this.http.get(this.config.baseAPIURL + '/api/' + apipath + query, this.jwt())
+                        .map((response: Response) => response.json())
+                        .catch((response: Response) => this.handleError(response));
     }
 
     public getById(apipath: string, id: number) {
-        return this.http.get(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt()).map((response: Response) => response.json());
+        return this.http.get(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt())
+                        .map((response: Response) => response.json())
+                        .catch((response: Response) => this.handleError(response));
     }
 
     public create(apipath: string, data: any) {
         this.setDirty(apipath);
-        return this.http.post(this.config.baseAPIURL + '/api/' + apipath, data, this.jwt()).map((response: Response) => response.json());
+        return this.http.post(this.config.baseAPIURL + '/api/' + apipath, data, this.jwt())
+                        .map((response: Response) => response.json())
+                        .catch((response: Response) => this.handleError(response));
     }
 
     public update(apipath: string, data: any) {
         this.setDirty(apipath);
-        return this.http.put(this.config.baseAPIURL + '/api/' + apipath + '/' + data.id, data, this.jwt()).map((response: Response) => response.json());
+        return this.http.put(this.config.baseAPIURL + '/api/' + apipath + '/' + data.id, data, this.jwt())
+                        .map((response: Response) => response.json())
+                        .catch((response: Response) => this.handleError(response));
     }
 
     public delete(apipath: string, id: number) {
         this.setDirty(apipath);
-        return this.http.delete(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt()).map((response: Response) => response.json());
+        return this.http.delete(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt())
+                        .map((response: Response) => response.json())
+                        .catch((response: Response) => this.handleError(response));
     }
 
     public getLastUpdates() {
-        return this.http.get(this.config.baseAPIURL + '/api/lastupdates', this.jwt()).map((response: Response) => response.json());
+        return this.http.get(this.config.baseAPIURL + '/api/lastupdates', this.jwt())
+                        .map((response: Response) => response.json())
+                        .catch((response: Response) => this.handleError(response));
+    }
+
+    private handleError (error: Response | any) {
+
+        let errMsg: string;
+        if (error instanceof Response) {
+
+            let body = error.json() || '';
+            let err = body.error || JSON.stringify(body);
+            errMsg = `${error.status} - ${error.statusText || ''} ${err.message}`;
+
+            let usermsg = err.message ? err.message : 'Errore non previsto, consultare la console per ulteriori informazioni';
+            this.configFn.notify(usermsg);
+
+        } else {
+            errMsg = error.message ? error.message : error.toString();
+        }
+        console.error('>>>>',errMsg);
+
+        return Observable.throw(errMsg);
     }
 
     public refreshCommonCache() {
@@ -103,6 +144,7 @@ export class APICommonService {
             }
             this.commonDataready = ( this.titolari.length > 0 && this.fascicoli.length > 0 && this.amministrazioni.length > 0 && this.mittenti.length > 0 );
         });
+
     }
 
     private setDirty(apipath: string) {
@@ -114,7 +156,7 @@ export class APICommonService {
             storedUpdates[apipath] = 0;
             localStorage.setItem('lastupdates', JSON.stringify(storedUpdates));
 
-            this.commonDataready = false;
+            this.isDirty = true;
         }
 
     }
@@ -168,6 +210,7 @@ export class APICommonService {
             case 'amministrazioni':
                 this.amministrazioniSelect.forEach((entry) => {
                     entry['text'] = entry['codice'] + ' - ' + entry['denominazione'];
+                    entry['id'] = String(entry['id']);
                     this._amministrazioniEnum[entry['id']] = entry['denominazione'];
                 });
                 break;
@@ -176,6 +219,11 @@ export class APICommonService {
                 this.mittentiSelect.forEach((entry) => {
                     entry['text'] = entry['denominazione'];
                     this.mittentiEnum[entry['id']] = entry['denominazione'];
+                });
+                break;
+            case 'registri':
+                this.registriSelect.forEach((entry) => {
+                    entry['text'] = entry['numero_fascicolo'] + ' - ' + entry['argomento'];
                 });
                 break;
         }
