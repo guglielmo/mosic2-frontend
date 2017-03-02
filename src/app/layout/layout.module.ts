@@ -4,6 +4,9 @@ import { NgModule }      from '@angular/core';
 import { CommonModule }  from '@angular/common';
 import { FormsModule }  from '@angular/forms';
 import { TooltipModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { SimpleNotificationsModule } from 'angular2-notifications/components'
+
+
 import { Autosize } from 'angular2-autosize';
 
 import { ROUTES }       from './layout.routes';
@@ -24,6 +27,7 @@ import { Navbar } from './navbar/navbar.component';
     CommonModule,
     FormsModule,
     TooltipModule,
+    SimpleNotificationsModule.forRoot(),
     ROUTES
   ],
   declarations: [

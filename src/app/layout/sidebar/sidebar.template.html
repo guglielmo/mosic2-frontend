@@ -86,6 +86,19 @@
                 <li><a [routerLink]=" ['users/edit'] ">Crea nuovo</a></li>
             </ul>
         </li>
+        <li>
+            <a class="collapsed" data-target="#sidebar-service" data-toggle="collapse" data-parent="#sidebar">
+                <span class="icon"><i class="simpleicon icon-wrench"></i></span>
+                Servizio
+                <i class="toggle fa fa-angle-down"></i>
+            </a>
+            <ul id="sidebar-service" class="collapse">
+                <li><a [routerLink]=" ['amministrazioni/list'] ">Tutte le amministrazioni</a></li>
+                <li><a [routerLink]=" ['amministrazioni/edit'] ">Nuova amministrazione</a></li>
+                <li><a [routerLink]=" ['mittenti/list'] ">Tutti i mittenti</a></li>
+                <li><a [routerLink]=" ['mittenti/edit'] ">Nuovo mittente</a></li>
+            </ul>
+        </li>
     </ul>
 
 </div>

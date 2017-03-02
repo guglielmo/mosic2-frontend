@@ -2,6 +2,7 @@ import {Component, ViewEncapsulation, ElementRef} from '@angular/core';
 import {Router, NavigationEnd} from '@angular/router';
 import {AppConfig} from '../app.config';
 
+import { NotificationsService } from 'angular2-notifications'
 
 declare var jQuery: any;
 declare var Hammer: any;
@@ -9,6 +10,7 @@ declare var Hammer: any;
 @Component({
     selector: 'layout',
     encapsulation: ViewEncapsulation.None,
+    providers: [NotificationsService],
     templateUrl: './layout.template.html',
     host: {
         '[class.nav-static]': 'config.state["nav-static"]',
@@ -25,13 +27,32 @@ export class Layout {
     router: Router;
     chatOpened: boolean = false;
 
+    public notifyOptions = {
+        position: ["bottom", "right"],
+        timeOut: 6000,
+        lastOnBottom: true
+    };
+
     constructor(config: AppConfig,
                 el: ElementRef,
-                router: Router) {
+                private _notificationService: NotificationsService,
+                router: Router,
+    ) {
         this.el = el;
         this.config = config.getConfig();
         this.configFn = config;
         this.router = router;
+
+        let _that = this;
+        this.configFn.notify = function( title: any, msg: any ) {
+            _that._notificationService.error(title, msg);
+        };
+
+    }
+
+    ngAfterViewInit() {
+
+
     }
 
     toggleSidebarListener(state): void {
@@ -40,22 +61,6 @@ export class Layout {
             : this.toggleNavigationCollapseState;
         toggleNavigation.apply(this);
         localStorage.setItem('nav-static', this.config.state['nav-static']);
-    }
-
-    toggleChatListener(): void {
-        jQuery(this.el.nativeElement).find('.chat-notification-sing').remove();
-        this.chatOpened = !this.chatOpened;
-
-        setTimeout(() => {
-            // demo: add class & badge to indicate incoming messages from contact
-            // .js-notification-added ensures notification added only once
-            jQuery('.chat-sidebar-user-group:first-of-type ' +
-                '.list-group-item:first-child:not(.js-notification-added)')
-                .addClass('active js-notification-added')
-                .find('.fa-circle')
-                .after('<span class="badge tag-danger ' +
-                    'pull-right animated bounceInDown">3</span>');
-        }, 1000);
     }
 
     toggleNavigationState(): void {
@@ -165,6 +170,7 @@ export class Layout {
     }
 
     ngOnInit(): void {
+
 
         if (localStorage.getItem('nav-static') === 'true') {
             this.config.state['nav-static'] = true;

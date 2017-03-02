@@ -11,7 +11,10 @@ const routes: Routes = [
     { path: 'titolari', loadChildren: () => System.import('../titolari/titolari.module'), canActivate: [AuthGuard] },
     { path: 'fascicoli', loadChildren: () => System.import('../fascicoli/fascicoli.module'), canActivate: [AuthGuard] },
     { path: 'registri', loadChildren: () => System.import('../registri/registri.module'), canActivate: [AuthGuard] },
-    { path: 'users', loadChildren: () => System.import('../users/users.module'), canActivate: [AuthGuard] }
+    { path: 'pre-cipe', loadChildren: () => System.import('../pre-cipe/pre-cipe.module'), canActivate: [AuthGuard] },
+    { path: 'users', loadChildren: () => System.import('../users/users.module'), canActivate: [AuthGuard] },
+    { path: 'mittenti', loadChildren: () => System.import('../mittenti/mittenti.module'), canActivate: [AuthGuard] },
+    { path: 'amministrazioni', loadChildren: () => System.import('../amministrazioni/amministrazioni.module'), canActivate: [AuthGuard] },
   ]}
 ];
 
