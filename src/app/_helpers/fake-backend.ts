@@ -1,15 +1,15 @@
 ﻿import {Http, BaseRequestOptions, Response, ResponseOptions, RequestMethod} from '@angular/http';
 import {MockBackend, MockConnection} from '@angular/http/testing';
 
-import {TitolariMockData, FascicoliMockData, RegistriMockData, AmministrazioniMockData, MittentiMockData} from './fake-backend-data/index';
+import {TitolariMockData, FascicoliMockData, RegistriMockData, AmministrazioniMockData, MittentiMockData, LastUpdatesMockData} from './fake-backend-data/index';
 
 export let fakeBackendProvider = {
     // use fake backend in place of Http service for backend-less development
     provide: Http,
     useFactory: (backend: MockBackend, options: BaseRequestOptions) => {
 
-        let mockDataVersion = "28";
-        let debug = false;
+        let mockDataVersion = "29";
+        let debug = true;
         let mockDataStored = localStorage.getItem('mockDataVersion');
 
         if (mockDataStored != mockDataVersion) {
@@ -19,6 +19,7 @@ export let fakeBackendProvider = {
             localStorage.setItem('registri', JSON.stringify(RegistriMockData));
             localStorage.setItem('amministrazioni', JSON.stringify(AmministrazioniMockData));
             localStorage.setItem('mittenti', JSON.stringify(MittentiMockData));
+            localStorage.setItem('lastupdates', JSON.stringify(LastUpdatesMockData));
 
             localStorage.setItem('mockDataVersion', mockDataVersion);
         }
@@ -31,6 +32,7 @@ export let fakeBackendProvider = {
         let registri: any[] = JSON.parse(localStorage.getItem('registri')) || [];
         let amministrazioni: any[] = JSON.parse(localStorage.getItem('amministrazioni')) || [];
         let mittenti: any[] = JSON.parse(localStorage.getItem('mittenti')) || [];
+        let lastupdates: any[] = JSON.parse(localStorage.getItem('lastupdates')) || [];
 
         let supportedApiMetods: string[] = [
             'authenticate',
@@ -39,7 +41,8 @@ export let fakeBackendProvider = {
             'fascicoli',
             'registri',
             'amministrazioni',
-            'mittenti'
+            'mittenti',
+            'lastupdates'
         ];
 
         // configure fake backend
