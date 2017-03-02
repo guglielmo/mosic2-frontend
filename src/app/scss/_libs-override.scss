@@ -116,7 +116,7 @@ datetime .input-group {
 * Dropzone
 **/
 
-.dropzone {
+/*.dropzone {
     display: block;
 }
 
@@ -128,7 +128,7 @@ datetime .input-group {
 
 .dropzone.dz-wrapper .dz-preview {
   width: 120px !important;
- }
+ }*/
 
 .filetypes {
   font-size: 24px;
@@ -263,4 +263,75 @@ mfDefaultSorter > a {
       border-color: $pagination-hover-border;
     }
   }
+}
+
+
+/***********************************/
+/**          NGX-UPLOADER         **/
+/***********************************/
+.drag-n-drop-container {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 100%;
+  height: 300px;
+  padding: 10px;
+  border: 3px dashed #ccc;
+  border-radius: 20px;
+  margin-top: 20px;
+  margin-bottom: 30px
+}
+.drag-n-drop-container h3 {
+  font-weight: normal;
+  display: block;
+  text-align: center;
+  font-size: 16px;
+  color: #555;
+  margin-top: 80px
+}
+.upload-button {
+  width: 200px;
+  display: block;
+  outline: none;
+  border-radius: 3px;
+  background: #f8f8f8;
+  color: #333;
+  text-transform: uppercase;
+  font-weight: normal;
+  font-size: 16px;
+  text-align: center;
+  padding: 10px 20px;
+  border: 1px solid #eaeaea;
+  margin: 20px auto 0
+}
+.upload-button input {
+  display: none
+}
+.upload-button:hover {
+  cursor: pointer
+}
+.file-over {
+  border: dotted 3px red;
+  background: rgba(255, 255, 255, 0.4)
+}
+
+.button-container {
+  display: inline-block
+}
+.start-upload-button {
+  width: 300px;
+  display: block;
+  outline: none;
+  border-radius: 10px;
+  background: #fff;
+  color: #DD0A31;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 12px;
+  text-align: center;
+  padding: 5px 20px;
+  border: 1px solid #DD0A31;
+  margin: 20px 0 50px
 }
