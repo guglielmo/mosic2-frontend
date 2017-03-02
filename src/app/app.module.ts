@@ -7,10 +7,7 @@ import {removeNgStyles, createNewHosts, createInputTransfer} from '@angularclass
 
 // Guard & Services
 import {AuthGuard} from './_guards/auth.guard';
-import {
-    AuthenticationService,
-    APICommonService
-} from './_services/index';
+import { AuthenticationService, APICommonService } from './_services/index';
 
 
 // Fake backend
