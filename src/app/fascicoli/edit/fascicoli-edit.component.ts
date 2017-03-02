@@ -36,6 +36,8 @@ export class FascicoliEditComponent implements OnInit {
         this.id = +this.route.snapshot.params['id'];
         this.mode = isNaN(this.id) ? 'create' : 'update';
 
+
+
         switch (this.mode) {
             case 'create':
                 this.model = {
@@ -63,16 +65,20 @@ export class FascicoliEditComponent implements OnInit {
         this.router.navigate(['/app/fascicoli/list']);
     }
 
-    submit() {
+    submit(event: any, modal: any) {
         this.loading = true;
         switch (this.mode) {
             case 'create':
                 this.apiService.create('fascicoli', this.model)
                     .subscribe(
                         data => {
-                            this.router.navigate(['/app/fascicoli/list']);
+                            console.log(data);
+                            this.model = data;
+                            modal.open();
+                            //this.router.navigate(['/app/fascicoli/list']);
                         },
                         error => {
+                            modal.open();
                             this.error = error;
                             this.loading = false;
                         });
@@ -93,7 +99,15 @@ export class FascicoliEditComponent implements OnInit {
     }
 
     public select2Changed(e: any, name: string): void {
-        this.model[name] = e.value;
+        this.model[name] = typeof e.value === 'object' ? e.value.join(',') : e.value;
+        //console.log(this.model[name]);
+
+        //this.model[name] = e.value;
+    }
+
+    public confirmCodeNotification(modal: any) {
+        modal.close();
+        this.router.navigate(['/app/fascicoli/edit/'+this.model.id]);
     }
 
 }

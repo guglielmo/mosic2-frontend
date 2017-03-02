@@ -1,4 +1,4 @@
-<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
+<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event, myModal)" #f="ngForm" novalidate>
     <div class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
@@ -34,15 +34,15 @@
                                 <label for="numero_fascicolo"><strong>Numero Fascicolo</strong></label>
                                 <input id="numero_fascicolo" name="numero_fascicolo"
                                        type="text" class="form-control"
-                                       placeholder="numero del fascicolo"
-                                       [(ngModel)]="model.numero_fascicolo" #numero_fascicolo="ngModel" required>
+                                       placeholder="assegnato automaticamente"
+                                       [(ngModel)]="model.numero_fascicolo" #numero_fascicolo="ngModel" disabled>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label for="data_magazzino"><strong>Data magazzino</strong></label>
                                 <datetime id="data_magazzino" name="data_magazzino"
-                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data' }"
+                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
                                           [(ngModel)]="model.data_magazzino" #data_magazzino="ngModel" required></datetime>
                             </div>
@@ -112,4 +112,17 @@
         </div>
     </div>
 </form>
+
+<modal #myModal submitButtonLabel="Conferma" [hideCloseButton]="true" [closeOnEscape]="false" [closeOnOutsideClick]="false" (onSubmit)="confirmCodeNotification(myModal)">
+    <modal-header>
+        <h4 class="modal-title text-xs-center fw-bold mt">Conferma creazione fascicolo</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="text-xs-center mt-sm">
+            Il nuovo fascicolo è stato creato. Il codice assegnato è <strong>{{model.numero_fascicolo}} </strong><br/>
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>
 

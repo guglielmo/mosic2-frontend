@@ -1,13 +1,13 @@
 <h3 class="page-title">Fascicolo - <span class="fw-semi-bold">Tutti i fascicoli</span></h3>
 
-<section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="true">
+<section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
     <header>
-        <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Filtra <span class="fw-semi-bold">fascicoli ...</span>
+        <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">fascicoli ...</span>
             <span *ngIf="filter.argomento.length > 2 || filter.id_amministrazioni != -1 || filter.id_titolari != -1 || filter.numero_fascicolo" class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
             </span>
         </h5>
-        <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Filtra <span class="fw-semi-bold">fascicoli ...</span>
+        <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">fascicoli ...</span>
             <span *ngIf="filter.argomento.length > 2 || filter.id_amministrazioni != -1 || filter.id_titolari != -1 || filter.numero_fascicolo" class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
             </span>
@@ -37,13 +37,13 @@
                     <input id="numero_fascicolo" name="numero_fascicolo" class="form-control" [(ngModel)]="filter.numero_fascicolo" placeholder="Numero..."/>
                 </div>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-3">
                 <div class="form-group">
                     <label for="argomento"><strong>Argomento</strong></label>
                     <input id="argomento" name="argomento" class="form-control" [(ngModel)]="filter.argomento" placeholder="Digita almeno 3 caratteri..."/>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="form-group">
                     <label for="id_amministrazioni"><strong>Amministrazione</strong></label>
                     <select2 id="id_amministrazioni"
@@ -62,9 +62,9 @@
 <div class="row" *ngIf="apiService.commonDataready">
     <div class="col-lg-12">
         <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
-        <section class="widget" widget>
-            <div class="widget-body">
-                <table class="table table-hover table-condensed mb-0"
+        <section class="widget py-0" widget>
+            <div class="widget-body widget-table-overflow">
+                <table class="table table-hover table-condensed mb-0 table-bordered"
                        #mf="mfDataTable"
                        [mfData]="apiService.fascicoli | fascicoliDataFilter : filter.argomento : filter.id_titolari : filter.id_amministrazioni: filter.numero_fascicolo : filteredCount"
                        [mfRowsOnPage]="100"
