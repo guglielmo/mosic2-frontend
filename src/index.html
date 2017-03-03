@@ -57,6 +57,18 @@
   <script src="/webpack-dev-server.js"></script>
   <% } %>
 
+  <script>
+      var $buoop = {vs:{i:10,f:40,o:30,s:9,c:50},
+          unsecure:true,api:4,l:'it',reminder: 0,noclose:true,
+          jsshowurl: "/assets/update.show.js"};
+      function $buo_f(){
+          var e = document.createElement("script");
+          e.src = "/assets/update.js";
+          document.body.appendChild(e);
+      };
+      try {document.addEventListener("DOMContentLoaded", $buo_f,false)}
+      catch(e){window.attachEvent("onload", $buo_f)}
+  </script>
 
 </body>
 </html>
