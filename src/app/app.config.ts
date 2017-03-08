@@ -64,6 +64,8 @@ export class AppConfig {
 
     select2Options = {
         theme: 'bootstrap',
+        placeholder: 'Inizia a scrivere per selezionare...',
+        allowClear: true,
         templateResult: (item) => {
             // No need to template the searching text
             if (item.loading) {
