@@ -1,0 +1,93 @@
+<div class="pull-right">
+    <a [routerLink]=" ['/app/uffici/edit'] " class="btn btn-primary btn-save">Nuovo Ufficio</a>
+</div>
+<h3 class="page-title">Ufficio - <span class="fw-semi-bold">Tutti i uffici</span></h3>
+
+<section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
+    <header>
+        <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">uffici ...</span>
+            <span *ngIf="filter.denominazione.length > 2" class="float-lg-right mr-3">
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+            </span>
+        </h5>
+        <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">uffici ...</span>
+            <span *ngIf="filter.denominazione.length > 2" class="float-lg-right mr-3">
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+            </span>
+        </h5>
+        <div class="widget-controls m-t-1">
+            <a data-widgster="expand" title="Apri"><i class="glyphicon glyphicon-chevron-down"></i></a>
+            <a data-widgster="collapse" title="Chiudi"><i class="glyphicon glyphicon-chevron-up"></i></a>
+        </div>
+    </header>
+    <div class="widget-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="argomento"><strong>Denominazione</strong></label>
+                    <input id="argomento" name="argomento" class="form-control" [(ngModel)]="filter.denominazione" placeholder="Digita almeno 3 caratteri..."/>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div *ngIf="apiService.commonDataready" class="row">
+    <div class="col-lg-12">
+        <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
+        <section class="widget py-0" widget>
+            <div class="widget-body widget-table-overflow">
+
+                <table class="table table-hover table-condensed mb-0 table-bordered"
+                       [mfData]="apiService.uffici | ufficiDataFilter : filter.denominazione : filteredCount"
+                       [mfSortBy]="codice" [mfSortOrder]="'asc'"
+                       #mf="mfDataTable" stickthead>
+                    <thead>
+                    <tr>
+                        <th><mfDefaultSorter by="codice">#</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="denominazione">Denominazione</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="codice_direzione">Codice direzione</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="ordine_ufficio">Ordine ufficio</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="solo_delibere">Solo delibere</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="disattivo_ufficio">Stato</mfDefaultSorter></th>
+                        <th>Azioni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let ufficio of mf.data" (click)="editId(ufficio.id)" class="clickable">
+                        <td>{{ufficio.id}}</td>
+                        <td [innerHTML]="ufficio.denominazione | ufficiDataMark : filter.denominazione"></td>
+                        <td>{{ufficio.codice_direzione}}</td>
+                        <td>{{ufficio.ordine_ufficio}}</td>
+                        <td>
+                            <span *ngIf="ufficio.solo_delibere === '0'" class="tag tag-success">No</span>
+                            <span *ngIf="ufficio.solo_delibere === '1'" class="tag tag-danger">Si</span>
+                        </td>
+                        <td>
+                            <span *ngIf="ufficio.disattivo_ufficio === '0'" class="tag tag-success">Attivo</span>
+                            <span *ngIf="ufficio.disattivo_ufficio === '1'" class="tag tag-danger">Non attivo</span>
+                        <td>
+                            <a (click)="askDeleteUffici($event, myModal, ufficio)"><i class="fa fa-trash-o"> </i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <footer>
+            </footer>
+        </section>
+    </div>
+</div>
+
+<modal #myModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteUffici(myModal)">
+    <modal-header>
+        <h4 class="modal-title text-xs-center fw-bold mt">Conferma cancellazione ufficio</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="text-xs-center mt-sm">
+            Vuoi eliminare il ufficio {{deletingUffici.id}} {{deletingUffici.denominazione}} ?
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>
