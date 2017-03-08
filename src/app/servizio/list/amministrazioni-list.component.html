@@ -1,4 +1,7 @@
-<h3 class="page-title">Amministrazione - <span class="fw-semi-bold">Tutti i amministrazioni</span></h3>
+<div class="pull-right">
+    <a [routerLink]=" ['/app/amministrazioni/edit'] " class="btn btn-primary btn-save">Nuova Amministrazione</a>
+</div>
+<h3 class="page-title">Amministrazione - <span class="fw-semi-bold">Tutte le amministrazioni</span></h3>
 
 <section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
     <header>

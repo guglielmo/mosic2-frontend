@@ -41,7 +41,7 @@ export class AmministrazioniEditComponent implements OnInit {
 
                         },
                         error => {
-                            this.error = error;
+                            this.error = error; console.log(error);
                             this.loading = false;
                         });
                 break;
@@ -63,7 +63,7 @@ export class AmministrazioniEditComponent implements OnInit {
                             this.router.navigate(['/app/amministrazioni/list']);
                         },
                         error => {
-                            this.error = error;
+                            this.error = error; console.log(error);
                             this.loading = false;
                         });
                 break;
@@ -75,7 +75,7 @@ export class AmministrazioniEditComponent implements OnInit {
                             this.router.navigate(['/app/amministrazioni/list']);
                         },
                         error => {
-                            this.error = error;
+                            this.error = error; console.log(error);
                             this.loading = false;
                         });
                 break;
