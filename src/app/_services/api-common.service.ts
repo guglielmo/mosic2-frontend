@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch'
 
 
-import { Titolari, Fascicoli, Registri, Amministrazioni, Mittenti } from '../_models/index';
+import { Titolari, Fascicoli, Registri, Amministrazioni, Mittenti, Uffici, RuoliCipe } from '../_models/index';
 
 import {AppConfig} from '../app.config';
 
@@ -34,15 +34,32 @@ export class APICommonService {
     public mittentiSelect: Select2OptionData[] = [];
     public mittentiEnum: any = {};
 
+    public uffici: Uffici[] = [];
+    public ufficiSelect: Select2OptionData[] = [];
+    public ufficiEnum: any = {};
+    public ufficiIdCodEnum: any = {};
+
+    public ruoli_cipe: RuoliCipe[] = [];
+    public ruoli_cipeSelect: Select2OptionData[] = [];
+    public ruoli_cipeEnum: any = {};
+    public ruoli_cipeIdCodEnum: any = {};
+
     public commonDataready: boolean = false;
     public isDirty: boolean = false;
+
+    private currentStorageVersion: string = '88';
+    private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
         'amministrazioni',
         'mittenti',
         'titolari',
         'fascicoli',
-        'registri'
+        'registri',
+        'groups',
+        'uffici',
+        'ruoli_cipe',
+        'tags'
     ];
 
     private storedLastUpdates: any = {};
@@ -67,7 +84,7 @@ export class APICommonService {
 
     public getById(apipath: string, id: number) {
         return this.http.get(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt())
-                        .map((response: Response) => response.json())
+                        .map((response: Response)  => response.json())
                         .catch((response: Response) => this.handleError(response));
     }
 
@@ -92,13 +109,20 @@ export class APICommonService {
                         .catch((response: Response) => this.handleError(response));
     }
 
+    public deleteFile(apipath: string, idContainer: number, idFile: number) {
+        this.setDirty(apipath);
+        return this.http.delete(this.config.baseAPIURL + '/api/' + apipath + '/' + idContainer + '/upload/' + idFile, this.jwt())
+            .map((response: Response) => response.json())
+            .catch((response: Response) => this.handleError(response));
+    }
+
     public getLastUpdates() {
         return this.http.get(this.config.baseAPIURL + '/api/lastupdates', this.jwt())
                         .map((response: Response) => response.json())
                         .catch((response: Response) => this.handleError(response));
     }
 
-    private handleError (error: Response | any) {
+    public handleError (error: Response | any) {
 
         let errMsg: string;
         if (error instanceof Response) {
@@ -108,7 +132,7 @@ export class APICommonService {
             errMsg = `${error.status} - ${error.statusText || ''} ${err.message}`;
 
             let usermsg = err.message ? err.message : 'Errore non previsto, consultare la console per ulteriori informazioni';
-            this.configFn.notify(usermsg);
+            this.notifyError(usermsg);
 
         } else {
             errMsg = error.message ? error.message : error.toString();
@@ -116,6 +140,10 @@ export class APICommonService {
         console.error('>>>>',errMsg);
 
         return Observable.throw(errMsg);
+    }
+
+    public notifyError (msg: any) {
+        this.configFn.notify(msg);
     }
 
     public refreshCommonCache() {
@@ -131,7 +159,7 @@ export class APICommonService {
                 let apipath = this.cachedApiDataMetods[i];
 
                 // if not stored or fresher on the backend
-                if(!storedLastUpdates[apipath] || lastupdates[apipath] > storedLastUpdates[apipath]) {
+                if(this.storageVersion != this.currentStorageVersion || !storedLastUpdates[apipath] || lastupdates[apipath] > storedLastUpdates[apipath]) {
 
                     // initiate a cache priming
                     this.cacheCommon(apipath, lastupdates[apipath]);
@@ -142,7 +170,15 @@ export class APICommonService {
                     this.prepareSelects(apipath);
                 }
             }
-            this.commonDataready = ( this.titolari.length > 0 && this.fascicoli.length > 0 && this.amministrazioni.length > 0 && this.mittenti.length > 0 );
+            localStorage.setItem('storageVersion', this.currentStorageVersion);
+            this.commonDataready = (
+                this.titolari.length > 0 &&
+                this.fascicoli.length > 0 &&
+                this.amministrazioni.length > 0 &&
+                this.mittenti.length > 0 &&
+                this.uffici.length > 0 &&
+                this.ruoli_cipe.length > 0
+            );
         });
 
     }
@@ -181,8 +217,19 @@ export class APICommonService {
             storedUpdates[apipath] = lastupdate;
             localStorage.setItem('lastupdates', JSON.stringify(storedUpdates));
 
-            this.commonDataready = ( this.titolari.length > 0 && this.fascicoli.length > 0 && this.amministrazioni.length > 0 && this.mittenti.length > 0 );
+            this.commonDataready = (
+                    this.titolari.length > 0 &&
+                    this.fascicoli.length > 0 &&
+                    this.amministrazioni.length > 0 &&
+                    this.mittenti.length > 0 &&
+                    this.uffici.length > 0 &&
+                    this.ruoli_cipe.length > 0
+            );
         });
+    }
+
+    public getSelect(apipath: string) {
+        return this[apipath+'Select'];
     }
 
     private prepareSelects(apipath: string) {
@@ -226,8 +273,22 @@ export class APICommonService {
                     entry['text'] = entry['numero_fascicolo'] + ' - ' + entry['argomento'];
                 });
                 break;
+            case 'uffici':
+                this.ufficiSelect.forEach((entry) => {
+                    entry.text = entry['denominazione'];
+                    this.ufficiEnum[entry['id']] = entry['denominazione'];
+                    this.ufficiIdCodEnum[entry['id']] = entry['codice'];
+                });
+                break;
+            case 'ruoli_cipe':
+                this.ruoli_cipeSelect.forEach((entry) => {
+                    entry.text = entry['denominazione'];
+                    this.ruoli_cipeEnum[entry['id']] = entry['denominazione'];
+                    this.ruoli_cipeIdCodEnum[entry['id']] = entry['codice'];
+                });
+                break;
         }
-        this[apipath+'Select'].unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
+        //this[apipath+'Select'].unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
     }
 
     // private helper methods
