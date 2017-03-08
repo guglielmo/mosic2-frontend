@@ -41,7 +41,7 @@ export class MittentiEditComponent implements OnInit {
 
                         },
                         error => {
-                            this.error = error;
+                            this.error = error; console.log(error);
                             this.loading = false;
                         });
                 break;
@@ -63,7 +63,7 @@ export class MittentiEditComponent implements OnInit {
                             this.router.navigate(['/app/mittenti/list']);
                         },
                         error => {
-                            this.error = error;
+                            this.error = error; console.log(error);
                             this.loading = false;
                         });
                 break;
@@ -75,7 +75,7 @@ export class MittentiEditComponent implements OnInit {
                             this.router.navigate(['/app/mittenti/list']);
                         },
                         error => {
-                            this.error = error;
+                            this.error = error; console.log(error);
                             this.loading = false;
                         });
                 break;
