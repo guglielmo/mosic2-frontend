@@ -13,8 +13,10 @@ const routes: Routes = [
     { path: 'registri', loadChildren: () => System.import('../registri/registri.module'), canActivate: [AuthGuard] },
     { path: 'pre-cipe', loadChildren: () => System.import('../pre-cipe/pre-cipe.module'), canActivate: [AuthGuard] },
     { path: 'users', loadChildren: () => System.import('../users/users.module'), canActivate: [AuthGuard] },
-    { path: 'mittenti', loadChildren: () => System.import('../mittenti/mittenti.module'), canActivate: [AuthGuard] },
-    { path: 'amministrazioni', loadChildren: () => System.import('../amministrazioni/amministrazioni.module'), canActivate: [AuthGuard] },
+    { path: 'mittenti', loadChildren: () => System.import('../servizio/mittenti.module.ts'), canActivate: [AuthGuard] },
+    { path: 'amministrazioni', loadChildren: () => System.import('../servizio/amministrazioni.module.ts'), canActivate: [AuthGuard] },
+    { path: 'uffici', loadChildren: () => System.import('../servizio/uffici.module.ts'), canActivate: [AuthGuard] },
+    { path: 'tags', loadChildren: () => System.import('../servizio/tags.module.ts'), canActivate: [AuthGuard] }
   ]}
 ];
 
