@@ -6,13 +6,12 @@ import {Pipe, PipeTransform} from "@angular/core";
 })
 export class FascicoliByTitolarioDataFilterPipe implements PipeTransform {
 
-    transform(array: any[], titolari: number): any {
+    transform(array: any[], id_titolari: number): any {
 
         // pre-compute some conditions to execute checks outside the loop
-        let tL = titolari != -1;
+        let tL = id_titolari != null;
         return _.filter(array, row => {
-
-            if (tL && row.codice_titolario != titolari) return false;
+            if (tL && row.id_titolari != id_titolari) return false;
 
             return true;
         });

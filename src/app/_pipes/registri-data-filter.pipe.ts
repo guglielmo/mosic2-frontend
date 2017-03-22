@@ -27,11 +27,11 @@ export class RegistriDataFilterPipe implements PipeTransform {
         let i;
 
         // pre-compute some conditions to execute checks outside the loop
-        let tL = id_titolari != -1;
-        let mL = id_mittenti != -1;
+        let tL = id_titolari != null;
+        let mL = id_mittenti != null;
         let pM = protocollo_mittente.length;
         let pA = protocollo_arrivo.length;
-        let fL = id_fascicoli > 0;
+        let fL = id_fascicoli != null;
         let dF = data_arrivo_da ? new Date(data_arrivo_da).getTime() : false;
         let dT = data_arrivo_a ? new Date(data_arrivo_a).getTime() : false;
         let qL = oggetto.length > 2;
