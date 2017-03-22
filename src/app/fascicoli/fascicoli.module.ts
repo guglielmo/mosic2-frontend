@@ -1,18 +1,16 @@
-import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
-import { FormsModule,
-         ReactiveFormsModule }      from '@angular/forms';
+import { NgModule }                           from '@angular/core';
+import { CommonModule }                       from '@angular/common';
+import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
+import { RouterModule }                       from '@angular/router';
 
-import { RouterModule } from '@angular/router';
+import { ModalModule }                        from 'ngx-modal';
+import { StickTheadModule }                   from '../_directives/stickthead/stickthead.module';
+import { DataTableModule }                    from 'angular2-datatable';
+import { PipesSharedModule }                  from '../_shared/index'
 
-import { ModalModule } from 'ngx-modal';
-import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
-import { DataTableModule } from 'angular2-datatable';
-import { FascicoliDataFilterPipe,
-         DataMarkPipe }   from '../_pipes/index';
 
 import 'select2/dist/js/select2.full.js';
-import { Select2Module } from 'ng2-select2';
+import { Select2Module }                      from 'ng2-select2';
 
 // datetime picker
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js';
@@ -44,16 +42,14 @@ export const routes = [
     DataTableModule,
     NKDatetimeModule,
     Select2Module,
-
+    PipesSharedModule,
     RouterModule.forChild(routes)
   ],
   declarations: [
       FascicoliListComponent,
-      FascicoliEditComponent,
-      FascicoliDataFilterPipe,
-      DataMarkPipe
+      FascicoliEditComponent
   ]
 })
-export default class TitolariModule {
+export default class FascicoliModule {
   static routes = routes;
 }

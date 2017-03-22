@@ -1,9 +1,13 @@
 import { Component }        from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 
-import { Fascicoli } from '../../_models/index';
+
 import { APICommonService } from '../../_services/index';
 import { AppConfig } from '../../app.config';
+
+import { Amministrazioni, Titolari, Fascicoli } from '../../_models/index';
+
 
 @Component({
     templateUrl: 'fascicoli-list.component.html'
@@ -17,9 +21,13 @@ export class FascicoliListComponent {
         numero_fascicolo: ''
     };
     public deletingFascicoli: Fascicoli = new Fascicoli;
-    public fascicoli: Fascicoli[] = [];
+    public fascicoli: Observable<Fascicoli[]>;
     public filteredCount = {count: 0};
     public select2Options: Select2Options;
+
+    public titolari$: Observable<Titolari[]>;
+    public fascicoli$: Observable<Fascicoli[]>;
+    public amministrazioni$: Observable<Amministrazioni[]>;
 
     constructor(private apiService: APICommonService,
                 private router: Router,
@@ -27,6 +35,10 @@ export class FascicoliListComponent {
     ) {
 
         this.select2Options = config.select2Options;
+
+        this.titolari$ = this.apiService.subscribeToDataService('titolari');
+        this.fascicoli$ = this.apiService.subscribeToDataService('fascicoli');
+        this.amministrazioni$ = this.apiService.subscribeToDataService('amministrazioni');
     }
 
     ngOnInit() {
@@ -77,15 +89,18 @@ export class FascicoliListComponent {
 
     //todo: this should be in apiService but couldn't find yet how to call injected classes methods from templates
     public amministrazioniEnum(val:string):string {
-    if (-1 != String(val).indexOf(',') ) {
-        let ret = [];
-        String(val).split(',').forEach( item => {
-            ret.push(this.apiService._amministrazioniEnum[item]);
-        });
-        return ret.join(', ');
 
-    } else if (val) {
-        return this.apiService._amministrazioniEnum[val];
+        let e = this.apiService.dataEnum['amministrazioni'];
+        if (-1 != String(val).indexOf(',') ) {
+            let ret = [];
+            String(val).split(',').forEach( item => {
+                ret.push(e[item]['denominazione']);
+            });
+            return ret.join(', ');
+
+        } else if (val) {
+
+            return e[val] ? e[val]['denominazione'] : '';
+        }
     }
-}
 }

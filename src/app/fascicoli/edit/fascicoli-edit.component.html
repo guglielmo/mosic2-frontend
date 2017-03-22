@@ -3,12 +3,11 @@
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
     </div>
-<h3 class="page-title">Fascicolo -
-    <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
-    <span *ngIf="mode == 'update'" class="fw-semi-bold">{{apiService.titolariIdCodEnum[model.id_titolari]}}.{{model.numero_fascicolo}}</span>
-</h3>
-<h5 class="page-title"><span *ngIf="mode == 'update'">{{model.argomento}}</span></h5>
-
+    <h3 class="page-title"><a [routerLink]=" ['/app/fascicoli/list'] ">Fascicoli</a> /
+        <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
+        <span *ngIf="mode == 'update'" class="fw-semi-bold">{{apiService.dataEnum['titolari'][model.id_titolari]['codice']}}.{{model.numero_fascicolo}}</span>
+    </h3>
+    <h5 class="page-title"><span *ngIf="mode == 'update'">{{model.argomento}}</span></h5>
 
     <div class="row">
         <div class="col-lg-6">
@@ -17,15 +16,15 @@
                     <h4><span class="fw-semi-bold">Catalogazione</span></h4>
                 </header>
                 <div class="widget-body">
-                    <div class="form-group">
+                    <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_titolari == '' }">
                         <label for="id_titolari"><strong>Titolario</strong></label>
-                        <select2 id="id_titolari"
-                                 class="full-width-select"
+                        <div class="select2-H-keeper"><select2 id="id_titolari"
+                                 class="form-control full-width-select"
                                  [options]="select2Options"
                                  value="{{model.id_titolari}}"
                                  cssImport="false"
                                  (valueChanged)="select2Changed($event,'id_titolari')"
-                                 [data]="apiService.titolariSelect"></select2>
+                                 [data]="titolari$ | async" required></select2></div>
                     </div>
 
                     <div class="row">
@@ -49,7 +48,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !argomento.valid }">
                         <label for="argomento"><strong>Argomento</strong></label>
                         <textarea id="argomento" name="argomento"
                                   rows="4" class="autogrow form-control transition-height"
@@ -58,14 +57,14 @@
                                   [(ngModel)]="model.argomento" #argomento="ngModel" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="amministrazioni"><strong>Amministrazione</strong></label>
-                        <select2 id="amministrazioni"
+                        <label for="id_amministrazioni"><strong>Amministrazione</strong></label>
+                        <div class="select2-H-keeper"><select2 id="id_amministrazioni"
                                  class="full-width-select"
-                                 [options]="select2OptionsMulti"
-                                 value="{{model.id_amministrazioni}}"
+                                 [options]="select2WithAddOptionsMulti"
+                                 [value]="model.id_amministrazioni ? model.id_amministrazioni.split(',') : ''"
                                  cssImport="false"
                                  (valueChanged)="select2Changed($event,'id_amministrazioni')"
-                                 [data]="apiService.amministrazioniSelect"></select2>
+                                 [data]="amministrazioni$ | async"></select2></div>
                     </div>
                 </div>
             </section>
@@ -87,7 +86,7 @@
             </section>
             <section class="widget">
                 <header>
-                    <h4><span class="fw-semi-bold">Annotazioni ad uso interno</span></h4>
+                    <h4><span class="fw-semi-bold">Annotazioni</span></h4>
                 </header>
                 <div class="widget-body">
                     <div class="row">
@@ -112,6 +111,85 @@
         </div>
     </div>
 </form>
+
+<div class="row" *ngIf="apiService.commonDataready && model.id">
+    <div class="col-lg-12">
+        <div class="mb-1">
+            <h4>Registri contenuti nel fascicolo</h4>
+            Risultati: {{filteredCount?.count}}
+        </div>
+        <section class="widget py-0" widget>
+            <div class="widget-body widget-table-overflow">
+                <table class="table table-hover table-condensed table-bordered mb-0"
+                       [mfData]="registri$ | async | registriDataFilter : [null, '', null, null, '', '', model.id, null, null, filteredCount]"
+                       [mfSortBy]="'codice'" [mfSortOrder]="'desc'"
+                       [mfRowsOnPage]="100"
+                       #mf="mfDataTable" stickthead>
+                    <thead>
+                    <tr>
+                        <th colspan="4"></th>
+                        <th colspan="2">Protocollo&nbsp;Arrivo</th>
+                        <th colspan="2">Protocollo&nbsp;Mittente</th>
+                        <th colspan="2"></th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <mfDefaultSorter by="codice">Codice</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="oggetto">Oggetto</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="mittenti">Mittente</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="repertorio">Repertorio</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="protocollo_arrivo">Numero</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="data_arrivo">Data</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="protocollo_mittente">Numero</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="data_mittente">Data</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="nome_documento">Allegati</mfDefaultSorter>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let registro of mf.data" (click)="editRegistriId(registro.id)" class="clickable">
+                        <td>{{registro.id}}</td>
+                        <td [innerHTML]="registro.oggetto"></td>
+                        <!-- todo: find a better way to implement enum -->
+                        <td><span *ngIf="registro.id_mittenti">{{apiService.dataEnum.mittenti[registro.id_mittenti]['text']}}</span></td>
+                        <td><span *ngIf="registro.id_titolari">{{apiService.dataEnum.titolari[registro.id_titolari]['codice']}}</span>.{{registro.numero_fascicolo}}</td>
+                        <td>{{registro.protocollo_arrivo}}</td>
+                        <td class="nowrap">{{registro.data_arrivo | date: 'dd/MM/yyyy' }}</td>
+                        <td>{{registro.protocollo_mittente}}</td>
+                        <td class="nowrap">{{registro.data_mittente | date: 'dd/MM/yyyy'}}</td>
+                        <td><p class="text-center"><a [routerLink]="['/app/registri/edit/'+registro.id]" fragment="allegati"><i class="fa fa-files-o text-muted"> </i></a></p></td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="10">
+                            <mfBootstrapPaginator [rowsOnPageSet]="[100,200,500,1000]"></mfBootstrapPaginator>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <footer>
+            </footer>
+        </section>
+    </div>
+</div>
 
 <modal #myModal submitButtonLabel="Conferma" [hideCloseButton]="true" [closeOnEscape]="false" [closeOnOutsideClick]="false" (onSubmit)="confirmCodeNotification(myModal)">
     <modal-header>

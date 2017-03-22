@@ -1,6 +1,9 @@
-<h3 class="page-title">Fascicolo - <span class="fw-semi-bold">Tutti i fascicoli</span></h3>
+<div class="pull-right">
+    <a [routerLink]=" ['/app/fascicoli/edit'] " class="btn btn-primary btn-save">Nuovo Fascicolo</a>
+</div>
+<h3 class="page-title">Fascicoli / <span class="fw-semi-bold">Tutti i fascicoli</span></h3>
 
-<section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
+<section *ngIf="apiService.commonDataready && !apiService.isDirty" class="widget" widget data-widgster-collapsed="false">
     <header>
         <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">fascicoli ...</span>
             <span *ngIf="filter.argomento.length > 2 || filter.id_amministrazioni != -1 || filter.id_titolari != -1 || filter.numero_fascicolo" class="float-lg-right mr-3">
@@ -22,13 +25,13 @@
             <div class="col-lg-4">
                 <div class="form-group">
                     <label for="titolari_id"><strong>Titolario</strong></label>
-                    <select2 id="titolari_id"
+                    <div class="select2-H-keeper"><select2 id="titolari_id"
                              class="full-width-select"
                              [options]="select2Options"
                              value="{{filter.id_titolari}}"
                              cssImport="false"
                              (valueChanged)="select2Changed($event,'id_titolari')"
-                             [data]="apiService.titolariSelect"></select2>
+                             [data]="titolari$ | async"></select2></div>
                 </div>
             </div>
             <div class="col-lg-2">
@@ -46,13 +49,13 @@
             <div class="col-lg-3">
                 <div class="form-group">
                     <label for="id_amministrazioni"><strong>Amministrazione</strong></label>
-                    <select2 id="id_amministrazioni"
+                    <div class="select2-H-keeper"><select2 id="id_amministrazioni"
                              class="full-width-select"
                              [options]="select2Options"
                              value="{{filter.id_amministrazioni}}"
                              cssImport="false"
                              (valueChanged)="select2Changed($event,'id_amministrazioni')"
-                             [data]="apiService.amministrazioniSelect"></select2>
+                             [data]="amministrazioni$ | async"></select2></div>
                 </div>
             </div>
         </div>
@@ -66,7 +69,7 @@
             <div class="widget-body widget-table-overflow">
                 <table class="table table-hover table-condensed mb-0 table-bordered"
                        #mf="mfDataTable"
-                       [mfData]="apiService.fascicoli | fascicoliDataFilter : filter.argomento : filter.id_titolari : filter.id_amministrazioni: filter.numero_fascicolo : filteredCount"
+                       [mfData]="fascicoli$ | async | fascicoliDataFilter : filter.argomento : filter.id_titolari : filter.id_amministrazioni: filter.numero_fascicolo : filteredCount"
                        [mfRowsOnPage]="100"
                        stickthead>
                     <thead>
@@ -80,7 +83,7 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let fascicolo of mf.data" (click)="editId(fascicolo.id)" class="clickable">
-                        <td>{{apiService.titolariEnum[fascicolo.id_titolari]}}</td>
+                        <td> {{apiService.dataEnum['titolari'][fascicolo.id_titolari]['denominazione']}}</td>
                         <td>{{fascicolo.numero_fascicolo}}</td>
                         <td [innerHTML]="fascicolo.argomento | dataMark : filter.argomento"></td>
                         <td>{{amministrazioniEnum(fascicolo.id_amministrazioni)}}</td>
