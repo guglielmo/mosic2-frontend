@@ -10,3 +10,4 @@ export * from './ruoli_cipe';
 export * from './user';
 export * from './groups';
 export * from './tags';
+export * from './precipe';
