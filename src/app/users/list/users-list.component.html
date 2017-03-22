@@ -1,4 +1,7 @@
-<h3 class="page-title">Utenti - <span class="fw-semi-bold">Tutti gli utenti</span></h3>
+<div class="pull-right">
+    <a [routerLink]=" ['/app/users/edit'] " class="btn btn-primary btn-save">Nuovo Utente</a>
+</div>
+<h3 class="page-title">Utenti / <span class="fw-semi-bold">Tutti gli utenti</span></h3>
 
 <div class="row">
     <div class="col-lg-12">
@@ -12,6 +15,9 @@
                         <th><mfDefaultSorter by="eMail">E-Mail</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="registrationDate">Data registrazione</mfDefaultSorter></th>
                         <th>Ruolo</th>
+                        <th>Ufficio</th>
+                        <th>IP</th>
+                        <th>Stazione</th>
                         <th>Stato</th>
                         <th>Azioni</th>
                     </tr>
@@ -22,9 +28,13 @@
                         <td>{{user.userName}}</td>
                         <td>{{user.eMail}}</td>
                         <td>{{user.registrationDate | date: 'dd/MM/yyyy HH:mm'}}</td>
-                        <td>Amministratore</td>
+                        <td>{{user.id_ruoli_cipe}} - {{user.id_ruoli_cipe | dataEnum : apiService.dataEnum : 'ruoli_cipe' : 'denominazione' }}</td>
+                        <td>{{user.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' }}</td>
+                        <td>{{user.ip}}</td>
+                        <td>{{user.stazione}}</td>
                         <td>
-                            <span class="tag tag-success">Attivo</span>
+                            <span *ngIf="user.cessatoServizio === '0'" class="tag tag-success">Attivo</span>
+                            <span *ngIf="user.cessatoServizio === '1'" class="tag tag-danger">Cessato servizio</span>
                         </td>
                         <td>
                             <a (click)="askDeleteUser($event, myModal, user)"><i class="fa fa-trash-o"> </i></a>

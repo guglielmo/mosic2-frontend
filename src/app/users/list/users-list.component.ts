@@ -21,6 +21,7 @@ export class UsersListComponent {
     }
 
     ngOnInit() {
+        this.apiService.refreshCommonCache();
         this.loadAllUsers();
     }
 
@@ -42,7 +43,8 @@ export class UsersListComponent {
 
     deleteUser(id: number) {
         this.apiService.delete('users',id).subscribe(() => {
-            this.loadAllUsers()
+            this.apiService.refreshCommonCache();
+            //this.loadAllUsers()
         });
     }
 
