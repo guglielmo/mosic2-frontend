@@ -148,6 +148,7 @@ module.exports = function(options) {
     devServer: {
       port: METADATA.port,
       host: METADATA.host,
+      //host: '0.0.0.0', // <--- allow access from network
       historyApiFallback: true,
       watchOptions: {
         aggregateTimeout: 300,
