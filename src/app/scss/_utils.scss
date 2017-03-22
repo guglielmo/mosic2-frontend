@@ -525,3 +525,23 @@ $z-index-variants: (more: 1, less: -1, '10': 10, '-10': -10);
 .nowrap {
   white-space: nowrap;
 }
+
+textarea.single-row {
+  -ms-overflow-style: none;
+  resize:none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+textarea.single-row::-webkit-scrollbar {
+  display: none;
+}
+
+.select2-H-keeper {
+  min-height: 35px;
+}
+
+select2 {
+  select { visibility: hidden; }
+}
