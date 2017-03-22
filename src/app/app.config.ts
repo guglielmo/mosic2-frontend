@@ -65,7 +65,7 @@ export class AppConfig {
     select2Options = {
         theme: 'bootstrap',
         placeholder: 'Inizia a scrivere per selezionare...',
-        allowClear: true,
+        //allowClear: true, <-- not yet available for a bug in ng2-select2 as of version 1.0.0-beta.10
         templateResult: (item) => {
             // No need to template the searching text
             if (item.loading) {
@@ -106,44 +106,33 @@ export class AppConfig {
         }
     };
 
-    select2WithAddOptions = {
-        theme: 'bootstrap',
-        templateResult: (item) => {
-            // No need to template the searching text
-            if (item.loading) {
-                return item.text;
+
+    select2OptionsMulti = $.extend(true, {}, this.select2Options, { multiple: true } );
+    select2WithAddOptions = $.extend(true, {}, this.select2Options, {
+        tags: true,
+        insertTag: (data, tag) => {
+            //console.log("select2WithAddOptions['insertTag']", data.length);
+
+            let markup = '';
+            if (data.length === 0) {
+                markup += "<strong>Nessuna corrispondenza trovata</strong><br/>";
             }
+            markup += '<h5><i class="fa fa-plus-circle"> </i> Aggiungi <strong>' + tag.text + '</strong></h5>';
+            tag.text = markup;
+            data.push(tag);
 
-            var term = this.query.term || '';
-            var $result = this.markMatch(item.text, term);
-
-            return $result;
+            //this.changeDetectionRef.detectChanges();
         },
-        language: {
-            searching: (params) => {
-                // Intercept the query as it is happening
-                this.query = params;
-                return 'Ricerca...';
-            }
-        },
-        escapeMarkup: function (markup) {
-            return markup;
-        },
-        matcher: (term: string, text: string, option: any): boolean => {
-            if (term.trim() === '') {
-                return true;
-            }
-            let keywords = term.split(' ');
-
-            for (var i = 0; i < keywords.length; i++) {
-
-                if ((text.toUpperCase()).indexOf((keywords[i]).toUpperCase()) == -1) {
-                    return false;
-                }
-            }
-            return true;
+        createTag: (tag) => {
+            //console.log("select2WithAddOptions['createTag']");
+            return {
+                id: tag.term,
+                text: tag.term,
+                isNew: true
+            };
         }
-    };
+    });
+    select2WithAddOptionsMulti = $.extend(true, {}, this.select2WithAddOptions, { multiple: true } );
 
     _resizeCallbacks = [];
     _screenSizeCallbacks = {
