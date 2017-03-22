@@ -2,52 +2,31 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
 import { Select2OptionData } from 'ng2-select2';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch'
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { Warehouse } from 'ngx-warehouse';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import * as _ from "lodash";
 
 
 import { Titolari, Fascicoli, Registri, Amministrazioni, Mittenti, Uffici, RuoliCipe } from '../_models/index';
 
 import {AppConfig} from '../app.config';
 
-
 @Injectable()
 export class APICommonService {
     public config: any;
     public configFn: any;
 
-    public titolari: Titolari[] = [];
-    public titolariSelect: Select2OptionData[] = [];
-    public titolariEnum: any = {};
-    public titolariIdCodEnum: any = {};
-
-    public fascicoli: Fascicoli[] = [];
-    public fascicoliSelect: Select2OptionData[] = [];
-
-    public registri: Registri[] = [];
-    public registriSelect: Select2OptionData[] = [];
-
-    public amministrazioni: Amministrazioni[] = [];
-    public amministrazioniSelect: Select2OptionData[] = [];
-    public _amministrazioniEnum: any = {};
-
-    public mittenti: Mittenti[] = [];
-    public mittentiSelect: Select2OptionData[] = [];
-    public mittentiEnum: any = {};
-
-    public uffici: Uffici[] = [];
-    public ufficiSelect: Select2OptionData[] = [];
-    public ufficiEnum: any = {};
-    public ufficiIdCodEnum: any = {};
-
-    public ruoli_cipe: RuoliCipe[] = [];
-    public ruoli_cipeSelect: Select2OptionData[] = [];
-    public ruoli_cipeEnum: any = {};
-    public ruoli_cipeIdCodEnum: any = {};
-
     public commonDataready: boolean = false;
+    public activeRequests: number = 0;
     public isDirty: boolean = false;
 
-    private currentStorageVersion: string = '88';
+    private _allData:any = {};
+    private _allData$:any = {};
+    public dataEnum:any = {};
+
+    private currentStorageVersion: string = '20';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
@@ -59,36 +38,53 @@ export class APICommonService {
         'groups',
         'uffici',
         'ruoli_cipe',
-        'tags'
+        'tags',
+        'precipe'
     ];
 
-    private storedLastUpdates: any = {};
-
     constructor( private http: Http,
+                 public warehouse: Warehouse,
                  config: AppConfig
     ) {
         this.config = config.getConfig();
         this.configFn = config;
+
+        // creates containers for local in memory storage and Observable data arrays
+        this.cachedApiDataMetods.forEach( apipath => {
+            if ( !this._allData$[apipath] ) {
+                // creates data containers
+                this._allData[apipath] = [];
+                this.dataEnum[apipath] = {};
+                // creates Observables subjects
+                this._allData$[apipath] = <BehaviorSubject<any[]>> new BehaviorSubject([]);
+            }
+        });
+
+        this.warehouse.set('apiServiceLastInitTime', Date.now() );
     }
 
-    ngOnInit() {
+    public subscribeToDataService( apipath: string ): Observable<any[]> {
+        return this._allData$[apipath].asObservable();
     }
 
     // PUBLIC helper methods
     public getAll(apipath: string, params?:URLSearchParams) {
+        this.startingRequest(apipath);
         let query = params ? '?'+params.toString() : '';
         return this.http.get(this.config.baseAPIURL + '/api/' + apipath + query, this.jwt())
                         .map((response: Response) => response.json())
                         .catch((response: Response) => this.handleError(response));
     }
 
-    public getById(apipath: string, id: number) {
+    public getById(apipath: string, id: number | string) {
+        this.startingRequest(apipath);
         return this.http.get(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt())
                         .map((response: Response)  => response.json())
                         .catch((response: Response) => this.handleError(response));
     }
 
     public create(apipath: string, data: any) {
+        this.startingRequest(apipath);
         this.setDirty(apipath);
         return this.http.post(this.config.baseAPIURL + '/api/' + apipath, data, this.jwt())
                         .map((response: Response) => response.json())
@@ -96,13 +92,15 @@ export class APICommonService {
     }
 
     public update(apipath: string, data: any) {
+        this.startingRequest(apipath);
         this.setDirty(apipath);
         return this.http.put(this.config.baseAPIURL + '/api/' + apipath + '/' + data.id, data, this.jwt())
                         .map((response: Response) => response.json())
                         .catch((response: Response) => this.handleError(response));
     }
 
-    public delete(apipath: string, id: number) {
+    public delete(apipath: string, id: number | string) {
+        this.startingRequest(apipath);
         this.setDirty(apipath);
         return this.http.delete(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt())
                         .map((response: Response) => response.json())
@@ -110,19 +108,47 @@ export class APICommonService {
     }
 
     public deleteFile(apipath: string, idContainer: number, idFile: number) {
+        this.startingRequest(apipath);
         this.setDirty(apipath);
         return this.http.delete(this.config.baseAPIURL + '/api/' + apipath + '/' + idContainer + '/upload/' + idFile, this.jwt())
-            .map((response: Response) => response.json())
-            .catch((response: Response) => this.handleError(response));
+                        .map((response: Response) => response.json())
+                        .catch((response: Response) => this.handleError(response));
     }
 
-    public getLastUpdates() {
+    private setDirty(apipath: string) {
+
+        if(this.cachedApiDataMetods.indexOf(apipath) != -1) {
+
+            //
+            // retrive and set last update to zero for the method
+            //
+            let storedUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
+            storedUpdates[apipath] = 0;
+            localStorage.setItem('lastupdates', JSON.stringify(storedUpdates));
+
+            this.isDirty = true;
+        }
+
+    }
+
+    private getLastUpdates() {
+        this.startingRequest('lastupdates');
         return this.http.get(this.config.baseAPIURL + '/api/lastupdates', this.jwt())
                         .map((response: Response) => response.json())
                         .catch((response: Response) => this.handleError(response));
     }
 
-    public handleError (error: Response | any) {
+    private startingRequest ( apipath: string ) {
+        this.activeRequests++;
+        //console.log(this.activeRequests);
+    }
+
+    private finishRequest ( apipath: string ) {
+        this.activeRequests--;
+        //console.log(this.activeRequests);
+    }
+
+    private handleError (error: Response | any) {
 
         let errMsg: string;
         if (error instanceof Response) {
@@ -150,149 +176,160 @@ export class APICommonService {
 
         this.getLastUpdates().subscribe(response => {
 
+            //
             // retrieve new and last stored updates
+            //
             let storedLastUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
             let lastupdates = response.data;
 
+            //
             // for every cached API method
+            //
             for (let i=0; i<this.cachedApiDataMetods.length; i++) {
                 let apipath = this.cachedApiDataMetods[i];
 
-                // if not stored or fresher on the backend
+                //
+                // if storage version didn't change or data is not stored or fresher on the backend
+                //
                 if(this.storageVersion != this.currentStorageVersion || !storedLastUpdates[apipath] || lastupdates[apipath] > storedLastUpdates[apipath]) {
 
+                    //
                     // initiate a cache priming
-                    this.cacheCommon(apipath, lastupdates[apipath]);
+                    //
+                    this.cacheCommonIDB(apipath, lastupdates[apipath]);
 
                 } else {
-                // get it from local storage
-                    this[apipath] = JSON.parse(localStorage.getItem('stored_'+apipath)) || [];
-                    this.prepareSelects(apipath);
+
+                    //
+                    // get it from local data warehouse
+                    //
+                    this.warehouse.get('stored_'+apipath).subscribe(
+                        data => {
+                            //
+                            // stores data in memory
+                            //
+                            this._allData[apipath] = data;
+
+                            //
+                            // checks if all cached api methods are loaded
+                            //
+                            let checkIsReady = true;
+                            _.each(this.cachedApiDataMetods, v => {
+                                if(this._allData[v].length === 0) {
+                                    checkIsReady = false;
+                                    return false; // <-- this is the lodash way to break iteration;
+                                }
+                            });
+                            this.commonDataready = checkIsReady;
+
+                            //
+                            // creates a data hashmap for a convenient and quick lookup access by id
+                            //
+                            _.each(this._allData[apipath], item => { this.dataEnum[apipath][item.id] = item; });
+
+                            //
+                            // notifies the subscribers with the new data
+                            //
+                            this._allData$[apipath].next(this._allData[apipath]);
+                        },
+                        error => { console.log(error) }
+                    );
                 }
             }
+
             localStorage.setItem('storageVersion', this.currentStorageVersion);
-            this.commonDataready = (
-                this.titolari.length > 0 &&
-                this.fascicoli.length > 0 &&
-                this.amministrazioni.length > 0 &&
-                this.mittenti.length > 0 &&
-                this.uffici.length > 0 &&
-                this.ruoli_cipe.length > 0
-            );
         });
 
     }
 
-    private setDirty(apipath: string) {
-
-        if(this.cachedApiDataMetods.indexOf(apipath) != -1) {
-
-            // retrive and set last update to zero for the method
-            let storedUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
-            storedUpdates[apipath] = 0;
-            localStorage.setItem('lastupdates', JSON.stringify(storedUpdates));
-
-            this.isDirty = true;
-        }
-
-    }
-
-    private cacheCommon(apipath: string, lastupdate: number) {
+    private cacheCommonIDB(apipath: string,  lastupdate: number) {
 
         let params = new URLSearchParams();
         params.append('limit', '9999');
-        this.getAll(apipath, params).subscribe(response => {
 
-            // set received data to memory
-            this[apipath] = response.data;
+        this.getAll(apipath, params).subscribe(
+            response => {
 
-            // refresh associated data for selects
-            this.prepareSelects(apipath);
+                //
+                // extends all items with a custom 'text' property which is used by select2 fields
+                // !!! note that prepareSelect2 doesn't return a new extended copy but modifies the passed data directly to save memory !!!
+                //
+                this.prepareSelect2(apipath, response.data);
 
-            // store the data localy
-            localStorage.setItem('stored_'+apipath, JSON.stringify(this[apipath]));
+                //
+                // stores data in memory
+                //
+                this._allData[apipath] = response.data;
 
-            // retrive and update lastupdates for the method with the received timestamp
-            let storedUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
-            storedUpdates[apipath] = lastupdate;
-            localStorage.setItem('lastupdates', JSON.stringify(storedUpdates));
+                //
+                // creates a data hashmap for a convenient and quick lookup access by id
+                //
+                _.each(this._allData[apipath], item => { this.dataEnum[apipath][item.id] = item;  } );
 
-            this.commonDataready = (
-                    this.titolari.length > 0 &&
-                    this.fascicoli.length > 0 &&
-                    this.amministrazioni.length > 0 &&
-                    this.mittenti.length > 0 &&
-                    this.uffici.length > 0 &&
-                    this.ruoli_cipe.length > 0
-            );
-        });
+                //
+                // notifies the subscribers with the new data
+                //
+                this._allData$[apipath].next(this._allData[apipath]);
+
+                //
+                // stores the information on either LocalStorage/WebSQL/IndexedDB
+                //
+                this.warehouse.set('stored_'+apipath, this._allData[apipath]);
+
+                //
+                // retrives and update lastupdates for the apipath with the received timestamp
+                //
+                let storedUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
+                storedUpdates[apipath] = lastupdate;
+                localStorage.setItem('lastupdates', JSON.stringify(storedUpdates));
+
+                //
+                // checks if all cached api methods are loaded
+                //
+                let checkIsReady = true;
+                _.each(this.cachedApiDataMetods, v => {
+                    if(this._allData[v].length === 0) {
+                        checkIsReady = false;
+                        return false; // <-- this is the lodash way to break iteration;
+                    }
+                });
+                this.commonDataready = checkIsReady;
+
+            },
+            error => console.log('Could not load '+apipath)
+        );
     }
 
-    public getSelect(apipath: string) {
-        return this[apipath+'Select'];
-    }
-
-    private prepareSelects(apipath: string) {
-        this[apipath+'Select'] = $.extend(true, [], this[apipath]) as Select2OptionData[];
-        this[apipath+'Enum'] = {};
+    private prepareSelect2( apipath:string, data: any[] ) {
 
         switch (apipath) {
             case 'titolari':
-                this.titolariSelect.forEach((entry) => {
-                    entry.text = entry['codice'] + ' - ' + entry['denominazione'] + ' - ' + entry['descrizione'];
-                    this.titolariEnum[entry['id']] = entry['denominazione'];
-                    this.titolariIdCodEnum[entry['id']] = entry['codice'];
-                });
+                _.each(data,(item) => { item.text = item['codice'] + ' - ' + item['denominazione'] + ' - ' + item['descrizione'] } );
                 break;
-
             case 'fascicoli':
-                this.fascicoli.forEach((entry) => {
-                    entry['titolario'] = this.titolariEnum[entry['titolario']];
-                });
-                this.fascicoliSelect.forEach((entry) => {
-                    entry['text'] = entry['numero_fascicolo'] + ' - ' + entry['argomento'];
-                });
+                _.each(data,(item) => { item.text = item['numero_fascicolo'] + ' - ' + item['argomento'] } );
                 break;
-
             case 'amministrazioni':
-                this.amministrazioniSelect.forEach((entry) => {
-                    entry['text'] = entry['codice'] + ' - ' + entry['denominazione'];
-                    entry['id'] = String(entry['id']);
-                    this._amministrazioniEnum[entry['id']] = entry['denominazione'];
-                });
+                _.each(data,(item) => { item.text = item['codice'] + ' - ' + item['denominazione']; item.id = String(item.id); });
                 break;
-
             case 'mittenti':
-                this.mittentiSelect.forEach((entry) => {
-                    entry['text'] = entry['denominazione'];
-                    this.mittentiEnum[entry['id']] = entry['denominazione'];
-                });
+                _.each(data,(item) => { item.text = item['denominazione'] } );
                 break;
             case 'registri':
-                this.registriSelect.forEach((entry) => {
-                    entry['text'] = entry['numero_fascicolo'] + ' - ' + entry['argomento'];
-                });
+                _.each(data,(item) => { item.text = item['id'] + ' - ' + item['oggetto'] } );
                 break;
             case 'uffici':
-                this.ufficiSelect.forEach((entry) => {
-                    entry.text = entry['denominazione'];
-                    this.ufficiEnum[entry['id']] = entry['denominazione'];
-                    this.ufficiIdCodEnum[entry['id']] = entry['codice'];
-                });
+                _.each(data,(item) => { item.text = item['denominazione'] } );
                 break;
             case 'ruoli_cipe':
-                this.ruoli_cipeSelect.forEach((entry) => {
-                    entry.text = entry['denominazione'];
-                    this.ruoli_cipeEnum[entry['id']] = entry['denominazione'];
-                    this.ruoli_cipeIdCodEnum[entry['id']] = entry['codice'];
-                });
+                _.each(data,(item) => { item.text = item['denominazione'] } );
                 break;
         }
-        //this[apipath+'Select'].unshift({id: '-1', text: 'Inizia a scrivere per selezionare...'});
     }
 
-    // private helper methods
-
+    //
+    // JWT helper method
+    //
     private jwt() {
         // create authorization header with jwt token
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
