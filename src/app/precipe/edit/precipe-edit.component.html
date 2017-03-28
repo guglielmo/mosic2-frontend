@@ -53,7 +53,7 @@
             <ng-template tabHeading>
                 <strong>Ordine del giorno</strong>
             </ng-template>
-            <ul [dragula]='"bag-one"' [dragulaModel]='model.precipe_odg' class="list-group">
+            <ul [dragula]='"precipe_odg"' [dragulaModel]='model.precipe_odg' class="list-group">
                 <li *ngFor="let item of model.precipe_odg" class="list-group-item">
 
                     <div class="row">
@@ -66,13 +66,20 @@
 
                                 <!-- VIEW -->
                                 <div *ngIf="!item.edit">
-                                    <i class="fa fa-sort fa-lg float-xs-left rel-t-m10"> </i> <h2 class="ml-2"> <strong> {{item.ordine}}</strong></h2>
+                                    <i class="fa fa-sort fa-lg float-xs-left rel-t-m10"> </i> <h2 class="ml-2"> <strong>{{item.ordine}}</strong></h2>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-11">
-                            <div class="float-lg-right ml-1"><a (click)="item.edit = !item.edit"><i class="fa fa-edit fa-lg"> </i></a></div>
-                            <h5 class="fw-semi-bold">{{item.denominazione}}</h5>
+                            <h5 class="fw-semi-bold mb-1">
+                                <div class="float-lg-right ml-1"><a (click)="item.edit = !item.edit"><i class="fa fa-edit fa-lg"> </i></a></div>
+                                <div class="float-lg-right ml-1">
+                                    <span *ngIf="item.risultanza !== 1 && item.risultanza !== 2" class="tag tag-default rel-t-l2">N/D</span>
+                                    <span *ngIf="item.risultanza === 2" class="tag tag-warning rel-t-l2">Rinviato</span>
+                                    <span *ngIf="item.risultanza === 1" class="tag tag-success rel-t-l2">Positivo</span>
+                                </div>
+                                {{item.denominazione}}
+                            </h5>
 
                             <accordion [closeOthers]="true" class="mb-lg show" id="precipe_odg_allegati[{{item.id}}]">
                                 <accordion-group #accordionGroupDefinition [panelClass]="'accordion-info'">
@@ -133,30 +140,30 @@
                                                 <div class="col-md-6">
                                                     <label><strong>Risultanza</strong></label>
                                                     <div class="mt-1 rel-t-l7">
-                                        <span class="abc-radio abc-radio-default">
-                                            <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_nd[{{item.id}}]" value=""
-                                                   [checked]="item.risultanza !== 1 && item.risultanza !== 2"
-                                                   (click)="item.risultanza = ''">
-                                            <label for="risultanza_nd[{{item.id}}]">
-                                                <span [ngClass]="{ 'tag tag-default': item.risultanza !== 1 && item.risultanza !== 2 }" class="rel-t-l2">N/D</span>
-                                            </label>
-                                        </span>
+                                                        <span class="abc-radio abc-radio-default">
+                                                            <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_nd[{{item.id}}]" value=""
+                                                                   [checked]="item.risultanza !== 1 && item.risultanza !== 2"
+                                                                   (click)="item.risultanza = ''">
+                                                            <label for="risultanza_nd[{{item.id}}]">
+                                                                <span [ngClass]="{ 'tag tag-default': item.risultanza !== 1 && item.risultanza !== 2 }" class="rel-t-l2">N/D</span>
+                                                            </label>
+                                                        </span>
                                                         <span class="abc-radio abc-radio-warning">
-                                            <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_rinviato[{{item.id}}]" value="2"
-                                                   [checked]="item.risultanza === 2"
-                                                   (click)="item.risultanza = 2">
-                                            <label for="risultanza_rinviato[{{item.id}}]">
-                                                <span [ngClass]="{ 'tag tag-warning': item.risultanza === 2 }" class="rel-t-l2">Rinviato</span>
-                                            </label>
-                                        </span>
+                                                            <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_rinviato[{{item.id}}]" value="2"
+                                                                   [checked]="item.risultanza === 2"
+                                                                   (click)="item.risultanza = 2">
+                                                            <label for="risultanza_rinviato[{{item.id}}]">
+                                                                <span [ngClass]="{ 'tag tag-warning': item.risultanza === 2 }" class="rel-t-l2">Rinviato</span>
+                                                            </label>
+                                                        </span>
                                                         <span class="abc-radio abc-radio-success">
-                                            <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_positivo[{{item.id}}]" value="1"
-                                                   [checked]="item.risultanza === 1"
-                                                   (click)="item.risultanza = 1">
-                                            <label for="risultanza_positivo[{{item.id}}]">
-                                                <span [ngClass]="{ 'tag tag-success': item.risultanza === 1 }" class="rel-t-l2">Positivo</span>
-                                            </label>
-                                        </span>
+                                                            <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_positivo[{{item.id}}]" value="1"
+                                                                   [checked]="item.risultanza === 1"
+                                                                   (click)="item.risultanza = 1">
+                                                            <label for="risultanza_positivo[{{item.id}}]">
+                                                                <span [ngClass]="{ 'tag tag-success': item.risultanza === 1 }" class="rel-t-l2">Positivo</span>
+                                                            </label>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -274,12 +281,20 @@
                                         <i class="fa fa-files-o fa-lg"></i> &nbsp; <strong>Documenti inclusi in ODG</strong>
                                         <i class="fa float-xs-right"
                                            [ngClass]="{'fa-angle-down': accordionGroupDocs?.isOpen, 'fa-angle-right': !accordionGroupDocs?.isOpen}"></i>
-
                                     </div>
-                                    <div>
-                                        <p>
-                                            <span class="fw-semi-bold">Non ancora implementato</span>
-                                        </p>
+                                    <div *ngFor="let id_registri_odg of castToArray(item.id_registri)" class="filetypes-small">
+                                        <div *ngFor="let allegato of _allegati$[id_registri_odg] | async">
+                                            <input type="checkbox"
+                                                   [checked]="allegato.to_share"
+                                                   (change)="allegato.to_share = !allegato.to_share">
+                                            <label class="rel-t-m4">
+                                                <i class="filetypes filetypes-{{allegato.tipo}}"></i>
+                                                <a href="{{apiService.config.baseAPIURL}}/{{allegato.relURI}}" target="_blank"
+                                                   title="Dimensione: {{allegato.dimensione | fileSize}} - Data caricato: {{allegato.data  | date: 'dd/MM/yyyy HH:mm'}}">
+                                                    {{allegato.nome}}
+                                                </a>
+                                            </label>
+                                        </div>
                                     </div>
                                 </accordion-group>
                             </accordion>

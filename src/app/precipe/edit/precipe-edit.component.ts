@@ -1,5 +1,6 @@
 import { Component, OnInit, EventEmitter, NgZone, Inject} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { APICommonService } from '../../_services/index';
 import { AppConfig } from '../../app.config';
@@ -10,6 +11,9 @@ import { NgUploaderOptions, UploadedFile } from 'ngx-uploader';
 import * as _ from 'lodash';
 import { Precipe, PrecipeOdg } from '../../_models/index';
 import { DragulaService } from 'ng2-dragula';
+import {forEach} from "@angular/router/src/utils/collection";
+
+
 
 
 @Component({
@@ -24,6 +28,11 @@ export class PreCipeEditComponent implements OnInit {
     public fascicoli$: Observable<Fascicoli[]>;
     public registri$: Observable<Registri[]>;
     public uffici$: Observable<Uffici[]>;
+
+    private _allegati: any = {};
+    private _allegati$: any = {};
+    public _: any;
+
 
     private NGUPoptions_APG: NgUploaderOptions;
     private NGUPoptions_TLX: NgUploaderOptions;
@@ -127,7 +136,8 @@ export class PreCipeEditComponent implements OnInit {
                         response => {
                             this.model = response.data;
                             this.model.data = new Date(this.model.data);
-                            this.model.ufficiale_riunione = '0';
+                            this.getRegistri();
+                            //this.model.ufficiale_riunione = '0';
                             this.loading = false;
                             this.allowUpload = true;
                             // console.log(this.model);
@@ -139,6 +149,29 @@ export class PreCipeEditComponent implements OnInit {
                         });
                 break;
         }
+    }
+
+    getRegistri() {
+        const id_registri = _.flatten(_.map(this.model.precipe_odg, 'id_registri'));
+
+        id_registri.forEach( id => {
+            this._allegati[id] = {};
+            this._allegati$[id] = <BehaviorSubject<any[]>> new BehaviorSubject([]);
+
+           this.apiService.getById('registri', id)
+               .subscribe( response => {
+                  this._allegati[id] = _.map(response.data.allegati, o => _.extend({to_share: true}, o));
+                  this._allegati$[id].next(this._allegati[id]);
+               },
+               error => {
+                   this.error = error; console.log(error);
+                   this.loading = false;
+               });
+        });
+    }
+
+    castToArray(item) {
+        return item ? _.castArray(item) : [];
     }
 
     cancel( event ) {
