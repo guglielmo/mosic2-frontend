@@ -40,3 +40,9 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Dev files
+build_n_sync.sh
+test.html
+test.json
+/src/app/registri/edit/upload.php
