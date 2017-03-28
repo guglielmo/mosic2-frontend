@@ -38,8 +38,8 @@
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">
                 <table class="table table-hover table-condensed mb-0 table-bordered"
-                       [mfData]="apiService.mittenti | mittentiDataFilter : filter.denominazione : filteredCount"
-                       [mfSortBy]="codice" [mfSortOrder]="'asc'"
+                       [mfData]="mittenti$ | async | mittentiDataFilter : filter.denominazione : filteredCount"
+                       [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
                        #mf="mfDataTable" stickthead>
                     <thead>
                     <tr>
@@ -51,7 +51,7 @@
                     <tbody>
                     <tr *ngFor="let mittente of mf.data" (click)="editId(mittente.id)" class="clickable">
                         <td>{{mittente.id}}</td>
-                        <td [innerHTML]="mittente.denominazione | mittentiDataMark : filter.denominazione"></td>
+                        <td [innerHTML]="mittente.denominazione | dataMark : filter.denominazione"></td>
                         <td>
                             <a (click)="askDeleteMittenti($event, myModal, mittente)"><i class="fa fa-trash-o"> </i></a>
                         </td>

@@ -1,21 +1,16 @@
-import { NgModule }                           from '@angular/core';
-import { CommonModule }                       from '@angular/common';
-import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
-import { RouterModule }                       from '@angular/router';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
-import { ModalModule }                        from 'ngx-modal';
-import { StickTheadModule }                   from '../_directives/stickthead/stickthead.module';
-import { DataTableModule }                    from 'angular2-datatable';
-import { PipesSharedModule }                  from '../_shared/index'
-
-
-import 'select2/dist/js/select2.full.js';
-import { Select2Module }                      from 'ng2-select2';
-
-// datetime picker
-import 'bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js';
-import 'bootstrap-datepicker/dist/locales/bootstrap-datepicker.it.min.js';
+import { ModalModule } from 'ngx-modal';
+import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
+import { DataTableModule } from 'angular2-datatable';
+import { PipesSharedModule } from '../_shared/index';
+import { Select2Module } from 'ng2-select2';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
+import { TooltipModule } from 'ng2-bootstrap/tooltip';
+
 
 import { FascicoliListComponent } from './list/fascicoli-list.component';
 import { FascicoliEditComponent } from './edit/fascicoli-edit.component';
@@ -43,6 +38,7 @@ export const routes = [
     NKDatetimeModule,
     Select2Module,
     PipesSharedModule,
+    TooltipModule.forRoot(),
     RouterModule.forChild(routes)
   ],
   declarations: [
@@ -50,6 +46,6 @@ export const routes = [
       FascicoliEditComponent
   ]
 })
-export default class FascicoliModule {
+export class FascicoliModule {
   static routes = routes;
 }

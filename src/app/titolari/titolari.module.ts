@@ -1,18 +1,20 @@
-import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
-import { FormsModule,
-  ReactiveFormsModule }      from '@angular/forms';
+import { NgModule }                             from '@angular/core';
+import { CommonModule }                         from '@angular/common';
+import { FormsModule, ReactiveFormsModule }     from '@angular/forms';
 
-import { RouterModule } from '@angular/router';
+import { RouterModule }                         from '@angular/router';
 
-import { ModalModule } from 'ngx-modal';
-import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
-import { DataTableModule } from 'angular2-datatable';
+import { ModalModule }                          from 'ngx-modal';
+import { StickTheadModule }                     from '../_directives/stickthead/stickthead.module';
+import { DataTableModule }                      from 'angular2-datatable';
 
-import { TitolariListComponent } from './list/titolari-list.component';
-import { TitolariEditComponent } from './edit/titolari-edit.component';
+import { PipesSharedModule }                    from '../_shared/index'
 
-import { WidgetModule } from '../layout/widget/widget.module';
+
+import { TitolariListComponent }                from './list/titolari-list.component';
+import { TitolariEditComponent }                from './edit/titolari-edit.component';
+
+import { WidgetModule }                         from '../layout/widget/widget.module';
 
 export const routes = [
   {path: '', redirectTo: 'list', pathMatch: 'full'},
@@ -32,7 +34,7 @@ export const routes = [
     ModalModule,
     StickTheadModule,
     DataTableModule,
-
+    PipesSharedModule,
     RouterModule.forChild(routes)
   ],
   declarations: [
@@ -40,6 +42,6 @@ export const routes = [
       TitolariEditComponent
   ]
 })
-export default class TitolariModule {
+export class TitolariModule {
   static routes = routes;
 }

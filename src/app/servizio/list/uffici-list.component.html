@@ -39,8 +39,8 @@
             <div class="widget-body widget-table-overflow">
 
                 <table class="table table-hover table-condensed mb-0 table-bordered"
-                       [mfData]="apiService.uffici | ufficiDataFilter : filter.denominazione : filteredCount"
-                       [mfSortBy]="codice" [mfSortOrder]="'asc'"
+                       [mfData]="uffici$ | async | ufficiDataFilter : filter.denominazione : filteredCount"
+                       [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
                        #mf="mfDataTable" stickthead>
                     <thead>
                     <tr>
@@ -56,7 +56,7 @@
                     <tbody>
                     <tr *ngFor="let ufficio of mf.data" (click)="editId(ufficio.id)" class="clickable">
                         <td>{{ufficio.id}}</td>
-                        <td [innerHTML]="ufficio.denominazione | ufficiDataMark : filter.denominazione"></td>
+                        <td [innerHTML]="ufficio.denominazione | dataMark : filter.denominazione"></td>
                         <td>{{ufficio.codice_direzione}}</td>
                         <td>{{ufficio.ordine_ufficio}}</td>
                         <td>

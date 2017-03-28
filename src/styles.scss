@@ -1,0 +1,47 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "app/scss/variables";
+@import "app/scss/mixins";
+
+@import "~bootstrap/scss/bootstrap";
+
+
+$OpenSansPath: "~open-sans-fontface/fonts";
+@import "~open-sans-fontface/open-sans";
+$simple-line-font-path: "~simple-line-icons/fonts/";
+@import "~simple-line-icons/scss/simple-line-icons";
+$fa-font-path: "~font-awesome/fonts";
+@import "~font-awesome/scss/font-awesome";
+
+$glyphicons-filetypes-font-path: "/assets/fonts";
+@import "/assets/scss/glyphicons-filetypes";
+$glyphicons-halflings-font-path: "/assets/fonts";
+@import "/assets/scss/glyphicons-halflings";
+
+@import "~pace/themes/pace-theme-flash";
+
+@import "~animate.css/animate";
+
+@import "~awesome-bootstrap-checkbox/awesome-bootstrap-checkbox";
+
+@import "app/scss/select2-variables";
+@import "~select2/src/scss/core";
+@import "~select2-bootstrap-theme/src/select2-bootstrap";
+
+@import "~bootstrap-datepicker/dist/css/bootstrap-datepicker3.min";
+
+@import "~dragula/dist/dragula";
+
+@import "app/scss/bootstrap-override";
+@import "app/scss/libs-override";
+
+//end custom libs
+
+//everything below this line is required for essential styling
+@import "app/scss/general";
+@import "app/scss/global-transitions";
+@import "app/scss/base";
+@import "app/scss/utils";
+@import "app/scss/print";
+
+:focus { outline: none !important; }

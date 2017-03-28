@@ -8,8 +8,8 @@ import { RouterModule } from '@angular/router';
 import { ModalModule } from 'ngx-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DataTableModule } from 'angular2-datatable';
-import { AmministrazioniDataFilterPipe,
-  AmministrazioniDataMarkPipe }   from '../_pipes/index';
+import { AmministrazioniDataFilterPipe }   from '../_pipes/index';
+import { PipesSharedModule } from '../_shared/index';
 
 import { AmministrazioniListComponent } from './list/amministrazioni-list.component';
 import { AmministrazioniEditComponent } from './edit/amministrazioni-edit.component';
@@ -34,16 +34,15 @@ export const routes = [
     ModalModule,
     StickTheadModule,
     DataTableModule,
-
+    PipesSharedModule,
     RouterModule.forChild(routes)
   ],
   declarations: [
       AmministrazioniListComponent,
       AmministrazioniEditComponent,
-      AmministrazioniDataFilterPipe,
-      AmministrazioniDataMarkPipe
+      AmministrazioniDataFilterPipe
   ]
 })
-export default class AmministrazioniModule {
+export class AmministrazioniModule {
   static routes = routes;
 }

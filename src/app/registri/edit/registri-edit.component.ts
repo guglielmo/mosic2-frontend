@@ -1,12 +1,21 @@
-import { Component, OnInit, ViewEncapsulation, NgZone, Inject, EventEmitter, AfterViewChecked, ChangeDetectorRef, Renderer, OnDestroy } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    ViewEncapsulation,
+    NgZone,
+    Inject,
+    EventEmitter,
+    AfterViewChecked,
+    OnDestroy
+} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-//import {__platform_browser_private__} from '@angular/platform-browser'; // needed for select2 styles override hack
+import { Titolari, Fascicoli, Amministrazioni, Mittenti, Allegati } from '../../_models/index';
+import { APICommonService } from '../../_services/index';
+import { AppConfig } from '../../app.config';
+import { NgUploaderOptions, UploadedFile } from 'ngx-uploader';
+import { Observable } from 'rxjs/Observable';
 
-import {Titolari, Fascicoli, Amministrazioni, Mittenti} from '../../_models/index';
-import {APICommonService} from '../../_services/index';
-import {AppConfig} from '../../app.config';
-
-import { NgUploaderOptions, UploadedFile, UploadRejected } from 'ngx-uploader';
+import * as _ from 'lodash';
 
 @Component({
     templateUrl: 'registri-edit.component.html',
@@ -14,76 +23,55 @@ import { NgUploaderOptions, UploadedFile, UploadRejected } from 'ngx-uploader';
 })
 export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestroy {
 
-    config: any;
-    model: any = {};
-    error: string = '';
-    mode: string;
-    loading: boolean = false;
-    allowUpload: boolean = false;
-    id: number;
-    selected: any;
+    private config: any;
+    public model: any = {};
+    private error = '';
+    public mode: string;
+    private loading = false;
+    private select2Debounce = false;
+    private scrollDone = false;
+    public allowUpload = false;
+    private id: number;
 
-    routeFragmentSubscription: any;
+    private routeFragmentSubscription: any;
 
-    options: NgUploaderOptions;
-    sizeLimit: number = 1000000; // 1MB
-    previewData: any;
-    errorMessage: string;
-    inputUploadEvents: EventEmitter<string>;
-    hasBaseDropZoneOver: boolean;
-    private progress: number = 0;
+    public NGUPoptions: NgUploaderOptions;
+    public previewData: any;
+    public errorMessage: string;
+    private inputUploadEvents: EventEmitter<string>;
+    public hasBaseDropZoneOver: boolean;
+    public progress = 0;
     private response: any[] = [];
 
-    titolari: Titolari[] = [];
-    fascicoli: Fascicoli[] = [];
-    amministrazioni: Amministrazioni[] = [];
-    mittenti: Mittenti[] = [];
+    public deletingFile: Allegati = new Allegati;
+
+    public titolari$: Observable<Titolari[]>;
+    public fascicoli$: Observable<Fascicoli[]>;
+    public amministrazioni$: Observable<Amministrazioni[]>;
+    public mittenti$: Observable<Mittenti[]>;
 
     public select2Options: Select2Options;
     public select2WithAddOptions: Select2Options;
     public select2OptionsMulti: Select2Options;
+    public select2WithAddOptionsMulti: Select2Options;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
-                private apiService: APICommonService,
-                private changeDetectionRef : ChangeDetectorRef,
-                private renderer: Renderer,
+                public apiService: APICommonService,
                 config: AppConfig,
-                @Inject(NgZone) private zone: NgZone
-    ) {
+                @Inject(NgZone) private zone: NgZone) {
 
         this.config = config.getConfig();
 
         this.select2Options = config.select2Options;
         this.select2WithAddOptions = config.select2WithAddOptions;
-        this.select2OptionsMulti = Object.assign({}, config.select2Options);
-        this.select2OptionsMulti['multiple'] = true;
+        this.select2OptionsMulti = config.select2OptionsMulti;
+        this.select2WithAddOptionsMulti = config.select2WithAddOptionsMulti;
 
-        this.select2WithAddOptions = Object.assign({}, config.select2Options);
-        this.select2WithAddOptions['tags'] = true;
-
-        this.select2WithAddOptions['insertTag'] = (data, tag) => {
-            console.log("select2WithAddOptions['insertTag']", data.length);
-
-            let markup = '';
-            if(data.length === 0) {
-                markup += "<strong>Nessuna corrispondenza trovata</strong><br/>";
-            }
-                markup += '<h5><i class="fa fa-plus-circle"> </i> Aggiungi <strong>'+tag.text+'</strong></h5>';
-                tag.text = markup;
-                data.push(tag);
-
-            //this.changeDetectionRef.detectChanges();
-        };
-
-        this.select2WithAddOptions['createTag'] = (tag) => {
-            console.log("select2WithAddOptions['createTag']");
-            return {
-                id: tag.term,
-                text: tag.term,
-                isNew : true
-            };
-        };
+        this.titolari$ = this.apiService.subscribeToDataService('titolari');
+        this.fascicoli$ = this.apiService.subscribeToDataService('fascicoli');
+        this.amministrazioni$ = this.apiService.subscribeToDataService('amministrazioni');
+        this.mittenti$ = this.apiService.subscribeToDataService('mittenti');
 
         this.inputUploadEvents = new EventEmitter<string>();
     }
@@ -93,13 +81,12 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
 
         this.id = +this.route.snapshot.params['id'];
 
-        this.options = new NgUploaderOptions({
+        this.NGUPoptions = new NgUploaderOptions({
             url: this.config.baseAPIURL + '/api/registri/' + this.id + '/upload',
-            //url: 'http://upload.mosic.hantarex.org/upload.php',
-            filterExtensions: true,
-            allowedExtensions: ['jpg', 'png', 'gif', 'pdf', 'doc'],
+            // url: 'http://upload.mosic.hantarex.org/upload.php',
+            filterExtensions: false,
             maxSize: 250000000,
-            data: { id_registri: this.id },
+            data: {id_registri: this.id},
             autoUpload: true,
             fieldName: 'file',
             fieldReset: true,
@@ -110,16 +97,16 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
             withCredentials: true,
             authTokenPrefix: 'Bearer',
             authToken: this.jwt()
-
         });
 
         this.mode = isNaN(this.id) ? 'create' : 'update';
         switch (this.mode) {
             case 'create':
                 this.model = {
-                    "id_titolari": -1,
-                    "id_fascicoli": -1,
-                    "id_mittenti": -1,
+                    'id_titolari': '',
+                    'id_fascicoli': '',
+                    'id_mittenti': '',
+                    'id_amministrazioni': '',
                 };
                 break;
 
@@ -133,52 +120,41 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
                             this.allowUpload = true;
                         },
                         error => {
-                            this.error = error;
+                            this.error = error; console.log(error);
                             this.loading = false;
                         });
                 break;
         }
 
-        $('#content').on("select2:select", "#id_mittenti", (e: any) => {
-            console.log('on("select2:select")');
+/*        $('#content').on("select2:select", "#id_mittenti", (e: any) => {
+            //console.log('on("select2:select")');
             //console.log('select2:select',e.params.data.id);
             if (e.params.data.isNew) {
-                console.log('isNew!',e.params.data);
-                this.createTag('mittenti',e.params.data.id);
+                console.log('isNew!', e.params.data);
+                this.createTag('mittenti', e.params.data.id);
             }
-        });
+        });*/
     }
 
     ngAfterViewChecked() {
         // checks if there's an anchor hash in the URL and jumps to it
         this.routeFragmentSubscription = this.route.fragment
             .subscribe(fragment => {
-                if (fragment) {
-                    let element = document.getElementById(fragment);
+                if (!this.scrollDone && fragment) {
+                    const element = document.getElementById(fragment);
                     if (element) {
                         element.scrollIntoView();
+                        this.scrollDone = true;
                     }
                 }
             });
-    }
-
-    createTag(type: string, name: string ) {
-        let data = { 'denominazione': name };
-        this.apiService.create(type, data)
-            .subscribe(
-                data => {
-                    console.log(data);
-                },
-                error => {
-                    this.error = error;
-                });
     }
 
     ngOnDestroy() {
         this.routeFragmentSubscription.unsubscribe();
     }
 
-    cancel( event ) {
+    cancel(event) {
         this.router.navigate(['/app/registri/list']);
     }
 
@@ -195,7 +171,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
                             modal.open();
                         },
                         error => {
-                            this.error = error;
+                            this.error = error; console.log(error);
                             this.loading = false;
                         });
                 break;
@@ -207,7 +183,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
                             this.router.navigate(['/app/registri/list']);
                         },
                         error => {
-                            this.error = error;
+                            this.error = error; console.log(error);
                             this.loading = false;
                         });
                 break;
@@ -216,23 +192,152 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
 
     select2Changed(e: any, name: string): void {
 
-        this.model[name] = typeof e.value === 'object' ? e.value.join(',') : e.value;
+        if (this.select2Debounce) {
+            this.select2Debounce = false;
+            return;
+        }
 
-        if( name == 'id_titolari' || name == 'id_fascicoli') {
+        // converts value to arrays to handle multi-selects and selects in the same way
+        let V = [];
+        if (null != e.value) {
+            switch (typeof e.value) {
+                case 'string':
+                    V = e.value.split(',');
+                    break;
+                case 'object':
+                    V = e.value;
+                    break;
+            }
+        }
+
+        let selectedCount = 0;
+        if (typeof this.model[name] === 'string' && this.model[name] !== '') {
+            selectedCount = this.model[name].split(',').length;
+        }
+
+        if (V.length > selectedCount) {
+            // Value added
+            // console.log('value added');
+            this.mayBeCreateNewSelect2Values(name);
+
+        } else if (V.length < selectedCount) {
+            // Value removed
+            // console.log('value removed');
+
+        } else if (V.join(',') !== this.model[name]) {
+            // console.log('value changed');
+            this.mayBeCreateNewSelect2Values(name);
+        }
+
+        // don't allow upload when registro classification is changed
+        // as we first need to move the current files on the server
+        if (name === 'id_titolari' || name === 'id_fascicoli') {
             this.allowUpload = false;
         }
 
-/*        console.log(name, e.value);
-        if(parseInt(e.value)) {
-            this.model[name] = Number(e.value);
-        } else {
-            this.model[name] = e.value;
-        }*/
+        // go back to comma separated strings in the model value as the server handles
+        // both single and multi selects as strings
+        this.model[name] = V.join(',');
+
+        // debounce change events and reset id_fascicoli when titolari changes
+        if (name === 'id_titolari') {
+            this.select2Debounce = true;
+            this.model.id_fascicoli = '';
+        }
     }
+
+    mayBeCreateNewSelect2Values(name) {
+
+        const newValues = $('#' + name + ' select option[data-select2-tag="true"]');
+
+        if (newValues.length) {
+
+            const apipath = name.split('_')[1];
+
+            newValues.each((index: number, elem: HTMLInputElement) => {
+
+                this.apiService.create(apipath, { 'denominazione': elem.value } )
+                    .subscribe(
+                        response => {
+                            const id = response.data.id,
+                                 den = response.data.denominazione;
+
+                            const label = id + ' - ' + den;
+                            response.data.text = label;
+
+                            // creates the new entry on the relative apiService select2 data
+                            this.apiService[apipath + 'Select'].push(response.data);
+
+                            // find the select element and update temporary id with the new assigned id
+                            $('#' + name + ' select option[value="' + den + '"]').val(id).text(label);
+
+                            // replace the temporary id in the model with the new assigned id
+                            const selectedValues = this.model[name].split(',');
+
+                            const i = _.indexOf(selectedValues, _.find(selectedValues, den));
+                            selectedValues.splice(i, 1, id);
+
+                            this.model[name] = selectedValues.join(',');
+
+
+                            // update select2 data
+                            // $('#'+name+' select').select2('data',response.data, true);
+
+                            // find the select2 choice and update the temporary label with the new assigned id
+                            // $('#'+name+' .select2-selection__choice[title="'+den+'"]').prop('title',label);
+                        },
+                        error => {
+                            this.error = error; console.log(error);
+                        });
+            });
+        }
+    };
+
+
+/*
+    createTag(type: string, name: string) {
+        let data = {'denominazione': name};
+        this.apiService.create(type, data)
+            .subscribe(
+                data => {
+                    console.log(data);
+                },
+                error => {
+                    this.error = error; console.log(error);
+                });
+    }
+*/
 
     public confirmCodeNotification(modal: any) {
         modal.close();
-        this.router.navigate(['/app/registri/edit/'+this.model.id]);
+        this.router.navigate(['/app/registri/edit/' + this.model.id]);
+    }
+
+    askDeleteFile(event: any, modal: any, allegato: Allegati) {
+        event.stopPropagation();
+        this.deletingFile = allegato;
+        modal.open();
+    }
+
+    confirmDeleteFile(modal: any) {
+        modal.close();
+        this.deleteFile(this.deletingFile);
+        this.deletingFile = new Allegati;
+    }
+
+    deleteFile(allegato: Allegati) {
+        this.apiService.deleteFile('registri', this.id, allegato.id)
+            .subscribe(
+                data => {
+                    console.log('deleted', data.id_allegati);
+                    this.model.allegati = this.model.allegati.filter(function( obj ) {
+                        return obj.id !== data.id_allegati;
+                    });
+                    this.apiService.refreshCommonCache();
+                }, error => {
+                    this.error = error; console.log(error);
+                }
+            );
     }
 
     /*
@@ -248,7 +353,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
 
     rejectUpload(e) {
         console.log(e);
-        this.errorMessage = 'File is too large!';
+        this.errorMessage = 'Il file è troppo grande. (Max: 25MB)';
     }
 
     beforeUpload(uploadingFile: UploadedFile): void {
@@ -260,29 +365,46 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
 
     handleMultipleUpload(data: any): void {
 
-        let index = this.response.findIndex(x => x.id === data.id);
-        if (index === -1) {
-            this.response.push(data);
-        } else {
-            let total = 0, uploaded = 0;
-            this.response.forEach(resp => {
-                total += resp.progress.total;
-                uploaded += resp.progress.loaded;
-            });
-            let percent = uploaded / (total / 100) / 100;
+        if (data && data.response === '') {
+            // upload error
 
-            if(data.done) {
-                if(!this.model.allegati) this.model.allegati = [];
+            this.apiService.notifyError('Si è verificato un errore nel caricamento del file. Consultare la console per ulteriori informazioni.');
+            console.log(data);
+
+        } else if (data && data.response && data.response.indexOf('error') !== -1) {
+
+            const response = JSON.parse(data.response);
+            this.apiService.notifyError(response.error.message);
+            console.log(data);
+
+        } else if (data && data.response) {
+
+            // upload success
+
+            if (data.done) {
+                if (!this.model.allegati) { this.model.allegati = []; }
                 this.model.allegati.push(JSON.parse(data.response));
             }
 
-            //console.log(this.model.allegati);
+            const index = this.response.findIndex(x => x.id === data.id);
+            if (index === -1) {
+                this.response.push(data);
+            } else {
+                let total = 0, uploaded = 0;
+                this.response.forEach(resp => {
+                    total += resp.progress.total;
+                    uploaded += resp.progress.loaded;
+                });
+                const percent = uploaded / (total / 100) / 100;
+
+                // console.log(this.model.allegati);
 
 
-            this.zone.run(() => {
-                this.response[index] = data;
-                this.progress = percent;
-            });
+                this.zone.run(() => {
+                    this.response[index] = data;
+                    this.progress = percent;
+                });
+            }
         }
     }
 
@@ -296,7 +418,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
 
     private jwt() {
         // get jwt token
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (currentUser && currentUser.token) {
             return currentUser.token;
         }

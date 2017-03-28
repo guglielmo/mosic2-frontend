@@ -14,12 +14,12 @@ import { APICommonService } from '../_services/index';
 })
 export class Signup {
   model: any = {};
-  error: string = '';
+  error = '';
   loading = false;
 
   constructor(
       private router: Router,
-      private apiService: APICommonService
+      public apiService: APICommonService
   ) { }
 
   register() {

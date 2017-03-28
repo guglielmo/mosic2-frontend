@@ -1,19 +1,23 @@
-import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { RouterModule } from '@angular/router';
-import { Dashboard } from './dashboard.component.ts';
+import { DashboardComponent } from './dashboard.component';
 import { WidgetModule } from '../layout/widget/widget.module';
 
 export const routes = [
-  { path: '', component: Dashboard, pathMatch: 'full' }
+  { path: '', component: DashboardComponent, pathMatch: 'full' }
 ];
 
 
 @NgModule({
-  imports: [ CommonModule, WidgetModule, RouterModule.forChild(routes) ],
-  declarations: [ Dashboard ]
+  imports: [
+    CommonModule,
+    WidgetModule,
+    RouterModule.forChild(routes)
+  ],
+  declarations: [ DashboardComponent ]
 })
-export default class DashboardModule {
+export class DashboardModule {
   static routes = routes;
 }

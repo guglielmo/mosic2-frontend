@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-declare let jQuery: any;
+declare const jQuery: any;
 
 @Injectable()
 export class AppConfig {
@@ -10,9 +10,9 @@ export class AppConfig {
         name: 'mosic 2.0',
         title: 'Mo.Si.C. - Monitoraggio Sistema CIPE',
         version: '2.0.0-alpha.2',
-        //baseAPIURL: '',
+        // baseAPIURL: '',
         baseAPIURL: 'http://mosicapi.tdrynx.info',
-        //baseAPIURL: 'http://mosicapi.staging.celata.com',
+        // baseAPIURL: 'http://mosicapi.staging.celata.com',
         /**
          * Whether to print and alert some log information
          */
@@ -62,18 +62,19 @@ export class AppConfig {
         }
     };
 
+    // basic Select2 options
     select2Options = {
         theme: 'bootstrap',
         placeholder: 'Inizia a scrivere per selezionare...',
-        //allowClear: true, <-- not yet available for a bug in ng2-select2 as of version 1.0.0-beta.10
+        // allowClear: true, <-- not yet available for a bug in ng2-select2 as of version 1.0.0-beta.10
         templateResult: (item) => {
             // No need to template the searching text
             if (item.loading) {
                 return item.text;
             }
 
-            var term = this.query.term || '';
-            var $result = this.markMatch(item.text, term);
+            const term = this.query.term || '';
+            const $result = this.markMatch(item.text, term);
 
             return $result;
         },
@@ -94,11 +95,11 @@ export class AppConfig {
             if (term.trim() === '') {
                 return true;
             }
-            let keywords = term.split(' ');
 
-            for (var i = 0; i < keywords.length; i++) {
-
-                if ((text.toUpperCase()).indexOf((keywords[i]).toUpperCase()) == -1) {
+            // multi token case insensitive search
+            const keywords = term.split(' ');
+            for (let i = 0; i < keywords.length; i++) {
+                if ((text.toUpperCase()).indexOf((keywords[i]).toUpperCase()) === -1) {
                     return false;
                 }
             }
@@ -106,25 +107,27 @@ export class AppConfig {
         }
     };
 
-
+    // deep clone basic Select2 options and add multiple flag
     select2OptionsMulti = $.extend(true, {}, this.select2Options, { multiple: true } );
+
+    // deep clone basic Select2 options and add functions to prepare for "tags" (or whatever) creation
     select2WithAddOptions = $.extend(true, {}, this.select2Options, {
         tags: true,
         insertTag: (data, tag) => {
-            //console.log("select2WithAddOptions['insertTag']", data.length);
+            // console.log("select2WithAddOptions['insertTag']", data.length);
 
             let markup = '';
             if (data.length === 0) {
-                markup += "<strong>Nessuna corrispondenza trovata</strong><br/>";
+                markup += '<strong>Nessuna corrispondenza trovata</strong><br/>';
             }
             markup += '<h5><i class="fa fa-plus-circle"> </i> Aggiungi <strong>' + tag.text + '</strong></h5>';
             tag.text = markup;
             data.push(tag);
 
-            //this.changeDetectionRef.detectChanges();
+            // this.changeDetectionRef.detectChanges();
         },
         createTag: (tag) => {
-            //console.log("select2WithAddOptions['createTag']");
+            // console.log("select2WithAddOptions['createTag']");
             return {
                 id: tag.term,
                 text: tag.term,
@@ -132,7 +135,18 @@ export class AppConfig {
             };
         }
     });
+
+    // deep clone select2WithAddOptions and add multiple option
     select2WithAddOptionsMulti = $.extend(true, {}, this.select2WithAddOptions, { multiple: true } );
+
+    datePickerOptions = {
+        language: 'it',
+        icon: 'fa fa-calendar',
+        todayBtn: 'linked',
+        todayHighlight: true,
+        placeholder: 'Scegli data',
+        autoclose: true
+    };
 
     _resizeCallbacks = [];
     _screenSizeCallbacks = {
@@ -143,29 +157,30 @@ export class AppConfig {
         xl: {enter: [], exit: []}
     };
 
-    notify():any {
+    notify(): any {
 
     }
 
     markMatch(text: string, term: string): any {
-        let res, reg, words = [], val = $.trim(term.replace(/[<>]?/g, ""));
+        let res, reg, words = [];
+        const val = $.trim(term.replace(/[<>]?/g, ''));
         if (val.length > 0) {
-            words = val.split(" ");
-            reg = new RegExp("(?![^<]+>)(" + words.join("|") + ")", "ig");
-            res = text.replace(reg, "<span class='select2-rendered__match'>$&</span>");
+            words = val.split(' ');
+            reg = new RegExp('(?![^<]+>)(' + words.join('|') + ')', 'ig');
+            res = text.replace(reg, '<span class="select2-rendered__match">$&</span>');
         }
         return words.length > 0 ? $('<span>' + res + '</span>') : $('<span>' + text + '</span>');
 
     }
 
     isScreen(size): boolean {
-        let screenPx = window.innerWidth;
+        const screenPx = window.innerWidth;
         return (screenPx >= this.config.settings.screens[size + '-min'] || size === 'xs')
             && (screenPx <= this.config.settings.screens[size + '-max'] || size === 'xl');
     }
 
     getScreenSize(): string {
-        let screenPx = window.innerWidth;
+        const screenPx = window.innerWidth;
         if (screenPx <= this.config.settings.screens['xs-max']) {
             return 'xs';
         }
@@ -199,8 +214,8 @@ export class AppConfig {
     }
 
     changeColor(color, ratio, darker): string {
-        let pad = function (num, totalChars): number {
-            let padVal = '0';
+        const pad = function (num, totalChars): number {
+            const padVal = '0';
             num = num + '';
             while (num.length < totalChars) {
                 num = padVal + num;
@@ -217,7 +232,7 @@ export class AppConfig {
         );
 
         // Calculate ratio
-        let difference = Math.round(ratio * 256) * (darker ? -1 : 1),
+        const difference = Math.round(ratio * 256) * (darker ? -1 : 1),
             // Determine if input is RGB(A)
             rgb = color.match(new RegExp('^rgba?\\(\\s*' +
                 '(\\d|[1-9]\\d|1\\d{2}|2[0-4][0-9]|25[0-5])' +
@@ -304,7 +319,7 @@ export class AppConfig {
         jQuery(window).resize(() => {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
-                let size = this.getScreenSize();
+                const size = this.getScreenSize();
                 if (size !== prevSize) { // run only if something changed
                     // run exit callbacks first
                     this._screenSizeCallbacks[prevSize].exit.forEach((fn) => {
@@ -314,7 +329,7 @@ export class AppConfig {
                     this._screenSizeCallbacks[size].enter.forEach((fn) => {
                         fn(size, prevSize);
                     });
-                    //console.log('screen changed. new: ' + size + ', old: ' + prevSize);
+                    // console.log('screen changed. new: ' + size + ', old: ' + prevSize);
                 }
                 prevSize = size;
             }, 100);

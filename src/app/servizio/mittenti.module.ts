@@ -8,8 +8,8 @@ import { RouterModule } from '@angular/router';
 import { ModalModule } from 'ngx-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DataTableModule } from 'angular2-datatable';
-import { MittentiDataFilterPipe,
-  MittentiDataMarkPipe }   from '../_pipes/index';
+import { MittentiDataFilterPipe }   from '../_pipes/index';
+import { PipesSharedModule } from '../_shared/index';
 
 import { MittentiListComponent } from './list/mittenti-list.component';
 import { MittentiEditComponent } from './edit/mittenti-edit.component';
@@ -34,16 +34,16 @@ export const routes = [
     ModalModule,
     StickTheadModule,
     DataTableModule,
+    PipesSharedModule,
 
     RouterModule.forChild(routes)
   ],
   declarations: [
       MittentiListComponent,
       MittentiEditComponent,
-      MittentiDataFilterPipe,
-      MittentiDataMarkPipe
+      MittentiDataFilterPipe
   ]
 })
-export default class MittentiModule {
+export class MittentiModule {
   static routes = routes;
 }

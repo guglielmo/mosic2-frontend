@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+
+
+import { Fascicoli } from '../../_models/index';
+
 
 import { APICommonService } from '../../_services/index';
 
@@ -8,17 +13,21 @@ import { APICommonService } from '../../_services/index';
 })
 
 export class TitolariEditComponent implements OnInit {
-    model: any = {};
-    error: string = '';
-    mode: string;
-    loading: boolean = true;
-    id: number;
+
+    public model: any = {};
+    private error = '';
+    public mode: string;
+    private loading= true;
+    private id: number;
+
+    private filteredCount = {count: 0};
+    private fascicoli$: Observable<Fascicoli[]>;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
-                private apiService: APICommonService
+                public apiService: APICommonService
     ) {
-
+        this.fascicoli$ = this.apiService.subscribeToDataService('fascicoli');
     }
 
     ngOnInit() {
@@ -41,7 +50,7 @@ export class TitolariEditComponent implements OnInit {
 
                         },
                         error => {
-                            this.error = error;
+                            this.error = error; console.log(error);
                             this.loading = false;
                         });
                 break;
@@ -63,7 +72,7 @@ export class TitolariEditComponent implements OnInit {
                             this.router.navigate(['/app/titolari/list']);
                         },
                         error => {
-                            this.error = error;
+                            this.error = error; console.log(error);
                             this.loading = false;
                         });
                 break;
@@ -75,10 +84,31 @@ export class TitolariEditComponent implements OnInit {
                             this.router.navigate(['/app/titolari/list']);
                         },
                         error => {
-                            this.error = error;
+                            this.error = error; console.log(error);
                             this.loading = false;
                         });
                 break;
+        }
+    }
+
+    public editFascicoliId(id: number) {
+        this.router.navigate(['/app/fascicoli/edit/' + id]);
+    }
+
+    //todo: this should be in apiService but couldn't find yet how to call injected classes methods from templates
+    public amministrazioniEnum(val:string):string {
+
+        let e = this.apiService.dataEnum['amministrazioni'];
+        if (-1 != String(val).indexOf(',') ) {
+            let ret = [];
+            String(val).split(',').forEach( item => {
+                ret.push(e[item]['denominazione']);
+            });
+            return ret.join(', ');
+
+        } else if (val) {
+
+            return e[val] ? e[val]['denominazione'] : '';
         }
     }
 }

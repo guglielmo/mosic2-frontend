@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, ElementRef, Output } from '@angular/core';
 import { AppConfig } from '../../app.config';
-import { User }                         from '../../_models/index';
+import { User } from '../../_models/index';
 
 declare var jQuery: any;
 
@@ -8,7 +8,7 @@ declare var jQuery: any;
   selector: '[navbar]',
   templateUrl: './navbar.template.html'
 })
-export class Navbar implements OnInit {
+export class NavbarComponent implements OnInit {
   @Output() toggleSidebarEvent: EventEmitter<any> = new EventEmitter();
   @Output() toggleChatEvent: EventEmitter<any> = new EventEmitter();
   currentUser: User;

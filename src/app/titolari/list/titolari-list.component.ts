@@ -1,34 +1,35 @@
-import {Component}        from '@angular/core';
-import {Router} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { URLSearchParams } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 
-
-import {Titolari} from '../../_models/index';
-import {APICommonService} from '../../_services/index';
+import { Titolari } from '../../_models/index';
+import { APICommonService } from '../../_services/index';
 
 @Component({
     templateUrl: 'titolari-list.component.html'
 })
-export class TitolariListComponent {
+export class TitolariListComponent implements OnInit {
 
     deletingTitolari: Titolari = new Titolari;
-    titolari: Titolari[] = [];
+    public titolari: Observable<Titolari[]>;
 
-    constructor(private apiService: APICommonService,
+    constructor(public apiService: APICommonService,
                 private router: Router
     ) {
+        this.titolari = this.apiService.subscribeToDataService('titolari');
     }
 
     ngOnInit() {
         this.apiService.refreshCommonCache();
-        //this.loadAllTitolari();
+        // this.loadAllTitolari();
     }
 
     editId(id: number) {
         this.router.navigate(['/app/titolari/edit/' + id]);
     }
 
-    askDeleteTitolari(event:any, modal: any, titolari: Titolari) {
+    askDeleteTitolari(event: any, modal: any, titolari: Titolari) {
         event.stopPropagation();
         this.deletingTitolari = titolari;
         modal.open();
@@ -43,12 +44,12 @@ export class TitolariListComponent {
     deleteTitolari(id: number) {
         this.apiService.delete('titolari', id).subscribe(() => {
             this.apiService.refreshCommonCache();
-            //this.loadAllTitolari()
+            // this.loadAllTitolari()
         });
     }
 
     private loadAllTitolari() {
-        let params = new URLSearchParams();
+        const params = new URLSearchParams();
         params.append('sort_by', 'codice');
         params.append('sort_order', 'asc');
 

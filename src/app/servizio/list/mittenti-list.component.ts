@@ -1,5 +1,7 @@
-import {Component}        from '@angular/core';
+import {Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+
 import { URLSearchParams } from '@angular/http';
 
 
@@ -10,19 +12,20 @@ import {APICommonService} from '../../_services/index';
 @Component({
     templateUrl: 'mittenti-list.component.html'
 })
-export class MittentiListComponent {
+export class MittentiListComponent implements OnInit {
 
     public filter = {
         denominazione: ''
     };
 
     deletingMittenti: Mittenti = new Mittenti;
-    mittenti: Mittenti[] = [];
+    public mittenti$: Observable<Mittenti[]>;
     filteredCount = {count: 0};
 
-    constructor(private apiService: APICommonService,
+    constructor(public apiService: APICommonService,
                 private router: Router
     ) {
+        this.mittenti$ = this.apiService.subscribeToDataService('mittenti');
     }
 
     ngOnInit() {

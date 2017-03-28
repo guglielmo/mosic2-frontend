@@ -7,7 +7,7 @@ import {Select2OptionData} from 'ng2-select2';
 import {Titolari, Amministrazioni, Registri} from '../../_models/index';
 import {APICommonService} from '../../_services/index';
 import {AppConfig} from '../../app.config';
-import * as _ from "lodash";
+import * as _ from 'lodash';
 
 
 @Component({
@@ -16,9 +16,9 @@ import * as _ from "lodash";
 
 export class FascicoliEditComponent implements OnInit {
     model: any = {};
-    error: string = '';
+    error = '';
     mode: string;
-    loading: boolean = false;
+    loading = false;
     id: number;
     selected: any;
 
@@ -35,7 +35,7 @@ export class FascicoliEditComponent implements OnInit {
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
-                private apiService: APICommonService,
+                public apiService: APICommonService,
                 private config: AppConfig) {
 
         this.select2Options = config.select2Options;
@@ -92,7 +92,7 @@ export class FascicoliEditComponent implements OnInit {
                             console.log(data);
                             this.model = data;
                             modal.open();
-                            //this.router.navigate(['/app/fascicoli/list']);
+                            // this.router.navigate(['/app/fascicoli/list']);
                         },
                         error => {
                             modal.open();
@@ -117,24 +117,24 @@ export class FascicoliEditComponent implements OnInit {
 
     select2Changed(e: any, name: string): void {
 
-        //console.log(name, typeof e.value, e.value);
+        // console.log(name, typeof e.value, e.value);
 
         // converts value to arrays to handle multi-selects and selects in the same way
-        let V = typeof e.value == 'string' ? e.value.split(',') : e.value;
+        const V = typeof e.value === 'string' ? e.value.split(',') : e.value;
 
-        let selectedCount = this.model[name] ? this.model[name].split(',').length : 0;
+        const selectedCount = this.model[name] ? this.model[name].split(',').length : 0;
 
-        if(V.length > selectedCount) {
+        if (V.length > selectedCount) {
             // Value added
             console.log('value added');
             this.mayBeCreateNewSelect2Values(name);
 
         } else if (V.length < selectedCount) {
             // Value removed
-            //console.log('value removed');
+            // console.log('value removed');
 
-        } else if (V.join(',') != this.model[name]) {
-            //console.log('value changed');
+        } else if (V.join(',') !== this.model[name]) {
+            // console.log('value changed');
             this.mayBeCreateNewSelect2Values(name);
         }
 
@@ -146,16 +146,15 @@ export class FascicoliEditComponent implements OnInit {
 
     mayBeCreateNewSelect2Values(name) {
 
-        console.log('trying to add new '+name, '#'+name+' select option[data-select2-tag="true"]');
+        console.log('trying to add new ' + name, '#' + name + ' select option[data-select2-tag="true"]');
 
-        let newValues = $('#'+name+' select option[data-select2-tag="true"]');
+        const newValues = $('#' + name + ' select option[data-select2-tag="true"]');
 
         console.log(newValues.length);
 
         if (newValues.length) {
 
-
-            let apipath = name.split('_')[1];
+            const apipath = name.split('_')[1];
 
             newValues.each((index: number, elem: HTMLInputElement) => {
 
@@ -164,31 +163,31 @@ export class FascicoliEditComponent implements OnInit {
                 this.apiService.create(apipath, { 'denominazione': elem.value } )
                     .subscribe(
                         response => {
-                            let id = response.data.id,
-                                den = response.data.denominazione;
+                            const id = response.data.id,
+                                 den = response.data.denominazione;
 
-                            let label = id+' - '+den;
+                            const label = id + ' - ' + den;
                             response.data.text = label;
 
                             // creates the new entry on the relative apiService select2 data
-                            //this.apiService[apipath+'Select'].push(response.data);
+                            // this.apiService[apipath+'Select'].push(response.data);
 
                             // find the select element and update temporary id with the new assigned id
-                            $('#'+name+' select option[value="'+ den +'"]').val(id).text(label);
+                            $('#' + name + ' select option[value="' + den + '"]').val(id).text(label);
 
                             // replace the temporary id in the model with the new assigned id
-                            let selectedValues = this.model[name].split(',');
+                            const selectedValues = this.model[name].split(',');
 
-                            let i = _.indexOf(selectedValues, _.find(selectedValues, den));
+                            const i = _.indexOf(selectedValues, _.find(selectedValues, den));
                             selectedValues.splice(i, 1, id);
 
                             this.model[name] = selectedValues.join(',');
 
                             // update select2 data
-                            //$('#'+name+' select').select2('data',response.data, true);
+                            // $('#'+name+' select').select2('data',response.data, true);
 
                             // find the select2 choice and update the temporary label with the new assigned id
-                            //$('#'+name+' .select2-selection__choice[title="'+den+'"]').prop('title',label);
+                            // $('#'+name+' .select2-selection__choice[title="'+den+'"]').prop('title',label);
                         },
                         error => {
                             this.error = error; console.log(error);
@@ -199,7 +198,7 @@ export class FascicoliEditComponent implements OnInit {
 
     public confirmCodeNotification(modal: any) {
         modal.close();
-        this.router.navigate(['/app/fascicoli/edit/'+this.model.id]);
+        this.router.navigate(['/app/fascicoli/edit/' + this.model.id]);
     }
 
     public editRegistriId(id: number) {

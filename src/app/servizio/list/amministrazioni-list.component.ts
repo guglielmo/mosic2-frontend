@@ -1,5 +1,6 @@
-import {Component}        from '@angular/core';
-import {Router} from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import { URLSearchParams } from '@angular/http';
 
 
@@ -16,12 +17,13 @@ export class AmministrazioniListComponent {
     };
 
     deletingAmministrazioni: Amministrazioni = new Amministrazioni;
-    amministrazioni: Amministrazioni[] = [];
-    filteredCount = {count: 0};
+    amministrazioni$: Observable<Amministrazioni[]>;
+    filteredCount = { count: 0 };
 
-    constructor(private apiService: APICommonService,
+    constructor(public apiService: APICommonService,
                 private router: Router
     ) {
+        this.amministrazioni$ = this.apiService.subscribeToDataService('amministrazioni');
     }
 
     ngOnInit() {

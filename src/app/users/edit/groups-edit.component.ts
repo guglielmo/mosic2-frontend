@@ -9,9 +9,9 @@ import { APICommonService } from '../../_services/index';
 
 export class GroupsEditComponent implements OnInit {
     model: Groups = new Groups;
-    error: string = '';
+    error = '';
     mode: string;
-    loading: boolean = false;
+    loading= false;
     id: number;
 
     supportedClasses: string[] = ['REGISTRI', 'FASCICOLI','TITOLARI', 'AMMINISTRAZIONI', 'MITTENTI', 'UTENTI', 'RUOLICIPE', 'TAGS', 'UFFICI'];
@@ -21,7 +21,7 @@ export class GroupsEditComponent implements OnInit {
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
-                private apiService: APICommonService
+                public apiService: APICommonService
     ) {
 
     }

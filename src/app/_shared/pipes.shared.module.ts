@@ -1,5 +1,5 @@
-import { NgModule }       from '@angular/core';
-import { CommonModule }   from '@angular/common';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 
 import {
@@ -9,14 +9,14 @@ import {
     FascicoliDataFilterPipe,
     FascicoliByTitolarioDataFilterPipe,
     RegistriByFascicoloDataFilterPipe,
-    DataEnumPipe
+    DataEnumPipe,
+    ArrayLengthPipe
 
-} from "../_pipes/index";
+} from '../_pipes/index';
 
 @NgModule({
     imports: [
         CommonModule
-
     ],
     declarations: [
         FileSizePipe,
@@ -25,7 +25,8 @@ import {
         FascicoliDataFilterPipe,
         FascicoliByTitolarioDataFilterPipe,
         RegistriByFascicoloDataFilterPipe,
-        DataEnumPipe
+        DataEnumPipe,
+        ArrayLengthPipe
     ],
     providers: [
     ],
@@ -36,7 +37,9 @@ import {
         FascicoliDataFilterPipe,
         FascicoliByTitolarioDataFilterPipe,
         RegistriByFascicoloDataFilterPipe,
-        DataEnumPipe
+        DataEnumPipe,
+        ArrayLengthPipe
     ]
 })
 export class PipesSharedModule {}
+

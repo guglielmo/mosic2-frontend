@@ -8,8 +8,8 @@ import { RouterModule } from '@angular/router';
 import { ModalModule } from 'ngx-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DataTableModule } from 'angular2-datatable';
-import { UfficiDataFilterPipe,
-  UfficiDataMarkPipe }   from '../_pipes/index';
+import { UfficiDataFilterPipe }   from '../_pipes/index';
+import { PipesSharedModule } from '../_shared/index';
 
 import { UfficiListComponent } from './list/uffici-list.component';
 import { UfficiEditComponent } from './edit/uffici-edit.component';
@@ -34,16 +34,15 @@ export const routes = [
     ModalModule,
     StickTheadModule,
     DataTableModule,
-
+    PipesSharedModule,
     RouterModule.forChild(routes)
   ],
   declarations: [
       UfficiListComponent,
       UfficiEditComponent,
-      UfficiDataFilterPipe,
-      UfficiDataMarkPipe
+      UfficiDataFilterPipe
   ]
 })
-export default class UfficiModule {
+export class UfficiModule {
   static routes = routes;
 }

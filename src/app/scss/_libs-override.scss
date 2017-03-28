@@ -2,13 +2,6 @@
  * Font Awesome 2x spin
  */
 
-.#{$fa-css-prefix}-spin-fast {
-  -webkit-animation: fa-spin 1s infinite linear;
-  -moz-animation: fa-spin 1s infinite linear;
-  -o-animation: fa-spin 1s infinite linear;
-  animation: fa-spin 1s infinite linear;
-}
-
 
 .fa-lg {
   vertical-align: -15%;
@@ -379,7 +372,7 @@ mfDefaultSorter > a {
   display: none;
 }
 .switch i {
-  margin-top: 10px;
+  margin-top: 0px;
   display: inline-block;
   cursor: pointer;
   padding-right: 20px;
@@ -403,15 +396,116 @@ mfDefaultSorter > a {
   background: rgb(189, 66, 69);
 }
 
+.switch :not(:checked):disabled + i {
+  background: rgb(236, 205, 208);
+}
+
+
 .switch :checked + i {
   padding-right: 0;
   padding-left: 20px;
   background: rgb(100, 189, 99);
 }
 
+.switch :checked:disabled + i {
+  background: rgb(197, 225, 196);
+}
+
 .filetypes-small {
   line-height: 24px;
-  a { line-height: 24px; }
-  .filetypes { height: 24px; width: 24px; &:before {margin-top: 5px; }}
+  a { line-height: 24px; position: relative; top: -5px; }
+  .filetypes { height: 24px; width: 24px; &:before {margin-top: 5px; } line-height: 24px; }
 
 }
+
+.rel-t-l2 { position: relative; top: -2px; }
+.rel-t-l3 { position: relative; top: -3px; }
+.rel-t-l4 { position: relative; top: -4px; }
+.rel-t-l5 { position: relative; top: -5px; }
+.rel-t-l6 { position: relative; top: -6px; }
+.rel-t-l7 { position: relative; top: -7px; }
+.rel-t-l8 { position: relative; top: -8px; }
+.rel-t-l9 { position: relative; top: -9px; }
+.rel-t-l10 { position: relative; top: -10px; }
+
+.rel-t-m2 { position: relative; top: 2px; }
+.rel-t-m3 { position: relative; top: 3px; }
+.rel-t-m4 { position: relative; top: 4px; }
+.rel-t-m5 { position: relative; top: 5px; }
+.rel-t-m6 { position: relative; top: 6px; }
+.rel-t-m7 { position: relative; top: 7px; }
+.rel-t-m8 { position: relative; top: 8px; }
+.rel-t-m9 { position: relative; top: 9px; }
+.rel-t-m10 { position: relative; top: 10px; }
+
+.loading-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: solid 2px transparent;
+  border-top-color: #29d;
+  border-left-color: #29d;
+  border-radius: 10px;
+  -webkit-animation: pace-spinner 400ms linear infinite;
+  -moz-animation: pace-spinner 400ms linear infinite;
+  -ms-animation: pace-spinner 400ms linear infinite;
+  -o-animation: pace-spinner 400ms linear infinite;
+  animation: pace-spinner 400ms linear infinite;
+}
+
+
+
+.card.accordion-info,
+.card.accordion-info .card-header,
+.panel.accordion-info {
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+  color: #31708f;
+}
+.panel.accordion-info .panel-body {
+  background-color: #fafafa;
+  color: #333;
+}
+
+.card.accordion-success,
+.card.accordion-success .card-header,
+.panel.accordion-success {
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  color: #3c763d;
+}
+.panel.accordion-success .panel-body {
+  background-color: #fafafa;
+  color: #333;
+}
+
+.card.accordion-warning,
+.card.accordion-warning .card-header,
+.panel.accordion-warning {
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+  color: #8a6d3b;
+}
+.panel.accordion-warning .panel-body {
+  background-color: #fafafa;
+  color: #333;
+}
+
+.card.accordion-danger,
+.card.accordion-danger .card-header,
+.panel.accordion-danger {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+}
+.panel.accordion-danger .panel-body {
+  background-color: #fafafa;
+  color: #333;
+}
+
+
+
+
+
+
+

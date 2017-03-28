@@ -14,7 +14,7 @@ export class UsersListComponent {
     deletingUser: User = new User;
     users: User[] = [];
 
-    constructor(private apiService: APICommonService,
+    constructor(public apiService: APICommonService,
                 private router: Router
     ) {
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));

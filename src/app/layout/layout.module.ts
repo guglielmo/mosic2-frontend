@@ -1,46 +1,31 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TooltipModule } from 'ng2-bootstrap/tooltip';
+import { SimpleNotificationsModule } from 'angular2-notifications/components';
+
 import 'jquery-slimscroll';
 
-import { NgModule }      from '@angular/core';
-import { CommonModule }  from '@angular/common';
-import { FormsModule }  from '@angular/forms';
-import { TooltipModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { SimpleNotificationsModule } from 'angular2-notifications/components'
+import { LayoutRoutingModule } from './layout-routing.module';
 
-
-import { Autosize } from 'angular2-autosize';
-
-import { ROUTES }       from './layout.routes';
-
-
-import { Layout } from './layout.component';
-import { Sidebar } from './sidebar/sidebar.component';
-import { Navbar } from './navbar/navbar.component';
-//import { ChatSidebar } from './chat-sidebar/chat-sidebar.component';
-//import { ChatMessage } from './chat-sidebar/chat-message/chat-message.component';
-//import {SearchPipe} from './pipes/search.pipe';
-//import {NotificationLoad} from './notifications/notifications-load.directive';
-//import {Notifications} from './notifications/notifications.component';
+import { LayoutComponent } from './layout.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    TooltipModule,
+    TooltipModule.forRoot(),
     SimpleNotificationsModule.forRoot(),
-    ROUTES
+    LayoutRoutingModule
   ],
   declarations: [
-    Layout,
-    Sidebar,
-    Navbar,
-    Autosize
-    //ChatSidebar,
-    //SearchPipe,
-    //Notifications,
-    //NotificationLoad,
-    //ChatMessage
+    LayoutComponent,
+    SidebarComponent,
+    NavbarComponent
   ]
 })
-export default class LayoutModule {
+export class LayoutModule {
 }

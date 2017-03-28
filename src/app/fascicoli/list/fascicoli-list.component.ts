@@ -1,4 +1,4 @@
-import { Component }        from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
@@ -12,7 +12,7 @@ import { Amministrazioni, Titolari, Fascicoli } from '../../_models/index';
 @Component({
     templateUrl: 'fascicoli-list.component.html'
 })
-export class FascicoliListComponent {
+export class FascicoliListComponent implements OnInit {
 
     public filter = {
         argomento: '',
@@ -29,7 +29,7 @@ export class FascicoliListComponent {
     public fascicoli$: Observable<Fascicoli[]>;
     public amministrazioni$: Observable<Amministrazioni[]>;
 
-    constructor(private apiService: APICommonService,
+    constructor(public apiService: APICommonService,
                 private router: Router,
                 private config: AppConfig
     ) {
@@ -64,13 +64,13 @@ export class FascicoliListComponent {
     private deleteFascicoli(id: number) {
         this.apiService.delete('fascicoli', id).subscribe(() => {
             this.apiService.refreshCommonCache();
-            //this.loadAllFascicoli()
+            // this.loadAllFascicoli()
         });
     }
 
     private loadAllFascicoli() {
         this.apiService.getAll('fascicoli').subscribe(response => {
-            this.fascicoli = Object.assign([],response.data);
+            this.fascicoli = Object.assign([], response.data);
         });
     }
 
@@ -87,12 +87,12 @@ export class FascicoliListComponent {
         };
     }
 
-    //todo: this should be in apiService but couldn't find yet how to call injected classes methods from templates
-    public amministrazioniEnum(val:string):string {
+    // todo: this should be in apiService but couldn't find yet how to call injected classes methods from templates
+    public amministrazioniEnum(val: string): string {
 
-        let e = this.apiService.dataEnum['amministrazioni'];
-        if (-1 != String(val).indexOf(',') ) {
-            let ret = [];
+        const e = this.apiService.dataEnum['amministrazioni'];
+        if (-1 !== String(val).indexOf(',') ) {
+            const ret = [];
             String(val).split(',').forEach( item => {
                 ret.push(e[item]['denominazione']);
             });

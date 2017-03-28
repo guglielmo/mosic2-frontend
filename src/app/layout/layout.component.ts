@@ -1,8 +1,8 @@
-import {Component, ViewEncapsulation, ElementRef} from '@angular/core';
+import {Component, ViewEncapsulation, ElementRef, OnInit, HostBinding} from '@angular/core';
 import {Router, NavigationEnd} from '@angular/router';
 import {AppConfig} from '../app.config';
 
-import { NotificationsService } from 'angular2-notifications'
+import { NotificationsService } from 'angular2-notifications';
 
 declare var jQuery: any;
 declare var Hammer: any;
@@ -19,16 +19,16 @@ declare var Hammer: any;
         id: 'app'
     }
 })
-export class Layout {
+export class LayoutComponent implements OnInit {
     config: any;
     configFn: any;
     $sidebar: any;
     el: ElementRef;
     router: Router;
-    chatOpened: boolean = false;
+    chatOpened = false;
 
     public notifyOptions = {
-        position: ["bottom", "right"],
+        position: ['bottom', 'right'],
         timeOut: 6000,
         lastOnBottom: true
     };
@@ -43,20 +43,15 @@ export class Layout {
         this.configFn = config;
         this.router = router;
 
-        let _that = this;
+        const _that = this;
         this.configFn.notify = function( title: any, msg: any ) {
             _that._notificationService.error(title, msg);
         };
 
     }
 
-    ngAfterViewInit() {
-
-
-    }
-
     toggleSidebarListener(state): void {
-        let toggleNavigation = state === 'static'
+        const toggleNavigation = state === 'static'
             ? this.toggleNavigationState
             : this.toggleNavigationCollapseState;
         toggleNavigation.apply(this);
@@ -138,8 +133,8 @@ export class Layout {
     }
 
     enableSwipeCollapsing(): void {
-        let swipe = new Hammer(document.getElementById('content-wrap'));
-        let d = this;
+        const swipe = new Hammer(document.getElementById('content-wrap'));
+        const d = this;
 
         swipe.on('swipeleft', () => {
             setTimeout(() => {
@@ -176,7 +171,7 @@ export class Layout {
             this.config.state['nav-static'] = true;
         }
 
-        let $el = jQuery(this.el.nativeElement);
+        const $el = jQuery(this.el.nativeElement);
         this.$sidebar = $el.find('[sidebar]');
 
         this.router.events.subscribe((event) => {
@@ -217,7 +212,7 @@ export class Layout {
             // return for bubbled events
       if (e.target !== e.currentTarget) { return; }
 
-            let $triggerLink = jQuery(this).prev('[data-toggle=collapse]');
+            const $triggerLink = jQuery(this).prev('[data-toggle=collapse]');
             jQuery($triggerLink.data('parent'))
                 .find('.collapse.in').not(jQuery(this)).collapse('hide');
         })

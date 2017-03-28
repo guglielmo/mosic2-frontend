@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
 import { Select2OptionData } from 'ng2-select2';
 import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Warehouse } from 'ngx-warehouse';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import * as _ from "lodash";
+import * as _ from 'lodash';
 
 
 import { Titolari, Fascicoli, Registri, Amministrazioni, Mittenti, Uffici, RuoliCipe } from '../_models/index';
@@ -18,15 +18,15 @@ export class APICommonService {
     public config: any;
     public configFn: any;
 
-    public commonDataready: boolean = false;
-    public activeRequests: number = 0;
-    public isDirty: boolean = false;
+    public commonDataready = false;
+    public activeRequests = 0;
+    public isDirty = false;
 
-    private _allData:any = {};
-    private _allData$:any = {};
-    public dataEnum:any = {};
+    private _allData: any = {};
+    private _allData$: any = {};
+    public dataEnum: any = {};
 
-    private currentStorageVersion: string = '20';
+    private currentStorageVersion = '22';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
@@ -68,9 +68,9 @@ export class APICommonService {
     }
 
     // PUBLIC helper methods
-    public getAll(apipath: string, params?:URLSearchParams) {
+    public getAll(apipath: string, params?: URLSearchParams) {
         this.startingRequest(apipath);
-        let query = params ? '?'+params.toString() : '';
+        const query = params ? '?' + params.toString() : '';
         return this.http.get(this.config.baseAPIURL + '/api/' + apipath + query, this.jwt())
                         .map((response: Response) => response.json())
                         .catch((response: Response) => this.handleError(response));
@@ -117,12 +117,12 @@ export class APICommonService {
 
     private setDirty(apipath: string) {
 
-        if(this.cachedApiDataMetods.indexOf(apipath) != -1) {
+        if (this.cachedApiDataMetods.indexOf(apipath) !== -1) {
 
             //
             // retrive and set last update to zero for the method
             //
-            let storedUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
+            const storedUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
             storedUpdates[apipath] = 0;
             localStorage.setItem('lastupdates', JSON.stringify(storedUpdates));
 
@@ -140,12 +140,12 @@ export class APICommonService {
 
     private startingRequest ( apipath: string ) {
         this.activeRequests++;
-        //console.log(this.activeRequests);
+        // console.log(this.activeRequests);
     }
 
     private finishRequest ( apipath: string ) {
         this.activeRequests--;
-        //console.log(this.activeRequests);
+        // console.log(this.activeRequests);
     }
 
     private handleError (error: Response | any) {
@@ -153,17 +153,17 @@ export class APICommonService {
         let errMsg: string;
         if (error instanceof Response) {
 
-            let body = error.json() || '';
-            let err = body.error || JSON.stringify(body);
+            const body = error.json() || '';
+            const err = body.error || JSON.stringify(body);
             errMsg = `${error.status} - ${error.statusText || ''} ${err.message}`;
 
-            let usermsg = err.message ? err.message : 'Errore non previsto, consultare la console per ulteriori informazioni';
+            const usermsg = err.message ? err.message : 'Errore non previsto, consultare la console per ulteriori informazioni';
             this.notifyError(usermsg);
 
         } else {
             errMsg = error.message ? error.message : error.toString();
         }
-        console.error('>>>>',errMsg);
+        console.error('>>>>', errMsg);
 
         return Observable.throw(errMsg);
     }
@@ -179,19 +179,22 @@ export class APICommonService {
             //
             // retrieve new and last stored updates
             //
-            let storedLastUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
-            let lastupdates = response.data;
+            const storedLastUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
+            const lastupdates = response.data;
 
             //
             // for every cached API method
             //
-            for (let i=0; i<this.cachedApiDataMetods.length; i++) {
-                let apipath = this.cachedApiDataMetods[i];
+            for (let i = 0; i < this.cachedApiDataMetods.length; i++) {
+                const apipath = this.cachedApiDataMetods[i];
 
                 //
                 // if storage version didn't change or data is not stored or fresher on the backend
                 //
-                if(this.storageVersion != this.currentStorageVersion || !storedLastUpdates[apipath] || lastupdates[apipath] > storedLastUpdates[apipath]) {
+                if (this.storageVersion !== this.currentStorageVersion
+                    || !storedLastUpdates[apipath]
+                    || lastupdates[apipath] > storedLastUpdates[apipath]
+                ) {
 
                     //
                     // initiate a cache priming
@@ -203,7 +206,7 @@ export class APICommonService {
                     //
                     // get it from local data warehouse
                     //
-                    this.warehouse.get('stored_'+apipath).subscribe(
+                    this.warehouse.get('stored_' + apipath).subscribe(
                         data => {
                             //
                             // stores data in memory
@@ -215,9 +218,9 @@ export class APICommonService {
                             //
                             let checkIsReady = true;
                             _.each(this.cachedApiDataMetods, v => {
-                                if(this._allData[v].length === 0) {
+                                if (this._allData[v].length === 0) {
                                     checkIsReady = false;
-                                    return false; // <-- this is the lodash way to break iteration;
+                                    return false; // <-- note: this is the lodash way to break iteration;
                                 }
                             });
                             this.commonDataready = checkIsReady;
@@ -232,7 +235,7 @@ export class APICommonService {
                             //
                             this._allData$[apipath].next(this._allData[apipath]);
                         },
-                        error => { console.log(error) }
+                        error => { console.log(error); }
                     );
                 }
             }
@@ -244,7 +247,7 @@ export class APICommonService {
 
     private cacheCommonIDB(apipath: string,  lastupdate: number) {
 
-        let params = new URLSearchParams();
+        const params = new URLSearchParams();
         params.append('limit', '9999');
 
         this.getAll(apipath, params).subscribe(
@@ -274,12 +277,12 @@ export class APICommonService {
                 //
                 // stores the information on either LocalStorage/WebSQL/IndexedDB
                 //
-                this.warehouse.set('stored_'+apipath, this._allData[apipath]);
+                this.warehouse.set('stored_' + apipath, this._allData[apipath]);
 
                 //
                 // retrives and update lastupdates for the apipath with the received timestamp
                 //
-                let storedUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
+                const storedUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
                 storedUpdates[apipath] = lastupdate;
                 localStorage.setItem('lastupdates', JSON.stringify(storedUpdates));
 
@@ -288,7 +291,7 @@ export class APICommonService {
                 //
                 let checkIsReady = true;
                 _.each(this.cachedApiDataMetods, v => {
-                    if(this._allData[v].length === 0) {
+                    if (this._allData[v].length === 0) {
                         checkIsReady = false;
                         return false; // <-- this is the lodash way to break iteration;
                     }
@@ -296,33 +299,33 @@ export class APICommonService {
                 this.commonDataready = checkIsReady;
 
             },
-            error => console.log('Could not load '+apipath)
+            error => console.log('Could not load ' + apipath)
         );
     }
 
-    private prepareSelect2( apipath:string, data: any[] ) {
+    private prepareSelect2( apipath: string, data: any[] ) {
 
         switch (apipath) {
             case 'titolari':
-                _.each(data,(item) => { item.text = item['codice'] + ' - ' + item['denominazione'] + ' - ' + item['descrizione'] } );
+                _.each(data, (item) => { item.text = item['codice'] + ' - ' + item['denominazione'] + ' - ' + item['descrizione']; } );
                 break;
             case 'fascicoli':
-                _.each(data,(item) => { item.text = item['numero_fascicolo'] + ' - ' + item['argomento'] } );
+                _.each(data, (item) => { item.text = item['numero_fascicolo'] + ' - ' + item['argomento']; } );
                 break;
             case 'amministrazioni':
-                _.each(data,(item) => { item.text = item['codice'] + ' - ' + item['denominazione']; item.id = String(item.id); });
+                _.each(data, (item) => { item.text = item['codice'] + ' - ' + item['denominazione']; item.id = String(item.id); });
                 break;
             case 'mittenti':
-                _.each(data,(item) => { item.text = item['denominazione'] } );
+                _.each(data, (item) => { item.text = item['denominazione']; } );
                 break;
             case 'registri':
-                _.each(data,(item) => { item.text = item['id'] + ' - ' + item['oggetto'] } );
+                _.each(data, (item) => { item.text = item['id'] + ' - ' + item['oggetto']; } );
                 break;
             case 'uffici':
-                _.each(data,(item) => { item.text = item['denominazione'] } );
+                _.each(data, (item) => { item.text = item['id'] + ' - ' + item['denominazione']; } );
                 break;
             case 'ruoli_cipe':
-                _.each(data,(item) => { item.text = item['denominazione'] } );
+                _.each(data, (item) => { item.text = item['denominazione']; } );
                 break;
         }
     }
@@ -332,9 +335,9 @@ export class APICommonService {
     //
     private jwt() {
         // create authorization header with jwt token
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (currentUser && currentUser.token) {
-            let headers = new Headers({'Authorization': 'Bearer ' + currentUser.token});
+            const headers = new Headers({'Authorization': 'Bearer ' + currentUser.token});
             return new RequestOptions({headers: headers});
         }
     }

@@ -56,12 +56,12 @@
         <li>
             <a class="collapsed" data-target="#sidebar-precipe" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="simpleicon icon-bubbles"></i></span>
-                pre-CIPE
+                Pre-CIPE
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-precipe" class="collapse">
-                <li><a [routerLink]=" ['pre-cipe/list'] ">Tutti i pre-CIPE</a></li>
-                <li><a [routerLink]=" ['pre-cipe/edit'] ">Crea nuovo</a></li>
+                <li><a [routerLink]=" ['precipe/list'] ">Tutti i pre-CIPE</a></li>
+                <li><a [routerLink]=" ['precipe/edit'] ">Crea nuovo</a></li>
             </ul>
         </li>
         <li>
@@ -84,6 +84,8 @@
             <ul id="sidebar-users" class="collapse">
                 <li><a [routerLink]=" ['users/list'] ">Tutti gli utenti</a></li>
                 <li><a [routerLink]=" ['users/edit'] ">Crea nuovo</a></li>
+                <li><a [routerLink]=" ['users/groups/list'] ">Gruppi</a></li>
+                <li><a [routerLink]=" ['users/ruoli_cipe/list'] ">Ruoli</a></li>
             </ul>
         </li>
         <li>
@@ -93,10 +95,10 @@
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-service" class="collapse">
-                <li><a [routerLink]=" ['amministrazioni/list'] ">Tutte le amministrazioni</a></li>
-                <li><a [routerLink]=" ['amministrazioni/edit'] ">Nuova amministrazione</a></li>
-                <li><a [routerLink]=" ['mittenti/list'] ">Tutti i mittenti</a></li>
-                <li><a [routerLink]=" ['mittenti/edit'] ">Nuovo mittente</a></li>
+                <li><a [routerLink]=" ['amministrazioni/list'] ">Amministrazioni</a></li>
+                <li><a [routerLink]=" ['mittenti/list'] ">Mittenti</a></li>
+                <li><a [routerLink]=" ['uffici/list'] ">Uffici</a></li>
+                <li><a [routerLink]=" ['tags/list'] ">Etichette</a></li>
             </ul>
         </li>
     </ul>

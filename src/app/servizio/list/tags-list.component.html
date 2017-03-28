@@ -38,8 +38,8 @@
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">
                 <table class="table table-hover table-condensed mb-0 table-bordered"
-                       [mfData]="apiService.tags | tagsDataFilter : filter.denominazione : filteredCount"
-                       [mfSortBy]="codice" [mfSortOrder]="'asc'"
+                       [mfData]="tags$ | async | tagsDataFilter : filter.denominazione : filteredCount"
+                       [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
                        #mf="mfDataTable" stickthead>
                     <thead>
                     <tr>
@@ -51,7 +51,7 @@
                     <tbody>
                     <tr *ngFor="let tag of mf.data" (click)="editId(tag.id)" class="clickable">
                         <td>{{tag.id}}</td>
-                        <td [innerHTML]="tag.denominazione | tagsDataMark : filter.denominazione"></td>
+                        <td [innerHTML]="tag.denominazione | dataMark : filter.denominazione"></td>
                         <td>
                             <a (click)="askDeleteTags($event, myModal, tag)"><i class="fa fa-trash-o"> </i></a>
                         </td>

@@ -15,8 +15,8 @@ import { AuthenticationService } from '../_services/index';
 })
 export class Login implements OnInit {
   model: any = {};
-  loading: boolean = false;
-  error: string = '';
+  loading= false;
+  error = '';
 
   constructor(
       private router: Router,
@@ -30,7 +30,6 @@ export class Login implements OnInit {
 
   login() {
     this.loading = true;
-    this.error
     this.authenticationService.login(this.model.eMail, this.model.password)
         .subscribe(
             data => {

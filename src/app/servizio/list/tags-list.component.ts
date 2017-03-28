@@ -1,28 +1,31 @@
-import {Component}        from '@angular/core';
-import {Router} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+
 import { URLSearchParams } from '@angular/http';
 
 
-import {Tags} from '../../_models/index';
-import {APICommonService} from '../../_services/index';
+import { Tags } from '../../_models/index';
+import { APICommonService } from '../../_services/index';
 
 
 @Component({
     templateUrl: 'tags-list.component.html'
 })
-export class TagsListComponent {
+export class TagsListComponent implements OnInit {
 
     public filter = {
         denominazione: ''
     };
 
     deletingTags: Tags = new Tags;
-    tags: Tags[] = [];
+    public tags$: Observable<Tags[]>;
     filteredCount = {count: 0};
 
-    constructor(private apiService: APICommonService,
+    constructor(public apiService: APICommonService,
                 private router: Router
     ) {
+        this.tags$ = this.apiService.subscribeToDataService('tags');
     }
 
     ngOnInit() {

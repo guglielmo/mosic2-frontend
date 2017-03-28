@@ -8,8 +8,8 @@ import { RouterModule } from '@angular/router';
 import { ModalModule } from 'ngx-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DataTableModule } from 'angular2-datatable';
-import { TagsDataFilterPipe,
-  TagsDataMarkPipe }   from '../_pipes/index';
+import { TagsDataFilterPipe }   from '../_pipes/index';
+import { PipesSharedModule } from '../_shared/index'
 
 import { TagsListComponent } from './list/tags-list.component';
 import { TagsEditComponent } from './edit/tags-edit.component';
@@ -34,16 +34,15 @@ export const routes = [
     ModalModule,
     StickTheadModule,
     DataTableModule,
-
+    PipesSharedModule,
     RouterModule.forChild(routes)
   ],
   declarations: [
       TagsListComponent,
       TagsEditComponent,
       TagsDataFilterPipe,
-      TagsDataMarkPipe
   ]
 })
-export default class TagsModule {
+export class TagsModule {
   static routes = routes;
 }

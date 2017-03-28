@@ -7867,7 +7867,7 @@ export const RegistriMockData: any = {
             "data_mittente": "2015-10-02",
             "mittenti": "Direzione generale delle arti e paesaggio",
             "id_amministrazioni": 9,
-            "oggetto": "Prescrizioni MIBACT enunciate nella riunione pre-cipe del 18/12/2014 e seduta CIPE 28/01/2015.",
+            "oggetto": "Prescrizioni MIBACT enunciate nella riunione precipe del 18/12/2014 e seduta CIPE 28/01/2015.",
             "proposta_cipe": 1,
             "nome_documento": 6426,
             "annotazioni": ""
@@ -8497,7 +8497,7 @@ export const RegistriMockData: any = {
             "data_mittente": "2015-02-27",
             "mittenti": "MIBAC",
             "id_amministrazioni": 9,
-            "oggetto": "seduta pre-cipe del 19/2/2015 e seduta CIPE del 20/2/2015 - Programma delle infrastrutture strategiche : Tav Toriino Lione - prescrizioni MIBAC",
+            "oggetto": "seduta precipe del 19/2/2015 e seduta CIPE del 20/2/2015 - Programma delle infrastrutture strategiche : Tav Toriino Lione - prescrizioni MIBAC",
             "proposta_cipe": 0,
             "nome_documento": 6468,
             "annotazioni": ""

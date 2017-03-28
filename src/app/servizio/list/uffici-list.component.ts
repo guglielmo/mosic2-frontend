@@ -1,5 +1,7 @@
-import {Component}        from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+
 import { URLSearchParams } from '@angular/http';
 
 
@@ -10,19 +12,20 @@ import {APICommonService} from '../../_services/index';
 @Component({
     templateUrl: 'uffici-list.component.html'
 })
-export class UfficiListComponent {
+export class UfficiListComponent implements OnInit {
 
     public filter = {
         denominazione: ''
     };
 
     deletingUffici: Uffici = new Uffici;
-    uffici: Uffici[] = [];
+    public uffici$: Observable<Uffici[]>;
     filteredCount = {count: 0};
 
-    constructor(private apiService: APICommonService,
+    constructor(public apiService: APICommonService,
                 private router: Router
     ) {
+        this.uffici$ = this.apiService.subscribeToDataService('uffici');
     }
 
     ngOnInit() {

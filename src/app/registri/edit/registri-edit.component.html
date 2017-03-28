@@ -3,11 +3,25 @@
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
     </div>
-    <h3 class="page-title">Registro -
+    <h3 class="page-title"><a [routerLink]=" ['/app/registri/list'] ">Registri</a> /
         <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
-        <span *ngIf="mode == 'update'" class="fw-semi-bold">{{apiService.titolariIdCodEnum[model.id_titolari]}}.{{model.numero_fascicolo}}/{{model.id}}</span>
+
+        <span *ngIf="mode == 'update'" class="fw-semi-bold">
+            <ng-template #titolariTooltip>
+                <div [innerHtml]="apiService.dataEnum['titolari'][model.id_titolari]['text']"></div>
+            </ng-template>
+            <a [routerLink]=" ['/app/titolari/edit/'+model.id_titolari ]"
+               [tooltip]="titolariTooltip" placement="bottom">{{apiService.dataEnum['titolari'][model.id_titolari]['codice']}}</a> .
+
+            <ng-template #fascicoliTooltip>
+                <div [innerHtml]="apiService.dataEnum['fascicoli'][model.id_fascicoli]['text']"></div>
+            </ng-template>
+            <a [routerLink]=" ['/app/fascicoli/edit/'+model.id_fascicoli ]"
+               [tooltip]="fascicoliTooltip" placement="bottom">{{model.numero_fascicolo}}</a> /
+            {{model.id}}
+        </span>
     </h3>
-    <h5 class="page-title"><span *ngIf="mode == 'update'">{{model.oggetto}}</span></h5>
+    <h3 class="page-title fw-semi-bold"><span *ngIf="mode == 'update'">{{model.oggetto}}</span></h3>
 
     <div class="row">
         <div class="col-lg-6">
@@ -31,22 +45,21 @@
                             <div class="mb-3"> </div>
                             <div class="form-group abc-checkbox abc-checkbox-primary">
                                 <input id="proposta_cipe" name="proposta_cipe" type="checkbox"
-                                       [checked]="model.proposta_cipe == 1"
-                                       (change)="model.proposta_cipe = $event.target.checked == 1"
+                                       [checked]="model.proposta_cipe == 2"
+                                       (change)="model.proposta_cipe = $event.target.checked ? 2 : 1"
                                 >
                                 <label for="proposta_cipe">
-                                    Proposta CIPE
+                                    Proposta CIPE {{model.proposta_cipe}}
                                 </label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="form-group">
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !oggetto.valid }">
                                 <label for="oggetto"><strong>Oggetto</strong></label>
                                 <textarea id="oggetto" name="oggetto"
                                           rows="6" class="autogrow form-control transition-height"
-                                          autosize
                                           placeholder="Scrivi l'oggetto del registro..."
                                           [(ngModel)]="model.oggetto" #oggetto="ngModel" required></textarea>
                             </div>
@@ -67,16 +80,16 @@
                             <label><strong>Arrivo</strong></label>
                             <div class="row">
                                 <div class="col-sm-7">
-                                    <div class="form-group">
+                                    <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !protocollo_arrivo.valid }">
                                         <label for="protocollo_arrivo">Numero</label>
                                         <input id="protocollo_arrivo" name="protocollo_arrivo"
                                                type="text" class="form-control"
                                                placeholder="numero del protocollo"
-                                               [(ngModel)]="model.protocollo_arrivo" #protocollo_arrivo="ngModel">
+                                               [(ngModel)]="model.protocollo_arrivo" #protocollo_arrivo="ngModel" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-5">
-                                    <div class="form-group">
+                                    <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !data_arrivo.valid }">
                                         <label for="data_arrivo">Data</label>
                                         <datetime id="data_arrivo" name="data_arrivo"
                                                   [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
@@ -89,13 +102,13 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="id_mittenti"><strong>Mittente</strong></label>
-                                        <select2 id="id_mittenti"
+                                        <div class="select2-H-keeper"><select2 id="id_mittenti"
                                                  class="full-width-select"
                                                  [options]="select2WithAddOptions"
                                                  value="{{model.id_mittenti}}"
                                                  cssImport="false"
                                                  (valueChanged)="select2Changed($event,'id_mittenti')"
-                                                 [data]="apiService.mittentiSelect"></select2>
+                                                 [data]="mittenti$ | async"></select2></div>
                                     </div>
                                 </div>
                             </div>
@@ -140,34 +153,34 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="id_amministrazioni"><strong>Amministrazione</strong></label>
-                                <select2 id="id_amministrazioni"
+                                <div class="select2-H-keeper"><select2 id="id_amministrazioni"
                                          class="full-width-select"
-                                         [options]="select2WithAddOptions"
-                                         value="{{model.id_amministrazioni}}"
+                                         [options]="select2WithAddOptionsMulti"
+                                         [value]="model.id_amministrazioni ? model.id_amministrazioni.split(',') : ''"
                                          cssImport="false"
                                          (valueChanged)="select2Changed($event,'id_amministrazioni')"
-                                         [data]="apiService.amministrazioniSelect"></select2>
+                                         [data]="amministrazioni$ | async"></select2></div>
                             </div>
                             <div class="form-group">
                                 <label for="id_titolari"><strong>Titolario</strong></label>
-                                <select2 id="id_titolari" name="id_titolari"
+                                <div class="select2-H-keeper"><select2 id="id_titolari" name="id_titolari"
                                          class="full-width-select"
                                          [options]="select2Options"
-                                         value="{{model.id_titolari}}"
+                                         [value]="model.id_titolari"
                                          cssImport="false"
                                          (valueChanged)="select2Changed($event,'id_titolari')"
-                                         [data]="apiService.titolariSelect"></select2>
+                                         [data]="titolari$ | async"></select2></div>
                             </div>
                             <div class="form-group">
                                 <label for="id_fascicoli"><strong>Fascicolo</strong></label>
-                                <select2 id="id_fascicoli"
+                                <div class="select2-H-keeper"><select2 id="id_fascicoli"
                                          name="id_fascicoli"
                                          class="full-width-select"
                                          [options]="select2Options"
-                                         value="{{model.id_fascicoli}}"
+                                         [value]="model.id_fascicoli"
                                          cssImport="false"
                                          (valueChanged)="select2Changed($event,'id_fascicoli')"
-                                         [data]="apiService.fascicoliSelect"></select2>
+                                         [data]="fascicoli$ | async | fascicoliByTitolarioDataFilter : model.id_titolari"></select2></div>
                             </div>
                         </div>
                     </div>
@@ -215,6 +228,7 @@
                                 <i class="filetypes filetypes-{{allegato.tipo}} x2"></i>
                             </span>
                             <div class="news-item-info">
+                                <div class="float-lg-right"><a (click)="askDeleteFile($event, deleteFileModal, allegato)"><i class="fa fa-trash-o"> </i></a></div>
                                 <h5 class="name no-margin mb-xs"><a href="{{apiService.config.baseAPIURL}}/{{allegato.relURI}}" target="_blank">{{allegato.nome}}</a></h5>
                                 <p class="fs-mini">Dimensione: {{allegato.dimensione | fileSize}} - Data caricato: <time>{{allegato.data  | date: 'dd/MM/yyyy HH:mm'}}</time>
                                 </p>
@@ -239,7 +253,7 @@
                         </div>
                     </div>
                     <div ngFileDrop
-                         [options]="options"
+                         [options]="NGUPoptions"
                          (onUpload)="handleMultipleUpload($event)"
                          (onPreviewData)="handlePreviewData($event)"
                          (onUploadRejected)="rejectUpload($event)"
@@ -252,7 +266,12 @@
                         <h3>Rilascia i file qui dentro per caricarli oppure fai click per selezionare i file</h3>
 
                         <label class="upload-button">
-                            <input class="hidden" ngfileselect="" type="file" multiple>
+                            <input type="file"
+                                   multiple
+                                   class="hidden"
+                                   ngFileSelect
+                                   [options]="NGUPoptions"
+                                   (onUpload)="handleMultipleUpload($event)">
                             Sfoglia
                         </label>
                     </div>
@@ -278,11 +297,25 @@
 
 <modal #myModal submitButtonLabel="Conferma" [hideCloseButton]="true" [closeOnEscape]="false" [closeOnOutsideClick]="false" (onSubmit)="confirmCodeNotification(myModal)">
     <modal-header>
-        <h4 class="modal-title text-xs-center fw-bold mt">Conferma creazione fascicolo</h4>
+        <h4 class="modal-title text-xs-center fw-bold mt">Conferma creazione registro</h4>
     </modal-header>
     <modal-content>
         <h4 class="text-xs-center mt-sm">
             Il nuovo registro è stato creato. Il codice assegnato è <strong>{{model.id}} </strong><br/>
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>
+
+<modal #deleteFileModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteFile(deleteFileModal)">
+    <modal-header>
+        <h4 class="modal-title text-xs-center fw-bold mt">Conferma cancellazione file</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="text-xs-center mt-sm">
+            Vuoi eliminare il file <strong>{{deletingFile.nome}}</strong><br/>
+            Dimensione: {{deletingFile.dimensione | fileSize}} - Data caricato: <time>{{deletingFile.data  | date: 'dd/MM/yyyy HH:mm'}}</time>
         </h4>
     </modal-content>
     <modal-footer>

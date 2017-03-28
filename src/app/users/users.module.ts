@@ -1,9 +1,6 @@
-import {NgModule}      from '@angular/core';
-import {CommonModule}  from '@angular/common';
-import {
-    FormsModule,
-    ReactiveFormsModule
-}      from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {RouterModule} from '@angular/router';
 
@@ -11,17 +8,17 @@ import {ModalModule} from 'ngx-modal';
 import {StickTheadModule} from '../_directives/stickthead/stickthead.module';
 import {DataTableModule} from 'angular2-datatable';
 
-import { PipesSharedModule }                    from '../_shared/index'
+import { PipesSharedModule } from '../_shared/index';
 
 
-import {UsersListComponent}       from './list/users-list.component';
-import {UserEditComponent}       from './edit/user-edit.component';
+import {UsersListComponent} from './list/users-list.component';
+import {UserEditComponent} from './edit/user-edit.component';
 
-import {GroupsListComponent}       from './list/groups-list.component';
-import {GroupsEditComponent}       from './edit/groups-edit.component';
+import {GroupsListComponent} from './list/groups-list.component';
+import {GroupsEditComponent} from './edit/groups-edit.component';
 
-import {RuoliCipeListComponent}       from './list/ruoli_cipe-list.component';
-import {RuoliCipeEditComponent}       from './edit/ruoli_cipe-edit.component';
+import {RuoliCipeListComponent} from './list/ruoli_cipe-list.component';
+import {RuoliCipeEditComponent} from './edit/ruoli_cipe-edit.component';
 
 export const routes = [
     {path: '', redirectTo: 'list', pathMatch: 'full'},
@@ -36,7 +33,6 @@ export const routes = [
     {path: 'ruoli_cipe/edit/:id', component: RuoliCipeEditComponent},
 ];
 
-import 'select2/dist/js/select2.full.js';
 import { Select2Module } from 'ng2-select2';
 
 @NgModule({
@@ -60,6 +56,6 @@ import { Select2Module } from 'ng2-select2';
         RuoliCipeEditComponent
     ]
 })
-export default class UsersModule {
+export class UsersModule {
     static routes = routes;
 }

@@ -12,16 +12,16 @@ export class UserEditComponent implements OnInit {
 
     config: any;
     model: any = {};
-    error: string = '';
+    error = '';
     mode: string;
-    loading: boolean = false;
+    loading= false;
     id: number;
 
     public select2Options: Select2Options;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
-                private apiService: APICommonService,
+                public apiService: APICommonService,
                 config: AppConfig,
     ) {
         this.config = config.getConfig();

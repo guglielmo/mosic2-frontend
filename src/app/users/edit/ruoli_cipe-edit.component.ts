@@ -9,14 +9,14 @@ import { APICommonService } from '../../_services/index';
 
 export class RuoliCipeEditComponent implements OnInit {
     model: any = {};
-    error: string = '';
+    error = '';
     mode: string;
-    loading: boolean = true;
+    loading= true;
     id: number;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
-                private apiService: APICommonService
+                public apiService: APICommonService
     ) {
 
     }
@@ -49,7 +49,7 @@ export class RuoliCipeEditComponent implements OnInit {
     }
 
     cancel( event ) {
-        this.router.navigate(['/app/ruoli_cipe/list']);
+        this.router.navigate(['/app/users/ruoli_cipe/list']);
     }
 
     submit() {
@@ -60,7 +60,7 @@ export class RuoliCipeEditComponent implements OnInit {
                 this.apiService.create('ruoli_cipe', this.model)
                     .subscribe(
                         data => {
-                            this.router.navigate(['/app/ruoli_cipe/list']);
+                            this.router.navigate(['/app/users/ruoli_cipe/list']);
                         },
                         error => {
                             this.error = error; console.log(error);
@@ -72,7 +72,7 @@ export class RuoliCipeEditComponent implements OnInit {
                 this.apiService.update('ruoli_cipe',this.model)
                     .subscribe(
                         data => {
-                            this.router.navigate(['/app/ruoli_cipe/list']);
+                            this.router.navigate(['/app/users/ruoli_cipe/list']);
                         },
                         error => {
                             this.error = error; console.log(error);

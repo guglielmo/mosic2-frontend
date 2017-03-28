@@ -5,9 +5,19 @@
     </div>
     <h3 class="page-title"><a [routerLink]=" ['/app/fascicoli/list'] ">Fascicoli</a> /
         <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
-        <span *ngIf="mode == 'update'" class="fw-semi-bold">{{apiService.dataEnum['titolari'][model.id_titolari]['codice']}}.{{model.numero_fascicolo}}</span>
+        <span *ngIf="mode == 'update'" class="fw-semi-bold">
+
+            <ng-template #titolariTooltip>
+                <div [innerHtml]="apiService.dataEnum['titolari'][model.id_titolari]['text']"></div>
+            </ng-template>
+
+            <a [routerLink]=" ['/app/titolari/edit/'+model.id_titolari ]"
+               [tooltip]="titolariTooltip" placement="bottom"
+            >{{apiService.dataEnum['titolari'][model.id_titolari]['codice']}} </a>
+            . {{model.numero_fascicolo}}
+        </span>
     </h3>
-    <h5 class="page-title"><span *ngIf="mode == 'update'">{{model.argomento}}</span></h5>
+    <h4 class="page-title fw-semi-bold"><span *ngIf="mode == 'update'">{{model.argomento}}</span></h4>
 
     <div class="row">
         <div class="col-lg-6">
@@ -16,7 +26,7 @@
                     <h4><span class="fw-semi-bold">Catalogazione</span></h4>
                 </header>
                 <div class="widget-body">
-                    <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_titolari == '' }">
+                    <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_titolari }">
                         <label for="id_titolari"><strong>Titolario</strong></label>
                         <div class="select2-H-keeper"><select2 id="id_titolari"
                                  class="form-control full-width-select"
@@ -115,7 +125,7 @@
 <div class="row" *ngIf="apiService.commonDataready && model.id">
     <div class="col-lg-12">
         <div class="mb-1">
-            <h4>Registri contenuti nel fascicolo</h4>
+            <h3 class="fw-semi-bold">Registri contenuti nel fascicolo</h3>
             Risultati: {{filteredCount?.count}}
         </div>
         <section class="widget py-0" widget>
