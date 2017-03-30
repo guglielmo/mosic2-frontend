@@ -453,6 +453,7 @@ mfDefaultSorter > a {
   animation: pace-spinner 400ms linear infinite;
 }
 
+.tag.tag-lg { font-size: 14px; }
 
 
 .card.accordion-info,
@@ -493,7 +494,11 @@ mfDefaultSorter > a {
 
 .card.accordion-danger,
 .card.accordion-danger .card-header,
-.panel.accordion-danger {
+.panel.accordion-danger,
+.card.accordion-missing,
+.card.accordion-missing .card-header,
+.panel.accordion-missing
+{
   background-color: #f2dede;
   border-color: #ebccd1;
   color: #a94442;

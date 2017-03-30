@@ -136,8 +136,9 @@ export class PreCipeEditComponent implements OnInit {
                         response => {
                             this.model = response.data;
                             this.model.data = new Date(this.model.data);
-                            this.getRegistri();
-                            //this.model.ufficiale_riunione = '0';
+                            this.model.precipe_odg = _.map(this.model.precipe_odg, o => _.extend({allegati_esclusi: [], allegati_esclusi_approvati: []}, o));
+                            //this.getRegistri();
+
                             this.loading = false;
                             this.allowUpload = true;
                             // console.log(this.model);
@@ -151,6 +152,72 @@ export class PreCipeEditComponent implements OnInit {
         }
     }
 
+    toggleAllegato(item:any, allegato_id: number) {
+
+        var idx = _.indexOf(item.allegati_esclusi, allegato_id);
+        if(idx !== -1) {
+            item.allegati_esclusi.splice(idx, 1);
+        } else {
+            item.allegati_esclusi.push(allegato_id);
+        }
+    }
+
+    allegatiStatus(item:any) {
+
+         const id_registri = this.castToArray(item.id_registri);
+
+         let checkMissing = false;
+         id_registri.forEach( id_registro => {
+            if(item.allegati[id_registro].length === 0 ) {
+                checkMissing = true;
+                return;
+            }
+         });
+         if(checkMissing) {
+             return 'missing';
+         }
+
+        if(this.castToArray(item.allegati_esclusi).length === 0) {
+            return 'success';
+        }
+
+        if( _.isEqual(item.allegati_esclusi, item.allegati_esclusi_approvati) ) {
+            return 'warning';
+        }
+
+        return 'danger';
+
+/*        const id_registri = this.castToArray(item.id_registri);
+
+        let item_all_allegati = [];
+        id_registri.forEach( id_registro => {
+            let id_allegati = _.map(this._allegati[id_registro], 'id');
+            item_all_allegati = _.concat(item_all_allegati, id_allegati);
+        });
+
+        if( item.allegati_esclusi item.allegati_esclusi_approvati )
+
+
+
+        console.log(item.id, item_all_allegati);
+
+        if(Array.isArray(item.allegati_esclusi) && item.allegati_esclusi.length > 0) {
+
+            if(_.isEqual(item.allegati_esclusi.sort(), item.allegati_esclusi_approvati.sort())) {
+                return 'warning';
+            } else {
+                return 'danger'
+            }
+        }
+        return 'success';*/
+    }
+
+    allegatoIsChecked(item:any, allegatoId: number) {
+
+        return !(item.allegati_esclusi.indexOf(allegatoId) !== -1);
+
+    }
+
     getRegistri() {
         const id_registri = _.flatten(_.map(this.model.precipe_odg, 'id_registri'));
 
@@ -160,7 +227,7 @@ export class PreCipeEditComponent implements OnInit {
 
            this.apiService.getById('registri', id)
                .subscribe( response => {
-                  this._allegati[id] = _.map(response.data.allegati, o => _.extend({to_share: true}, o));
+                  this._allegati[id] = _.map(response.data.allegati, o => _.extend({escluso: false}, o));
                   this._allegati$[id].next(this._allegati[id]);
                },
                error => {

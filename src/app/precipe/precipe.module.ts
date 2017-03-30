@@ -10,6 +10,7 @@ import { PipesSharedModule } from '../_shared/index';
 import { DragulaModule } from 'ng2-dragula';
 import { TabsModule } from 'ng2-bootstrap/tabs';
 import { AccordionModule } from 'ng2-bootstrap/accordion';
+import { DropdownModule } from 'ng2-bootstrap/dropdown';
 
 
 import { WidgetModule } from '../layout/widget/widget.module';
@@ -47,6 +48,7 @@ export const routes = [
     DragulaModule,
     TabsModule.forRoot(),
     AccordionModule.forRoot(),
+    DropdownModule.forRoot(),
     NgUploaderModule,
     RouterModule.forChild(routes)
   ],

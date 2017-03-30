@@ -12,6 +12,7 @@ export class AppConfig {
         version: '2.0.0-alpha.2',
         // baseAPIURL: '',
         baseAPIURL: 'http://mosicapi.tdrynx.info',
+        // baseAPIURL: 'http://mosic.misterwolfweb.it',
         // baseAPIURL: 'http://mosicapi.staging.celata.com',
         /**
          * Whether to print and alert some log information
