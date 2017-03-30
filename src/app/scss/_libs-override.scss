@@ -484,7 +484,7 @@ mfDefaultSorter > a {
   animation: pace-spinner 400ms linear infinite;
 }
 
-.tag.tag-lg { font-size: 14px; }
+.badge.badge-lg { font-size: 14px; }
 
 
 .card.accordion-info,
@@ -537,6 +537,15 @@ mfDefaultSorter > a {
 .panel.accordion-danger .panel-body {
   background-color: #fafafa;
   color: #333;
+}
+
+/* fix needed for BS4-alpha.6
+ https://github.com/twbs/bootstrap/issues/21610
+ should be fixed soon upstream */
+
+.list-group,
+.list-group-item{
+  display:block;
 }
 
 

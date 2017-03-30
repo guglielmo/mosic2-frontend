@@ -36,8 +36,8 @@
                                 ><i></i>
                             </label>&nbsp;&nbsp;
                             <span *ngIf="model.ufficiale_riunione === '0' && officializingPreCipe === null"
-                                  class="tag tag-danger rel-t-l10">Bozza</span>
-                            <span *ngIf="model.ufficiale_riunione === '1' && officializingPreCipe === null" class="tag tag-success rel-t-l10">Ufficiale</span>
+                                  class="badge badge-lg badge-danger rel-t-l10">Bozza</span>
+                            <span *ngIf="model.ufficiale_riunione === '1' && officializingPreCipe === null" class="badge badge-lg badge-success rel-t-l10">Ufficiale</span>
                             <span *ngIf="officializingPreCipe !== null" class="rel-t-l10"> <i
                                     class="loading-spinner"></i> Pubblicazione in corso...</span>
                         </div>
@@ -70,27 +70,31 @@
                                 </div>
                                 <h6 class="fw-semi-bold">Risultanza</h6>
                                 <p>
-                                    <span *ngIf="item.risultanza !== 1 && item.risultanza !== 2" class="tag tag-default rel-t-l2">N/D</span>
-                                    <span *ngIf="item.risultanza === 2" class="tag tag-warning rel-t-l2">Rinviato</span>
-                                    <span *ngIf="item.risultanza === 1" class="tag tag-success rel-t-l2">Positivo</span>                                    
+                                    <span *ngIf="item.risultanza !== 1 && item.risultanza !== 2" class="badge badge-lg badge-default rel-t-l2">N/D</span>
+                                    <span *ngIf="item.risultanza === 2" class="badge badge-lg badge-warning rel-t-l2">Rinviato</span>
+                                    <span *ngIf="item.risultanza === 1" class="badge badge-lg badge-success rel-t-l2">Positivo</span>
                                 </p>
                             </div>
                         </div>
                         <div class="col-md-11">
                             <div class="btn-group float-md-right" dropdown>
-                                <button id="single-button" type="button" class="btn btn-secondary" dropdownToggle>
-                                    Azioni  <span class="caret"></span>
+                                <button id="split-button" type="button" class="btn btn-secondary" (click)="item.edit = !item.edit">
+                                    <i class="fa fa-edit fa-lg"> </i> Modifica
                                 </button>
-                                <ul dropdownMenu role="menu" aria-labelledby="single-button">
-                                    <li role="menuitem"><a class="dropdown-item" (click)="item.edit = !item.edit"><i class="fa fa-edit fa-lg"> </i> Modifica</a></li>
-                                    <li class="divider dropdown-divider"></li>
+                                <button type="button" class="btn btn-secondary dropdown-toggle-split" dropdownToggle>
+                                    <span class="caret"></span>
+                                    <span class="sr-only"> </span>
+                                </button>
+                                <ul class="dropdown-menu" *dropdownMenu role="menu" aria-labelledby="split-button">
+                                    <!--                                    <li class="divider dropdown-divider"></li>-->
                                     <li role="menuitem"><a class="dropdown-item"><i class="fa fa-trash-o fa-lg"> </i> Elimina</a></li>
                                 </ul>
                             </div>
-
-                            <h5 class="fw-semi-bold mb-1">
-                                {{item.denominazione}}
-                            </h5>
+                            <div>
+                                <h5 class="fw-semi-bold mb-lg">
+                                    {{item.denominazione}}
+                                </h5>
+                            </div>
 
                             <accordion [closeOthers]="false" class="mb-lg show" id="precipe_odg_allegati[{{item.id}}]">
                                 <accordion-group #accordionGroupDefinition [panelClass]="'accordion-info'" [isOpen]="item.edit">
@@ -156,7 +160,7 @@
                                                                    [checked]="item.risultanza !== 1 && item.risultanza !== 2"
                                                                    (click)="item.risultanza = ''">
                                                             <label for="risultanza_nd[{{item.id}}]">
-                                                                <span [ngClass]="{ 'tag tag-default': item.risultanza !== 1 && item.risultanza !== 2 }" class="rel-t-l2">N/D</span>
+                                                                <span [ngClass]="{ 'badge badge-lg badge-default': item.risultanza !== 1 && item.risultanza !== 2 }">N/D</span>
                                                             </label>
                                                         </span>
                                                         <span class="abc-radio abc-radio-warning">
@@ -164,7 +168,7 @@
                                                                    [checked]="item.risultanza === 2"
                                                                    (click)="item.risultanza = 2">
                                                             <label for="risultanza_rinviato[{{item.id}}]">
-                                                                <span [ngClass]="{ 'tag tag-warning': item.risultanza === 2 }" class="rel-t-l2">Rinviato</span>
+                                                                <span [ngClass]="{ 'badge badge-lg badge-warning': item.risultanza === 2 }">Rinviato</span>
                                                             </label>
                                                         </span>
                                                         <span class="abc-radio abc-radio-success">
@@ -172,7 +176,7 @@
                                                                    [checked]="item.risultanza === 1"
                                                                    (click)="item.risultanza = 1">
                                                             <label for="risultanza_positivo[{{item.id}}]">
-                                                                <span [ngClass]="{ 'tag tag-success': item.risultanza === 1 }" class="rel-t-l2">Positivo</span>
+                                                                <span [ngClass]="{ 'badge badge-lg badge-success': item.risultanza === 1 }">Positivo</span>
                                                             </label>
                                                         </span>
                                                     </div>
@@ -294,10 +298,10 @@
                                         <i class="fa float-right"
                                            [ngClass]="{'fa-angle-down': accordionGroupDocs?.isOpen, 'fa-angle-right': !accordionGroupDocs?.isOpen}"></i>
                                         <strong [ngSwitch]="allegatiStatus(item)" class="float-md-right mr-2">
-                                            <span *ngSwitchCase="'success'" class="tag tag-lg tag-success">Tutti</span>
-                                            <span *ngSwitchCase="'warning'" class="tag tag-lg tag-warning">Alcuni esclusi (approvati)</span>
-                                            <span *ngSwitchCase="'danger'" class="tag tag-lg tag-danger">Esclusi in attesa di approvazione</span>
-                                            <span *ngSwitchCase="'missing'" class="tag tag-lg tag-danger">Uno o più registri non contengono allegati</span>
+                                            <span *ngSwitchCase="'success'" class="badge badge-lg badge-success">Tutti</span>
+                                            <span *ngSwitchCase="'warning'" class="badge badge-lg badge-warning">Alcuni esclusi (approvati)</span>
+                                            <span *ngSwitchCase="'danger'" class="badge badge-lg badge-danger">Esclusi in attesa di approvazione</span>
+                                            <span *ngSwitchCase="'missing'" class="badge badge-lg badge-danger">Uno o più registri non contengono allegati</span>
                                         </strong>
                                         <i class="fa fa-files-o fa-lg"></i> &nbsp; <strong>Documenti inclusi in ODG</strong>
                                     </div>
@@ -321,6 +325,7 @@
                                 </accordion-group>
                             </accordion>
 
+<!--
                             <accordion [closeOthers]="true" class="mb-lg show" id="debug[{{item.id}}]">
                                 <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'">
                                     <div accordion-heading>
@@ -337,6 +342,7 @@
                                     </div>
                                 </accordion-group>
                             </accordion>
+-->
 
                         </div>
                     </div>

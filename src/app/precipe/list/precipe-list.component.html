@@ -27,8 +27,8 @@
                         <td>{{precipe.id}}</td>
                         <td>{{precipe.data | date: 'dd/MM/yyyy' }}</td>
                         <td>
-                            <span *ngIf="precipe.ufficiale_riunione === '0'" class="tag tag-danger">Bozza</span>
-                            <span *ngIf="precipe.ufficiale_riunione === '1'" class="tag tag-success">Ufficiale</span>
+                            <span *ngIf="precipe.ufficiale_riunione === '0'" class="badge badge-danger">Bozza</span>
+                            <span *ngIf="precipe.ufficiale_riunione === '1'" class="badge badge-success">Ufficiale</span>
                             <i *ngIf="officializingPreCipe" class="">Ufficiale</i>
 
                         </td>

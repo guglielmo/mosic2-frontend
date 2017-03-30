@@ -60,12 +60,12 @@
                         <td>{{ufficio.codice_direzione}}</td>
                         <td>{{ufficio.ordine_ufficio}}</td>
                         <td>
-                            <span *ngIf="ufficio.solo_delibere === '0'" class="tag tag-success">No</span>
-                            <span *ngIf="ufficio.solo_delibere === '1'" class="tag tag-danger">Si</span>
+                            <span *ngIf="ufficio.solo_delibere === '0'" class="badge badge-success">No</span>
+                            <span *ngIf="ufficio.solo_delibere === '1'" class="badge badge-danger">Si</span>
                         </td>
                         <td>
-                            <span *ngIf="ufficio.disattivo_ufficio === '0'" class="tag tag-success">Attivo</span>
-                            <span *ngIf="ufficio.disattivo_ufficio === '1'" class="tag tag-danger">Non attivo</span>
+                            <span *ngIf="ufficio.disattivo_ufficio === '0'" class="badge badge-success">Attivo</span>
+                            <span *ngIf="ufficio.disattivo_ufficio === '1'" class="badge badge-danger">Non attivo</span>
                         <td>
                             <a (click)="askDeleteUffici($event, myModal, ufficio)"><i class="fa fa-trash-o"> </i></a>
                         </td>

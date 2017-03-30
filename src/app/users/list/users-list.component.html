@@ -33,8 +33,8 @@
                         <td>{{user.ip}}</td>
                         <td>{{user.stazione}}</td>
                         <td>
-                            <span *ngIf="user.cessatoServizio === '0'" class="tag tag-success">Attivo</span>
-                            <span *ngIf="user.cessatoServizio === '1'" class="tag tag-danger">Cessato servizio</span>
+                            <span *ngIf="user.cessatoServizio === '0'" class="badge badge-success">Attivo</span>
+                            <span *ngIf="user.cessatoServizio === '1'" class="badge badge-danger">Cessato servizio</span>
                         </td>
                         <td>
                             <a (click)="askDeleteUser($event, myModal, user)"><i class="fa fa-trash-o"> </i></a>
