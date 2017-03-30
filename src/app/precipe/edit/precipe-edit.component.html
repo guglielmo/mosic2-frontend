@@ -66,7 +66,7 @@
 
                                 <!-- VIEW -->
                                 <div *ngIf="!item.edit">
-                                    <i class="fa fa-sort fa-lg float-xs-left rel-t-m10"> </i> <h2 class="ml-2"> <strong>{{item.ordine}}</strong></h2>
+                                    <i class="fa fa-sort fa-lg float-left rel-t-m10"> </i> <h2 class="ml-2"> <strong>{{item.ordine}}</strong></h2>
                                 </div>
                                 <h6 class="fw-semi-bold">Risultanza</h6>
                                 <p>
@@ -96,7 +96,7 @@
                                 <accordion-group #accordionGroupDefinition [panelClass]="'accordion-info'" [isOpen]="item.edit">
                                     <div accordion-heading>
                                         <i class="fa fa-files-o fa-lg"></i> &nbsp; <strong>Definizione</strong>
-                                        <i class="fa float-xs-right"
+                                        <i class="fa float-right"
                                            [ngClass]="{'fa-angle-down': accordionGroupDefinition?.isOpen, 'fa-angle-right': !accordionGroupDefinition?.isOpen}"></i>
 
                                     </div>
@@ -291,7 +291,7 @@
                                                  [panelClass]="'accordion-' + allegatiStatus(item)"
                                                  [isOpen]="item.edit">
                                     <div accordion-heading>
-                                        <i class="fa float-xs-right"
+                                        <i class="fa float-right"
                                            [ngClass]="{'fa-angle-down': accordionGroupDocs?.isOpen, 'fa-angle-right': !accordionGroupDocs?.isOpen}"></i>
                                         <strong [ngSwitch]="allegatiStatus(item)" class="float-md-right mr-2">
                                             <span *ngSwitchCase="'success'" class="tag tag-lg tag-success">Tutti</span>
@@ -325,7 +325,7 @@
                                 <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'">
                                     <div accordion-heading>
                                         <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
-                                        <i class="fa float-xs-right"
+                                        <i class="fa float-right"
                                            [ngClass]="{'fa-angle-down': accordionGroupDebug?.isOpen, 'fa-angle-right': !accordionGroupDebug?.isOpen}"></i>
                                     </div>
                                     <div>

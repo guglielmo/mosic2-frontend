@@ -164,6 +164,7 @@ small, .small {
 
 
 .form-control {
+  font-family: $font-family-sans-serif;
   font-weight: $font-weight-normal;
   padding: $padding-base-vertical $padding-base-horizontal;
   @include box-shadow(none);
@@ -224,6 +225,10 @@ legend {
   .input-group-addon{
     line-height: inherit;
   }
+}
+
+.input-group-btn {
+  flex-direction: row;
 }
 
 .input-group-addon{
@@ -681,6 +686,7 @@ legend {
 // --------------------------------------------------
 
 .btn {
+  font-family: $font-family-sans-serif;
   .glyphicon {
     top: 3px;
   }
@@ -882,6 +888,10 @@ small, .small {
 .btn-toolbar{
   margin-top: $line-height-computed/2;
   margin-bottom: $line-height-computed/2;
+
+  .btn {
+    margin-left: $line-height-computed/2;
+  }
 }
 
 //
@@ -889,13 +899,12 @@ small, .small {
 // --------------------------------------------------
 
 .js-progress-animate {
-  transition: width 0.6s ease;
+  transition: width 0.6s ease !important;
 }
 
 .progress{
   @include box-shadow(none);
   transition: width 0.6s ease;
-  height: 1.3rem;
 }
 
 .progress-bar{
@@ -914,16 +923,16 @@ small, .small {
 }
 
 
-.progress-bar-gray {
-  @include progress-variant($gray);
+.bg-bar-gray {
+  background-color: $gray;
 }
 
-.progress-bar-gray-light {
-  @include progress-variant($gray-light);
+.bg-bar-gray-light {
+  background-color: $gray-light;
 }
 
-.progress-primary {
-  @include progress-variant($brand-primary)
+.bg-primary {
+  background-color: $brand-primary;
 }
 
 
@@ -979,6 +988,10 @@ a.list-group-item, button.list-group-item {
 // Tooltips
 // --------------------------------------------------
 
+.tooltip.in {
+  opacity: 1;
+}
+
 .tooltip-inner{
   @include border-radius(3px);
 }
@@ -1033,6 +1046,18 @@ a.list-group-item, button.list-group-item {
     .sidebar{
       z-index: -1;
     }
+  }
+}
+
+.modal-backdrop.fade.in {
+    opacity: 0.5;
+}
+
+.modal.fade.in {
+  opacity: 1;
+
+  .modal-dialog {
+    transform: translate(0, 0);
   }
 }
 
@@ -1271,47 +1296,13 @@ pre {
 // Badges
 // --------------------------------------------------
 
-
-// Base class
 .badge {
-  display: inline-block;
-  min-width: 10px;
-  padding: 3px 7px;
   font-size: $font-size-sm;
-  font-weight: $font-weight-bold;
-  color: #fff;
-  line-height: 1;
-  white-space: nowrap;
-  text-align: center;
-  background-color: $gray;
-  border-radius: 100px;
-
-  // Empty badges collapse automatically (not available in IE8)
-  &:empty {
-    display: none;
   }
 
-  // Quick fix for badges in buttons
-  .btn & {
-    position: relative;
-    top: -1px;
-  }
-
-  .btn-xs &,
-  .btn-group-xs > .btn & {
-    top: 0;
-    padding: 1px 5px;
-  }
-
-  .list-group-item > & {
-    float: right;
-  }
-
-  .list-group-item > & + & {
-    margin-right: 5px;
-  }
-
-  .nav-pills > li > a > & {
-    margin-left: 3px;
-  }
+//
+// Close
+// ----------------
+.close {
+  opacity: .2;
 }

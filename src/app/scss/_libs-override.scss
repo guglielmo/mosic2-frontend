@@ -2,6 +2,13 @@
  * Font Awesome 2x spin
  */
 
+.#{$fa-css-prefix}-spin-fast {
+  -webkit-animation: fa-spin 1s infinite linear;
+  -moz-animation: fa-spin 1s infinite linear;
+  -o-animation: fa-spin 1s infinite linear;
+  animation: fa-spin 1s infinite linear;
+}
+
 
 .fa-lg {
   vertical-align: -15%;
@@ -75,9 +82,7 @@ datetime .input-group {
   }
 }
 
-/**
-* select2
-**/
+/* ng2-select2 */
 
 .form-control.full-width-select { padding: 0; border-color: transparent; }
 .has-danger .form-control.full-width-select { border-color: #dd5826; }
@@ -128,7 +133,33 @@ datetime .input-group {
   
   
 }
+/**
+ * Bootstrap select
+ */
 
+.selectpicker.form-control {
+  height: auto;
+}
+
+.bootstrap-select {
+  z-index: 1;
+
+  &.show .dropdown-menu.inner {
+    display: block;
+  }
+
+  &.show {
+    z-index: 3;
+    display: inline-block !important;
+  }
+}
+
+/**
+ * ng2-bootstrap
+ */
+.dropdown.open .dropdown-menu {
+  display: block;
+}
 
 /**
 * Awesome bootstrap checkbox

@@ -212,10 +212,10 @@
 
 <modal #myModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteRegistri(myModal)">
     <modal-header>
-        <h4 class="modal-title text-xs-center fw-bold mt">Conferma cancellazione registro</h4>
+        <h4 class="modal-title text-center fw-bold mt">Conferma cancellazione registro</h4>
     </modal-header>
     <modal-content>
-        <h4 class="text-xs-center mt-sm">
+        <h4 class="text-center mt-sm">
             Vuoi eliminare il registro <strong>{{deletingRegistri.id}}</strong><br/>
             {{deletingRegistri.oggetto}} ?
         </h4>

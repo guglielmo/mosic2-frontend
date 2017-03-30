@@ -297,10 +297,10 @@
 
 <modal #myModal submitButtonLabel="Conferma" [hideCloseButton]="true" [closeOnEscape]="false" [closeOnOutsideClick]="false" (onSubmit)="confirmCodeNotification(myModal)">
     <modal-header>
-        <h4 class="modal-title text-xs-center fw-bold mt">Conferma creazione registro</h4>
+        <h4 class="modal-title text-center fw-bold mt">Conferma creazione registro</h4>
     </modal-header>
     <modal-content>
-        <h4 class="text-xs-center mt-sm">
+        <h4 class="text-center mt-sm">
             Il nuovo registro è stato creato. Il codice assegnato è <strong>{{model.id}} </strong><br/>
         </h4>
     </modal-content>
@@ -310,10 +310,10 @@
 
 <modal #deleteFileModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteFile(deleteFileModal)">
     <modal-header>
-        <h4 class="modal-title text-xs-center fw-bold mt">Conferma cancellazione file</h4>
+        <h4 class="modal-title text-center fw-bold mt">Conferma cancellazione file</h4>
     </modal-header>
     <modal-content>
-        <h4 class="text-xs-center mt-sm">
+        <h4 class="text-center mt-sm">
             Vuoi eliminare il file <strong>{{deletingFile.nome}}</strong><br/>
             Dimensione: {{deletingFile.dimensione | fileSize}} - Data caricato: <time>{{deletingFile.data  | date: 'dd/MM/yyyy HH:mm'}}</time>
         </h4>
