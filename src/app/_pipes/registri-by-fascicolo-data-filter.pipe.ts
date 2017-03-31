@@ -8,10 +8,14 @@ export class RegistriByFascicoloDataFilterPipe implements PipeTransform {
 
     transform(array: any[], id_fascicoli: number): any {
 
-        // pre-compute some conditions to execute checks outside the loop
-        const tL = id_fascicoli != null;
+        // no id_fascicoli, skip filtering
+        if (id_fascicoli == null) {
+            return array;
+        }
+
         return _.filter(array, row => {
-            if (tL && row.id_fascicoli !== id_fascicoli) {
+            // todo: change back to strict equality operator when fascicoli getAll returns a numeric id
+            if (row.id_fascicoli != id_fascicoli) {
                 return false;
             }
 

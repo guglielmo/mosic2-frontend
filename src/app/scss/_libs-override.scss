@@ -528,7 +528,10 @@ mfDefaultSorter > a {
 .panel.accordion-danger,
 .card.accordion-missing,
 .card.accordion-missing .card-header,
-.panel.accordion-missing
+.panel.accordion-missing,
+.card.accordion-noregistri,
+.card.accordion-noregistri .card-header,
+.panel.accordion-noregistri
 {
   background-color: #f2dede;
   border-color: #ebccd1;
@@ -542,12 +545,17 @@ mfDefaultSorter > a {
 /* fix needed for BS4-alpha.6
  https://github.com/twbs/bootstrap/issues/21610
  should be fixed soon upstream */
-
 .list-group,
 .list-group-item{
   display:block;
 }
 
+/* fix needed for BS4-alpha.6
+  todo: check if bug already triaged upstream */
+
+.list-group:last-of-type .list-group-item:last-child {
+  border: $list-group-border-width solid $list-group-border-color;
+}
 
 
 

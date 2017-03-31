@@ -26,7 +26,7 @@ export class APICommonService {
     private _allData$: any = {};
     public dataEnum: any = {};
 
-    private currentStorageVersion = '23';
+    private currentStorageVersion = '30';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
@@ -208,6 +208,11 @@ export class APICommonService {
                     //
                     this.warehouse.get('stored_' + apipath).subscribe(
                         data => {
+                            if(!Array.isArray(data)) {
+                                this.notifyError('I dati registrati nella memoria locale per i ' + apipath + ' non sono validi');
+                                return;
+                            }
+
                             //
                             // stores data in memory
                             //
@@ -218,6 +223,7 @@ export class APICommonService {
                             //
                             let checkIsReady = true;
                             _.each(this.cachedApiDataMetods, v => {
+                                //console.log(v, this._allData);
                                 if (this._allData[v].length === 0) {
                                     checkIsReady = false;
                                     return false; // <-- note: this is the lodash way to break iteration;
@@ -252,6 +258,11 @@ export class APICommonService {
 
         this.getAll(apipath, params).subscribe(
             response => {
+
+                if(!Array.isArray(response.data)) {
+                    this.notifyError('La risposta del server per la API ' + apipath + ' non è valida');
+                    return;
+                }
 
                 //
                 // extends all items with a custom 'text' property which is used by select2 fields

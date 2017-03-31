@@ -545,3 +545,15 @@ textarea.single-row::-webkit-scrollbar {
 select2 {
   select { visibility: hidden; }
 }
+
+.hide-child-nohover {
+  .visible-parent-hover {
+    visibility: hidden;
+  }
+
+  &:hover {
+    .visible-parent-hover {
+      visibility: visible;
+    }
+  }
+}
