@@ -14,9 +14,15 @@ import {
 
 } from '../_pipes/index';
 
+import { MomentModule } from 'angular2-moment';
+import 'moment/locale/it';
+
+
+
 @NgModule({
     imports: [
-        CommonModule
+        CommonModule,
+        MomentModule
     ],
     declarations: [
         FileSizePipe,
@@ -38,7 +44,8 @@ import {
         FascicoliByTitolarioDataFilterPipe,
         RegistriByFascicoloDataFilterPipe,
         DataEnumPipe,
-        ArrayLengthPipe
+        ArrayLengthPipe,
+        MomentModule
     ]
 })
 export class PipesSharedModule {}
