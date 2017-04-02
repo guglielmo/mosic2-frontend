@@ -177,9 +177,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let registro of mf.data" (click)="editId(registro.id)" class="clickable">
+                    <tr *ngFor="let registro of mf.data">
                         <td>{{registro.id}}</td>
-                        <td [innerHTML]="registro.oggetto | dataMark : filter.oggetto"></td>
+                        <td><a [routerLink]="[ '/app/registri/edit/' + registro.id ]"
+                              [innerHTML]="registro.oggetto | dataMark : filter.oggetto"></a>
+                        </td>
                         <!-- todo: find a better way to implement enum -->
                         <td><span *ngIf="registro.id_mittenti">{{apiService.dataEnum.mittenti[registro.id_mittenti]['text']}}</span></td>
                         <td><span *ngIf="registro.id_titolari">
