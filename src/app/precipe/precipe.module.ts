@@ -1,7 +1,9 @@
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { LOCALE_ID } from '@angular/core';
 
 import { ModalModule } from 'ngx-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
@@ -11,7 +13,7 @@ import { DragulaModule } from 'ng2-dragula';
 import { TabsModule } from 'ng2-bootstrap/tabs';
 import { AccordionModule } from 'ng2-bootstrap/accordion';
 import { BsDropdownModule } from 'ng2-bootstrap/dropdown';
-
+import { Autosize } from 'angular2-autosize/src/autosize.directive';
 
 
 import { WidgetModule } from '../layout/widget/widget.module';
@@ -24,6 +26,10 @@ import { NgUploaderModule } from 'ngx-uploader';
 
 import { PreCipeListComponent } from './list/precipe-list.component';
 import { PreCipeEditComponent } from './edit/precipe-edit.component';
+import { PrecipeOdgItemComponent } from './edit/precipe-odg-item.component';
+import {DataEnumPipe} from "../_pipes/data-enum.pipe";
+
+
 
 export const routes = [
   {path: '', redirectTo: 'list', pathMatch: 'full'},
@@ -53,9 +59,14 @@ export const routes = [
     NgUploaderModule,
     RouterModule.forChild(routes)
   ],
+  providers: [
+    { provide: LOCALE_ID, useValue: "it-IT" }
+  ],
   declarations: [
+      Autosize,
       PreCipeListComponent,
-      PreCipeEditComponent
+      PreCipeEditComponent,
+      PrecipeOdgItemComponent
   ]
 })
 export class PreCipeModule {

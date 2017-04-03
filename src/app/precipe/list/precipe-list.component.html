@@ -13,19 +13,21 @@
                        #mf="mfDataTable" stickthead>
                     <thead>
                     <tr>
-                        <th><mfDefaultSorter by="id">#</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="data">Data</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="ufficiale_riunione">Stato</mfDefaultSorter></th>
                         <th>Appunto generale</th>
                         <th>Elenco Telex</th>
                         <th>Osservazioni</th>
+                        <th><mfDefaultSorter by="id">#</mfDefaultSorter></th>
                         <th>Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr *ngFor="let precipe of mf.data" (click)="editId(precipe.id)" class="clickable">
-                        <td>{{precipe.id}}</td>
-                        <td>{{precipe.data | date: 'dd/MM/yyyy' }}</td>
+                        <td>
+                            <h5><strong>{{precipe.data | amTimeAgo }}</strong></h5>
+                            <p class="fw-semi-bold text-capitalize">{{precipe.data | date: 'EEEE, dd MMMM yyyy' }}</p>
+                        </td>
                         <td>
                             <span *ngIf="precipe.ufficiale_riunione === '0'" class="badge badge-danger">Bozza</span>
                             <span *ngIf="precipe.ufficiale_riunione === '1'" class="badge badge-success">Ufficiale</span>
@@ -53,6 +55,7 @@
                                 </div>
                             </div>
                         </td>
+                        <td>{{precipe.id}}</td>
                         <td>
                             <a (click)="askDeletePrecipe($event, myModal, precipe)"><i class="fa fa-trash-o"> </i></a>
                         </td>

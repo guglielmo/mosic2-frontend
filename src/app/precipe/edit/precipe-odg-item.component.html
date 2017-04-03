@@ -1,0 +1,309 @@
+<form name="form" #f="ngForm" novalidate>
+<div class="row">
+    <div class="col-md-1">
+        <div class="form-group">
+            <!-- EDIT -->
+            <input *ngIf="edit" type="text" class="form-control form-control-lg" id="punto_odg[{{item.id}}]" name="punto_odg[{{item.id}}]"
+                   placeholder="..."
+                   [(ngModel)]="item.ordine" #punto_odg="ngModel" required>
+
+            <!-- VIEW -->
+            <div *ngIf="!edit">
+                <i class="fa fa-sort fa-lg float-left rel-t-m10"> </i>
+                <h2 class="ml-2"><strong>{{item.ordine}}</strong>&nbsp;</h2>
+            </div>
+            <h6 class="fw-semi-bold">Risultanza</h6>
+            <p>
+                <span *ngIf="item.risultanza !== 1 && item.risultanza !== 2" class="badge badge-lg badge-default rel-t-l2">N/D</span>
+                <span *ngIf="item.risultanza === 2" class="badge badge-lg badge-warning rel-t-l2">Rinviato</span>
+                <span *ngIf="item.risultanza === 1" class="badge badge-lg badge-success rel-t-l2">Positivo</span>
+            </p>
+        </div>
+    </div>
+    <div class="col-md-11 hide-child-nohover">
+        <div class="clearfix mb-lg">
+            <div class="btn-group float-md-right visible-parent-hover" dropdown>
+                <button id="split-button" type="button" class="btn btn-sm btn-secondary" (click)="toggleEdit()">
+                    <span *ngIf="!edit"><i class="fa fa-edit fa-lg"> </i> Modifica</span>
+                    <span *ngIf="edit"><i class="fa fa-edit fa-lg"> </i> Fine</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" dropdownToggle>
+                    <span class="caret"></span>
+                    <span class="sr-only">Apri menù azioni</span>
+                </button>
+                <ul class="dropdown-menu visible-parent-hover" *dropdownMenu role="menu" aria-labelledby="split-button">
+                    <!--                                    <li class="divider dropdown-divider"></li>-->
+                    <li role="menuitem"><a class="dropdown-item"><i class="fa fa-trash-o fa-lg"> </i> Elimina</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="fw-semi-bold mb-lg">
+                    {{item.denominazione}}
+                </h5>
+            </div>
+        </div>
+
+        <accordion [closeOthers]="false" class="mb-lg show" id="precipe_odg_allegati[{{item.id}}]">
+            <accordion-group #accordionGroupDefinition [panelClass]="'accordion-info'" [isOpen]="edit">
+                <div accordion-heading>
+                    <i class="fa fa-files-o fa-lg"></i> &nbsp; <strong>Definizione</strong>
+                    <i class="fa float-right"
+                       [ngClass]="{'fa-angle-down': accordionGroupDefinition?.isOpen, 'fa-angle-right': !accordionGroupDefinition?.isOpen}"></i>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- DENOMINAZIONE -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="denominazione[{{item.id}}]"><strong>Denominazione</strong></label>
+
+                                    <!-- VIEW / EDIT -->
+                                    <textarea id="denominazione[{{item.id}}]" name="denominazione[{{item.id}}]"
+                                              rows="2" class="autogrow form-control transition-height"
+                                              placeholder="Scrivi la descrizione del punto all'ordine del giorno..."
+                                              [disabled]="!edit"
+                                              [(ngModel)]="item.denominazione" #denominazione[item.id]="ngModel" autosize required></textarea>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- UFFICIO / RISULTANZA-->
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="id_uffici[{{item.id}}]"><strong>Ufficio di competenza</strong></label>
+
+                                    <!-- EDIT -->
+                                    <div *ngIf="edit" class="select2-H-keeper">
+                                        <select2
+                                                id="id_uffici[{{item.id}}]"
+                                                class="full-width-select"
+                                                [options]="select2Options"
+                                                [value]="item.id_uffici"
+                                                (valueChanged)="select2Changed($event, item, 'id_uffici')"
+                                                cssImport="false"
+                                                [data]="uffici$ | async"></select2>
+                                    </div>
+
+                                    <!-- VIEW -->
+                                    <div *ngIf="!edit">
+                             <textarea disabled="disabled" readonly
+                                       rows="1" class="form-control single-row"
+                                       placeholder="Click su 'Modifica' per selezionare..."
+                                       title="{{ item.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'text' }}"
+                             >{{ item.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'text' }}</textarea>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label><strong>Risultanza</strong></label>
+                                <div class="mt-1 rel-t-l7">
+                                    <span class="abc-radio abc-radio-default">
+                                        <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_nd[{{item.id}}]"
+                                               value=""
+                                               [disabled]="!edit"
+                                               [checked]="item.risultanza !== 1 && item.risultanza !== 2"
+                                               (click)="item.risultanza = ''">
+                                        <label for="risultanza_nd[{{item.id}}]">
+                                            <span [ngClass]="{ 'badge badge-lg badge-default': item.risultanza !== 1 && item.risultanza !== 2 }">N/D</span>
+                                        </label>
+                                    </span>
+                                    <span class="abc-radio abc-radio-warning">
+                                        <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_rinviato[{{item.id}}]"
+                                               value="2"
+                                               [disabled]="!edit"
+                                               [checked]="item.risultanza === 2"
+                                               (click)="item.risultanza = 2">
+                                        <label for="risultanza_rinviato[{{item.id}}]">
+                                            <span [ngClass]="{ 'badge badge-lg badge-warning': item.risultanza === 2 }">Rinviato</span>
+                                        </label>
+                                    </span>
+                                    <span class="abc-radio abc-radio-success">
+                                        <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_positivo[{{item.id}}]"
+                                               value="1"
+                                               [disabled]="!edit"
+                                               [checked]="item.risultanza === 1"
+                                               (click)="item.risultanza = 1">
+                                        <label for="risultanza_positivo[{{item.id}}]">
+                                            <span [ngClass]="{ 'badge badge-lg badge-success': item.risultanza === 1 }">Positivo</span>
+                                        </label>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TITOLARIO / FASCICOLO -->
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="id_titolari[{{item.id}}]"><strong>Titolario</strong></label>
+
+                                    <!-- EDIT -->
+                                    <div *ngIf="edit" class="select2-H-keeper">
+                                        <select2
+                                                id="id_titolari[{{item.id}}]"
+                                                class="full-width-select"
+                                                [options]="select2Options"
+                                                [value]="item.id_titolari"
+                                                (valueChanged)="select2Changed($event, item, 'id_titolari')"
+                                                cssImport="false"
+                                                [data]="titolari$ | async"></select2>
+                                    </div>
+                                    <!-- VIEW -->
+                                    <div *ngIf="!edit">
+                                        <textarea disabled="disabled" readonly
+                                                rows="1" class="form-control single-row"
+                                                placeholder="Click su 'Modifica' per selezionare..."
+                                                title="{{ item.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'text' }}"
+                                        >{{ item.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'text' }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="id_fascicoli[{{item.id}}]"><strong>Fascicolo</strong></label>
+                                    <!-- EDIT -->
+                                    <div *ngIf="edit && item.id_titolari !== null" class="select2-H-keeper">
+                                        <select2
+                                                id="id_fascicoli[{{item.id}}]"
+                                                class="full-width-select"
+                                                [options]="select2Options"
+                                                [value]="item.id_fascicoli"
+                                                (valueChanged)="select2Changed($event, item, 'id_fascicoli')"
+                                                cssImport="false"
+                                                [data]="fascicoli$ | async | fascicoliByTitolarioDataFilter"></select2>
+                                    </div>
+                                    <!-- EDIT + NO TITOLARI -->
+                                    <div *ngIf="edit  && item.id_titolari === null">
+                                        <textarea disabled="disabled" readonly rows="1" class="form-control single-row"
+                                                  placeholder="Seleziona prima un titolario..."></textarea>
+                                    </div>
+                                    <!-- VIEW -->
+                                    <div *ngIf="!edit">
+                                        <textarea disabled="disabled" readonly
+                                                  rows="1" class="form-control single-row"
+                                                  placeholder="Click su 'Modifica' per selezionare..."
+                                                  title="{{ item.id_fascicoli | dataEnum : apiService.dataEnum : 'fascicoli' : 'text' }}"
+                                        >{{ item.id_fascicoli | dataEnum : apiService.dataEnum : 'fascicoli' : 'text' }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- REGISTRO -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="id_registri[{{item.id}}]"><strong>Registro(i)</strong></label>
+
+                                    <!-- EDIT -->
+                                    <div *ngIf="edit && item.id_fascicoli !== null" class="select2-H-keeper">
+                                        <select2
+                                                id="id_registri[{{item.id}}]"
+                                                class="full-width-select"
+                                                [options]="select2OptionsMulti"
+                                                [value]="item.id_registri"
+                                                (valueChanged)="select2Changed($event, item, 'id_registri')"
+                                                cssImport="false"
+                                                [data]="registri$ | async | registriByFascicoloDataFilter : item.id_fascicoli"></select2>
+                                    </div>
+
+                                    <!-- EDIT + NO FASCICOLI -->
+                                    <div *ngIf="edit  && item.id_fascicoli === null">
+                                        <textarea disabled="disabled" readonly rows="1" class="form-control"
+                                                  placeholder="Seleziona prima un fascicolo..." autosize></textarea>
+                                    </div>
+
+                                    <!-- VIEW -->
+                                    <div *ngIf="!edit">
+                                        <textarea disabled="disabled" readonly
+                                                  rows="1" class="form-control"
+                                                  placeholder="Click su 'Modifica' per selezionare..." autosize
+                                                  title="{{item.id_registri | dataEnum : apiService.dataEnum : 'registri' : 'text'}}"
+                                        >{{item.id_registri | dataEnum : apiService.dataEnum : 'registri' : 'text' : '\n\n'}}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ANNOTAZIONI -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group" [ngClass]="{ 'has-danger': !annotazioni.valid }">
+                                    <label for="annotazioni[{{item.id}}]"><strong>Annotazioni</strong></label>
+
+                                    <!-- VIEW / EDIT -->
+                                    <textarea [disabled]="!edit"
+                                              rows="2" class="autogrow form-control transition-height" id="annotazioni[{{item.id}}]"
+                                              name="annotazioni[{{item.id}}]"
+                                              placeholder="Scrivi la descrizione del punto all'ordine del giorno..."
+                                              [(ngModel)]="item.annotazioni" #annotazioni="ngModel" autosize></textarea>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </accordion-group>
+            <accordion-group #accordionGroupDocs
+                             [panelClass]="'accordion-' + allegatiStatus(item)"
+                             [isOpen]="edit">
+                <div accordion-heading>
+                    <i class="fa float-right"
+                       [ngClass]="{'fa-angle-down': accordionGroupDocs?.isOpen, 'fa-angle-right': !accordionGroupDocs?.isOpen}"></i>
+                    <strong [ngSwitch]="allegatiStatus(item)" class="float-md-right mr-4">
+                        <span *ngSwitchCase="'success'" class="badge badge-lg badge-success">Tutti</span>
+                        <span *ngSwitchCase="'warning'" class="badge badge-lg badge-warning">Alcuni esclusi (approvati)</span>
+                        <span *ngSwitchCase="'danger'" class="badge badge-lg badge-danger">Esclusi in attesa di approvazione</span>
+                        <span *ngSwitchCase="'missing'" class="badge badge-lg badge-danger">Uno o più registri non contengono allegati</span>
+                        <span *ngSwitchCase="'noregistri'" class="badge badge-lg badge-danger">Nessun registro selezionato</span>
+                    </strong>
+                    <i class="fa fa-files-o fa-lg"></i> &nbsp; <strong>Documenti inclusi in ODG</strong>
+                </div>
+                <!--<pre>{{_allegati | json}}</pre>-->
+                <div *ngFor="let id_registri_odg of castToArray(item.id_registri)" class="filetypes-small">
+                    <div *ngFor="let allegato of item.allegati[id_registri_odg]">
+                        <input type="checkbox"
+                               [checked]="allegatoIsChecked(item, allegato.id)"
+                               [disabled]="!edit"
+                               (change)="allegato.escluso = !allegato.escluso"
+                               (click)="toggleAllegato(item, allegato.id)">
+                        <label class="rel-t-m4">
+                            <i class="filetypes filetypes-{{allegato.tipo}}"></i>
+                            <a href="{{apiService.config.baseAPIURL}}/{{allegato.relURI}}" target="_blank"
+                               title="Dimensione: {{allegato.dimensione | fileSize}} - Data caricato: {{allegato.data  | date: 'dd/MM/yyyy HH:mm'}}">
+                                {{allegato.nome}}
+                            </a>
+                        </label>
+                    </div>
+                </div>
+            </accordion-group>
+        </accordion>
+
+        <!--
+                                    <accordion [closeOthers]="true" class="mb-lg show" id="debug[{{item.id}}]">
+                                        <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'">
+                                            <div accordion-heading>
+                                                <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
+                                                <i class="fa float-right"
+                                                   [ngClass]="{'fa-angle-down': accordionGroupDebug?.isOpen, 'fa-angle-right': !accordionGroupDebug?.isOpen}"></i>
+                                            </div>
+                                            <div>
+                                                <pre>item = {{item | json}}</pre>
+                                                {{registri$ | async | registriByFascicoloDataFilter : item.id_fascicoli | arrayLength}}
+                                                <div *ngFor="let id_registri_odg of castToArray(item.id_registri)">
+                                                    <pre>{{_allegati$[id_registri_odg] | async | json}}</pre>
+                                                </div>
+                                            </div>
+                                        </accordion-group>
+                                    </accordion>
+        -->
+
+    </div>
+</div>
+</form>
