@@ -8,10 +8,14 @@ export class FascicoliByTitolarioDataFilterPipe implements PipeTransform {
 
     transform(array: any[], id_titolari: number): any {
 
-        // pre-compute some conditions to execute checks outside the loop
-        let tL = id_titolari != null;
+        // no id_titolari, skip filtering
+        if (id_titolari == null) {
+            return array;
+        }
+
         return _.filter(array, row => {
-            if (tL && row.id_titolari != id_titolari) return false;
+            // todo: change back to strict equality operator when titolari getAll returns a numeric id
+            if (row.id_titolari != id_titolari) return false;
 
             return true;
         });

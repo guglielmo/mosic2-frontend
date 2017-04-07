@@ -8,7 +8,7 @@ import { ModalModule }                          from 'ngx-modal';
 import { StickTheadModule }                     from '../_directives/stickthead/stickthead.module';
 import { DataTableModule }                      from 'angular2-datatable';
 
-import { PipesSharedModule }                    from '../_shared/index'
+import { PipesDirectivesSharedModule }                    from '../_shared/index'
 
 
 import { TitolariListComponent }                from './list/titolari-list.component';
@@ -34,7 +34,7 @@ export const routes = [
     ModalModule,
     StickTheadModule,
     DataTableModule,
-    PipesSharedModule,
+    PipesDirectivesSharedModule,
     RouterModule.forChild(routes)
   ],
   declarations: [

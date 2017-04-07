@@ -8,7 +8,7 @@ import {ModalModule} from 'ngx-modal';
 import {StickTheadModule} from '../_directives/stickthead/stickthead.module';
 import {DataTableModule} from 'angular2-datatable';
 
-import { PipesSharedModule } from '../_shared/index';
+import { PipesDirectivesSharedModule } from '../_shared/index';
 
 
 import {UsersListComponent} from './list/users-list.component';
@@ -44,7 +44,7 @@ import { Select2Module } from 'ng2-select2';
         DataTableModule,
         StickTheadModule,
         Select2Module,
-        PipesSharedModule,
+        PipesDirectivesSharedModule,
         RouterModule.forChild(routes)
     ],
     declarations: [

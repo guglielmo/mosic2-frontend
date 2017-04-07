@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Autosize } from 'angular2-autosize/src/autosize.directive';
+
 
 
 import {
@@ -32,7 +34,8 @@ import 'moment/locale/it';
         FascicoliByTitolarioDataFilterPipe,
         RegistriByFascicoloDataFilterPipe,
         DataEnumPipe,
-        ArrayLengthPipe
+        ArrayLengthPipe,
+        Autosize
     ],
     providers: [
     ],
@@ -48,5 +51,5 @@ import 'moment/locale/it';
         MomentModule
     ]
 })
-export class PipesSharedModule {}
+export class PipesDirectivesSharedModule {}
 

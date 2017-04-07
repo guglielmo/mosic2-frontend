@@ -9,7 +9,7 @@ import { ModalModule } from 'ngx-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DataTableModule } from 'angular2-datatable';
 import { AmministrazioniDataFilterPipe }   from '../_pipes/index';
-import { PipesSharedModule } from '../_shared/index';
+import { PipesDirectivesSharedModule } from '../_shared/index';
 
 import { AmministrazioniListComponent } from './list/amministrazioni-list.component';
 import { AmministrazioniEditComponent } from './edit/amministrazioni-edit.component';
@@ -34,7 +34,7 @@ export const routes = [
     ModalModule,
     StickTheadModule,
     DataTableModule,
-    PipesSharedModule,
+    PipesDirectivesSharedModule,
     RouterModule.forChild(routes)
   ],
   declarations: [

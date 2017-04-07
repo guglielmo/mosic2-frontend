@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 import { ModalModule } from 'ngx-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DataTableModule } from 'angular2-datatable';
-import { PipesSharedModule } from '../_shared/index';
+import { PipesDirectivesSharedModule } from '../_shared/index';
 import { Select2Module } from 'ng2-select2';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 import { TooltipModule } from 'ng2-bootstrap/tooltip';
@@ -37,7 +37,7 @@ export const routes = [
     DataTableModule,
     NKDatetimeModule,
     Select2Module,
-    PipesSharedModule,
+    PipesDirectivesSharedModule,
     TooltipModule.forRoot(),
     RouterModule.forChild(routes)
   ],

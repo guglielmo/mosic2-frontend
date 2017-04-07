@@ -185,7 +185,8 @@
                         <!-- todo: find a better way to implement enum -->
                         <td><span *ngIf="registro.id_mittenti">{{apiService.dataEnum.mittenti[registro.id_mittenti]['text']}}</span></td>
                         <td><span *ngIf="registro.id_titolari">
-                            {{apiService.dataEnum.titolari[registro.id_titolari]['codice']}}</span>.{{registro.numero_fascicolo}}
+                            {{apiService.dataEnum.titolari[registro.id_titolari]['codice']}}</span>.{{registro.numero_fascicolo}}<br/>
+                            <small style="text-wrap: avoid">{{registro.denominazione_sottofascicolo}}</small>
                             <!--<br/>id_titolari:&nbsp;{{registro.id_titolari}}-->
                             <!--<br/> id_fascicoli:&nbsp;{{registro.id_fascicoli}}-->
                         </td>

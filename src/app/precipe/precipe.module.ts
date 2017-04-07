@@ -9,12 +9,11 @@ import { ModalModule } from 'ngx-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DisableFormControlModule } from '../_directives/disable-formcontrol/disable-formcontrol.module';
 import { DataTableModule } from 'angular2-datatable';
-import { PipesSharedModule } from '../_shared/index';
+import { PipesDirectivesSharedModule } from '../_shared/index';
 import { DragulaModule } from 'ng2-dragula';
 import { TabsModule } from 'ng2-bootstrap/tabs';
 import { AccordionModule } from 'ng2-bootstrap/accordion';
 import { BsDropdownModule } from 'ng2-bootstrap/dropdown';
-import { Autosize } from 'angular2-autosize/src/autosize.directive';
 
 
 import { WidgetModule } from '../layout/widget/widget.module';
@@ -54,7 +53,7 @@ export const routes = [
     DataTableModule,
     Select2Module,
     NKDatetimeModule,
-    PipesSharedModule,
+    PipesDirectivesSharedModule,
     DragulaModule,
     TabsModule.forRoot(),
     AccordionModule.forRoot(),
@@ -66,7 +65,6 @@ export const routes = [
     { provide: LOCALE_ID, useValue: "it-IT" }
   ],
   declarations: [
-      Autosize,
       PreCipeListComponent,
       PreCipeEditComponent,
       PreCipeOdgItemComponent,

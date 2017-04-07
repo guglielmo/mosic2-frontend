@@ -1,1 +1,1 @@
-﻿export * from './pipes.shared.module';
+﻿export * from './pipes-directives.shared.module';

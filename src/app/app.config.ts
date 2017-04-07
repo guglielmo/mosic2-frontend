@@ -1,9 +1,18 @@
 import { Injectable } from '@angular/core';
-
 declare const jQuery: any;
 
 @Injectable()
 export class AppConfig {
+
+    constructor( ) {
+        this._initResizeEvent();
+        this._initOnScreenSizeCallbacks();
+    }
+
+    getConfig(): Object {
+        return this.config;
+    }
+
     query: any;
 
     config = {
@@ -146,7 +155,20 @@ export class AppConfig {
         todayBtn: 'linked',
         todayHighlight: true,
         placeholder: 'Scegli data',
-        autoclose: true
+        autoclose: true,
+/*        format: {
+            toDisplay: function (date, format, language) {
+                console.log('toDisplay',date, format, language);
+                return new Date().toLocaleString('it-IT')
+                //return date;
+            },
+            toValue: function (date, format, language) {
+                console.log('toValue',date, format, language);
+                //return new Date(date).getTime();
+                return new Date().toLocaleString('it-IT')
+                //return date;
+            }
+        }*/
     };
 
     _resizeCallbacks = [];
@@ -335,15 +357,6 @@ export class AppConfig {
                 prevSize = size;
             }, 100);
         });
-    }
-
-    constructor() {
-        this._initResizeEvent();
-        this._initOnScreenSizeCallbacks();
-    }
-
-    getConfig(): Object {
-        return this.config;
     }
 }
 
