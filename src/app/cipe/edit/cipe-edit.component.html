@@ -1,0 +1,136 @@
+<accordion [closeOthers]="false" class="mb-lg show" id="debug[{{model.id}}]">
+   <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="true">
+      <div accordion-heading>
+         <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
+         <i class="fa float-right"
+            [ngClass]="{'fa-angle-down': accordionGroupDebug?.isOpen, 'fa-angle-right': !accordionGroupDebug?.isOpen}"></i>
+      </div>
+      <div>
+         <pre>model = {{model | json}}</pre>
+      </div>
+   </accordion-group>
+</accordion>
+
+<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
+
+   <div class="pull-right">
+      <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
+      <button type="submit" class="btn btn-primary btn-save">Salva</button>
+   </div>
+
+   <h3 class="page-title"><a [routerLink]=" ['/app/cipe/list'] ">CIPE</a> /
+      <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
+      <span *ngIf="mode == 'update'" class="fw-semi-bold">riunione del {{ model.data | date: 'dd/MM/yyyy' }}</span>
+   </h3>
+
+   <section class="widget">
+      <div class="widget-body">
+         <div class="row">
+            <div class="col-md-6">
+               <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !data.valid }">
+                  <label for="data"><strong>Data della riunione</strong></label>
+                  <datetime id="data" name="data"
+                            [datepicker]="datePickerOptions"
+                            [timepicker]="false"
+                            [(ngModel)]="model.data" #data="ngModel" required></datetime>
+               </div>
+            </div>
+            <div class="col-md-6">
+               <div class="form-group">
+                  <label for="ufficiale_riunione"><strong>Stato</strong></label>
+                  <div>
+                     <label class="switch">
+                        <input id="ufficiale_riunione" name="ufficiale_riunione" type="checkbox"
+                               class="ios"
+                               [checked]="model.ufficiale_riunione == '1'"
+                               (change)="model.ufficiale_riunione = $event.target.checked ? '1' : '0'"
+                               (click)="askOfficializeCipe($event, officializeCipeModal, model)"
+                               [disabled]="officializingCipe != null || model.ufficiale_riunione === '1'"
+                        ><i></i>
+                     </label>&nbsp;&nbsp;
+                     <span *ngIf="model.ufficiale_riunione === '0' && officializingCipe === null"
+                           class="badge badge-lg badge-danger rel-t-l10">Bozza</span>
+                     <span *ngIf="model.ufficiale_riunione === '1' && officializingCipe === null" class="badge badge-lg badge-success rel-t-l10">Ufficiale</span>
+                     <span *ngIf="officializingCipe !== null" class="rel-t-l10"> <i
+                           class="loading-spinner"></i> Pubblicazione in corso...</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+
+
+   <tabset #staticTabs>
+      <tab [customClass]="'p-0'">
+         <ng-template tabHeading>
+            <strong>Ordine del giorno</strong>
+         </ng-template>
+
+         <div class="clearfix mb-lg">
+            <button type="button" class="btn btn-secondary float-right"
+                    (click)="addPuntoOdg()">
+               <i class="fa fa-lg fa-plus-circle"></i> Nuovo punto o.d.g.
+            </button>
+         </div>
+
+         <ul [dragula]='"cipe_odg"' [dragulaModel]='model.cipe_odg' class="list-group">
+            <li *ngFor="let item of model.cipe_odg" class="list-group-item">
+               <cipe-odg-item [item]="item"></cipe-odg-item>
+            </li>
+         </ul>
+
+         <div class="clearfix mt-lg">
+            <button type="button" class="btn btn-secondary float-right"
+                    (click)="addPuntoOdg()">
+               <i class="fa fa-lg fa-plus-circle"></i> Nuovo punto o.d.g.
+            </button>
+         </div>
+
+      </tab>
+      <tab>
+         <ng-template tabHeading>
+            <strong>Appunto Generale <span *ngIf="model.allegati_APG">({{model.allegati_APG.length}})</span></strong>
+         </ng-template>
+         <cipe-upload [type]="'APG'" [allegati]="model.allegati_APG" [allowUpload]="allowUpload"></cipe-upload>
+      </tab>
+      <tab>
+         <ng-template tabHeading>
+            <strong>Elenco Telex e Fogli presenze<span *ngIf="model.allegati_TLX">({{model.allegati_TLX.length}})</span></strong>
+         </ng-template>
+         <cipe-upload [type]="'TLX'" [allegati]="model.allegati_TLX" [allowUpload]="allowUpload"></cipe-upload>
+      </tab>
+      <tab>
+         <ng-template tabHeading>
+            <strong>Osservazioni <span *ngIf="model.allegati_OSS">({{model.allegati_OSS.length}})</span></strong>
+         </ng-template>
+         <cipe-upload [type]="'OSS'" [allegati]="model.allegati_OSS" [allowUpload]="allowUpload"></cipe-upload>
+      </tab>
+      <tab>
+         <ng-template tabHeading>
+            <strong>Esito <span *ngIf="model.allegati_OSS">({{model.allegati_ESI.length}})</span></strong>
+         </ng-template>
+         <cipe-upload [type]="'OSS'" [allegati]="model.allegati_OSS" [allowUpload]="allowUpload"></cipe-upload>
+      </tab>
+   </tabset>
+</form>
+
+<modal #officializeCipeModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true"
+       (onSubmit)="confirmOfficializeCipe(officializeCipeModal)"
+       (onCancel)="cancelOfficializeCipe(officializeCipeModal)">
+   <modal-header>
+      <h4 class="modal-title fw-bold mt"><i class="fa fa-warning"></i> Confermi l'ufficializzazione del Pre-CIPE ?</h4>
+   </modal-header>
+   <modal-content>
+      <h4 class="mt-sm">
+         I punti all'o.d.g. e documenti allegati saranno pubblicati nell'area riservata.<br/><br/>
+         A pubblicazione completa, in questa scheda sarà disponibile il collegamento per visualizzarli.
+      </h4>
+   </modal-content>
+   <modal-footer>
+   </modal-footer>
+</modal>
+
+
+
+

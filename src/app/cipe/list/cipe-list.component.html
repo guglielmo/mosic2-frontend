@@ -1,0 +1,91 @@
+<div class="pull-right">
+    <a [routerLink]=" ['/app/cipe/edit'] " class="btn btn-primary btn-save">Nuovo CIPE</a>
+</div>
+<h3 class="page-title">CIPE / <span class="fw-semi-bold">Tutti i CIPE</span></h3>
+
+<div class="row">
+    <div class="col-lg-12">
+        <section class="widget py-0" widget>
+            <div class="widget-body widget-table-overflow">
+                <table class="table table-hover table-condensed mb-0 table-bordered"
+                       [mfData]="cipe | async"
+                       [mfSortBy]="'data'" [mfSortOrder]="'desc'"
+                       #mf="mfDataTable" stickthead>
+                    <thead>
+                    <tr>
+                        <th><mfDefaultSorter by="data">Data</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="ufficiale_riunione">Stato</mfDefaultSorter></th>
+                        <th>Appunto generale</th>
+                        <th>Elenco Telex e Fogli presenze</th>
+                        <th>Osservazioni</th>
+                        <th>Esito</th>
+                        <th><mfDefaultSorter by="id">#</mfDefaultSorter></th>
+                        <th>Azioni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let cipe of mf.data" (click)="editId(cipe.id)" class="clickable">
+                        <td>
+                            <h5><strong>{{cipe.data | amTimeAgo }}</strong></h5>
+                            <p class="fw-semi-bold text-capitalize">{{cipe.data | date: 'EEEE, dd MMMM yyyy' }}</p>
+                        </td>
+                        <td>
+                            <span *ngIf="cipe.ufficiale_riunione === '0'" class="badge badge-danger">Bozza</span>
+                            <span *ngIf="cipe.ufficiale_riunione === '1'" class="badge badge-success">Ufficiale</span>
+                            <i *ngIf="officializingCipe" class="">Ufficiale</i>
+
+                        </td>
+                        <td>
+                            <div *ngIf="cipe.allegati_APG" class="filetypes-small">
+                                <div *ngFor="let allegato of cipe.allegati_APG">
+                                    <i class="filetypes filetypes-{{allegato.tipo}}"></i> <a href="{{apiService.config.baseAPIURL}}/{{allegato.relURI}}" target="_blank" title="Dimensione: {{allegato.dimensione | fileSize}} - Data caricato: {{allegato.data  | date: 'dd/MM/yyyy HH:mm'}}">{{allegato.nome}}</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div *ngIf="cipe.allegati_TLX" class="filetypes-small">
+                                <div *ngFor="let allegato of cipe.allegati_TLX">
+                                    <i class="filetypes filetypes-{{allegato.tipo}}"></i> <a href="{{apiService.config.baseAPIURL}}/{{allegato.relURI}}" target="_blank" title="Dimensione: {{allegato.dimensione | fileSize}} - Data caricato: {{allegato.data  | date: 'dd/MM/yyyy HH:mm'}}">{{allegato.nome}}</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div *ngIf="cipe.allegati_OSS" class="filetypes-small">
+                                <div *ngFor="let allegato of cipe.allegati_OSS">
+                                    <i class="filetypes filetypes-{{allegato.tipo}}"></i> <a href="{{apiService.config.baseAPIURL}}/{{allegato.relURI}}" target="_blank" title="Dimensione: {{allegato.dimensione | fileSize}} - Data caricato: {{allegato.data  | date: 'dd/MM/yyyy HH:mm'}}">{{allegato.nome}}</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div *ngIf="cipe.allegati_ESI" class="filetypes-small">
+                                <div *ngFor="let allegato of cipe.allegati_ESI">
+                                    <i class="filetypes filetypes-{{allegato.tipo}}"></i> <a href="{{apiService.config.baseAPIURL}}/{{allegato.relURI}}" target="_blank" title="Dimensione: {{allegato.dimensione | fileSize}} - Data caricato: {{allegato.data  | date: 'dd/MM/yyyy HH:mm'}}">{{allegato.nome}}</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{cipe.id}}</td>
+                        <td>
+                            <a (click)="askDeleteCipe($event, myModal, cipe)"><i class="fa fa-trash-o"> </i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <footer>
+            </footer>
+        </section>
+    </div>
+</div>
+
+<modal #myModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteCipe(myModal)">
+    <modal-header>
+        <h4 class="modal-title text-center fw-bold mt">Conferma cancellazione cipe</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="text-center mt-sm">
+            Vuoi eliminare il cipe {{deletingCipe.id}} {{deletingCipe.data}} ?
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>
