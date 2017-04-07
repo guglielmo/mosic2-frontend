@@ -1,7 +1,7 @@
 <div class="pull-right">
-    <a [routerLink]=" ['/app/precipe/edit'] " class="btn btn-primary btn-save">Nuovo Precipe</a>
+    <a [routerLink]=" ['/app/precipe/edit'] " class="btn btn-primary btn-save">Nuovo PreCipe</a>
 </div>
-<h3 class="page-title">Precipe / <span class="fw-semi-bold">Tutti i precipe</span></h3>
+<h3 class="page-title">PreCipe / <span class="fw-semi-bold">Tutti i precipe</span></h3>
 
 <div class="row">
     <div class="col-lg-12">
@@ -57,7 +57,7 @@
                         </td>
                         <td>{{precipe.id}}</td>
                         <td>
-                            <a (click)="askDeletePrecipe($event, myModal, precipe)"><i class="fa fa-trash-o"> </i></a>
+                            <a (click)="askDeletePreCipe($event, myModal, precipe)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>
                     </tbody>
@@ -69,13 +69,13 @@
     </div>
 </div>
 
-<modal #myModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeletePrecipe(myModal)">
+<modal #myModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeletePreCipe(myModal)">
     <modal-header>
         <h4 class="modal-title text-center fw-bold mt">Conferma cancellazione precipe</h4>
     </modal-header>
     <modal-content>
         <h4 class="text-center mt-sm">
-            Vuoi eliminare il precipe {{deletingPrecipe.id}} {{deletingPrecipe.data}} ?
+            Vuoi eliminare il precipe {{deletingPreCipe.id}} {{deletingPreCipe.data}} ?
         </h4>
     </modal-content>
     <modal-footer>

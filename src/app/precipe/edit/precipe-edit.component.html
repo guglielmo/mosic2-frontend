@@ -1,4 +1,17 @@
-<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
+<accordion [closeOthers]="false" class="mb-lg show" id="debug[{{model.id}}]">
+   <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="true">
+      <div accordion-heading>
+         <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
+         <i class="fa float-right"
+            [ngClass]="{'fa-angle-down': accordionGroupDebug?.isOpen, 'fa-angle-right': !accordionGroupDebug?.isOpen}"></i>
+      </div>
+      <div>
+         <pre>model = {{model | json}}</pre>
+      </div>
+   </accordion-group>
+</accordion>
+
+<form *ngIf="model.id || mode == 'create'" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
 
    <div class="pull-right">
       <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
@@ -63,9 +76,7 @@
 
          <ul [dragula]='"precipe_odg"' [dragulaModel]='model.precipe_odg' class="list-group">
             <li *ngFor="let item of model.precipe_odg" class="list-group-item">
-
                <precipe-odg-item [item]="item"></precipe-odg-item>
-
             </li>
          </ul>
 
@@ -81,266 +92,26 @@
          <ng-template tabHeading>
             <strong>Appunto Generale <span *ngIf="model.allegati_APG">({{model.allegati_APG.length}})</span></strong>
          </ng-template>
-         <div class="row">
-            <div class="col-lg-6">
-               <section class="widget">
-                  <header>
-                     <h4><span class="fw-semi-bold">Documenti allegati</span></h4>
-                  </header>
-                  <div class="widget-body no-padding">
-                     <ul *ngIf="model.allegati_APG" class="news-list stretchable">
-                        <li *ngFor="let allegato of model.allegati_APG">
-                            <span class="icon">
-                                <i class="filetypes filetypes-{{allegato.tipo}} x2"></i>
-                            </span>
-                           <div class="news-item-info">
-                              <div class="float-lg-right"><a (click)="askDeleteFile($event, deleteFileModal, allegato)"><i
-                                    class="fa fa-trash-o"> </i></a></div>
-                              <h5 class="name no-margin mb-xs"><a href="{{apiService.config.baseAPIURL}}/{{allegato.relURI}}"
-                                                                  target="_blank">{{allegato.nome}}</a></h5>
-                              <p class="fs-mini">Dimensione: {{allegato.dimensione | fileSize}} - Data caricato:
-                                 <time>{{allegato.data | date: 'dd/MM/yyyy HH:mm'}}</time>
-                              </p>
-
-                           </div>
-                        </li>
-                     </ul>
-                  </div>
-               </section>
-            </div>
-
-            <div class="col-lg-6">
-               <section class="widget">
-                  <header>
-                     <h4><span class="fw-semi-bold">Carica File</span></h4>
-                  </header>
-                  <div class="widget-body">
-                     <div *ngIf="!allowUpload">
-                        <div role="alert" class="alert alert-danger">
-                           <strong>Attenzione!</strong> Prima di caricare i file è necessario salvare la scheda.
-                        </div>
-                     </div>
-                     <div ngFileDrop
-                          [options]="NGUPoptions_APG"
-                          (onUpload)="handleMultipleUpload($event)"
-                          (onPreviewData)="handlePreviewData($event)"
-                          (onUploadRejected)="rejectUpload($event)"
-                          (beforeUpload)="beforeUpload($event)"
-                          [ngClass]="{'file-over': hasBaseDropZoneOver}"
-                          (onFileOver)="fileOverBase($event)"
-                          class="drag-n-drop-container"
-                          *ngIf="allowUpload">
-
-                        <h3>Rilascia i file qui dentro per caricarli oppure fai click per selezionare i file</h3>
-
-                        <label class="upload-button">
-                           <input type="file"
-                                  multiple
-                                  class="hidden"
-                                  ngFileSelect
-                                  [options]="NGUPoptions_APG"
-                                  (onUpload)="handleMultipleUpload($event)">
-                           Sfoglia
-                        </label>
-                     </div>
-                     <div *ngIf="progress && progress < 1" class="bg-gray-lighter progress-bar">
-                        <progress class="progress progress-danger" value="{{progress*100}}" max="100">{{progress*100}}%</progress>
-                     </div>
-
-
-                     <div *ngIf="errorMessage">
-                        <code>{{ errorMessage }}</code>
-                     </div>
-
-                     <div *ngIf="previewData && !response">
-                        <img [src]="previewData">
-                     </div>
-
-                  </div>
-               </section>
-
-            </div>
-         </div>
+         <precipe-upload [type]="'APG'" [allegati]="model.allegati_APG" [allowUpload]="allowUpload"></precipe-upload>
       </tab>
       <tab>
          <ng-template tabHeading>
             <strong>Elenco Telex <span *ngIf="model.allegati_TLX">({{model.allegati_TLX.length}})</span></strong>
          </ng-template>
-         <div class="row">
-            <div class="col-lg-6">
-               <section class="widget">
-                  <header>
-                     <h4><span class="fw-semi-bold">Documenti allegati</span></h4>
-                  </header>
-                  <div class="widget-body no-padding">
-                     <ul *ngIf="model.allegati_TLX" class="news-list stretchable">
-                        <li *ngFor="let allegato of model.allegati_TLX">
-                            <span class="icon">
-                                <i class="filetypes filetypes-{{allegato.tipo}} x2"></i>
-                            </span>
-                           <div class="news-item-info">
-                              <div class="float-lg-right"><a (click)="askDeleteFile($event, deleteFileModal, allegato)"><i
-                                    class="fa fa-trash-o"> </i></a></div>
-                              <h5 class="name no-margin mb-xs"><a href="{{apiService.config.baseAPIURL}}/{{allegato.relURI}}"
-                                                                  target="_blank">{{allegato.nome}}</a></h5>
-                              <p class="fs-mini">Dimensione: {{allegato.dimensione | fileSize}} - Data caricato:
-                                 <time>{{allegato.data | date: 'dd/MM/yyyy HH:mm'}}</time>
-                              </p>
-
-                           </div>
-                        </li>
-                     </ul>
-                  </div>
-               </section>
-            </div>
-
-            <div class="col-lg-6">
-               <section class="widget">
-                  <header>
-                     <h4><span class="fw-semi-bold">Carica File</span></h4>
-                  </header>
-                  <div class="widget-body">
-                     <div *ngIf="!allowUpload">
-                        <div role="alert" class="alert alert-danger">
-                           <strong>Attenzione!</strong> Prima di caricare i file è necessario salvare la scheda.
-                        </div>
-                     </div>
-                     <div ngFileDrop
-                          [options]="NGUPoptions_TLX"
-                          (onUpload)="handleMultipleUpload($event)"
-                          (onPreviewData)="handlePreviewData($event)"
-                          (onUploadRejected)="rejectUpload($event)"
-                          (beforeUpload)="beforeUpload($event)"
-                          [ngClass]="{'file-over': hasBaseDropZoneOver}"
-                          (onFileOver)="fileOverBase($event)"
-                          class="drag-n-drop-container"
-                          *ngIf="allowUpload">
-
-                        <h3>Rilascia i file qui dentro per caricarli oppure fai click per selezionare i file</h3>
-
-                        <label class="upload-button">
-                           <input type="file"
-                                  multiple
-                                  class="hidden"
-                                  ngFileSelect
-                                  [options]="NGUPoptions_TLX"
-                                  (onUpload)="handleMultipleUpload($event)">
-                           Sfoglia
-                        </label>
-                     </div>
-                     <div *ngIf="progress && progress < 1" class="bg-gray-lighter progress-bar">
-                        <progress class="progress progress-danger" value="{{progress*100}}" max="100">{{progress*100}}%</progress>
-                     </div>
-
-
-                     <div *ngIf="errorMessage">
-                        <code>{{ errorMessage }}</code>
-                     </div>
-
-                     <div *ngIf="previewData && !response">
-                        <img [src]="previewData">
-                     </div>
-
-                  </div>
-               </section>
-
-            </div>
-         </div>
+         <precipe-upload [type]="'TLX'" [allegati]="model.allegati_TLX" [allowUpload]="allowUpload"></precipe-upload>
       </tab>
       <tab>
          <ng-template tabHeading>
             <strong>Osservazioni <span *ngIf="model.allegati_OSS">({{model.allegati_OSS.length}})</span></strong>
          </ng-template>
-         <div class="row">
-            <div class="col-lg-6">
-               <section class="widget">
-                  <header>
-                     <h4><span class="fw-semi-bold">Documenti allegati</span></h4>
-                  </header>
-                  <div class="widget-body no-padding">
-                     <ul *ngIf="model.allegati_OSS" class="news-list stretchable">
-                        <li *ngFor="let allegato of model.allegati_OSS">
-                            <span class="icon">
-                                <i class="filetypes filetypes-{{allegato.tipo}} x2"></i>
-                            </span>
-                           <div class="news-item-info">
-                              <div class="float-lg-right"><a (click)="askDeleteFile($event, deleteFileModal, allegato)"><i
-                                    class="fa fa-trash-o"> </i></a></div>
-                              <h5 class="name no-margin mb-xs"><a href="{{apiService.config.baseAPIURL}}/{{allegato.relURI}}"
-                                                                  target="_blank">{{allegato.nome}}</a></h5>
-                              <p class="fs-mini">Dimensione: {{allegato.dimensione | fileSize}} - Data caricato:
-                                 <time>{{allegato.data | date: 'dd/MM/yyyy HH:mm'}}</time>
-                              </p>
-
-                           </div>
-                        </li>
-                     </ul>
-                  </div>
-               </section>
-            </div>
-
-            <div class="col-lg-6">
-               <section class="widget">
-                  <header>
-                     <h4><span class="fw-semi-bold">Carica File</span></h4>
-                  </header>
-                  <div class="widget-body">
-                     <div *ngIf="!allowUpload">
-                        <div role="alert" class="alert alert-danger">
-                           <strong>Attenzione!</strong> Prima di caricare i file è necessario salvare la scheda.
-                        </div>
-                     </div>
-                     <div ngFileDrop
-                          [options]="NGUPoptions_OSS"
-                          (onUpload)="handleMultipleUpload($event)"
-                          (onPreviewData)="handlePreviewData($event)"
-                          (onUploadRejected)="rejectUpload($event)"
-                          (beforeUpload)="beforeUpload($event)"
-                          [ngClass]="{'file-over': hasBaseDropZoneOver}"
-                          (onFileOver)="fileOverBase($event)"
-                          class="drag-n-drop-container"
-                          *ngIf="allowUpload">
-
-                        <h3>Rilascia i file qui dentro per caricarli oppure fai click per selezionare i file</h3>
-
-                        <label class="upload-button">
-                           <input type="file"
-                                  multiple
-                                  class="hidden"
-                                  ngFileSelect
-                                  [options]="NGUPoptions_OSS"
-                                  (onUpload)="handleMultipleUpload($event)">
-                           Sfoglia
-                        </label>
-                     </div>
-                     <div *ngIf="progress && progress < 1" class="bg-gray-lighter progress-bar">
-                        <progress class="progress progress-danger" value="{{progress*100}}" max="100">{{progress*100}}%</progress>
-                     </div>
-
-
-                     <div *ngIf="errorMessage">
-                        <code>{{ errorMessage }}</code>
-                     </div>
-
-                     <div *ngIf="previewData && !response">
-                        <img [src]="previewData">
-                     </div>
-
-                  </div>
-               </section>
-
-            </div>
-         </div>
+         <precipe-upload [type]="'OSS'" [allegati]="model.allegati_OSS" [allowUpload]="allowUpload"></precipe-upload>
       </tab>
    </tabset>
-
-
 </form>
 
 <modal #officializePreCipeModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true"
        (onSubmit)="confirmOfficializePreCipe(officializePreCipeModal)"
-       (onCancel)="cancelOfficializePreCipe(officializePreCipeModal)"
->
+       (onCancel)="cancelOfficializePreCipe(officializePreCipeModal)">
    <modal-header>
       <h4 class="modal-title fw-bold mt"><i class="fa fa-warning"></i> Confermi l'ufficializzazione del Pre-CIPE ?</h4>
    </modal-header>
@@ -353,5 +124,7 @@
    <modal-footer>
    </modal-footer>
 </modal>
+
+
 
 

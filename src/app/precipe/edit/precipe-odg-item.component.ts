@@ -1,22 +1,23 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from '@angular/forms'
-import { Observable } from 'rxjs/Observable';
+import {Component, Input, OnInit} from "@angular/core";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Observable} from "rxjs/Observable";
+
 import * as _ from "lodash";
 
-import { AppConfig} from "../../app.config";
-import { APICommonService} from "../../_services/index";
+import {AppConfig} from "../../app.config";
+import {APICommonService} from "../../_services/index";
 
-import { Titolari, Fascicoli, Registri, Uffici } from '../../_models/index';
-import { PrecipeOdg } from "../../_models/index";
+import {Fascicoli, PreCipeOdg, Registri, Titolari, Uffici} from "../../_models/index";
 
 @Component({
     selector: 'precipe-odg-item',
     templateUrl: './precipe-odg-item.component.html',
     styles: []
 })
-export class PrecipeOdgItemComponent implements OnInit {
-    @Input() item: PrecipeOdg;
+export class PreCipeOdgItemComponent implements OnInit {
+    @Input() item: PreCipeOdg;
 
+    public isNew;
     public edit = false;
 
     private select2Options: Select2Options;
@@ -28,7 +29,9 @@ export class PrecipeOdgItemComponent implements OnInit {
     public registri$: Observable<Registri[]>;
     public uffici$: Observable<Uffici[]>;
 
-    odgItemForm: FormGroup;
+    public odgItemForm: FormGroup;
+    public hasErrors = false;
+
 
     constructor(
                 config: AppConfig,
@@ -44,15 +47,48 @@ export class PrecipeOdgItemComponent implements OnInit {
         this.registri$ = this.apiService.subscribeToDataService('registri');
         this.uffici$ = this.apiService.subscribeToDataService('uffici');
 
-        this.odgItemForm = fb.group({});
+        this.odgItemForm = fb.group({
+            id_titolari: [{value:'', disabled: true}, Validators.required],
+            id_fascicoli: [{value:'', disabled: true}, Validators.required],
+            id_registri: [{value:'', disabled: true}, Validators.required],
+            id_uffici: [{value:'', disabled: true}, Validators.required],
+            ordine: [{value:'', disabled: true}, Validators.required],
+            denominazione: [{value:'', disabled: true}, Validators.required],
+            risultanza: [{value:'', disabled: true}],
+            annotazioni: [{value:'', disabled: true}]
+        });
+
+        this.odgItemForm.valueChanges.subscribe(data => {
+            this.item = Object.assign(this.item, data);
+        });
+
     }
 
     ngOnInit() {
+        this.odgItemForm.patchValue(this.item);
+        this.isNew = !_.isNumber(this.item.id);
+        if(this.isNew) { this.edit = true; }
     }
 
-    toggleEdit(value: any){
-        console.log(value);
-        this.edit = !this.edit;
+    toggleEdit(FG: any){
+
+        if (this.edit && !FG.valid) {
+            this.hasErrors = true;
+            console.log(FG);
+        } else {
+            this.edit = !this.edit;
+        }
+
+    }
+
+    toggleAllegato(item:any, allegato_id: number) {
+
+        var idx = _.indexOf(item.allegati_esclusi, allegato_id);
+        if(idx !== -1) {
+            item.allegati_esclusi.splice(idx, 1);
+        } else {
+            item.allegati_esclusi.push(allegato_id);
+        }
     }
 
     allegatoIsChecked(item: any, allegatoId: number) {
@@ -102,63 +138,97 @@ export class PrecipeOdgItemComponent implements OnInit {
 
     public select2Changed(e: any, item: any, name: string): void {
 
-        /*        if (this.select2Debounce) {
-         console.log('debounce', name, e.value);
-         this.select2Debounce = false;
-         return;
-         }*/
-
-        console.log(name, e.value);
+        if (this.select2Debounce) {
+            console.log('debounce', name, e.value);
+            this.select2Debounce = false;
+            return;
+        }
 
         switch(name) {
+            case 'id_uffici':
+                this.select2Debounce = true;
+                item.id_uffici = e.value;
+
+                // todo: ng2-select2 doesn't implement formControl accessors, to overcome this, here we're using a shadow copy
+                // todo: may be removed when https://github.com/NejcZdovc/ng2-select2/issues/13 will be fixed
+                this.odgItemForm.controls['id_uffici'].setValue(e.value);
+
+                break;
             case 'id_titolari':
                 this.select2Debounce = true;
                 item.id_fascicoli = null;
                 item.id_registri = [];
                 item.id_titolari = e.value;
+
+                // todo: ng2-select2 doesn't implement formControl accessors...
+                this.odgItemForm.controls['id_registri'].setValue([]);
+                this.odgItemForm.controls['id_titolari'].setValue(e.value);
                 break;
             case 'id_fascicoli':
                 this.select2Debounce = true;
                 item.id_registri = [];
                 item.id_fascicoli = e.value;
+
+                // todo: ng2-select2 doesn't implement formControl accessors...
+                this.odgItemForm.controls['id_registri'].setValue([]);
+                this.odgItemForm.controls['id_fascicoli'].setValue(e.value);
                 break;
             case 'id_registri':
-                this.select2Debounce = true;
 
                 const selected_registri = this.castToArray(e.value);
 
                 if (selected_registri.length === 0) {
-                    item.allegati = [];
+                    item.allegati = {};
                     item.id_registri = selected_registri;
+
+                    // todo: ng2-select2 doesn't implement formControl accessors...
+                    this.odgItemForm.controls['id_registri'].setValue(selected_registri);
                 }
 
                 if(item.allegati[e.value]) {
                     item.id_registri = selected_registri;
+
+                    // todo: ng2-select2 doesn't implement formControl accessors...
+                    this.odgItemForm.controls['id_registri'].setValue(selected_registri);
                     //console.log('allegato found');
                 } else {
                     this.getAllegatiRegistri(item, selected_registri);
-                    //console.log('no allegato found');
+                    console.log('no allegato found');
                 }
                 break;
         }
-
-        //console.log(item);
+        //console.log(name, e.value, item, this.odgItemForm);
+        console.log(name, e.value);
     }
 
     getAllegatiRegistri(item, id_registri: number[]) {
 
         id_registri.forEach( id => {
-
-            if(!item.allegati[id] || item.allegati[id].length === 0) {
+            console.log('checking id', id);
+            if(id && !item.allegati[id] || item.allegati[id].length === 0) {
                 this.apiService.getById('registri', id)
                     .subscribe( response => {
-                            item.allegati[id] = response.data.allegati;
-                            if(item.id_registri.indexOf(id) === -1) {
-                                item.id_registri.push(id);
+                            if(response && response.data && Array.isArray(response.data.allegati)) {
+                                console.log('LOADED ALLEGATI', response.data.allegati);
+
+                                console.log(item.allegati);
+
+                                item.allegati[id] = _.compact(response.data.allegati);
+
+                                console.log(item.allegati);
+                                /*
+                                 console.log(item.id_registri, id, item.id_registri.indexOf(id));
+                                 */
+                                if(item.id_registri.indexOf(id) === -1) {
+                                    item.id_registri.push(Number(id));
+                                }
+
+                                // todo: ng2-select2 doesn't implement formControl accessors...
+                                this.odgItemForm.controls['id_registri'].setValue(item.id_registri);
+                            } else {
+                                console.log('struttura allegati non valida', response);
                             }
-                            console.log(item);
-                            //this._allegati[id] = _.map(response.data.allegati, o => _.extend({escluso: false}, o));
-                            //this._allegati$[id].next(this._allegati[id]);
+
                         },
                         error => {
                             //this.error = error; console.log(error);
@@ -169,5 +239,27 @@ export class PrecipeOdgItemComponent implements OnInit {
         });
 
     }
+
+/*    getAllAllegatiRegistri() {
+
+        // not used now, cut 'n paste from parent component, eventually a refactoring is needed
+
+        const id_registri = _.flatten(_.map(this.model.precipe_odg, 'id_registri'));
+
+        id_registri.forEach( id => {
+            this.allegati[id] = {};
+            this.allegati$[id] = <BehaviorSubject<any[]>> new BehaviorSubject([]);
+
+            this.apiService.getById('registri', id)
+                .subscribe( response => {
+                        this.allegati[id] = _.map(response.data.allegati, o => _.extend({escluso: false}, o));
+                        this.allegati$[id].next(this.allegati[id]);
+                    },
+                    error => {
+                        this.error = error; console.log(error);
+                        this.loading = false;
+                    });
+        });
+    }*/
 
 }

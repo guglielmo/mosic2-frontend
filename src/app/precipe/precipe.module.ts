@@ -7,6 +7,7 @@ import { LOCALE_ID } from '@angular/core';
 
 import { ModalModule } from 'ngx-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
+import { DisableFormControlModule } from '../_directives/disable-formcontrol/disable-formcontrol.module';
 import { DataTableModule } from 'angular2-datatable';
 import { PipesSharedModule } from '../_shared/index';
 import { DragulaModule } from 'ng2-dragula';
@@ -26,7 +27,8 @@ import { NgUploaderModule } from 'ngx-uploader';
 
 import { PreCipeListComponent } from './list/precipe-list.component';
 import { PreCipeEditComponent } from './edit/precipe-edit.component';
-import { PrecipeOdgItemComponent } from './edit/precipe-odg-item.component';
+import { PreCipeOdgItemComponent } from './edit/precipe-odg-item.component';
+import { PreCipeUploadComponent } from './edit/precipe-upload.component';
 import {DataEnumPipe} from "../_pipes/data-enum.pipe";
 
 
@@ -48,6 +50,7 @@ export const routes = [
 
     ModalModule,
     StickTheadModule,
+    DisableFormControlModule,
     DataTableModule,
     Select2Module,
     NKDatetimeModule,
@@ -66,7 +69,8 @@ export const routes = [
       Autosize,
       PreCipeListComponent,
       PreCipeEditComponent,
-      PrecipeOdgItemComponent
+      PreCipeOdgItemComponent,
+      PreCipeUploadComponent
   ]
 })
 export class PreCipeModule {

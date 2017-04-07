@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 
 
 
-import { Precipe } from '../../_models/index';
+import { PreCipe } from '../../_models/index';
 import { APICommonService } from '../../_services/index';
 
 @Component({
@@ -13,9 +13,9 @@ import { APICommonService } from '../../_services/index';
 })
 export class PreCipeListComponent {
 
-    public precipe: Observable<Precipe[]>;
+    public precipe: Observable<PreCipe[]>;
 
-    deletingPrecipe: Precipe = new Precipe;
+    deletingPreCipe: PreCipe = new PreCipe;
 
     constructor(public apiService: APICommonService,
                 private router: Router
@@ -25,33 +25,33 @@ export class PreCipeListComponent {
 
     ngOnInit() {
         this.apiService.refreshCommonCache();
-        // this.loadAllPrecipe();
+        // this.loadAllPreCipe();
     }
 
     editId(id: number) {
         this.router.navigate(['/app/precipe/edit/' + id]);
     }
 
-    askDeletePrecipe(event:any, modal: any, precipe: Precipe) {
+    askDeletePreCipe(event:any, modal: any, precipe: PreCipe) {
         event.stopPropagation();
-        this.deletingPrecipe = precipe;
+        this.deletingPreCipe = precipe;
         modal.open();
     }
 
-    confirmDeletePrecipe(modal: any) {
+    confirmDeletePreCipe(modal: any) {
         modal.close();
-        this.deletePrecipe(this.deletingPrecipe.id);
-        this.deletingPrecipe = new Precipe;
+        this.deletePreCipe(this.deletingPreCipe.id);
+        this.deletingPreCipe = new PreCipe;
     }
 
-    deletePrecipe(id: number) {
+    deletePreCipe(id: number) {
         this.apiService.delete('precipe', id).subscribe(() => {
             this.apiService.refreshCommonCache();
-            // this.loadAllPrecipe()
+            // this.loadAllPreCipe()
         });
     }
 
-    private loadAllPrecipe() {
+    private loadAllPreCipe() {
         let params = new URLSearchParams();
         params.append('sort_by', 'data');
         params.append('sort_order', 'desc');

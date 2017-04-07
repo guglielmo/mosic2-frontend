@@ -1,11 +1,12 @@
-<form name="form" #f="ngForm" novalidate>
+<form name="form" [formGroup]="odgItemForm">
 <div class="row">
     <div class="col-md-1">
-        <div class="form-group">
+        <div class="form-group" [ngClass]="{ 'has-danger': hasErrors && !odgItemForm.controls['ordine'].valid}">
             <!-- EDIT -->
-            <input *ngIf="edit" type="text" class="form-control form-control-lg" id="punto_odg[{{item.id}}]" name="punto_odg[{{item.id}}]"
+            <input *ngIf="edit" type="text" class="form-control form-control-lg"
                    placeholder="..."
-                   [(ngModel)]="item.ordine" #punto_odg="ngModel" required>
+                   [disableCond]="!edit"
+                   [formControl]="odgItemForm.controls['ordine']">
 
             <!-- VIEW -->
             <div *ngIf="!edit">
@@ -20,10 +21,10 @@
             </p>
         </div>
     </div>
-    <div class="col-md-11 hide-child-nohover">
+    <div class="col-md-11 hide-child-nohover-or-noactive" [ngClass]="{ 'active': edit }">
         <div class="clearfix mb-lg">
-            <div class="btn-group float-md-right visible-parent-hover" dropdown>
-                <button id="split-button" type="button" class="btn btn-sm btn-secondary" (click)="toggleEdit()">
+            <div class="btn-group float-md-right visible-parent-hover-or-active" dropdown>
+                <button id="split-button" type="button" class="btn btn-sm btn-secondary" (click)="toggleEdit(odgItemForm)">
                     <span *ngIf="!edit"><i class="fa fa-edit fa-lg"> </i> Modifica</span>
                     <span *ngIf="edit"><i class="fa fa-edit fa-lg"> </i> Fine</span>
                 </button>
@@ -44,7 +45,7 @@
         </div>
 
         <accordion [closeOthers]="false" class="mb-lg show" id="precipe_odg_allegati[{{item.id}}]">
-            <accordion-group #accordionGroupDefinition [panelClass]="'accordion-info'" [isOpen]="edit">
+            <accordion-group #accordionGroupDefinition [panelClass]="'accordion-info'" [isOpen]="edit || isNew">
                 <div accordion-heading>
                     <i class="fa fa-files-o fa-lg"></i> &nbsp; <strong>Definizione</strong>
                     <i class="fa float-right"
@@ -56,15 +57,15 @@
                         <!-- DENOMINAZIONE -->
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="form-group" [ngClass]="{ 'has-danger': hasErrors && !odgItemForm.controls['denominazione'].valid }">
                                     <label for="denominazione[{{item.id}}]"><strong>Denominazione</strong></label>
 
                                     <!-- VIEW / EDIT -->
-                                    <textarea id="denominazione[{{item.id}}]" name="denominazione[{{item.id}}]"
+                                    <textarea id="denominazione[{{item.id}}]"
                                               rows="2" class="autogrow form-control transition-height"
                                               placeholder="Scrivi la descrizione del punto all'ordine del giorno..."
-                                              [disabled]="!edit"
-                                              [(ngModel)]="item.denominazione" #denominazione[item.id]="ngModel" autosize required></textarea>
+                                              [disableCond]="!edit"
+                                              [formControl]="odgItemForm.controls['denominazione']" autosize></textarea>
 
                                 </div>
                             </div>
@@ -73,7 +74,7 @@
                         <!-- UFFICIO / RISULTANZA-->
                         <div class="row">
                             <div class="col-lg-6">
-                                <div class="form-group">
+                                <div class="form-group" [ngClass]="{ 'has-danger': hasErrors && !odgItemForm.controls['id_uffici'].valid}">
                                     <label for="id_uffici[{{item.id}}]"><strong>Ufficio di competenza</strong></label>
 
                                     <!-- EDIT -->
@@ -86,6 +87,9 @@
                                                 (valueChanged)="select2Changed($event, item, 'id_uffici')"
                                                 cssImport="false"
                                                 [data]="uffici$ | async"></select2>
+
+                                                <!--todo: ng2-select2 no form control value accessor workaround-->
+                                                <input type="hidden" [formControl]="odgItemForm.controls['id_uffici']" [disableCond]="!edit">
                                     </div>
 
                                     <!-- VIEW -->
@@ -104,19 +108,19 @@
                                 <div class="mt-1 rel-t-l7">
                                     <span class="abc-radio abc-radio-default">
                                         <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_nd[{{item.id}}]"
-                                               value=""
-                                               [disabled]="!edit"
-                                               [checked]="item.risultanza !== 1 && item.risultanza !== 2"
-                                               (click)="item.risultanza = ''">
+                                               [value]="null"
+                                               [disableCond]="!edit"
+                                               [formControl]="odgItemForm.controls['risultanza']"
+                                               (click)="item.risultanza = null">
                                         <label for="risultanza_nd[{{item.id}}]">
                                             <span [ngClass]="{ 'badge badge-lg badge-default': item.risultanza !== 1 && item.risultanza !== 2 }">N/D</span>
                                         </label>
                                     </span>
                                     <span class="abc-radio abc-radio-warning">
                                         <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_rinviato[{{item.id}}]"
-                                               value="2"
-                                               [disabled]="!edit"
-                                               [checked]="item.risultanza === 2"
+                                               [value]="2"
+                                               [disableCond]="!edit"
+                                               [formControl]="odgItemForm.controls['risultanza']"
                                                (click)="item.risultanza = 2">
                                         <label for="risultanza_rinviato[{{item.id}}]">
                                             <span [ngClass]="{ 'badge badge-lg badge-warning': item.risultanza === 2 }">Rinviato</span>
@@ -124,9 +128,9 @@
                                     </span>
                                     <span class="abc-radio abc-radio-success">
                                         <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_positivo[{{item.id}}]"
-                                               value="1"
-                                               [disabled]="!edit"
-                                               [checked]="item.risultanza === 1"
+                                               [value]="1"
+                                               [disableCond]="!edit"
+                                               [formControl]="odgItemForm.controls['risultanza']"
                                                (click)="item.risultanza = 1">
                                         <label for="risultanza_positivo[{{item.id}}]">
                                             <span [ngClass]="{ 'badge badge-lg badge-success': item.risultanza === 1 }">Positivo</span>
@@ -139,7 +143,7 @@
                         <!-- TITOLARIO / FASCICOLO -->
                         <div class="row">
                             <div class="col-lg-6">
-                                <div class="form-group">
+                                <div class="form-group" [ngClass]="{ 'has-danger': hasErrors && !odgItemForm.controls['id_titolari'].valid}">
                                     <label for="id_titolari[{{item.id}}]"><strong>Titolario</strong></label>
 
                                     <!-- EDIT -->
@@ -152,6 +156,9 @@
                                                 (valueChanged)="select2Changed($event, item, 'id_titolari')"
                                                 cssImport="false"
                                                 [data]="titolari$ | async"></select2>
+
+                                        <!--todo: ng2-select2 no form control value accessor workaround-->
+                                        <input type="hidden" [formControl]="odgItemForm.controls['id_titolari']" [disableCond]="!edit">
                                     </div>
                                     <!-- VIEW -->
                                     <div *ngIf="!edit">
@@ -161,10 +168,11 @@
                                                 title="{{ item.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'text' }}"
                                         >{{ item.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'text' }}</textarea>
                                     </div>
+                                    <!--{{item.id_titolari}}-->
                                 </div>
                             </div>
                             <div class="col-lg-6">
-                                <div class="form-group">
+                                <div class="form-group" [ngClass]="{ 'has-danger': hasErrors && !odgItemForm.controls['id_fascicoli'].valid}">
                                     <label for="id_fascicoli[{{item.id}}]"><strong>Fascicolo</strong></label>
                                     <!-- EDIT -->
                                     <div *ngIf="edit && item.id_titolari !== null" class="select2-H-keeper">
@@ -175,7 +183,11 @@
                                                 [value]="item.id_fascicoli"
                                                 (valueChanged)="select2Changed($event, item, 'id_fascicoli')"
                                                 cssImport="false"
-                                                [data]="fascicoli$ | async | fascicoliByTitolarioDataFilter"></select2>
+                                                [data]="fascicoli$ | async | fascicoliByTitolarioDataFilter : item.id_titolari"></select2>
+
+                                        <!--<pre>{{fascicoli$ | async | fascicoliByTitolarioDataFilter : item.id_titolari | json}}</pre>-->
+                                        <!--todo: ng2-select2 no form control value accessor workaround-->
+                                        <input type="hidden" [formControl]="odgItemForm.controls['id_fascicoli']" [disableCond]="!edit">
                                     </div>
                                     <!-- EDIT + NO TITOLARI -->
                                     <div *ngIf="edit  && item.id_titolari === null">
@@ -190,6 +202,8 @@
                                                   title="{{ item.id_fascicoli | dataEnum : apiService.dataEnum : 'fascicoli' : 'text' }}"
                                         >{{ item.id_fascicoli | dataEnum : apiService.dataEnum : 'fascicoli' : 'text' }}</textarea>
                                     </div>
+
+                                    <!--{{item.id_fascicoli}}-->
                                 </div>
                             </div>
                         </div>
@@ -197,7 +211,7 @@
                         <!-- REGISTRO -->
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group">
+                                <div class="form-group" [ngClass]="{ 'has-danger': hasErrors && !odgItemForm.controls['id_registri'].valid}">
                                     <label for="id_registri[{{item.id}}]"><strong>Registro(i)</strong></label>
 
                                     <!-- EDIT -->
@@ -210,6 +224,9 @@
                                                 (valueChanged)="select2Changed($event, item, 'id_registri')"
                                                 cssImport="false"
                                                 [data]="registri$ | async | registriByFascicoloDataFilter : item.id_fascicoli"></select2>
+
+                                        <!--todo: ng2-select2 no form control value accessor workaround-->
+                                        <input type="hidden" [formControl]="odgItemForm.controls['id_registri']" [disableCond]="!edit">
                                     </div>
 
                                     <!-- EDIT + NO FASCICOLI -->
@@ -226,6 +243,8 @@
                                                   title="{{item.id_registri | dataEnum : apiService.dataEnum : 'registri' : 'text'}}"
                                         >{{item.id_registri | dataEnum : apiService.dataEnum : 'registri' : 'text' : '\n\n'}}</textarea>
                                     </div>
+
+                                    <!--{{item.id_registri}}-->
                                 </div>
                             </div>
                         </div>
@@ -233,15 +252,15 @@
                         <!-- ANNOTAZIONI -->
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group" [ngClass]="{ 'has-danger': !annotazioni.valid }">
+                                <div class="form-group" [ngClass]="{ 'has-danger': hasErrors && !odgItemForm.controls['annotazioni'].valid }">
                                     <label for="annotazioni[{{item.id}}]"><strong>Annotazioni</strong></label>
 
                                     <!-- VIEW / EDIT -->
-                                    <textarea [disabled]="!edit"
+                                    <textarea [disableCond]="!edit"
                                               rows="2" class="autogrow form-control transition-height" id="annotazioni[{{item.id}}]"
                                               name="annotazioni[{{item.id}}]"
                                               placeholder="Scrivi la descrizione del punto all'ordine del giorno..."
-                                              [(ngModel)]="item.annotazioni" #annotazioni="ngModel" autosize></textarea>
+                                              [formControl]="odgItemForm.controls['annotazioni']" autosize></textarea>
 
                                 </div>
                             </div>
@@ -252,7 +271,7 @@
             </accordion-group>
             <accordion-group #accordionGroupDocs
                              [panelClass]="'accordion-' + allegatiStatus(item)"
-                             [isOpen]="edit">
+                             [isOpen]="edit || isNew">
                 <div accordion-heading>
                     <i class="fa float-right"
                        [ngClass]="{'fa-angle-down': accordionGroupDocs?.isOpen, 'fa-angle-right': !accordionGroupDocs?.isOpen}"></i>
@@ -270,7 +289,6 @@
                     <div *ngFor="let allegato of item.allegati[id_registri_odg]">
                         <input type="checkbox"
                                [checked]="allegatoIsChecked(item, allegato.id)"
-                               [disabled]="!edit"
                                (change)="allegato.escluso = !allegato.escluso"
                                (click)="toggleAllegato(item, allegato.id)">
                         <label class="rel-t-m4">
@@ -285,24 +303,23 @@
             </accordion-group>
         </accordion>
 
-        <!--
-                                    <accordion [closeOthers]="true" class="mb-lg show" id="debug[{{item.id}}]">
-                                        <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'">
-                                            <div accordion-heading>
-                                                <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
-                                                <i class="fa float-right"
-                                                   [ngClass]="{'fa-angle-down': accordionGroupDebug?.isOpen, 'fa-angle-right': !accordionGroupDebug?.isOpen}"></i>
-                                            </div>
-                                            <div>
-                                                <pre>item = {{item | json}}</pre>
-                                                {{registri$ | async | registriByFascicoloDataFilter : item.id_fascicoli | arrayLength}}
-                                                <div *ngFor="let id_registri_odg of castToArray(item.id_registri)">
-                                                    <pre>{{_allegati$[id_registri_odg] | async | json}}</pre>
-                                                </div>
-                                            </div>
-                                        </accordion-group>
-                                    </accordion>
-        -->
+
+        <accordion [closeOthers]="true" class="mb-lg show" id="debug[{{item.id}}]">
+            <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'">
+                <div accordion-heading>
+                    <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
+                    <i class="fa float-right"
+                       [ngClass]="{'fa-angle-down': accordionGroupDebug?.isOpen, 'fa-angle-right': !accordionGroupDebug?.isOpen}"></i>
+                </div>
+                <div>
+                    <pre>item = {{item | json}}</pre>
+<!--                    <div *ngFor="let id_registri_odg of castToArray(item.id_registri)">
+                        <pre>{{_allegati$[id_registri_odg] | async | json}}</pre>
+                    </div>-->
+                </div>
+            </accordion-group>
+        </accordion>
+
 
     </div>
 </div>
