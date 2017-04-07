@@ -12,3 +12,7 @@ export * from './groups';
 export * from './tags';
 export * from './precipe';
 export * from './precipe_odg';
+export * from './cipe';
+export * from './cipe_odg';
+export * from './delibere';
+export * from './adempimenti'

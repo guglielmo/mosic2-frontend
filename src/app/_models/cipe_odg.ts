@@ -1,8 +1,8 @@
 import { Allegati } from './allegati';
 
-export class PreCipeOdg {
+export class CipeOdg {
     id: number;
-    id_pre_cipe: number;
+    id_cipe: number;
     progressivo: number;
     id_titolari: number;
     id_fascicoli: number;
@@ -11,7 +11,8 @@ export class PreCipeOdg {
     id_uffici: number;
     ordine: string;
     denominazione: string;
-    risultanza: number;
+    esito: number;
+    numero_delibera: number;
     annotazioni: string;
     stato: number;
     allegati: any;
@@ -21,7 +22,7 @@ export class PreCipeOdg {
     
     constructor() {
         this.id = null;
-        this.id_pre_cipe = null;
+        this.id_cipe = null;
         this.progressivo = null;
         this.id_titolari = null;
         this.id_fascicoli = null;
@@ -30,7 +31,8 @@ export class PreCipeOdg {
         this.id_uffici = null;
         this.ordine = null;
         this.denominazione = null;
-        this.risultanza = null;
+        this.esito = null;
+        this.numero_delibera = null;
         this.annotazioni = null;
         this.stato = null;
         this.allegati = {};
