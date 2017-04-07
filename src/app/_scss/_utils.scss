@@ -549,11 +549,14 @@ select2 {
 .hide-child-nohover-or-noactive {
   .visible-parent-hover-or-active {
     visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.25s linear;
   }
 
   &:hover, &.active {
     .visible-parent-hover-or-active {
       visibility: visible;
+      opacity: 1;
     }
   }
 }

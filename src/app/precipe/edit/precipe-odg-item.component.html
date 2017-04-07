@@ -10,22 +10,24 @@
 
             <!-- VIEW -->
             <div *ngIf="!edit">
-                <i class="fa fa-sort fa-lg float-left rel-t-m10 visible-parent-hover-or-active"> </i>
+                <i class="fa fa-sort fa-lg float-left rel-t-m10 visible-parent-hover-or-active mr-2"> </i>
                 <h2 class="ml-2"><strong>{{item.ordine}}</strong>&nbsp;</h2>
             </div>
+<!--
             <h6 class="fw-semi-bold">Risultanza</h6>
-            <p>
+-->
+            <h6>
                 <span *ngIf="item.risultanza !== 1 && item.risultanza !== 2" class="badge badge-lg badge-default rel-t-l2">N/D</span>
                 <span *ngIf="item.risultanza === 2" class="badge badge-lg badge-warning rel-t-l2">Rinviato</span>
                 <span *ngIf="item.risultanza === 1" class="badge badge-lg badge-success rel-t-l2">Positivo</span>
-            </p>
+            </h6>
         </div>
     </div>
     <div class="col-md-11">
         <div class="clearfix mb-lg">
 
-            <div class="btn-group float-md-right visible-parent-hover-or-active" dropdown>
-                <button id="split-button" type="button" class="btn btn-sm" (click)="toggleEdit(odgItemForm)"
+            <div class="btn-group float-md-right visible-parent-hover-or-active ml-1" dropdown>
+                <button type="button" class="btn btn-sm" (click)="toggleEdit(odgItemForm)"
                         [ngClass]="{'btn-secondary': !edit, 'btn-primary': edit}">
                     <span *ngIf="!edit"><i class="fa fa-edit fa-lg"> </i> Modifica</span>
                     <span *ngIf="edit"><i class="fa fa-edit fa-lg"> </i> Fine</span>
