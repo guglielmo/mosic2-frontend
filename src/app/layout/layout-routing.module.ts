@@ -12,6 +12,7 @@ export const routes: Routes = [
         { path: 'fascicoli', loadChildren: '../fascicoli/fascicoli.module#FascicoliModule', canActivate: [AuthGuard] },
         { path: 'registri', loadChildren: '../registri/registri.module#RegistriModule', canActivate: [AuthGuard] },
         { path: 'precipe', loadChildren: '../precipe/precipe.module#PreCipeModule', canActivate: [AuthGuard] },
+        { path: 'cipe', loadChildren: '../cipe/cipe.module#CipeModule', canActivate: [AuthGuard] },
         { path: 'users', loadChildren: '../users/users.module#UsersModule', canActivate: [AuthGuard] },
         { path: 'mittenti', loadChildren: '../servizio/mittenti.module#MittentiModule', canActivate: [AuthGuard] },
         { path: 'amministrazioni', loadChildren: '../servizio/amministrazioni.module#AmministrazioniModule', canActivate: [AuthGuard] },

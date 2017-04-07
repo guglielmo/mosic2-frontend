@@ -29,6 +29,7 @@ export class LayoutComponent implements OnInit {
 
     public notifyOptions = {
         position: ['bottom', 'right'],
+        showProgressBar: true,
         timeOut: 6000,
         lastOnBottom: true
     };

@@ -23,7 +23,7 @@
         <li>
             <a class="collapsed" data-target="#sidebar-register" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="simpleicon icon-docs"></i></span>
-                Registro
+                Registri
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-register" class="collapse">
@@ -34,7 +34,7 @@
         <li>
             <a class="collapsed" data-target="#sidebar-file" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="simpleicon icon-folder"></i></span>
-                Fascicolo
+                Fascicoli
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-file" class="collapse">
@@ -45,7 +45,7 @@
         <li>
             <a class="collapsed" data-target="#sidebar-filingplan" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="simpleicon icon-drawer"></i></span>
-                Titolario
+                Titolari
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-filingplan" class="collapse">
@@ -66,13 +66,47 @@
         </li>
         <li>
             <a class="collapsed" data-target="#sidebar-cipe" data-toggle="collapse" data-parent="#sidebar">
-                <span class="icon"><i class="fa fa-gavel"></i></span>
+                <span class="icon"><i class="fa fa-handshake-o"></i></span>
                 CIPE
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-cipe" class="collapse">
                 <li><a [routerLink]=" ['cipe/list'] ">Tutti i CIPE</a></li>
                 <li><a [routerLink]=" ['cipe/edit'] ">Crea nuovo</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="collapsed" data-target="#sidebar-delibere" data-toggle="collapse" data-parent="#sidebar">
+                <span class="icon"><i class="fa fa-gavel"></i></span>
+                Delibere
+                <i class="toggle fa fa-angle-down"></i>
+            </a>
+            <ul id="sidebar-delibere" class="collapse">
+                <li><a [routerLink]=" ['delibere/list'] ">Tutte le delibere</a></li>
+                <li><a [routerLink]=" ['delibere/edit'] ">Crea nuova</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="collapsed" data-target="#sidebar-adempimenti" data-toggle="collapse" data-parent="#sidebar">
+                <span class="icon"><i class="fa fa-check-square-o"></i></span>
+                Adempimenti
+                <i class="toggle fa fa-angle-down"></i>
+            </a>
+            <ul id="sidebar-adempimenti" class="collapse">
+                <li><a [routerLink]=" ['adempimenti/list'] ">Tutti gli adempimenti</a></li>
+                <li><a [routerLink]=" ['adempimenti/edit'] ">Crea nuovo</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="collapsed" data-target="#sidebar-monitor" data-toggle="collapse" data-parent="#sidebar">
+                <span class="icon"><i class="fa fa-eye"></i></span>
+                Monitor
+                <i class="toggle fa fa-angle-down"></i>
+            </a>
+            <ul id="sidebar-monitor" class="collapse">
+                <li><a [routerLink]=" ['monitor/situazione'] ">Situazione</a></li>
+                <li><a [routerLink]=" ['monitor/statistica'] ">Statistica</a></li>
+                <li><a [routerLink]=" ['monitor/analisi'] ">Analisi delle fasi</a></li>
             </ul>
         </li>
         <li>
