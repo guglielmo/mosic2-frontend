@@ -1,11 +1,13 @@
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 
 // Guard & Services
-import { NgxWarehouseModule } from 'ngx-warehouse';
+import { NgxWarehouseModule, WarehouseConfig, DRIVER_TYPE } from 'ngx-warehouse';
+
 import { AuthGuard } from './_guards/auth.guard';
 import { AuthenticationService, APICommonService } from './_services/index';
 
@@ -33,15 +35,24 @@ const APP_PROVIDERS = [
     AppConfig
 ];
 
+const WH_CONFIG: WarehouseConfig = {
+    driver: DRIVER_TYPE.DEFAULT,
+    name: 'Mosic',
+    version: 2.0,
+    storeName: 'key_value_pairs', // Should be alphanumeric, with underscores.
+    description: 'Monitoraggio Sistema CIPE'
+};
+
 @NgModule({
     declarations: [
         AppComponent
     ],
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         FormsModule,
         HttpModule,
-        NgxWarehouseModule,
+        NgxWarehouseModule.configureWarehouse(WH_CONFIG),
         AppRoutingModule
     ],
     providers: [
