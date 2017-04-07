@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "app/scss/variables";
-@import "app/scss/mixins";
+@import "app/_scss/variables";
+@import "app/_scss/mixins";
 
 @import "~bootstrap/scss/bootstrap";
 
@@ -24,7 +24,7 @@ $glyphicons-halflings-font-path: "/assets/fonts";
 
 @import "~awesome-bootstrap-checkbox/awesome-bootstrap-checkbox";
 
-@import "app/scss/select2-variables";
+@import "app/_scss/select2-variables";
 @import "~select2/src/scss/core";
 @import "~select2-bootstrap-theme/src/select2-bootstrap";
 
@@ -32,16 +32,16 @@ $glyphicons-halflings-font-path: "/assets/fonts";
 
 @import "~dragula/dist/dragula";
 
-@import "app/scss/bootstrap-override";
-@import "app/scss/libs-override";
+@import "app/_scss/bootstrap-override";
+@import "app/_scss/libs-override";
 
 //end custom libs
 
 //everything below this line is required for essential styling
-@import "app/scss/general";
-@import "app/scss/global-transitions";
-@import "app/scss/base";
-@import "app/scss/utils";
-@import "app/scss/print";
+@import "app/_scss/general";
+@import "app/_scss/global-transitions";
+@import "app/_scss/base";
+@import "app/_scss/utils";
+@import "app/_scss/print";
 
 :focus { outline: none !important; }
