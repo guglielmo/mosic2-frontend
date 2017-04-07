@@ -22,6 +22,8 @@ export class PreCipeEditComponent implements OnInit {
 
     private error = '';
     public mode: string;
+    public compact: true;
+    public viewtype: string = 'documents';
     private loading= true;
     private id: number;
     private baseAPIURL: string;

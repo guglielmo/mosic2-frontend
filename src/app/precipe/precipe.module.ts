@@ -8,6 +8,7 @@ import { LOCALE_ID } from '@angular/core';
 import { ModalModule } from 'ngx-modal';
 import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DisableFormControlModule } from '../_directives/disable-formcontrol/disable-formcontrol.module';
+import { ButtonsModule } from 'ng2-bootstrap/buttons';
 import { DataTableModule } from 'angular2-datatable';
 import { PipesDirectivesSharedModule } from '../_shared/index';
 import { DragulaModule } from 'ng2-dragula';
@@ -50,6 +51,7 @@ export const routes = [
     ModalModule,
     StickTheadModule,
     DisableFormControlModule,
+    ButtonsModule,
     DataTableModule,
     Select2Module,
     NKDatetimeModule,

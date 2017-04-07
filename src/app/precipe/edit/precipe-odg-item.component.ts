@@ -16,6 +16,7 @@ import {Fascicoli, PreCipeOdg, Registri, Titolari, Uffici} from "../../_models/i
 })
 export class PreCipeOdgItemComponent implements OnInit {
     @Input() item: PreCipeOdg;
+    @Input() viewtype: any;
 
     public isNew;
     public edit = false;

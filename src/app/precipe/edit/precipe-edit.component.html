@@ -1,5 +1,5 @@
 <accordion [closeOthers]="false" class="mb-lg show" id="debug[{{model.id}}]">
-   <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="true">
+   <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="false">
       <div accordion-heading>
          <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
          <i class="fa float-right"
@@ -68,15 +68,30 @@
          </ng-template>
 
          <div class="clearfix mb-lg">
-            <button type="button" class="btn btn-secondary float-right"
+
+            <div class="btn-group float-right">
+               <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="compact" name="viewtype">
+                  <i class="fa fa-lg fa-list"></i>
+               </label>
+               <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="documents" name="viewtype">
+                  <i class="fa fa-lg fa-th-list"></i>
+               </label>
+               <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="detail" name="viewtype">
+                  <i class="fa fa-lg fa-list-alt"></i>
+               </label>
+            </div>
+
+
+            <button type="button" class="btn btn-primary"
                     (click)="addPuntoOdg()">
                <i class="fa fa-lg fa-plus-circle"></i> Nuovo punto o.d.g.
             </button>
+
          </div>
 
          <ul [dragula]='"precipe_odg"' [dragulaModel]='model.precipe_odg' class="list-group">
             <li *ngFor="let item of model.precipe_odg" class="list-group-item">
-               <precipe-odg-item [item]="item"></precipe-odg-item>
+               <precipe-odg-item [item]="item" [viewtype]="viewtype"></precipe-odg-item>
             </li>
          </ul>
 
