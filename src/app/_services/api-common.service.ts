@@ -26,10 +26,27 @@ export class APICommonService {
     private _allData$: any = {};
     public dataEnum: any = {};
 
-    private currentStorageVersion = '30';
+    private currentStorageVersion = '36';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
+        'amministrazioni',
+        'mittenti',
+        'titolari',
+        'fascicoli',
+        'registri',
+        'groups',
+        'uffici',
+        'ruoli_cipe',
+        'tags',
+        'precipe',
+        'cipe',
+/*        'delibere',
+        'adempimenti',
+        'monitor'*/
+    ];
+
+    private commonData: string[] = [
         'amministrazioni',
         'mittenti',
         'titolari',
@@ -61,6 +78,10 @@ export class APICommonService {
         });
 
         this.warehouse.set('apiServiceLastInitTime', Date.now() );
+
+        this.warehouse.get('apiServiceLastInitTime').subscribe(data => {
+            console.log('apiServiceLastInitTime', data);  // <-- returns null at first execution
+        });
     }
 
     public subscribeToDataService( apipath: string ): Observable<any[]> {
@@ -107,7 +128,7 @@ export class APICommonService {
                         .catch((response: Response) => this.handleError(response));
     }
 
-    public deleteFile(apipath: string, idContainer: number, idFile: number) {
+    public deleteFile(apipath: string, idContainer: number | string, idFile: number) {
         this.startingRequest(apipath);
         this.setDirty(apipath);
         return this.http.delete(this.config.baseAPIURL + '/api/' + apipath + '/' + idContainer + '/upload/' + idFile, this.jwt())
@@ -149,6 +170,8 @@ export class APICommonService {
     }
 
     private handleError (error: Response | any) {
+
+        console.log('handle',error);
 
         let errMsg: string;
         if (error instanceof Response) {
@@ -209,7 +232,10 @@ export class APICommonService {
                     this.warehouse.get('stored_' + apipath).subscribe(
                         data => {
                             if(!Array.isArray(data)) {
-                                this.notifyError('I dati registrati nella memoria locale per i ' + apipath + ' non sono validi');
+                                this.notifyError("I dati registrati nella memoria locale per " + apipath + " non sono validi. Sarà effettuato un" +
+                                    " nuovo tentativo di ricaricamento dal server.");
+                                localStorage.setItem('lastupdates', JSON.stringify({}));
+                                this.cacheCommonIDB(apipath, lastupdates[apipath]);
                                 return;
                             }
 
@@ -222,7 +248,7 @@ export class APICommonService {
                             // checks if all cached api methods are loaded
                             //
                             let checkIsReady = true;
-                            _.each(this.cachedApiDataMetods, v => {
+                            _.each(this.commonData, v => {
                                 //console.log(v, this._allData);
                                 if (this._allData[v].length === 0) {
                                     checkIsReady = false;
@@ -301,7 +327,7 @@ export class APICommonService {
                 // checks if all cached api methods are loaded
                 //
                 let checkIsReady = true;
-                _.each(this.cachedApiDataMetods, v => {
+                _.each(this.commonData, v => {
                     if (this._allData[v].length === 0) {
                         checkIsReady = false;
                         return false; // <-- this is the lodash way to break iteration;
@@ -310,7 +336,9 @@ export class APICommonService {
                 this.commonDataready = checkIsReady;
 
             },
-            error => console.log('Could not load ' + apipath)
+            error => {
+                this.notifyError('Errore nel caricamento di "' + apipath + '" dalla API');
+            }
         );
     }
 
