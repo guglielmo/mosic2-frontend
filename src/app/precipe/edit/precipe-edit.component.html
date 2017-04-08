@@ -70,13 +70,16 @@
          <div class="clearfix mb-lg">
 
             <div class="btn-group float-right">
-               <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="compact" name="viewtype">
+               <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="compact" name="viewtype"
+                      [tooltip]="'Vista compatta'" placement="top">
                   <i class="fa fa-lg fa-list"></i>
                </label>
-               <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="documents" name="viewtype">
+               <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="documents" name="viewtype"
+                      [tooltip]="'Vista documenti'" placement="top">
                   <i class="fa fa-lg fa-th-list"></i>
                </label>
-               <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="detail" name="viewtype">
+               <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="detail" name="viewtype"
+                      [tooltip]="'Vista&nbsp;dettaglio'" placement="top">
                   <i class="fa fa-lg fa-list-alt"></i>
                </label>
             </div>

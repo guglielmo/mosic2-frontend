@@ -10,6 +10,7 @@ import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
 import { DisableFormControlModule } from '../_directives/disable-formcontrol/disable-formcontrol.module';
 import { ButtonsModule } from 'ng2-bootstrap/buttons';
 import { DataTableModule } from 'angular2-datatable';
+import { TooltipModule } from 'ng2-bootstrap/tooltip';
 import { PipesDirectivesSharedModule } from '../_shared/index';
 import { DragulaModule } from 'ng2-dragula';
 import { TabsModule } from 'ng2-bootstrap/tabs';
@@ -53,6 +54,7 @@ export const routes = [
     DisableFormControlModule,
     ButtonsModule,
     DataTableModule,
+    TooltipModule.forRoot(),
     Select2Module,
     NKDatetimeModule,
     PipesDirectivesSharedModule,
