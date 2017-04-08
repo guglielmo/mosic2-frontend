@@ -2,20 +2,24 @@
 <div class="row hide-child-nohover-or-noactive" [ngClass]="{ 'active': edit }">
     <div class="col-md-1">
         <div class="form-group" [ngClass]="{ 'has-danger': hasErrors && !odgItemForm.controls['ordine'].valid}">
+            <!-- VIEW -->
+            <div *ngIf="!edit">
+                <div>
+                    <i class="fa fa-sort fa-lg float-left rel-t-m10 visible-parent-hover-or-active mr-2"> </i>
+                    <h2 class="ml-2"><strong>{{item.ordine}}</strong>&nbsp;</h2>
+                </div>
+                <h6 class="ml-1">
+                    <span *ngIf="item.risultanza !== 1 && item.risultanza !== 2" class="badge badge-lg badge-default rel-t-l2">N/D</span>
+                    <span *ngIf="item.risultanza === 2" class="badge badge-lg badge-warning rel-t-l2">Rinviato</span>
+                    <span *ngIf="item.risultanza === 1" class="badge badge-lg badge-success rel-t-l2">Positivo</span>
+                </h6>
+            </div>
+
             <!-- EDIT -->
             <input *ngIf="edit" type="text" class="form-control form-control-lg"
                    placeholder="..."
                    [disableCond]="!edit"
-                   [formControl]="odgItemForm.controls['ordine']"><br/>
-
-            <!-- VIEW -->
-            <div *ngIf="!edit">
-                <i class="fa fa-sort fa-lg float-left rel-t-m10 visible-parent-hover-or-active mr-2"> </i>
-                <h2 class="ml-2"><strong>{{item.ordine}}</strong>&nbsp;</h2>
-            </div>
-<!--
-            <h6 class="fw-semi-bold">Risultanza</h6>
--->
+                   [formControl]="odgItemForm.controls['ordine']">
             <div *ngIf="edit">
                 <label class="sr-only"><strong>Risultanza</strong></label>
                 <div class="radio abc-radio abc-radio-default">
@@ -25,7 +29,7 @@
                            [formControl]="odgItemForm.controls['risultanza']"
                            (click)="item.risultanza = null">
                     <label for="risultanza_nd[{{item.id}}]">
-                        <span [ngClass]="{ 'badge badge-lg badge-default': item.risultanza !== 1 && item.risultanza !== 2 }">N/D</span><br/>
+                        <span [ngClass]="{ 'badge badge-lg badge-default': item.risultanza !== 1 && item.risultanza !== 2 }">N/D</span>
                     </label>
                 </div>
                 <div class="radio abc-radio abc-radio-warning">
@@ -35,7 +39,7 @@
                            [formControl]="odgItemForm.controls['risultanza']"
                            (click)="item.risultanza = 2">
                     <label for="risultanza_rinviato[{{item.id}}]">
-                        <span [ngClass]="{ 'badge badge-lg badge-warning': item.risultanza === 2 }">Rinviato</span><br/>
+                        <span [ngClass]="{ 'badge badge-lg badge-warning': item.risultanza === 2 }">Rinviato</span>
                     </label>
                 </div>
                 <div class="radio abc-radio abc-radio-success">
@@ -49,12 +53,6 @@
                     </label>
                 </div>
             </div>
-
-            <h6 *ngIf="!edit">
-                <span *ngIf="item.risultanza !== 1 && item.risultanza !== 2" class="badge badge-lg badge-default rel-t-l2">N/D</span>
-                <span *ngIf="item.risultanza === 2" class="badge badge-lg badge-warning rel-t-l2">Rinviato</span>
-                <span *ngIf="item.risultanza === 1" class="badge badge-lg badge-success rel-t-l2">Positivo</span>
-            </h6>
         </div>
     </div>
     <div class="col-md-11">

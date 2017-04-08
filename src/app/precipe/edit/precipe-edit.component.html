@@ -1,146 +1,161 @@
 <accordion [closeOthers]="false" class="mb-lg show" id="debug[{{model.id}}]">
-   <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="false">
-      <div accordion-heading>
-         <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
-         <i class="fa float-right"
-            [ngClass]="{'fa-angle-down': accordionGroupDebug?.isOpen, 'fa-angle-right': !accordionGroupDebug?.isOpen}"></i>
-      </div>
-      <div>
-         <pre>model = {{model | json}}</pre>
-      </div>
-   </accordion-group>
+    <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="false">
+        <div accordion-heading>
+            <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
+            <i class="fa float-right"
+               [ngClass]="{'fa-angle-down': accordionGroupDebug?.isOpen, 'fa-angle-right': !accordionGroupDebug?.isOpen}"></i>
+        </div>
+        <div>
+            <pre>model = {{model | json}}</pre>
+        </div>
+    </accordion-group>
 </accordion>
 
 <form *ngIf="model.id || mode == 'create'" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
 
-   <div class="pull-right">
-      <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
-      <button type="submit" class="btn btn-primary btn-save">Salva</button>
-   </div>
+    <div class="float-right">
+        <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
+        <button type="submit" class="btn btn-primary btn-save">Salva</button>
+    </div>
 
-   <h3 class="page-title"><a [routerLink]=" ['/app/precipe/list'] ">Pre-CIPE</a> /
-      <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
-      <span *ngIf="mode == 'update'" class="fw-semi-bold">riunione del {{ model.data | date: 'dd/MM/yyyy' }}</span>
-   </h3>
+    <h3 class="page-title"><a [routerLink]=" ['/app/precipe/list'] ">Pre-CIPE</a> /
+        <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
+        <span *ngIf="mode == 'update'" class="fw-semi-bold">riunione del {{ model.data | date: 'dd/MM/yyyy' }}</span>
+    </h3>
 
-   <section class="widget">
-      <div class="widget-body">
-         <div class="row">
-            <div class="col-md-6">
-               <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !data.valid }">
-                  <label for="data"><strong>Data della riunione</strong></label>
-                  <datetime id="data" name="data"
-                            [datepicker]="datePickerOptions"
-                            [timepicker]="false"
-                            [(ngModel)]="model.data" #data="ngModel" required></datetime>
-               </div>
+    <section class="widget">
+        <div class="widget-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !data.valid }">
+                        <label for="data"><strong>Data della riunione</strong></label>
+                        <datetime id="data" name="data"
+                                  [datepicker]="datePickerOptions"
+                                  [timepicker]="false"
+                                  [(ngModel)]="model.data" #data="ngModel" required></datetime>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="ufficiale_riunione"><strong>Stato</strong></label>
+                        <div>
+                            <label class="switch">
+                                <input id="ufficiale_riunione" name="ufficiale_riunione" type="checkbox"
+                                       class="ios"
+                                       [checked]="model.ufficiale_riunione == '1'"
+                                       (change)="model.ufficiale_riunione = $event.target.checked ? '1' : '0'"
+                                       (click)="askOfficializePreCipe($event, officializePreCipeModal, model)"
+                                       [disabled]="officializingPreCipe != null || model.ufficiale_riunione === '1'"
+                                ><i></i>
+                            </label>&nbsp;&nbsp;
+                            <span *ngIf="model.ufficiale_riunione === '0' && officializingPreCipe === null"
+                                  class="badge badge-lg badge-danger rel-t-l10">Bozza</span>
+                            <span *ngIf="model.ufficiale_riunione === '1' && officializingPreCipe === null"
+                                  class="badge badge-lg badge-success rel-t-l10">Ufficiale</span>
+                            <span *ngIf="officializingPreCipe !== null" class="rel-t-l10"> <i
+                                    class="loading-spinner"></i> Pubblicazione in corso...</span>
+
+                            <p *ngIf="model.ufficiale_riunione" class="d-inline-block rel-t-l10 ml-4 text-center">
+                                <button class="btn btn-gray mb-xs mx-2" role="button">
+                                    <i class="fa fa-lg fa-refresh"></i> &nbsp; Aggiorna
+                                </button>
+                                <button class="btn btn-gray mb-xs mx-2" role="button">
+                                    <i class="fa fa-lg fa-trash"></i> &nbsp; Rimuovi
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="ufficiale_riunione"><strong>URL area pubblica riservata</strong></label>
+                        <div><a href="http://www.google.it" target="_blank">http://google.it</a></div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-               <div class="form-group">
-                  <label for="ufficiale_riunione"><strong>Stato</strong></label>
-                  <div>
-                     <label class="switch">
-                        <input id="ufficiale_riunione" name="ufficiale_riunione" type="checkbox"
-                               class="ios"
-                               [checked]="model.ufficiale_riunione == '1'"
-                               (change)="model.ufficiale_riunione = $event.target.checked ? '1' : '0'"
-                               (click)="askOfficializePreCipe($event, officializePreCipeModal, model)"
-                               [disabled]="officializingPreCipe != null || model.ufficiale_riunione === '1'"
-                        ><i></i>
-                     </label>&nbsp;&nbsp;
-                     <span *ngIf="model.ufficiale_riunione === '0' && officializingPreCipe === null"
-                           class="badge badge-lg badge-danger rel-t-l10">Bozza</span>
-                     <span *ngIf="model.ufficiale_riunione === '1' && officializingPreCipe === null" class="badge badge-lg badge-success rel-t-l10">Ufficiale</span>
-                     <span *ngIf="officializingPreCipe !== null" class="rel-t-l10"> <i
-                           class="loading-spinner"></i> Pubblicazione in corso...</span>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </section>
+        </div>
+    </section>
+
+    <tabset #staticTabs>
+        <tab [customClass]="'p-0'">
+            <ng-template tabHeading>
+                <strong>Ordine del giorno</strong>
+            </ng-template>
+
+            <div class="clearfix mb-lg">
+
+                <div class="btn-group float-right">
+                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="compact" name="viewtype"
+                           [tooltip]="'Vista compatta'" placement="top">
+                        <i class="fa fa-lg fa-list"></i>
+                    </label>
+                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="documents" name="viewtype"
+                           [tooltip]="'Vista documenti'" placement="top">
+                        <i class="fa fa-lg fa-th-list"></i>
+                    </label>
+                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="detail" name="viewtype"
+                           [tooltip]="'Vista&nbsp;dettaglio'" placement="top">
+                        <i class="fa fa-lg fa-list-alt"></i>
+                    </label>
+                </div>
 
 
-   <tabset #staticTabs>
-      <tab [customClass]="'p-0'">
-         <ng-template tabHeading>
-            <strong>Ordine del giorno</strong>
-         </ng-template>
+                <button type="button" class="btn btn-primary"
+                        (click)="addPuntoOdg()">
+                    <i class="fa fa-lg fa-plus-circle"></i> Nuovo punto o.d.g.
+                </button>
 
-         <div class="clearfix mb-lg">
-
-            <div class="btn-group float-right">
-               <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="compact" name="viewtype"
-                      [tooltip]="'Vista compatta'" placement="top">
-                  <i class="fa fa-lg fa-list"></i>
-               </label>
-               <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="documents" name="viewtype"
-                      [tooltip]="'Vista documenti'" placement="top">
-                  <i class="fa fa-lg fa-th-list"></i>
-               </label>
-               <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="detail" name="viewtype"
-                      [tooltip]="'Vista&nbsp;dettaglio'" placement="top">
-                  <i class="fa fa-lg fa-list-alt"></i>
-               </label>
             </div>
 
+            <ul [dragula]='"precipe_odg"' [dragulaModel]='model.precipe_odg' class="list-group">
+                <li *ngFor="let item of model.precipe_odg" class="list-group-item">
+                    <precipe-odg-item [item]="item" [viewtype]="viewtype"></precipe-odg-item>
+                </li>
+            </ul>
 
-            <button type="button" class="btn btn-primary"
-                    (click)="addPuntoOdg()">
-               <i class="fa fa-lg fa-plus-circle"></i> Nuovo punto o.d.g.
-            </button>
+            <div class="clearfix mt-lg">
+                <button type="button" class="btn btn-secondary float-right"
+                        (click)="addPuntoOdg()">
+                    <i class="fa fa-lg fa-plus-circle"></i> Nuovo punto o.d.g.
+                </button>
+            </div>
 
-         </div>
-
-         <ul [dragula]='"precipe_odg"' [dragulaModel]='model.precipe_odg' class="list-group">
-            <li *ngFor="let item of model.precipe_odg" class="list-group-item">
-               <precipe-odg-item [item]="item" [viewtype]="viewtype"></precipe-odg-item>
-            </li>
-         </ul>
-
-         <div class="clearfix mt-lg">
-            <button type="button" class="btn btn-secondary float-right"
-                    (click)="addPuntoOdg()">
-               <i class="fa fa-lg fa-plus-circle"></i> Nuovo punto o.d.g.
-            </button>
-         </div>
-
-      </tab>
-      <tab>
-         <ng-template tabHeading>
-            <strong>Appunto Generale <span *ngIf="model.allegati_APG">({{model.allegati_APG.length}})</span></strong>
-         </ng-template>
-         <precipe-upload [type]="'APG'" [allegati]="model.allegati_APG" [allowUpload]="allowUpload"></precipe-upload>
-      </tab>
-      <tab>
-         <ng-template tabHeading>
-            <strong>Elenco Telex <span *ngIf="model.allegati_TLX">({{model.allegati_TLX.length}})</span></strong>
-         </ng-template>
-         <precipe-upload [type]="'TLX'" [allegati]="model.allegati_TLX" [allowUpload]="allowUpload"></precipe-upload>
-      </tab>
-      <tab>
-         <ng-template tabHeading>
-            <strong>Osservazioni <span *ngIf="model.allegati_OSS">({{model.allegati_OSS.length}})</span></strong>
-         </ng-template>
-         <precipe-upload [type]="'OSS'" [allegati]="model.allegati_OSS" [allowUpload]="allowUpload"></precipe-upload>
-      </tab>
-   </tabset>
+        </tab>
+        <tab>
+            <ng-template tabHeading>
+                <strong>Appunto Generale <span *ngIf="model.allegati_APG">({{model.allegati_APG.length}})</span></strong>
+            </ng-template>
+            <precipe-upload [type]="'APG'" [allegati]="model.allegati_APG" [allowUpload]="allowUpload"></precipe-upload>
+        </tab>
+        <tab>
+            <ng-template tabHeading>
+                <strong>Elenco Telex <span *ngIf="model.allegati_TLX">({{model.allegati_TLX.length}})</span></strong>
+            </ng-template>
+            <precipe-upload [type]="'TLX'" [allegati]="model.allegati_TLX" [allowUpload]="allowUpload"></precipe-upload>
+        </tab>
+        <tab>
+            <ng-template tabHeading>
+                <strong>Osservazioni <span *ngIf="model.allegati_OSS">({{model.allegati_OSS.length}})</span></strong>
+            </ng-template>
+            <precipe-upload [type]="'OSS'" [allegati]="model.allegati_OSS" [allowUpload]="allowUpload"></precipe-upload>
+        </tab>
+    </tabset>
 </form>
 
 <modal #officializePreCipeModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true"
        (onSubmit)="confirmOfficializePreCipe(officializePreCipeModal)"
        (onCancel)="cancelOfficializePreCipe(officializePreCipeModal)">
-   <modal-header>
-      <h4 class="modal-title fw-bold mt"><i class="fa fa-warning"></i> Confermi l'ufficializzazione del Pre-CIPE ?</h4>
-   </modal-header>
-   <modal-content>
-      <h4 class="mt-sm">
-         I punti all'o.d.g. e documenti allegati saranno pubblicati nell'area riservata.<br/><br/>
-         A pubblicazione completa, in questa scheda sarà disponibile il collegamento per visualizzarli.
-      </h4>
-   </modal-content>
-   <modal-footer>
-   </modal-footer>
+    <modal-header>
+        <h4 class="modal-title fw-bold mt"><i class="fa fa-warning"></i> Confermi l'ufficializzazione del Pre-CIPE ?</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="mt-sm">
+            I punti all'o.d.g. e documenti allegati saranno pubblicati nell'area riservata.<br/><br/>
+            A pubblicazione completa, in questa scheda sarà disponibile il collegamento per visualizzarli.
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
 </modal>
 
 
