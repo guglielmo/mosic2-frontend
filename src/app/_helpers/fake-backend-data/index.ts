@@ -8,4 +8,5 @@ export * from './tags.mockdata';
 export * from './groups.mockdata';
 export * from './precipe.mockdata';
 export * from './uffici.mockdata';
+export * from './users.mockdata';
 export * from './lastupdates.mockdata';
