@@ -1,7 +1,9 @@
-﻿import {Http, BaseRequestOptions, Response, ResponseOptions, RequestMethod} from '@angular/http';
-import {MockBackend, MockConnection} from '@angular/http/testing';
+﻿import { Http, BaseRequestOptions, Response, ResponseOptions, RequestMethod } from '@angular/http';
+import { MockBackend, MockConnection } from '@angular/http/testing';
 
-import {TitolariMockData, FascicoliMockData, RegistriMockData, AmministrazioniMockData, MittentiMockData, LastUpdatesMockData} from './fake-backend-data/index';
+import { TitolariMockData, FascicoliMockData, RegistriMockData, AmministrazioniMockData, MittentiMockData,
+         UfficiMockData, PreCipeMockData, RuoliCipeMockData, TagsMockData, GroupsMockData, UsersMockData,
+         LastUpdatesMockData } from './fake-backend-data/index';
 
 export let fakeBackendProvider = {
     // use fake backend in place of Http service for backend-less development
@@ -12,28 +14,6 @@ export let fakeBackendProvider = {
         let debug = true;
         let mockDataStored = localStorage.getItem('mockDataVersion');
 
-        if (mockDataStored != mockDataVersion) {
-            // write mock data to local storage if version number differs from the current
-            localStorage.setItem('titolari', JSON.stringify(TitolariMockData));
-            localStorage.setItem('fascicoli', JSON.stringify(FascicoliMockData));
-            localStorage.setItem('registri', JSON.stringify(RegistriMockData));
-            localStorage.setItem('amministrazioni', JSON.stringify(AmministrazioniMockData));
-            localStorage.setItem('mittenti', JSON.stringify(MittentiMockData));
-            localStorage.setItem('lastupdates', JSON.stringify(LastUpdatesMockData));
-
-            localStorage.setItem('mockDataVersion', mockDataVersion);
-        }
-
-
-        // read local storage
-        let users: any[] = JSON.parse(localStorage.getItem('users')) || [];
-        let titolari: any[] = JSON.parse(localStorage.getItem('titolari')) || [];
-        let fascicoli: any[] = JSON.parse(localStorage.getItem('fascicoli')) || [];
-        let registri: any[] = JSON.parse(localStorage.getItem('registri')) || [];
-        let amministrazioni: any[] = JSON.parse(localStorage.getItem('amministrazioni')) || [];
-        let mittenti: any[] = JSON.parse(localStorage.getItem('mittenti')) || [];
-        let lastupdates: any[] = JSON.parse(localStorage.getItem('lastupdates')) || [];
-
         let supportedApiMetods: string[] = [
             'authenticate',
             'users',
@@ -42,8 +22,44 @@ export let fakeBackendProvider = {
             'registri',
             'amministrazioni',
             'mittenti',
+            'uffici',
+            'precipe',
+            'ruoli_cipe',
+            'tags',
+            'groups',
             'lastupdates'
         ];
+
+        let data: any = {};
+
+        if (mockDataStored != mockDataVersion) {
+            // write mock data to local storage if version number differs from the current
+            localStorage.setItem('titolari', JSON.stringify(TitolariMockData));
+            localStorage.setItem('fascicoli', JSON.stringify(FascicoliMockData));
+            localStorage.setItem('registri', JSON.stringify(RegistriMockData));
+            localStorage.setItem('amministrazioni', JSON.stringify(AmministrazioniMockData));
+            localStorage.setItem('mittenti', JSON.stringify(MittentiMockData));
+
+            localStorage.setItem('uffici', JSON.stringify(UfficiMockData));
+            localStorage.setItem('precipe', JSON.stringify(PreCipeMockData));
+            localStorage.setItem('ruoli_cipe', JSON.stringify(RuoliCipeMockData));
+            localStorage.setItem('tags', JSON.stringify(TagsMockData));
+            localStorage.setItem('groups', JSON.stringify(GroupsMockData));
+            localStorage.setItem('users', JSON.stringify(UsersMockData));
+
+            localStorage.setItem('lastupdates', JSON.stringify(LastUpdatesMockData));
+
+            localStorage.setItem('mockDataVersion', mockDataVersion);
+        }
+
+        supportedApiMetods.forEach( apipath => {
+           data[apipath] =  JSON.parse(localStorage.getItem(apipath)) || [];
+        });
+
+        // read local storage
+        let users: any[] = JSON.parse(localStorage.getItem('users')) || [];
+        let lastupdates: any[] = JSON.parse(localStorage.getItem('lastupdates')) || [];
+
 
         // configure fake backend
         backend.connections.subscribe((connection: MockConnection) => {
@@ -79,6 +95,8 @@ export let fakeBackendProvider = {
 
                     let reqMethod = connection.request.method;
                     let id = parseInt(requestUrlArr[3]);
+
+                    console.log(apiMethod, supportedApiMetods.indexOf( apiMethod ), queryParams);
 
                     if ( supportedApiMetods.indexOf( apiMethod ) != -1 ) {
                         // the method is supported
@@ -173,7 +191,7 @@ export let fakeBackendProvider = {
                             // every request except authentication and signup MUST BE authenticated
                             if (connection.request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
 
-                                let methodData = eval(apiMethod); // <--- gets the data structure corresponding to the invoked api method name
+                                let methodData = data[apiMethod]; // <--- gets the data structure corresponding to the invoked api method name
 
                                 switch ( reqMethod ) {
 
