@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, ElementRef, OnInit, HostBinding} from '@angular/core';
+import {Component, ViewEncapsulation, ElementRef, OnInit} from '@angular/core';
 import {Router, NavigationEnd} from '@angular/router';
 import {AppConfig} from '../app.config';
 
