@@ -26,7 +26,7 @@ export class APICommonService {
     private _allData$: any = {};
     public dataEnum: any = {};
 
-    private currentStorageVersion = '36';
+    private currentStorageVersion = '43';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
@@ -40,7 +40,9 @@ export class APICommonService {
         'ruoli_cipe',
         'tags',
         'precipe',
+        'firmatari',
         'cipe',
+
 /*        'delibere',
         'adempimenti',
         'monitor'*/
