@@ -15,13 +15,13 @@ import { PipesDirectivesSharedModule } from '../_shared/index';
 import { DragulaModule } from 'ng2-dragula';
 import { TabsModule } from 'ng2-bootstrap/tabs';
 import { AccordionModule } from 'ng2-bootstrap/accordion';
-import { BsDropdownModule } from 'ng2-bootstrap/dropdown';
-
 
 import { WidgetModule } from '../layout/widget/widget.module';
 
 import { Select2Module } from 'ng2-select2';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
+import { Ng2PageScrollModule } from 'ng2-page-scroll';
+
 
 // ngx-uploader
 import { NgUploaderModule } from 'ngx-uploader';
@@ -57,11 +57,11 @@ export const routes = [
     TooltipModule.forRoot(),
     Select2Module,
     NKDatetimeModule,
+    Ng2PageScrollModule.forRoot(),
     PipesDirectivesSharedModule,
     DragulaModule,
     TabsModule.forRoot(),
     AccordionModule.forRoot(),
-    BsDropdownModule.forRoot(),
     NgUploaderModule,
     RouterModule.forChild(routes)
   ],

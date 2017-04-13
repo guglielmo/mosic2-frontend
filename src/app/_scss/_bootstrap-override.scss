@@ -93,9 +93,9 @@ accordion-group.card-open .card-title a.accordion-toggle i {
     display: block;
   }
 
-  > a:focus {
+/*  > a:focus {
     outline: none;
-  }
+  }*/
 }
 
 small, .small {
@@ -693,6 +693,10 @@ legend {
   }
 }
 
+.btn:focus {
+  outline: dotted;
+}
+
 .btn, .btn-inverse, .btn-gray {
   &:not(.active) {
     box-shadow: none !important;
@@ -721,11 +725,11 @@ legend {
   }
 }
 
-.btn-link:focus,
+/*.btn-link:focus,
 .btn-link:active:focus,
 .btn-link.active:focus{
   outline: 0;
-}
+}*/
 
 .input-group > .input-group-btn:last-child > .btn[data-toggle="dropdown"] {
   @include border-right-radius($btn-border-radius);
@@ -735,10 +739,10 @@ legend {
 .btn-group > .btn[data-toggle="dropdown"][data-original-title][title] {
   @include border-right-radius($btn-border-radius);
 
-  &:focus,
+/*  &:focus,
   &:active{
     outline: none !important;
-  }
+  }*/
 }
 
 //
@@ -795,9 +799,9 @@ accordion-group.panel-open .panel-title a.accordion-toggle i {
     display: block;
   }
 
-  > a:focus {
+/*  > a:focus {
     outline: none;
-  }
+  }*/
 }
 
 small, .small {
@@ -1238,7 +1242,7 @@ a.list-group-item, button.list-group-item {
     &:hover,
     &:focus {
       color: $navbar-dashboard-link-hover-color;
-      outline: none;
+      /*outline: none;*/
       text-decoration: none;
     }
     &[disabled],

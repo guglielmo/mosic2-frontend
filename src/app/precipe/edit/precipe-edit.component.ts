@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Inject} from '@angular/core';
+import { DOCUMENT } from '@angular/platform-browser';
+import {PageScrollInstance, PageScrollService, EasingLogic} from 'ng2-page-scroll';
+
+
 import { Router, ActivatedRoute } from '@angular/router';
 import { APICommonService } from '../../_services/index';
 import { AppConfig } from '../../app.config';
@@ -29,12 +33,19 @@ export class PreCipeEditComponent implements OnInit {
     private baseAPIURL: string;
     public datePickerOptions;
 
-    public officializingPreCipe = null;
+    public officializingPreCipe: PreCipe = null;
+    public publishingPreCipe: PreCipe = null;
+    public removingPreCipe: PreCipe = null;
+    public updatingPreCipe: PreCipe = null;
+    public deletingPuntoOdg: PreCipeOdg = null;
+    public status: string = null;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
                 public apiService: APICommonService,
                 private dragulaService: DragulaService,
+                @Inject(DOCUMENT) private document: any,
+                private pageScrollService: PageScrollService,
                 config: AppConfig,
     ) {
         this.config = config.getConfig();
@@ -69,7 +80,7 @@ export class PreCipeEditComponent implements OnInit {
         switch ( this.mode ) {
             case 'create':
                 this.model = new PreCipe();
-                this.addPuntoOdg();
+                this.createPuntoOdg();
 
                 //console.log(this.model);
                 this.loading = false;
@@ -82,8 +93,7 @@ export class PreCipeEditComponent implements OnInit {
                             this.model.data = new Date(this.model.data);
 
                             // todo: chiedere ad alessando di aggiungere i campi
-                            //this.model.precipe_odg = _.map(this.model.precipe_odg, o => _.extend({allegati_esclusi: [],
-                            // allegati_esclusi_approvati: []}, o));
+                            this.model.public_reserved_URL = "http://www.google.it/bceykber6hiub8nbn8@#gdyuevcuhluickjdbuycgdkyhbckuydgcbdbvuykgwlsxvh";
 
                             this.loading = false;
                             this.allowUpload = true;
@@ -98,8 +108,41 @@ export class PreCipeEditComponent implements OnInit {
         }
     }
 
-    addPuntoOdg() {
+    createPuntoOdg() {
         this.model.precipe_odg.push(new PreCipeOdg());
+    }
+
+    public myEasing: EasingLogic = {
+        ease: (t: number, b: number, c: number, d: number): number => {
+            // easeInOutExpo easing
+            if (t === 0) return b;
+            if (t === d) return b + c;
+            if ((t /= d / 2) < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
+            return c / 2 * (-Math.pow(2, -10 * --t) + 2) + b;
+        }
+    };
+
+    askDeletePuntoOdg(id: number, modal: any) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.deletingPuntoOdg = _.find(this.model.precipe_odg, o => { return o.id === id });
+        console.log(id,this.deletingPuntoOdg);
+        modal.open();
+        return false;
+    }
+
+    confirmDeletePuntoOdg(modal: any) {
+        modal.close();
+        this.deletePuntoOdg(this.deletingPuntoOdg.id);
+    }
+
+    cancelDeletePuntoOdg(modal: any) {
+        modal.close();
+        this.deletingPuntoOdg = null;
+    }
+
+    deletePuntoOdg(id: number) {
+        this.model.precipe_odg = _.filter(this.model.precipe_odg, o => { return o.id !== id; });
     }
 
     castToArray(item) {
@@ -160,6 +203,41 @@ export class PreCipeEditComponent implements OnInit {
         // do something
     }
 
+    startPublishOrUpdate(id){
+        this.apiService.getById('areariservata/precipe',id)
+            .subscribe(
+                response => {
+                    this.pollStatus(id);
+                    console.log(response);
+                },
+                error => {
+                    console.log(error);
+
+                }
+            );
+    }
+
+    pollStatus(id){
+        this.apiService.getAll('precipe/'+id+'/upload_status')
+            .subscribe(
+                response => {
+                    setTimeout(id => {
+                        this.pollStatus(id);
+                    },5000);
+
+                    console.log(response);
+                },
+                error => {
+                    console.log(error);
+
+                }
+            );
+    }
+
+    startRemove(id){
+
+    }
+
 
     /*
      *
@@ -178,6 +256,7 @@ export class PreCipeEditComponent implements OnInit {
     confirmOfficializePreCipe(modal: any) {
         modal.close();
         this.officializePreCipe(this.officializingPreCipe);
+        this.status = 'publishing';
     }
 
     cancelOfficializePreCipe(modal: any) {
@@ -186,10 +265,113 @@ export class PreCipeEditComponent implements OnInit {
     }
 
     officializePreCipe(precipe: PreCipe){
-        setTimeout(() => {
+        this.startPublishOrUpdate(this.id);
+
+/*        setTimeout(() => {
+            this.model.public_reserved_URL = "http://www.google.it/bceykber6hiub8nbn8@#gdyuevcuhluickjdbuycgdkyhbckuydgcbdbvuykgwlsxvh";
             this.model.ufficiale_riunione = '1';
             this.officializingPreCipe = null;
+            this.status = null;
+        }, 4000);*/
+    }
+
+    /*
+     *
+     * PUBLISH PRE-CIPE
+     *
+     */
+
+    askPublishPreCipe(event: any, modal: any, precipe: PreCipe) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.publishingPreCipe = precipe;
+        modal.open();
+        return false;
+    }
+
+    confirmPublishPreCipe(modal: any) {
+        modal.close();
+        this.publishPreCipe(this.publishingPreCipe);
+        this.status = 'publishing';
+    }
+
+    cancelPublishPreCipe(modal: any) {
+        modal.close();
+        this.publishingPreCipe = null;
+    }
+
+    publishPreCipe(precipe: PreCipe){
+        this.startPublishOrUpdate(this.id);
+
+/*        setTimeout(() => {
+            this.model.public_reserved_URL = "http://www.google.it/bceykber6hiub8nbn8@#gdyuevcuhluickjdbuycgdkyhbckuydgcbdbvuykgwlsxvh";
+            this.model.ufficiale_riunione = '1';
+            this.publishingPreCipe = null;
+            this.status = null;
+        }, 4000);*/
+    }    
+
+    /*
+     *
+     * REMOVE PRE-CIPE
+     *
+     */
+
+    askRemovePreCipe(event: any, modal: any, precipe: PreCipe) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.removingPreCipe = precipe;
+        modal.open();
+        return false;
+    }
+
+    confirmRemovePreCipe(modal: any) {
+        modal.close();
+        this.removePreCipe(this.removingPreCipe);
+        this.status = 'removing';
+    }
+
+    cancelRemovePreCipe(modal: any) {
+        modal.close();
+        this.removingPreCipe = null;
+    }
+
+    removePreCipe(precipe: PreCipe){
+        setTimeout(() => {
+            this.model.public_reserved_URL = null;
+            this.removingPreCipe = null;
+            this.status = null;
         }, 4000);
+    }
+
+
+    /*
+     *
+     * UPDATE PRE-CIPE
+     *
+     */
+
+    askUpdatePreCipe(event: any, modal: any, precipe: PreCipe) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.updatingPreCipe = precipe;
+        modal.open();
+        return false;
+    }
+
+    confirmUpdatePreCipe(modal: any) {
+        modal.close();
+        this.updatePreCipe(this.updatingPreCipe);
+        this.status = 'updating';
+    }
+
+    cancelUpdatePreCipe(modal: any) {
+        modal.close();
+        this.updatingPreCipe = null;
+    }
+
+    updatePreCipe(precipe: PreCipe){
+        this.startPublishOrUpdate(this.id);
     }
 
     private jwt() {

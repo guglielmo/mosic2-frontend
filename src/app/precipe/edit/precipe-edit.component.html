@@ -35,7 +35,7 @@
                                   [(ngModel)]="model.data" #data="ngModel" required></datetime>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <div class="form-group">
                         <label for="ufficiale_riunione"><strong>Stato</strong></label>
                         <div>
@@ -50,26 +50,47 @@
                             </label>&nbsp;&nbsp;
                             <span *ngIf="model.ufficiale_riunione === '0' && officializingPreCipe === null"
                                   class="badge badge-lg badge-danger rel-t-l10">Bozza</span>
-                            <span *ngIf="model.ufficiale_riunione === '1' && officializingPreCipe === null"
-                                  class="badge badge-lg badge-success rel-t-l10">Ufficiale</span>
-                            <span *ngIf="officializingPreCipe !== null" class="rel-t-l10"> <i
-                                    class="loading-spinner"></i> Pubblicazione in corso...</span>
 
-                            <p *ngIf="model.ufficiale_riunione" class="d-inline-block rel-t-l10 ml-4 text-center">
-                                <button class="btn btn-gray mb-xs mx-2" role="button">
-                                    <i class="fa fa-lg fa-refresh"></i> &nbsp; Aggiorna
-                                </button>
-                                <button class="btn btn-gray mb-xs mx-2" role="button">
-                                    <i class="fa fa-lg fa-trash"></i> &nbsp; Rimuovi
-                                </button>
-                            </p>
+                            <span *ngIf="model.ufficiale_riunione === '1' && status === null">
+                                <span class="d-inline-block text-center rel-t-m4 float-right">
+
+                                    <button *ngIf="model.public_reserved_URL"
+                                            class="btn btn-secondary ml-2 btn-xs" role="button"
+                                            (click)="askUpdatePreCipe($event, updatePreCipeModal, model)"
+                                    > <i class="fa fa-lg fa-refresh"></i> &nbsp; Aggiorna </button>
+
+                                    <button *ngIf="!model.public_reserved_URL"
+                                            class="btn btn-secondary ml-2 btn-xs" role="button"
+                                            (click)="askPublishPreCipe($event, publishPreCipeModal, model)"
+                                    > <i class="fa fa-lg fa-repeat"></i> &nbsp; Pubblica </button>
+
+
+                                    <button *ngIf="model.public_reserved_URL"
+                                            class="btn btn-secondary ml-2 btn-xs" role="button"
+                                            (click)="askRemovePreCipe($event, removePreCipeModal, model)"
+                                    > <i class="fa fa-lg fa-trash"></i> &nbsp; Rimuovi </button>
+                                </span>
+                                <span class="badge badge-lg badge-success rel-t-l10">Ufficiale</span>
+                            </span>
+                            <span *ngIf="status === 'publishing'" class="rel-t-l10"> <i
+                                    class="loading-spinner"></i> Pubblicazione in corso...</span>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="form-group">
-                        <label for="ufficiale_riunione"><strong>URL area pubblica riservata</strong></label>
-                        <div><a href="http://www.google.it" target="_blank">http://google.it</a></div>
+                        <label for="ufficiale_riunione"><strong>Indirizzo pubblico riservato</strong></label>
+
+                        <div *ngIf="model.public_reserved_URL" class="rel-t-m4 mb-3">
+                            <a href="{{model.public_reserved_URL}}" target="_blank" class="dont-break-out">{{model.public_reserved_URL}}</a>
+                        </div>
+                        <div *ngIf="!model.public_reserved_URL" class="rel-t-m4 mb-3">
+                            N/D
+                        </div>
+
+                        <div *ngIf="status === 'updating'"> <i class="loading-spinner"></i> Aggiornamento in corso...</div>
+                        <div *ngIf="status === 'removing'"> <i class="loading-spinner"></i> Rimozione in corso...</div>
+
                     </div>
                 </div>
             </div>
@@ -82,44 +103,50 @@
                 <strong>Ordine del giorno</strong>
             </ng-template>
 
-            <div class="clearfix mb-lg">
-
-                <div class="btn-group float-right">
-                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="compact" name="viewtype"
-                           [tooltip]="'Vista compatta'" placement="top">
-                        <i class="fa fa-lg fa-list"></i>
-                    </label>
-                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="documents" name="viewtype"
-                           [tooltip]="'Vista documenti'" placement="top">
-                        <i class="fa fa-lg fa-th-list"></i>
-                    </label>
-                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="detail" name="viewtype"
-                           [tooltip]="'Vista&nbsp;dettaglio'" placement="top">
-                        <i class="fa fa-lg fa-list-alt"></i>
-                    </label>
-                </div>
-
-
-                <button type="button" class="btn btn-primary"
-                        (click)="addPuntoOdg()">
-                    <i class="fa fa-lg fa-plus-circle"></i> Nuovo punto o.d.g.
-                </button>
-
-            </div>
+            <table class="table" stickthead>
+                <thead>
+                <tr>
+                    <th>
+                        <button type="button" class="btn btn-outline-primary rel-t-l4" href="#page-bottom" pageScroll [pageScrollEasing]="myEasing"
+                                (click)="createPuntoOdg()">
+                            <strong><i class="fa fa-lg fa-plus-square-o mr-2"></i> Nuovo punto o.d.g.</strong>
+                        </button>
+                    </th>
+                    <th>
+                        <div class="text-right">
+                            <div class="btn-group">
+                                <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="compact" name="viewtype"
+                                       [tooltip]="'Vista compatta'" placement="top">
+                                    <i class="fa fa-lg fa-list"></i>
+                                </label>
+                                <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="documents" name="viewtype"
+                                       [tooltip]="'Vista documenti'" placement="top">
+                                    <i class="fa fa-lg fa-th-list"></i>
+                                </label>
+                                <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="detail" name="viewtype"
+                                       [tooltip]="'Vista&nbsp;dettaglio'" placement="top">
+                                    <i class="fa fa-lg fa-list-alt"></i>
+                                </label>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+            </table>
 
             <ul [dragula]='"precipe_odg"' [dragulaModel]='model.precipe_odg' class="list-group">
                 <li *ngFor="let item of model.precipe_odg" class="list-group-item">
-                    <precipe-odg-item [item]="item" [viewtype]="viewtype"></precipe-odg-item>
+                    <precipe-odg-item [item]="item" [viewtype]="viewtype" (deleteitem)="askDeletePuntoOdg($event, deletePuntoOdgModal)"></precipe-odg-item>
                 </li>
             </ul>
 
             <div class="clearfix mt-lg">
-                <button type="button" class="btn btn-secondary float-right"
-                        (click)="addPuntoOdg()">
-                    <i class="fa fa-lg fa-plus-circle"></i> Nuovo punto o.d.g.
+                <button type="button" class="btn btn-outline-primary" href="#page-bottom" pageScroll [pageScrollEasing]="myEasing"
+                        (click)="createPuntoOdg()">
+                    <strong><i class="fa fa-lg fa-plus-square-o mr-2"></i> Nuovo punto o.d.g.</strong>
                 </button>
             </div>
-
+            <div id="page-bottom"></div>
         </tab>
         <tab>
             <ng-template tabHeading>
@@ -152,6 +179,69 @@
         <h4 class="mt-sm">
             I punti all'o.d.g. e documenti allegati saranno pubblicati nell'area riservata.<br/><br/>
             A pubblicazione completa, in questa scheda sarà disponibile il collegamento per visualizzarli.
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>
+
+<modal #publishPreCipeModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true"
+       (onSubmit)="confirmPublishPreCipe(publishPreCipeModal)"
+       (onCancel)="cancelPublishPreCipe(publishPreCipeModal)">
+    <modal-header>
+        <h4 class="modal-title fw-bold mt"><i class="fa fa-warning"></i> Confermi la pubblicazione del Pre-CIPE ?</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="mt-sm">
+            I punti all'o.d.g. e documenti allegati saranno pubblicati nell'area riservata.<br/><br/>
+            A pubblicazione completa, in questa scheda sarà disponibile il collegamento per visualizzarli.
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>
+
+<modal #removePreCipeModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true"
+       (onSubmit)="confirmRemovePreCipe(removePreCipeModal)"
+       (onCancel)="cancelRemovePreCipe(removePreCipeModal)">
+    <modal-header>
+        <h4 class="modal-title fw-bold mt"><i class="fa fa-warning"></i> Confermi la rimozione del Pre-CIPE dall'area pubblica riservata ?</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="mt-sm">
+            I punti all'o.d.g. e documenti allegati saranno rimossi dall'area riservata.<br/><br/>
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>
+
+<modal #updatePreCipeModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true"
+       (onSubmit)="confirmUpdatePreCipe(updatePreCipeModal)"
+       (onCancel)="cancelUpdatePreCipe(updatePreCipeModal)">
+    <modal-header>
+        <h4 class="modal-title fw-bold mt"><i class="fa fa-warning"></i> Confermi l'aggiornamento del Pre-CIPE ?</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="mt-sm">
+            I punti all'o.d.g. e documenti allegati saranno aggiornati nell'area riservata.<br/><br/>
+            Ad aggiornamento completo, in questa scheda sarà nuovamente disponibile il collegamento per visualizzarli.
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>
+
+<modal #deletePuntoOdgModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true"
+       (onSubmit)="confirmDeletePuntoOdg(deletePuntoOdgModal)"
+       (onCancel)="cancelDeletePuntoOdg(deletePuntoOdgModal)">
+    <modal-header>
+        <h4 class="modal-title fw-bold mt"><i class="fa fa-warning"></i> Confermi la cancellazione del punto all'o.d.g.?</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="mt-sm">
+            Il punto {{deletingPuntoOdg?.ordine}} - {{deletingPuntoOdg?.denominazione}}
+            sarà rimosso dall'o.d.g.
         </h4>
     </modal-content>
     <modal-footer>

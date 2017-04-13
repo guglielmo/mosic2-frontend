@@ -1,11 +1,11 @@
 <form name="form" [formGroup]="odgItemForm">
 <div class="row hide-child-nohover-or-noactive" [ngClass]="{ 'active': edit }">
-    <div class="col-md-1">
+    <div class="col-md-2">
         <div class="form-group" [ngClass]="{ 'has-danger': hasErrors && !odgItemForm.controls['ordine'].valid}">
             <!-- VIEW -->
             <div *ngIf="!edit">
-                <div>
-                    <i class="fa fa-sort fa-lg float-left rel-t-m10 visible-parent-hover-or-active mr-2"> </i>
+                <div class="clearfix">
+                    <div class="float-left rel-t-m5 visible-parent-hover-or-active mr-2"><i class="fa fa-sort fa-lg"> </i></div>
                     <h2 class="ml-2"><strong>{{item.ordine}}</strong>&nbsp;</h2>
                 </div>
                 <h6 class="ml-1">
@@ -20,7 +20,11 @@
                    placeholder="..."
                    [disableCond]="!edit"
                    [formControl]="odgItemForm.controls['ordine']">
-            <div *ngIf="edit">
+
+
+            <!-- RISULTANZA -->
+
+            <div *ngIf="edit" class="mt-1">
                 <label class="sr-only"><strong>Risultanza</strong></label>
                 <div class="radio abc-radio abc-radio-default">
                     <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_nd[{{item.id}}]"
@@ -52,32 +56,48 @@
                         <span [ngClass]="{ 'badge badge-lg badge-success': item.risultanza === 1 }">Positivo</span>
                     </label>
                 </div>
+                <br/>
             </div>
+
+            <!-- UFFICIO -->
+            <div class="form-group" [ngClass]="{ 'has-danger': hasErrors && !odgItemForm.controls['id_uffici'].valid}">
+
+                <!-- VIEW/EDIT -->
+                <div>
+                     <span class="badge badge-lg badge-default"
+                           title="{{ item.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'text' }}"
+                     >{{ item.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' }}</span>
+                </div>
+
+            </div>
+
         </div>
     </div>
-    <div class="col-md-11">
-        <div class="clearfix mb-lg">
+    <div class="col-md-10">
 
-            <div class="btn-group float-md-right visible-parent-hover-or-active ml-1" dropdown>
-                <button type="button" class="btn btn-sm" (click)="toggleEdit(odgItemForm)"
-                        [ngClass]="{'btn-secondary': !edit, 'btn-primary': edit}">
+        <div class="clearfix mb-3">
+            <div class="float-md-right visible-parent-hover-or-active ml-2">
+                <button type="button" class="btn btn-xs btn-outline-danger" (click)="deleteOdg()">
+                    <i class="fa fa-trash fa-lg"> </i> Elimina
+                </button>
+            </div>
+            <div class="float-right visible-parent-hover-or-active ml-2">
+                <button type="button" class="btn btn-xs" (click)="toggleEdit(odgItemForm)"
+                        [ngClass]="{'btn-outline-primary': !edit, 'btn-primary': edit}">
                     <span *ngIf="!edit"><i class="fa fa-edit fa-lg"> </i> Modifica</span>
                     <span *ngIf="edit"><i class="fa fa-edit fa-lg"> </i> Fine</span>
                 </button>
             </div>
-
-            <div>
-                <h5 class="fw-semi-bold mb-lg">
-                    {{item.denominazione}}
-                </h5>
-            </div>
+            <h5 class="fw-semi-bold mb-lg">
+                {{item.denominazione}}
+            </h5>
         </div>
 
         <div>
             <accordion [closeOthers]="false" class="mb-lg show" id="precipe_odg_allegati[{{item.id}}]">
                 <accordion-group #accordionGroupDefinition
                                  [panelClass]="'accordion-info'"
-                                 [isOpen]="edit || isNew"
+                                 [isOpen]="edit || isNew  || viewtype == 'detail'"
                                  *ngIf="edit || viewtype == 'detail'">
                     <div accordion-heading>
                         <i class="fa fa-files-o fa-lg"></i> &nbsp; <strong>Definizione</strong>
@@ -101,42 +121,6 @@
                                                   [formControl]="odgItemForm.controls['denominazione']" autosize></textarea>
 
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- UFFICIO / RISULTANZA-->
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group" [ngClass]="{ 'has-danger': hasErrors && !odgItemForm.controls['id_uffici'].valid}">
-                                        <label for="id_uffici[{{item.id}}]"><strong>Ufficio di competenza</strong></label>
-
-                                        <!-- EDIT -->
-                                        <div *ngIf="edit" class="select2-H-keeper">
-                                            <select2
-                                                    id="id_uffici[{{item.id}}]"
-                                                    class="full-width-select"
-                                                    [options]="select2Options"
-                                                    [value]="item.id_uffici"
-                                                    (valueChanged)="select2Changed($event, item, 'id_uffici')"
-                                                    cssImport="false"
-                                                    [data]="uffici$ | async"></select2>
-
-                                            <!--todo: ng2-select2 no form control value accessor workaround-->
-                                            <input type="hidden" [formControl]="odgItemForm.controls['id_uffici']" [disableCond]="!edit">
-                                        </div>
-
-                                        <!-- VIEW -->
-                                        <div *ngIf="!edit">
-                             <textarea disabled="disabled" readonly
-                                       rows="1" class="form-control single-row"
-                                       placeholder="Click su 'Modifica' per selezionare..."
-                                       title="{{ item.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'text' }}"
-                             >{{ item.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'text' }}</textarea>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
                                 </div>
                             </div>
 
@@ -190,7 +174,7 @@
                                             <input type="hidden" [formControl]="odgItemForm.controls['id_fascicoli']" [disableCond]="!edit">
                                         </div>
                                         <!-- EDIT + NO TITOLARI -->
-                                        <div *ngIf="edit  && item.id_titolari === null">
+                                        <div *ngIf="edit && item.id_titolari === null">
                                         <textarea disabled="disabled" readonly rows="1" class="form-control single-row"
                                                   placeholder="Seleziona prima un titolario..."></textarea>
                                         </div>
@@ -230,7 +214,7 @@
                                         </div>
 
                                         <!-- EDIT + NO FASCICOLI -->
-                                        <div *ngIf="edit  && item.id_fascicoli === null">
+                                        <div *ngIf="edit && item.id_fascicoli === null">
                                         <textarea disabled="disabled" readonly rows="1" class="form-control"
                                                   placeholder="Seleziona prima un fascicolo..." autosize></textarea>
                                         </div>
@@ -271,8 +255,8 @@
                 </accordion-group>
                 <accordion-group #accordionGroupDocs
                                  [panelClass]="'accordion-' + allegatiStatus(item)"
-                                 [isOpen]="edit || isNew"
-                                 *ngIf="edit || (viewtype == 'detail' || viewtype=='documents')">
+                                 [isOpen]="edit || isNew || viewtype=='documents'  || viewtype == 'detail'"
+                                 *ngIf="edit || viewtype == 'detail' || viewtype=='documents'">
                     <div accordion-heading>
                         <i class="fa float-right"
                            [ngClass]="{'fa-angle-down': accordionGroupDocs?.isOpen, 'fa-angle-right': !accordionGroupDocs?.isOpen}"></i>
@@ -319,6 +303,7 @@
                 </accordion-group>
             </accordion>
         </div>
+
     </div>
 </div>
 </form>

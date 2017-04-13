@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, Input, Output, OnInit, EventEmitter} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Observable} from "rxjs/Observable";
 
@@ -17,6 +17,7 @@ import {Fascicoli, PreCipeOdg, Registri, Titolari, Uffici} from "../../_models/i
 export class PreCipeOdgItemComponent implements OnInit {
     @Input() item: PreCipeOdg;
     @Input() viewtype: any;
+    @Output() deleteitem:EventEmitter<number> = new EventEmitter();
 
     public isNew;
     public edit = false;
@@ -80,6 +81,10 @@ export class PreCipeOdgItemComponent implements OnInit {
             this.edit = !this.edit;
         }
 
+    }
+
+    deleteOdg(){
+            this.deleteitem.emit(this.item.id);
     }
 
     toggleAllegato(item:any, allegato_id: number) {
