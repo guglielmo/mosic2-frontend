@@ -153,7 +153,7 @@ export class PreCipeOdgItemComponent implements OnInit {
         switch(name) {
             case 'id_uffici':
                 this.select2Debounce = true;
-                item.id_uffici = e.value;
+                item.id_uffici = Array.isArray(e.value) ? e.value.join(',') : e.value ;
 
                 // todo: ng2-select2 doesn't implement formControl accessors, to overcome this, here we're using a shadow copy
                 // todo: may be removed when https://github.com/NejcZdovc/ng2-select2/issues/13 will be fixed

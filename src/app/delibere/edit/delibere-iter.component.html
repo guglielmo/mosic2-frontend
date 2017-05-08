@@ -1,0 +1,533 @@
+<div class="row">
+    <div class="col-12">
+        <ul class="iter_stepline">
+            <li id="A_segretariato">
+                <div class="iter_step_title"><span>Acquisizione Segretariato</span></div>
+                <div class="iter_step_bullet" [ngClass]="{ 'green' :  model.id_segretariato && model.data_consegna > 0 }"></div>
+                <div class="iter_step_box">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="id_segretariato"><strong>Firmatari</strong></label>
+                                <div class="select2-H-keeper">
+                                    <select2 id="id_segretariato"
+                                             class="full-width-select"
+                                             [options]="select2OptionsMulti"
+                                             [value]="model.id_segretariato"
+                                             [cssImport]="false"
+                                             (valueChanged)="select2Changed($event,'id_segretariato')"
+                                             [data]="firmatari$ | async | firmatariDataFilter : 4 : 0"></select2>
+                                </div>
+                                {{model.id_segretariato}}
+                            </div>
+                        </div>
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="data_consegna"><strong>Data consegna</strong></label>
+                                <datetime id="data_consegna"
+                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [timepicker]="false"
+                                          [(ngModel)]="model.data_consegna" #data_consegna="ngModel" required></datetime>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label for="Nota_Consegna"><strong>Nota di consegna</strong></label>
+                                <textarea id="Nota_Consegna" name="Nota_Consegna"
+                                          rows="1" class="autogrow form-control transition-height"
+                                          placeholder="Scrivi la nota di consegna..."
+                                          [(ngModel)]="model.Nota_Consegna" #argomento="ngModel" autosize></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="A_capo_dipartimento">
+                <div class="iter_step_title"><span>Capo Dipartimento</span></div>
+                <div class="iter_step_bullet" [ngClass]="{ 'green' :  model.data_direttore_ritorno > 0 }"></div>
+                <div class="iter_step_box">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="id_direttore"><strong>Firmatario</strong></label>
+                                <div class="select2-H-keeper">
+                                    <select2 id="id_direttore"
+                                             class="full-width-select"
+                                             [options]="select2Options"
+                                             [value]="model.id_direttore"
+                                             [cssImport]="false"
+                                             (valueChanged)="select2Changed($event,'id_direttore')"
+                                             [data]="firmatari$ | async | firmatariDataFilter : 3 : 0"></select2>
+                                </div>
+                                {{model.id_direttore}}
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="data_direttore_invio"><strong>Data invio</strong></label>
+                                <div class="float-right"><br><br><i class="fa fa-lg fa-arrow-right text-muted float-right"></i></div>
+                                <datetime id="data_direttore_invio"
+                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [timepicker]="false"
+                                          [(ngModel)]="model.data_direttore_invio" #data_direttore_invio="ngModel" required></datetime>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="data_direttore_ritorno"><strong>Data ritorno</strong></label>
+                                <datetime id="data_direttore_ritorno"
+                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [timepicker]="false"
+                                          [(ngModel)]="model.data_direttore_ritorno" #data_direttore_ritorno="ngModel" required></datetime>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label for="note_direttore"><strong>Note Capo Dipartimento</strong></label>
+                                <textarea id="note_direttore" name="note_direttore"
+                                          rows="1" class="autogrow form-control transition-height"
+                                          placeholder="Scrivi le note del direttore..."
+                                          [(ngModel)]="model.note_direttore" #note_direttore="ngModel" autosize></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="A_MEF">
+                <div class="iter_step_title"><span>M.E.F.</span></div>
+                <div class="iter_step_bullet" [ngClass]="{ 'green' :  model.data_mef_ritorno > 0 }"></div>
+                <div class="iter_step_box">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group abc-checkbox abc-checkbox-primary rel-t-m20">
+                                <input id="invio_mef" name="invio_mef" type="checkbox"
+                                       [checked]="model.invio_mef == 1"
+                                       (change)="model.invio_mef = $event.target.checked ? 1 : 0"
+                                >
+                                <label for="invio_mef">
+                                    Invio M.E.F.
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="data_mef_pec"><strong>Data invio</strong></label>
+                                <div class="float-right"><br><br><i class="fa fa-lg fa-arrow-right text-muted float-right"></i></div>
+                                <datetime id="data_mef_pec"
+                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [timepicker]="false"
+                                          [(ngModel)]="model.data_mef_pec" #data_mef_pec="ngModel" required></datetime>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="data_mef_ritorno"><strong>Data ritorno</strong></label>
+                                <datetime id="data_mef_ritorno"
+                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [timepicker]="false"
+                                          [(ngModel)]="model.data_mef_ritorno" #data_mef_ritorno="ngModel" required></datetime>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label for="note_mef"><strong>Note M.E.F.</strong></label>
+                                <textarea id="note_mef" name="note_mef"
+                                          rows="1" class="autogrow form-control transition-height"
+                                          placeholder="Scrivi le note del M.E.F. ..."
+                                          [(ngModel)]="model.note_mef" #note_mef="ngModel" autosize></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <delibere-upload [type]="'MEF'" [allegati]="model.allegati_MEF" [allowUpload]="allowUpload"></delibere-upload>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="A_segretario">
+                <div class="iter_step_title"><span>Segretario CIPE</span></div>
+                <div class="iter_step_bullet" [ngClass]="{ 'green' :  model.data_segretario_ritorno > 0 }"></div>
+                <div class="iter_step_box">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="id_segretario"><strong>Firmatario</strong></label>
+                                <div class="select2-H-keeper">
+                                    <select2 id="id_segretario"
+                                             class="full-width-select"
+                                             [options]="select2Options"
+                                             [value]="model.id_segretario"
+                                             [cssImport]="false"
+                                             (valueChanged)="select2Changed($event,'Codice_Segretario')"
+                                             [data]="firmatari$ | async | firmatariDataFilter : 2 : 0"></select2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="data_segretario_invio"><strong>Data invio</strong></label>
+                                <div class="float-right"><br><br><i class="fa fa-lg fa-arrow-right text-muted float-right"></i></div>
+                                <datetime id="data_segretario_invio"
+                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [timepicker]="false"
+                                          [(ngModel)]="model.data_segretario_invio" #data_segretario_invio="ngModel" required></datetime>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="data_segretario_ritorno"><strong>Data ritorno</strong></label>
+                                <datetime id="data_segretario_ritorno"
+                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [timepicker]="false"
+                                          [(ngModel)]="model.data_segretario_ritorno" #data_segretario_ritorno="ngModel" required></datetime>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label for="note_segretario"><strong>Note Segretario</strong></label>
+                                <textarea id="note_segretario" name="note_segretario"
+                                          rows="1" class="autogrow form-control transition-height"
+                                          placeholder="Scrivi le note del Segretario ..."
+                                          [(ngModel)]="model.note_segretario" #note_segretario="ngModel" autosize></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="A_presidente">
+                <div class="iter_step_title"><span>Presidente CIPE</span></div>
+                <div class="iter_step_bullet" [ngClass]="{ 'green' :  model.data_presidente_ritorno > 0 }"></div>
+                <div class="iter_step_box">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="id_presidente"><strong>Firmatario</strong></label>
+                                <div class="select2-H-keeper">
+                                    <select2 id="id_presidente"
+                                             class="full-width-select"
+                                             [options]="select2Options"
+                                             [value]="model.id_presidente"
+                                             [cssImport]="false"
+                                             (valueChanged)="select2Changed($event,'Codice_Presidente')"
+                                             [data]="firmatari$ | async | firmatariDataFilter : 1 : 0"></select2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="data_presidente_invio"><strong>Data invio</strong></label>
+                                <div class="float-right"><br><br><i class="fa fa-lg fa-arrow-right text-muted float-right"></i></div>
+                                <datetime id="data_presidente_invio"
+                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [timepicker]="false"
+                                          [(ngModel)]="model.data_presidente_invio" #data_presidente_invio="ngModel" required></datetime>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="data_presidente_ritorno"><strong>Data ritorno</strong></label>
+                                <datetime id="data_presidente_ritorno"
+                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [timepicker]="false"
+                                          [(ngModel)]="model.data_presidente_ritorno" #data_presidente_ritorno="ngModel" required></datetime>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label for="note_presidente"><strong>Note Presidente</strong></label>
+                                <textarea id="note_presidente" name="note_presidente"
+                                          rows="1" class="autogrow form-control transition-height"
+                                          placeholder="Scrivi le note del Presidente ..."
+                                          [(ngModel)]="model.note_presidente" #note_presidente="ngModel" autosize></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="A_CC">
+                <div class="iter_step_title"><span>Corte dei Conti</span></div>
+                <div class="iter_step_bullet" [ngClass]="{ 'green' :  model.data_registrazione_cc > 0 }"></div>
+                <div class="iter_step_box">
+                    <h5><span class="fw-semi-bold">Invio alla Corte dei Conti</span></h5>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-3">
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="data_invio_cc"><strong>Data invio</strong></label>
+                                <datetime id="data_invio_cc"
+                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [timepicker]="false"
+                                          [(ngModel)]="model.data_invio_cc" #data_invio_cc="ngModel" required></datetime>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="numero_cc"><strong>Protocollo invio</strong></label>
+                                <input id="numero_cc" name="numero_cc"
+                                       type="text" class="form-control"
+                                       placeholder="numero del protocollo"
+                                       [(ngModel)]="model.numero_cc" #numero_cc="ngModel">
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label for="note_cc"><strong>Note Corte dei Conti</strong></label>
+                                <textarea id="note_cc" name="note_cc"
+                                          rows="1" class="autogrow form-control transition-height"
+                                          placeholder="Scrivi le note della Corte dei Conti ..."
+                                          [(ngModel)]="model.note_cc" #note_cc="ngModel" autosize></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <delibere-upload [type]="'CC'" [allegati]="model.allegati_CC" [allowUpload]="allowUpload"></delibere-upload>
+                        </div>
+                    </div>
+                </div>
+                <div class="iter_divider_box text-center">
+                    <i class="fa fa-lg fa-arrow-down text-muted"></i>
+                </div>
+                <div class="item_step_box" *ngFor="let rilievo of model.rilievi_CC">
+                    <delibere-rilievo [model]="rilievo"></delibere-rilievo>
+                </div>
+                <div class="iter_divider_box text-center">
+                    <button type="button" class="btn btn-outline-primary rel-t-l4 clickable"
+                            (click)="createRilievo_CC($event);">
+                        <strong><i class="fa fa-lg fa-plus-square-o mr-2"></i> Nuovo rilievo della Corte dei Conti</strong>
+                    </button>
+                </div>
+                <div class="iter_step_box">
+                    <h5><span class="fw-semi-bold">Registrazione della Corte dei Conti</span></h5>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="tipo_registrazione_cc"><strong>Tipo registrazione</strong></label>
+                                <div class="select2-H-keeper">
+                                    <select2 id="tipo_registrazione_cc"
+                                             class="full-width-select"
+                                             [options]="select2Options"
+                                             [value]="model.tipo_registrazione_cc"
+                                             [cssImport]="false"
+                                             (valueChanged)="select2Changed($event,'id_situazione')"
+                                             [data]="tipo_registrazione_cc"></select2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="data_registrazione_cc"><strong>Data registrazione</strong></label>
+                                <datetime id="data_registrazione_cc"
+                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [timepicker]="false"
+                                          [(ngModel)]="model.data_registrazione_cc" #data_registrazione_cc="ngModel" required></datetime>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-1">
+                            <div class="form-group">
+                                <label for="id_registro_cc"><strong>Registro</strong></label>
+                                <input id="id_registro_cc" name="numero_cc"
+                                       type="text" class="form-control"
+                                       placeholder="numero del protocollo"
+                                       [(ngModel)]="model.id_registro_cc" #id_registro_cc="ngModel">
+                            </div>
+                        </div>
+                        <div class="col-lg-1">
+                            <div class="form-group">
+                                <label for="foglio_cc"><strong>Foglio</strong></label>
+                                <input id="foglio_cc" name="numero_cc"
+                                       type="text" class="form-control"
+                                       placeholder="numero del protocollo"
+                                       [(ngModel)]="model.foglio_cc" #foglio_cc="ngModel">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="A_parlamento">
+                <div class="iter_step_title"><span>Parlamento</span></div>
+                <div class="iter_step_bullet" [ngClass]="{ 'green' :  model.data_invio_p > 0 }"></div>
+                <div class="iter_step_box">
+                    <div class="row">
+                        <div class="col-lg-3">
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="data_invio_p"><strong>Data invio</strong></label>
+                                <datetime id="data_invio_p"
+                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [timepicker]="false"
+                                          [(ngModel)]="model.data_invio_p" #data_invio_p="ngModel" required></datetime>
+                            </div>
+                        </div>
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label for="note_p"><strong>Note Parlamento</strong></label>
+                                <textarea id="note_p" name="note_p"
+                                          rows="1" class="autogrow form-control transition-height"
+                                          placeholder="Scrivi le note del Parlamento ..."
+                                          [(ngModel)]="model.note_p" #note_p="ngModel" autosize></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="A_GU">
+                <div class="iter_step_title"><span>Gazetta Ufficiale</span></div>
+                <div class="iter_step_bullet" [ngClass]="{ 'green' :  model.data_gu > 0 }"></div>
+                <div class="iter_step_box">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group abc-checkbox abc-checkbox-primary rel-t-m20">
+                                <input id="pubblicazione_gu" name="pubblicazione_gu" type="checkbox"
+                                       [checked]="model.pubblicazione_gu == 1"
+                                       (change)="model.pubblicazione_gu = $event.target.checked ? 1 : 0"
+                                >
+                                <label for="pubblicazione_gu">
+                                    Pubblicazione G.U.
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="data_invio_gu"><strong>Data invio</strong></label>
+                                <datetime id="data_invio_gu"
+                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [timepicker]="false"
+                                          [(ngModel)]="model.data_invio_gu" #data_invio_gu="ngModel" required></datetime>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <label for="numero_invio_gu"><strong>Numero Protocollo</strong></label>
+                                <input id="numero_invio_gu" name="numero_invio_gu"
+                                       type="text" class="form-control"
+                                       placeholder="numero del protocollo"
+                                       [(ngModel)]="model.numero_invio_gu" #numero_invio_gu="ngModel">
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label for="note_gu"><strong>Note Gazetta Ufficiale</strong></label>
+                                <textarea id="note_gu" name="note_gu"
+                                          rows="1" class="autogrow form-control transition-height"
+                                          placeholder="Scrivi le note del Parlamento ..."
+                                          [(ngModel)]="model.note_gu" #note_gu="ngModel" autosize></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <delibere-upload [type]="'GU'" [allegati]="model.allegati_GU" [allowUpload]="allowUpload"></delibere-upload>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h5><span class="fw-semi-bold">Pubblicazione</span></h5>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="mt-1">
+                                        <label>Tipo</label>
+                                        <div class="radio abc-radio abc-radio-success">
+                                            <input type="radio" name="tipo_gu" id="tipo_gu_ordinario"
+                                                   [value]="0"
+                                                   (click)="model.tipo_gu = 0"
+                                                   [checked]="model.tipo_gu === 0">
+                                            <label for="tipo_gu_ordinario">
+                                                <span [ngClass]="{ 'badge badge-lg badge-success': model.tipo_gu === 0 }">Ordinario</span>
+                                            </label>
+                                        </div>
+                                        <div class="radio abc-radio abc-radio-success">
+                                            <input type="radio" name="tipo_gu" id="tipo_gu_supplemento"
+                                                   [value]="1"
+                                                   (click)="model.tipo_gu = 1"
+                                                   [checked]="model.tipo_gu === 1">
+                                            <label for="tipo_gu_supplemento">
+                                                <span [ngClass]="{ 'badge badge-lg badge-success': model.tipo_gu === 1 }">Supplemento</span>
+                                            </label>
+                                        </div>
+                                        <br/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="numero_gu">Numero</label>
+                                        <input id="numero_gu" name="numero_gu"
+                                               type="text" class="form-control"
+                                               placeholder="numero del protocollo"
+                                               [(ngModel)]="model.numero_gu" #numero_gu="ngModel">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="data_gu">Data pubblicazione</label>
+                                        <datetime id="data_gu"
+                                                  [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                                  [timepicker]="false"
+                                                  [(ngModel)]="model.data_gu" #data_gu="ngModel" required></datetime>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <h5><span class="fw-semi-bold">Errata Corrige</span></h5>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="numero_ec_gu">Numero</label>
+                                        <input id="numero_ec_gu" name="numero_gu"
+                                               type="text" class="form-control"
+                                               placeholder="numero del protocollo"
+                                               [(ngModel)]="model.numero_ec_gu" #numero_ec_gu="ngModel">
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="form-group">
+                                        <label for="data_ec_gu">Data pubblicazione</label>
+                                        <datetime id="data_ec_gu"
+                                                  [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                                  [timepicker]="false"
+                                                  [(ngModel)]="model.data_ec_gu" #data_ec_gu="ngModel" required></datetime>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <h5><span class="fw-semi-bold">Comunicato</span></h5>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="numero_co_gu">Numero</label>
+                                        <input id="numero_co_gu" name="numero_gu"
+                                               type="text" class="form-control"
+                                               placeholder="numero del protocollo"
+                                               [(ngModel)]="model.numero_co_gu" #numero_co_gu="ngModel">
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="form-group">
+                                        <label for="data_co_gu">Data comunicato</label>
+                                        <datetime id="data_co_gu"
+                                                  [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                                  [timepicker]="false"
+                                                  [(ngModel)]="model.data_co_gu" #data_co_gu="ngModel" required></datetime>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

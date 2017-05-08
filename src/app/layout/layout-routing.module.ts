@@ -13,11 +13,13 @@ export const routes: Routes = [
         { path: 'registri', loadChildren: '../registri/registri.module#RegistriModule', canActivate: [AuthGuard] },
         { path: 'precipe', loadChildren: '../precipe/precipe.module#PreCipeModule', canActivate: [AuthGuard] },
         { path: 'cipe', loadChildren: '../cipe/cipe.module#CipeModule', canActivate: [AuthGuard] },
+        { path: 'delibere', loadChildren: '../delibere/delibere.module#DelibereModule', canActivate: [AuthGuard] },
         { path: 'users', loadChildren: '../users/users.module#UsersModule', canActivate: [AuthGuard] },
         { path: 'mittenti', loadChildren: '../servizio/mittenti.module#MittentiModule', canActivate: [AuthGuard] },
         { path: 'amministrazioni', loadChildren: '../servizio/amministrazioni.module#AmministrazioniModule', canActivate: [AuthGuard] },
         { path: 'uffici', loadChildren: '../servizio/uffici.module#UfficiModule', canActivate: [AuthGuard] },
-        { path: 'tags', loadChildren: '../servizio/tags.module#TagsModule', canActivate: [AuthGuard] }
+        { path: 'tags', loadChildren: '../servizio/tags.module#TagsModule', canActivate: [AuthGuard] },
+        { path: 'firmatari', loadChildren: '../servizio/firmatari.module#FirmatariModule', canActivate: [AuthGuard] }
     ]}
 ];
 

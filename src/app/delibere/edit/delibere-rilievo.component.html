@@ -1,0 +1,107 @@
+<div class="iter_step_box">
+    <h5><span class="fw-semi-bold">Rilievo N. </span></h5>
+    <hr>
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="mt-1">
+                <label><br/><strong>Tipo</strong></label>
+                <div class="radio abc-radio abc-radio-warning">
+                    <input type="radio" name="tipo_documento[{{model.id}}]" id="tipo_documento_cc_rilievo[{{model.id}}]"
+                           [value]="1"
+                           (click)="model.tipo_documento = 1"
+                           [checked]="model.tipo_documento === 1">
+                    <label for="tipo_documento_cc_rilievo[{{model.id}}]">
+                        <span [ngClass]="{ 'badge badge-lg badge-warning': model.tipo_documento === 1 }">Rilievo</span>
+                    </label>
+                </div>
+                <div class="radio abc-radio abc-radio-warning">
+                    <input type="radio" name="tipo_documento[{{model.id}}]" id="tipo_documento_cc_restituzione[{{model.id}}]"
+                           [value]="2"
+                           (click)="model.tipo_documento = 2"
+                           [checked]="model.tipo_documento === 2">
+                    <label for="tipo_documento_cc_restituzione[{{model.id}}]">
+                        <span [ngClass]="{ 'badge badge-lg badge-warning': model.tipo_documento === 2 }">Restituzione</span>
+                    </label>
+                </div>
+                <div class="radio abc-radio abc-radio-warning">
+                    <input type="radio" name="tipo_documento[{{model.id}}]" id="tipo_documento_cc_vuoto[{{model.id}}]"
+                           [value]="3"
+                           (click)="model.tipo_documento = 3"
+                           [checked]="model.tipo_documento === 3">
+                    <label for="tipo_documento_cc_vuoto[{{model.id}}]">
+                        <span [ngClass]="{ 'badge badge-lg badge-warning': model.tipo_documento === 3 }">A vuoto</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1">
+            <div class="form-group">
+                <label for="giorni_rilievo"><strong>Giorni risposta</strong></label>
+                <input id="giorni_rilievo" name="giorni_rilievo"
+                       type="text" class="form-control"
+                       placeholder="numero giorni"
+                       [(ngModel)]="model.giorni_rilievo" #giorni_rilievo="ngModel">
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="numero_rilievo"><br><strong>Numero Rilievo</strong></label>
+                <input id="numero_rilievo" name="numero_rilievo"
+                       type="text" class="form-control"
+                       placeholder="numero del protocollo"
+                       [(ngModel)]="model.numero_rilievo" #numero_rilievo="ngModel">
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="data_rilievo"><br><strong>Data Rilievo</strong></label>
+                <datetime id="data_rilievo"
+                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                          [timepicker]="false"
+                          [(ngModel)]="model.data_rilievo" #data_rilievo="ngModel" required></datetime>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="form-group">
+                <label for="note_rilievo"><br><strong>Note su rilievo</strong></label>
+                <textarea id="note_rilievo" name="note_cc"
+                          rows="1" class="autogrow form-control transition-height"
+                          placeholder="Scrivi le note sul rilievo ..."
+                          [(ngModel)]="model.note_rilievo" #note_rilievo="ngModel" autosize></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-1">
+            <div class="text-center">
+                <i class="fa fa-lg fa-arrow-down text-muted"></i>
+            </div>
+            <div class="text-right">
+                <br><br><span class="fw-semi-bold">Risposta</span> <i class="fa fa-lg fa-arrow-right text-muted"></i> </div>
+            </div>
+
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="data_risposta"><br><strong>Data Risposta</strong></label>
+                <datetime id="data_risposta"
+                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                          [timepicker]="false"
+                          [(ngModel)]="model.data_risposta" #data_risposta="ngModel" required></datetime>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="numero_risposta"><br><strong>Protocollo risposta</strong></label>
+                <input id="numero_risposta" name="numero_risposta"
+                       type="text" class="form-control"
+                       placeholder="numero del protocollo"
+                       [(ngModel)]="model.numero_risposta" #numero_risposta="ngModel">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="iter_divider_box text-center">
+    <i class="fa fa-lg fa-arrow-down text-muted"></i>
+</div>

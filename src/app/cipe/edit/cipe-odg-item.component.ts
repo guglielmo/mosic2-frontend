@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, Input, Output, OnInit, EventEmitter} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Observable} from "rxjs/Observable";
 
@@ -16,6 +16,8 @@ import {Fascicoli, CipeOdg, Registri, Titolari, Uffici} from "../../_models/inde
 })
 export class CipeOdgItemComponent implements OnInit {
     @Input() item: CipeOdg;
+    @Input() viewtype: any;
+    @Output() deleteitem:EventEmitter<number> = new EventEmitter();
 
     public isNew;
     public edit = false;
@@ -54,11 +56,12 @@ export class CipeOdgItemComponent implements OnInit {
             id_uffici: [{value:'', disabled: true}, Validators.required],
             ordine: [{value:'', disabled: true}, Validators.required],
             denominazione: [{value:'', disabled: true}, Validators.required],
-            risultanza: [{value:'', disabled: true}],
+            esito: [{value:'', disabled: true}],
             annotazioni: [{value:'', disabled: true}]
         });
 
         this.odgItemForm.valueChanges.subscribe(data => {
+            this.item.id_uffici = Array.isArray(this.item.id_uffici) ? this.item.id_uffici.join(',') : this.item.id_uffici;
             this.item = Object.assign(this.item, data);
         });
 
@@ -79,6 +82,10 @@ export class CipeOdgItemComponent implements OnInit {
             this.edit = !this.edit;
         }
 
+    }
+
+    deleteOdg(){
+            this.deleteitem.emit(this.item.id);
     }
 
     toggleAllegato(item:any, allegato_id: number) {
@@ -147,7 +154,7 @@ export class CipeOdgItemComponent implements OnInit {
         switch(name) {
             case 'id_uffici':
                 this.select2Debounce = true;
-                item.id_uffici = e.value;
+                item.id_uffici = Array.isArray(e.value) ? e.value.join(',') : e.value ;
 
                 // todo: ng2-select2 doesn't implement formControl accessors, to overcome this, here we're using a shadow copy
                 // todo: may be removed when https://github.com/NejcZdovc/ng2-select2/issues/13 will be fixed

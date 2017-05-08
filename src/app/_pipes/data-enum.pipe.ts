@@ -10,12 +10,17 @@ export class DataEnumPipe implements PipeTransform {
         if (-1 !== String(id).indexOf(',') ) {
             const ret = [];
             String(id).split(',').forEach( item => {
-                ret.push(_.get( dataseries, apipath + '["' + item + '"]' + prop, ''));
+                let retVal = _.get( dataseries, apipath + '["' + item + '"]' + prop, '');
+                if(retVal) {
+                    ret.push(retVal);
+                }
+
             });
             return ret.join(separator);
         }
 
-        return _.get( dataseries, apipath + '["' + id + '"]' + prop, '');
+        let retVal = _.get( dataseries, apipath + '["' + id + '"]' + prop, '');
+        return retVal;
 
     }
 }

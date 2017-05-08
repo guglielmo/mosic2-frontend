@@ -29,7 +29,7 @@
                              class="full-width-select"
                              [options]="select2Options"
                              value="{{filter.id_titolari}}"
-                             cssImport="false"
+                             [cssImport]="false"
                              (valueChanged)="select2Changed($event,'id_titolari')"
                              [data]="titolari$ | async"></select2></div>
                 </div>
@@ -53,7 +53,7 @@
                              class="full-width-select"
                              [options]="select2Options"
                              value="{{filter.id_amministrazioni}}"
-                             cssImport="false"
+                             [cssImport]="false"
                              (valueChanged)="select2Changed($event,'id_amministrazioni')"
                              [data]="amministrazioni$ | async"></select2></div>
                 </div>

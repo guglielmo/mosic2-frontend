@@ -1,0 +1,78 @@
+<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
+    <div class="pull-right">
+        <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
+        <button type="submit" class="btn btn-primary btn-save">Salva</button>
+    </div>
+    <h3 class="page-title"><a [routerLink]=" ['/app/firmatari/list'] ">Firmatari</a> -
+        <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
+        <span *ngIf="mode == 'update'" class="fw-semi-bold">{{model.chiave}} {{model.denominazione}}</span>
+    </h3>
+    <div class="row clearfix">
+        <div class="col-lg-12">
+            <section class="widget">
+                <div class="widget-body">
+                    <div class="row mb-2">
+                        <div class="col-sm-2">
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !denominazione.valid }">
+                                <label for="denominazione"><strong>Denominazione</strong></label>
+                                <input type="text" class="form-control" id="denominazione" name="denominazione"
+                                       placeholder="Scrivi la denominazione del firmatario..."
+                                       [(ngModel)]="model.denominazione" #denominazione="ngModel" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !denominazione_estesa.valid }">
+                                <label for="denominazione_estesa"><strong>Denominazione estesa</strong></label>
+                                <input type="text" class="form-control" id="denominazione_estesa" name="denominazione_estesa"
+                                       placeholder="Scrivi la denominazione estesa del firmatario..."
+                                       [(ngModel)]="model.denominazione_estesa" #denominazione_estesa="ngModel" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !chiave.valid }">
+                                <label for="chiave"><strong>Codice</strong></label>
+                                <input type="text" class="form-control" id="chiave" name="chiave"
+                                       placeholder="Scrivi il codice..."
+                                       [(ngModel)]="model.chiave" #chiave="ngModel">
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.tipo }">
+                                <label for="tipo"><strong>Tipo</strong></label>
+                                <div class="select2-H-keeper"><select2 id="tipo" name="tipo"
+                                                                       class="full-width-select"
+                                                                       [options]="select2Options"
+                                                                       [value]="model.tipo"
+                                                                       [cssImport]="false"
+                                                                       (valueChanged)="select2Changed($event,'tipo')"
+                                                                       [data]="firmataritipo$ | async"></select2></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group abc-checkbox abc-checkbox-primary">
+                                <input id="disattivato" name="disattivato" type="checkbox"
+                                       [checked]="model.disattivato == '1'"
+                                       (change)="model.disattivato = $event.target.checked == 1 ? '1' : '0'"
+                                >
+                                <label for="disattivato">
+                                    <strong>Disattivato</strong>
+                                </label>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div *ngIf="error" class="alert alert-danger" role="alert">{{error}}</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</form>
+

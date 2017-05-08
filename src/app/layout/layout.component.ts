@@ -4,8 +4,8 @@ import {AppConfig} from '../app.config';
 
 import { NotificationsService } from 'angular2-notifications';
 
-declare var jQuery: any;
-declare var Hammer: any;
+declare const jQuery: any;
+declare const Hammer: any;
 
 @Component({
     selector: 'layout',

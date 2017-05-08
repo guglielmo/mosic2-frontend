@@ -74,7 +74,7 @@
                                      class="full-width-select"
                                      [options]="select2Options"
                                      value="{{model.id_uffici}}"
-                                     cssImport="false"
+                                     [cssImport]="false"
                                      (valueChanged)="select2Changed($event,'id_uffici')"
                                      [data]="apiService.ufficiSelect"></select2></div>
                         </div>
@@ -84,7 +84,7 @@
                                      class="full-width-select"
                                      [options]="select2Options"
                                      value="{{model.id_ruoli_cipe}}"
-                                     cssImport="false"
+                                     [cssImport]="false"
                                      (valueChanged)="select2Changed($event,'id_ruoli_cipe')"
                                      [data]="apiService.ruoli_cipeSelect"></select2></div>
                         </div>

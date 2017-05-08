@@ -1,7 +1,7 @@
 <div class="pull-right">
     <a [routerLink]=" ['/app/uffici/edit'] " class="btn btn-primary btn-save">Nuovo Ufficio</a>
 </div>
-<h3 class="page-title">Ufficio - <span class="fw-semi-bold">Tutti i uffici</span></h3>
+<h3 class="page-title">Uffici - <span class="fw-semi-bold">Tutti gli uffici</span></h3>
 
 <section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
     <header>
@@ -39,7 +39,7 @@
             <div class="widget-body widget-table-overflow">
 
                 <table class="table table-hover table-condensed mb-0 table-bordered"
-                       [mfData]="uffici$ | async | ufficiDataFilter : filter.denominazione : filteredCount"
+                       [mfData]="uffici$ | async | denominazioneDataFilter : filter.denominazione : filteredCount"
                        [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
                        #mf="mfDataTable" stickthead>
                     <thead>

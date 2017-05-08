@@ -6,8 +6,7 @@ import { RouterModule } from '@angular/router';
 import { LOCALE_ID } from '@angular/core';
 
 import { ModalModule } from 'ngx-modal';
-import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
-import { DisableFormControlModule } from '../_directives/disable-formcontrol/disable-formcontrol.module';
+
 import { ButtonsModule } from 'ng2-bootstrap/buttons';
 import { DataTableModule } from 'angular2-datatable';
 import { TooltipModule } from 'ng2-bootstrap/tooltip';
@@ -15,12 +14,12 @@ import { PipesDirectivesSharedModule } from '../_shared/index';
 import { DragulaModule } from 'ng2-dragula';
 import { TabsModule } from 'ng2-bootstrap/tabs';
 import { AccordionModule } from 'ng2-bootstrap/accordion';
-
-import { WidgetModule } from '../layout/widget/widget.module';
-
+/*
+import { ProgressbarModule } from 'ng2-bootstrap/progressbar';
+*/
 import { Select2Module } from 'ng2-select2';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
-import { Ng2PageScrollModule } from 'ng2-page-scroll';
+import { ScrollToModule } from 'ng2-scroll-to-el';
 
 
 // ngx-uploader
@@ -45,23 +44,22 @@ export const routes = [
 @NgModule({
   imports: [
     CommonModule,
-    WidgetModule,
     FormsModule,
     ReactiveFormsModule,
 
     ModalModule,
-    StickTheadModule,
-    DisableFormControlModule,
+
     ButtonsModule,
     DataTableModule,
     TooltipModule.forRoot(),
     Select2Module,
     NKDatetimeModule,
-    Ng2PageScrollModule.forRoot(),
     PipesDirectivesSharedModule,
     DragulaModule,
     TabsModule.forRoot(),
     AccordionModule.forRoot(),
+    /*ProgressbarModule.forRoot(),*/
+    ScrollToModule.forRoot(),
     NgUploaderModule,
     RouterModule.forChild(routes)
   ],

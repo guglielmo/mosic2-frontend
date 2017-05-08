@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Autosize } from 'angular2-autosize/src/autosize.directive';
 
+import { StickThead, StickToolbar, Scroll2Bottom, Widget, DisableFormControlDirective, Autosize, MatchHeightDirective } from '../_directives/index';
 
 
 import {
@@ -11,14 +11,17 @@ import {
     FascicoliDataFilterPipe,
     FascicoliByTitolarioDataFilterPipe,
     RegistriByFascicoloDataFilterPipe,
+    FirmatariDataFilterPipe,
+    DenominazioneDataFilterPipe,
+    UsersDataFilterPipe,
     DataEnumPipe,
-    ArrayLengthPipe
+    ArrayLengthPipe,
+    DelibereDataFilterPipe
 
 } from '../_pipes/index';
 
 import { MomentModule } from 'angular2-moment';
 import 'moment/locale/it';
-
 
 
 @NgModule({
@@ -33,9 +36,19 @@ import 'moment/locale/it';
         FascicoliDataFilterPipe,
         FascicoliByTitolarioDataFilterPipe,
         RegistriByFascicoloDataFilterPipe,
+        FirmatariDataFilterPipe,
+        DenominazioneDataFilterPipe,
+        UsersDataFilterPipe,
         DataEnumPipe,
         ArrayLengthPipe,
-        Autosize
+        DelibereDataFilterPipe,
+        Autosize,
+        MatchHeightDirective,
+        StickThead,
+        StickToolbar,
+        Scroll2Bottom,
+        Widget,
+        DisableFormControlDirective
     ],
     providers: [
     ],
@@ -46,9 +59,20 @@ import 'moment/locale/it';
         FascicoliDataFilterPipe,
         FascicoliByTitolarioDataFilterPipe,
         RegistriByFascicoloDataFilterPipe,
+        FirmatariDataFilterPipe,
+        DenominazioneDataFilterPipe,
+        UsersDataFilterPipe,
         DataEnumPipe,
         ArrayLengthPipe,
-        MomentModule
+        DelibereDataFilterPipe,
+        MomentModule,
+        Autosize,
+        MatchHeightDirective,
+        StickThead,
+        StickToolbar,
+        Scroll2Bottom,
+        Widget,
+        DisableFormControlDirective
     ]
 })
 export class PipesDirectivesSharedModule {}

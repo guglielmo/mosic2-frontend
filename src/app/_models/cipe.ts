@@ -9,7 +9,7 @@ export class Cipe {
     allegati_TLX: Allegati[];
     allegati_APG: Allegati[];
     allegati_OSS: Allegati[];
-    allegati_ESI: Allegati[];
+    allegati_EST: Allegati[];
 
     constructor() {
         this.id = null;
@@ -19,7 +19,7 @@ export class Cipe {
         this.allegati_TLX = [];
         this.allegati_APG = [];
         this.allegati_OSS = [];
-        this.allegati_ESI = [];
+        this.allegati_EST = [];
     }
 }
 

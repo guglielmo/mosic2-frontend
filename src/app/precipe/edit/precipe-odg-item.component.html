@@ -8,6 +8,11 @@
                     <div class="float-left rel-t-m5 visible-parent-hover-or-active mr-2"><i class="fa fa-sort fa-lg"> </i></div>
                     <h2 class="ml-2"><strong>{{item.ordine}}</strong>&nbsp;</h2>
                 </div>
+                <div>
+                     <span class="ml-1 badge badge-lg badge-default text-left line-height-lg"
+                           [title]="item.id_uffici | dataEnum : apiService.dataEnum : 'uffici'"
+                           [innerHTML]="item.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
+                </div>
                 <h6 class="ml-1">
                     <span *ngIf="item.risultanza !== 1 && item.risultanza !== 2" class="badge badge-lg badge-default rel-t-l2">N/D</span>
                     <span *ngIf="item.risultanza === 2" class="badge badge-lg badge-warning rel-t-l2">Rinviato</span>
@@ -21,11 +26,29 @@
                    [disableCond]="!edit"
                    [formControl]="odgItemForm.controls['ordine']">
 
+            <!-- UFFICIO -->
+            <div class="form-group" [ngClass]="{ 'has-danger': hasErrors && !odgItemForm.controls['id_uffici'].valid}">
+                <!-- EDIT -->
+                <div *ngIf="edit" class="select2-H-keeper">
+                    <br/>
+                    <label for="id_uffici[{{item.id}}]"><strong>Uffici competenti</strong></label>
+                    <select2
+                            id="id_uffici[{{item.id}}]"
+                            class="full-width-select"
+                            [options]="select2OptionsMulti"
+                            [value]="item.id_uffici"
+                            (valueChanged)="select2Changed($event, item, 'id_uffici')"
+                            cssImport="false"
+                            [data]="uffici$ | async"></select2>
+
+                    <!--todo: ng2-select2 no form control value accessor workaround-->
+                    <input type="hidden" [formControl]="odgItemForm.controls['id_uffici']" [disableCond]="!edit">
+                </div>
+            </div>
 
             <!-- RISULTANZA -->
-
             <div *ngIf="edit" class="mt-1">
-                <label class="sr-only"><strong>Risultanza</strong></label>
+                <label><strong>Risultanza</strong></label>
                 <div class="radio abc-radio abc-radio-default">
                     <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_nd[{{item.id}}]"
                            [value]="null"
@@ -58,19 +81,6 @@
                 </div>
                 <br/>
             </div>
-
-            <!-- UFFICIO -->
-            <div class="form-group" [ngClass]="{ 'has-danger': hasErrors && !odgItemForm.controls['id_uffici'].valid}">
-
-                <!-- VIEW/EDIT -->
-                <div>
-                     <span class="badge badge-lg badge-default"
-                           title="{{ item.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'text' }}"
-                     >{{ item.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' }}</span>
-                </div>
-
-            </div>
-
         </div>
     </div>
     <div class="col-md-10">
@@ -138,7 +148,7 @@
                                                     [options]="select2Options"
                                                     [value]="item.id_titolari"
                                                     (valueChanged)="select2Changed($event, item, 'id_titolari')"
-                                                    cssImport="false"
+                                                    [cssImport]="false"
                                                     [data]="titolari$ | async"></select2>
 
                                             <!--todo: ng2-select2 no form control value accessor workaround-->
@@ -166,7 +176,7 @@
                                                     [options]="select2Options"
                                                     [value]="item.id_fascicoli"
                                                     (valueChanged)="select2Changed($event, item, 'id_fascicoli')"
-                                                    cssImport="false"
+                                                    [cssImport]="false"
                                                     [data]="fascicoli$ | async | fascicoliByTitolarioDataFilter : item.id_titolari"></select2>
 
                                             <!--<pre>{{fascicoli$ | async | fascicoliByTitolarioDataFilter : item.id_titolari | json}}</pre>-->
@@ -206,7 +216,7 @@
                                                     [options]="select2OptionsMulti"
                                                     [value]="item.id_registri"
                                                     (valueChanged)="select2Changed($event, item, 'id_registri')"
-                                                    cssImport="false"
+                                                    [cssImport]="false"
                                                     [data]="registri$ | async | registriByFascicoloDataFilter : item.id_fascicoli"></select2>
 
                                             <!--todo: ng2-select2 no form control value accessor workaround-->

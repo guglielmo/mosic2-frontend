@@ -1,0 +1,177 @@
+<div class="pull-right">
+    <a [routerLink]=" ['/app/delibere/edit'] " class="btn btn-primary btn-save">Nuova Delibera</a>
+</div>
+<h3 class="page-title">Delibere / <span class="fw-semi-bold">Tutte le delibere</span></h3>
+
+<section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
+    <header>
+        <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">delibere ...</span>
+            <span *ngIf="
+            filter.id ||
+            filter.argomento.length > 2 ||
+            filter.data_da ||
+            filter.data_a ||
+            filter.id_situazione"
+                  class="float-lg-right mr-3">
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+            </span>
+        </h5>
+        <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">delibere ...</span>
+            <span *ngIf="
+            filter.id ||
+            filter.argomento.length > 2 ||
+            filter.data_da ||
+            filter.data_a ||
+            filter.id_situazione"
+                  class="float-lg-right mr-3">
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+            </span>
+        </h5>
+        <div class="widget-controls m-t-1">
+            <a data-widgster="expand" title="Apri"><i class="glyphicon glyphicon-chevron-down"></i></a>
+            <a data-widgster="collapse" title="Chiudi"><i class="glyphicon glyphicon-chevron-up"></i></a>
+        </div>
+    </header>
+    <div class="widget-body">
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="numero"><strong>Numero</strong></label>
+                    <input id="numero" name="numero" class="form-control" [(ngModel)]="filter.numero" placeholder="Numero..."/>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label for="data_da"><strong>Da data</strong></label>
+                            <datetime id="data_da" name="data_da"
+                                      [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                      [timepicker]="false"
+                                      [(ngModel)]="filter.data_da" #data_da="ngModel" required></datetime>
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="data_a"><strong>A data</strong></label>
+                            <datetime id="data_a" name="data_a"
+                                      [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                      [timepicker]="false"
+                                      [(ngModel)]="filter.data_a" #data_a="ngModel" required></datetime>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="argomento"><strong>Argomento</strong></label>
+                    <input id="argomento" name="argomento" class="form-control" [formControl]="argomentoControl"
+                           placeholder="Digita almeno 3 caratteri..."/>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="id_segretario"><strong>Situazione</strong></label>
+                    <div class="select2-H-keeper">
+                        <select2 id="id_segretario"
+                                 class="full-width-select"
+                                 [options]="select2Options"
+                                 [value]="filter.id_situazione"
+                                 [cssImport]="false"
+                                 (valueChanged)="select2Changed($event,'id_situazione')"
+                                 [data]="situazione"></select2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="row" *ngIf="apiService.commonDataready">
+    <div class="col-lg-12">
+        <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
+        <section class="widget py-0" widget>
+            <div class="widget-body widget-table-overflow">
+                <table class="table table-hover table-condensed table-bordered mb-0"
+                       [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filteredCount"
+                       [mfSortBy]="'data'" [mfSortOrder]="'desc'"
+                       [mfRowsOnPage]="100"
+                       #mf="mfDataTable" stickthead>
+                    <thead>
+                    <tr>
+                        <th>
+                            <mfDefaultSorter by="numero">Nr.</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="data">Data</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="Argomento">Argomento</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="repertorio">Uffici</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="situazione">Stato</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="situazione">Situazione</mfDefaultSorter>
+                        </th>
+                        <th>Azioni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let delibera of mf.data">
+                        <td><h5><strong>{{delibera.numero}}</strong></h5></td>
+                        <td>
+                            <h5><strong>{{delibera.data | amTimeAgo }}</strong></h5>
+                            <p class="fw-semi-bold text-capitalize">{{delibera.data | date: 'EEEE, dd MMMM yyyy' }}</p>
+
+                        </td>
+                        <td>
+                            <p><a [routerLink]="[ '/app/delibere/edit/' + delibera.id ]"
+                               [innerHTML]="delibera.argomento | dataMark : filter.argomento"></a></p>
+                            <div *ngIf="delibera.note" class="alert alert-warning" role="alert">
+                                <span class="fw-semi-bold">NOTE:</span> {{delibera.note}}
+                            </div>
+                            <div *ngIf="delibera.note_servizio" class="alert alert-warning" role="alert">
+                                <span class="fw-semi-bold">NOTE DI SERVIZIO:</span> {{delibera.note_servizio}}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="ml-1 badge badge-lg badge-default text-left line-height-lg"
+                                  [title]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici'"
+                                  [innerHTML]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
+                        </td>
+                        <td>{{delibera.id_stato}}</td>
+                        <td>{{situazioneEnum[delibera.situazione]}}</td>
+                        <td><p class="text-center"><a (click)="askDeleteDelibere($event, myModal, delibera)"><i class="fa fa-trash-o"> </i></a></p></td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="10">
+                            <mfBootstrapPaginator [rowsOnPageSet]="[100,200,500,1000]"></mfBootstrapPaginator>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <footer>
+            </footer>
+        </section>
+    </div>
+</div>
+
+<modal #myModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteDelibere(myModal)">
+    <modal-header>
+        <h4 class="modal-title text-center fw-bold mt">Conferma cancellazione delibera</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="text-center mt-sm">
+            Vuoi eliminare la delibera <strong>{{deletingDelibere.numero}}</strong><br/>
+            {{deletingDelibere.argomento}} ?
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>

@@ -26,7 +26,7 @@ export class APICommonService {
     private _allData$: any = {};
     public dataEnum: any = {};
 
-    private currentStorageVersion = '43';
+    private currentStorageVersion = '71';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
@@ -42,6 +42,12 @@ export class APICommonService {
         'precipe',
         'firmatari',
         'cipe',
+        'firmataritipo',
+        'cipeesiti',
+        'cipeesititipo',
+        'cipeargomentitipo',
+        'users',
+        'delibere'
 
 /*        'delibere',
         'adempimenti',
@@ -58,7 +64,15 @@ export class APICommonService {
         'uffici',
         'ruoli_cipe',
         'tags',
-        'precipe'
+        'precipe',
+        'firmatari',
+        'cipe',
+        'firmataritipo',
+        'cipeesiti',
+        'cipeesititipo',
+        'cipeargomentitipo',
+        'users',
+        'delibere'
     ];
 
     constructor( private http: Http,
@@ -348,25 +362,34 @@ export class APICommonService {
 
         switch (apipath) {
             case 'titolari':
-                _.each(data, (item) => { item.text = item['codice'] + ' - ' + item['denominazione'] + ' - ' + item['descrizione']; } );
+                _.each(data, (item) => { item.text = item['codice'] + ' - ' + item['denominazione'] + ' - ' + item['descrizione'] } );
                 break;
             case 'fascicoli':
-                _.each(data, (item) => { item.text = item['numero_fascicolo'] + ' - ' + item['argomento']; } );
+                _.each(data, (item) => { item.text = item['numero_fascicolo'] + ' - ' + item['argomento'] } );
                 break;
             case 'amministrazioni':
-                _.each(data, (item) => { item.text = item['codice'] + ' - ' + item['denominazione']; item.id = String(item.id); });
+                _.each(data, (item) => { item.text = item['codice'] + ' - ' + item['denominazione']; item.id = String(item.id) });
                 break;
             case 'mittenti':
-                _.each(data, (item) => { item.text = item['denominazione']; } );
+                _.each(data, (item) => { item.text = item['denominazione'] } );
                 break;
             case 'registri':
-                _.each(data, (item) => { item.text = item['id'] + ' - ' + item['oggetto']; } );
+                _.each(data, (item) => { item.text = item['id'] + ' - ' + item['oggetto'] } );
                 break;
             case 'uffici':
-                _.each(data, (item) => { item.text = item['id'] + ' - ' + item['denominazione']; } );
+                _.each(data, (item) => { item.text = item['id'] + ' - ' + item['denominazione'] } );
                 break;
             case 'ruoli_cipe':
-                _.each(data, (item) => { item.text = item['denominazione']; } );
+                _.each(data, (item) => { item.text = item['denominazione'] } );
+                break;
+            case 'firmatari':
+                _.each(data, (item) => { item.text = item['denominazione_estesa'] } );
+                break;
+            case 'firmataritipo':
+                _.each(data, (item) => { item.text = item['denominazione'] } );
+                break;
+            case 'users':
+                _.each(data, (item) => { item.text = item['denominazione'] = item['lastName'] + ' ' + item['firstName'] } );
                 break;
         }
     }

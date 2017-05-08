@@ -43,13 +43,13 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="mb-3"> </div>
-                            <div class="form-group abc-checkbox abc-checkbox-primary">
+                            <div class="form-group abc-checkbox abc-checkbox-primary rel-t-m20">
                                 <input id="proposta_cipe" name="proposta_cipe" type="checkbox"
                                        [checked]="model.proposta_cipe == 2"
                                        (change)="model.proposta_cipe = $event.target.checked ? 2 : 1"
                                 >
                                 <label for="proposta_cipe">
-                                    Proposta CIPE {{model.proposta_cipe}}
+                                    Proposta CIPE
                                 </label>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                                                  class="full-width-select"
                                                  [options]="select2WithAddOptions"
                                                  value="{{model.id_mittenti}}"
-                                                 cssImport="false"
+                                                 [cssImport]="false"
                                                  (valueChanged)="select2Changed($event,'id_mittenti')"
                                                  [data]="mittenti$ | async"></select2></div>
                                     </div>
@@ -157,7 +157,7 @@
                                          class="full-width-select"
                                          [options]="select2WithAddOptionsMulti"
                                          [value]="model.id_amministrazioni ? model.id_amministrazioni.split(',') : ''"
-                                         cssImport="false"
+                                         [cssImport]="false"
                                          (valueChanged)="select2Changed($event,'id_amministrazioni')"
                                          [data]="amministrazioni$ | async"></select2></div>
                             </div>
@@ -167,7 +167,7 @@
                                          class="full-width-select"
                                          [options]="select2Options"
                                          [value]="model.id_titolari"
-                                         cssImport="false"
+                                         [cssImport]="false"
                                          (valueChanged)="select2Changed($event,'id_titolari')"
                                          [data]="titolari$ | async"></select2></div>
                             </div>
@@ -178,7 +178,7 @@
                                          class="full-width-select"
                                          [options]="select2Options"
                                          [value]="model.id_fascicoli"
-                                         cssImport="false"
+                                         [cssImport]="false"
                                          (valueChanged)="select2Changed($event,'id_fascicoli')"
                                          [data]="fascicoli$ | async | fascicoliByTitolarioDataFilter : model.id_titolari"></select2></div>
                             </div>

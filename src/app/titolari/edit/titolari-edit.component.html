@@ -22,12 +22,24 @@
                                        [(ngModel)]="model.codice" #codice="ngModel" required>
                             </div>
                         </div>
-                        <div class="col-sm-10">
+                        <div class="col-sm-5">
                             <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !denominazione.valid }">
                                 <label for="denominazione">Denominazione</label>
                                 <input type="text" class="form-control" id="denominazione" name="denominazione"
                                        placeholder="Scrivi la denominazione del titolario..."
                                        [(ngModel)]="model.denominazione" #denominazione="ngModel" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_uffici }">
+                                <label for="id_uffici"><strong>Ufficio</strong></label>
+                                <div class="select2-H-keeper"><select2 id="id_uffici" name="id_uffici"
+                                                                       class="full-width-select"
+                                                                       [options]="select2Options"
+                                                                       [value]="model.id_uffici"
+                                                                       [cssImport]="false"
+                                                                       (valueChanged)="select2Changed($event,'id_uffici')"
+                                                                       [data]="uffici$ | async"></select2></div>
                             </div>
                         </div>
                     </div>

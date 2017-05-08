@@ -16,3 +16,5 @@ export * from './cipe';
 export * from './cipe_odg';
 export * from './delibere';
 export * from './adempimenti'
+export * from './firmatari'
+export * from './rilievi_cc'

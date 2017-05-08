@@ -1,0 +1,80 @@
+<div class="row">
+    <div class="col-lg-7">
+        <label><strong>Documenti</strong></label>
+        <ul *ngIf="allegati" class="news-list stretchable">
+            <li *ngFor="let allegato of allegati" class="filetypes-small">
+                    <span class="icon">
+                        <i class="filetypes filetypes-{{allegato.tipo}} x2"></i>
+                    </span>
+                <div class="news-item-info">
+                    <div class="float-lg-right"><a (click)="askDeleteFile($event, deleteFileModal, allegato)"><i
+                            class="fa fa-trash-o"> </i></a></div>
+                    <h5 class="name no-margin mb-xs"><a href="{{apiService.config.baseAPIURL}}/{{allegato.relURI}}"
+                                                        target="_blank">{{allegato.nome}}</a></h5>
+                    <p class="fs-mini">Dimensione: {{allegato.dimensione | fileSize}} - Data caricato:
+                        <time>{{allegato.data | date: 'dd/MM/yyyy HH:mm'}}</time>
+                    </p>
+
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="col-lg-5">
+        <label><strong>Carica File</strong></label>
+        <div *ngIf="!allowUpload">
+            <div role="alert" class="alert alert-danger">
+                <strong>Attenzione!</strong> Prima di caricare i file è necessario salvare la scheda.
+            </div>
+        </div>
+        <div ngFileDrop
+             [options]="NGUPoptions"
+             (onUpload)="handleMultipleUpload($event)"
+             (onPreviewData)="handlePreviewData($event)"
+             (onUploadRejected)="rejectUpload($event)"
+             (beforeUpload)="beforeUpload($event)"
+             [ngClass]="{'file-over': hasBaseDropZoneOver}"
+             (onFileOver)="fileOverBase($event)"
+             class="drag-n-drop-container drag-n-drop-container-small"
+             *ngIf="allowUpload">
+
+            <h3>Rilascia i file qui dentro per caricarli oppure fai click per selezionare i file</h3>
+
+            <label class="upload-button">
+                <input type="file"
+                       multiple
+                       class="hidden"
+                       ngFileSelect
+                       [options]="NGUPoptions"
+                       (onUpload)="handleMultipleUpload($event)">
+                Sfoglia
+            </label>
+        </div>
+        <div *ngIf="progress && progress < 1" class="bg-gray-lighter progress-bar">
+            <progress class="progress progress-danger" value="{{progress*100}}" max="100">{{progress*100}}%</progress>
+        </div>
+
+
+        <div *ngIf="errorMessage">
+            <code>{{ errorMessage }}</code>
+        </div>
+
+        <div *ngIf="previewData && !response">
+            <img [src]="previewData">
+        </div>
+    </div>
+</div>
+
+<modal #deleteFileModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteFile(deleteFileModal)">
+    <modal-header>
+        <h4 class="modal-title text-center fw-bold mt">Conferma cancellazione file</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="text-center mt-sm">
+            Vuoi eliminare il file <strong>{{deletingFile.nome}}</strong><br/>
+            Dimensione: {{deletingFile.dimensione | fileSize}} - Data caricato: <time>{{deletingFile.data  | date: 'dd/MM/yyyy HH:mm'}}</time>
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>

@@ -1,0 +1,268 @@
+<accordion [closeOthers]="false" class="mb-lg show" id="debug[{{model.id}}]">
+    <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="false">
+        <div accordion-heading>
+            <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
+            <i class="fa float-right"
+               [ngClass]="{'fa-angle-down': accordionGroupDebug?.isOpen, 'fa-angle-right': !accordionGroupDebug?.isOpen}"></i>
+        </div>
+        <div>
+            <pre>model = {{model | json}}</pre>
+        </div>
+    </accordion-group>
+</accordion>
+
+<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event, myModal)" #f="ngForm" novalidate>
+    <div class="pull-right">
+        <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
+        <button type="submit" class="btn btn-primary btn-save">Salva</button>
+    </div>
+    <h3 class="page-title"><a [routerLink]=" ['/app/delibere/list'] ">Delibere</a> /
+        <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuova</span>
+
+        <span *ngIf="mode == 'update'" class="fw-semi-bold">
+            {{model.data | date : 'y'}} - {{model.numero}}
+        </span>
+    </h3>
+    <h3 class="page-title fw-semi-bold"><span *ngIf="mode == 'update'">{{model.argomento}}</span></h3>
+
+    <div class="mb-4">
+        <div>
+            <div class="row bg-body-light" sticktoolbar>
+                <div [scrollTo]="'#A_segretariato'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.id_segretariato && model.data_consegna > 0 }">
+                    Segretariato
+                </div>
+                <div [scrollTo]="'#A_capo_dipartimento'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_direttore_ritorno > 0 }">
+                    Capo Dipartimento
+                </div>
+                <div [scrollTo]="'#A_MEF'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_mef_ritorno > 0 }">
+                    M.E.F.
+                </div>
+                <div [scrollTo]="'#A_segretario'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_segretario_ritorno > 0 }">
+                    Segretario CIPE
+                </div>
+                <div [scrollTo]="'#A_presidente'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_presidente_ritorno > 0}">
+                    Presidente CIPE
+                </div>
+                <div [scrollTo]="'#A_CC'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_registrazione_cc > 0 }">
+                    Corte dei Conti
+                </div>
+                <div [scrollTo]="'#A_parlamento'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_invio_p > 0 }">
+                    Parlamento
+                </div>
+                <div [scrollTo]="'#A_GU'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_gu > 0 }">
+                    Gazzetta Ufficiale
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-2">
+        <div class="row" myMatchHeight="widget">
+            <div class="col-lg-6">
+                <section class="widget">
+                    <header>
+                        <h4><span class="fw-semi-bold">Definizione</span></h4>
+                    </header>
+                    <div class="widget-body">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label for="numero"><strong>Numero</strong></label>
+                                    <input id="numero" name="numero"
+                                           type="text" class="form-control"
+                                           placeholder="Inserisci numero delibera..."
+                                           [(ngModel)]="model.numero" #numero="ngModel">
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !data.valid }">
+                                    <label for="data"><strong>Data</strong></label>
+                                    <datetime id="data" name="Data_Delibera"
+                                              [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                              [timepicker]="false"
+                                              [(ngModel)]="model.data" #data="ngModel" required></datetime>
+                                </div>
+                            </div>
+                            <div class="col-6">
+
+                                <label><strong>Stato</strong></label>
+                                <div class="mb-1">
+                                    <div class="radio abc-radio abc-radio-success">
+                                        <input type="radio" name="id_stato" id="id_stato_ordinario"
+                                               [value]="null"
+                                               (click)="model.id_stato = 0"
+                                               [checked]="model.id_stato === 0">
+                                        <label for="id_stato_ordinario">
+                                            <span [ngClass]="{ 'badge badge-lg badge-success': model.id_stato === 0 }">N/D</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="radio abc-radio abc-radio-danger float-left mr-2 mb-1">
+                                        <input type="radio" name="id_stato" id="id_stato_ritirata"
+                                               [value]="1"
+                                               (click)="model.id_stato = 1"
+                                               [checked]="model.id_stato === 1">
+                                        <label for="id_stato_ritirata">
+                                            <span [ngClass]="{ 'badge badge-lg badge-danger': model.id_stato === 1 }">Ritirata</span>
+                                        </label>
+                                    </div>
+                                    <div class="radio abc-radio abc-radio-danger float-left mr-2 mb-1">
+                                        <input type="radio" name="id_stato" id="id_stato_annullata"
+                                               [value]="1"
+                                               (click)="model.id_stato = 2"
+                                               [checked]="model.id_stato === 2">
+                                        <label for="id_stato_annullata">
+                                            <span [ngClass]="{ 'badge badge-lg badge-danger': model.id_stato === 2 }">Annullata</span>
+                                        </label>
+                                    </div>
+                                    <div class="radio abc-radio abc-radio-danger float-left mb-1">
+                                        <input type="radio" name="id_stato" id="id_stato_superata"
+                                               [value]="1"
+                                               (click)="model.id_stato = 3"
+                                               [checked]="model.id_stato === 3">
+                                        <label for="id_stato_superata">
+                                            <span [ngClass]="{ 'badge badge-lg badge-danger': model.id_stato === 3 }">Superata</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !argomento.valid }">
+                                    <label for="argomento"><strong>Argomento</strong></label>
+                                    <textarea id="argomento" name="argomento"
+                                              rows="3" class="autogrow form-control transition-height"
+                                              placeholder="Scrivi l'argomento della delibera..."
+                                              [(ngModel)]="model.argomento" #argomento="ngModel" required autosize></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <!-- UFFICIO -->
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !id_uffici.valid}">
+                                    <!-- EDIT -->
+                                    <div class="select2-H-keeper">
+                                        <label for="id_uffici"><strong>Uffici competenti</strong></label>
+                                        <select2
+                                                id="id_uffici"
+                                                class="full-width-select"
+                                                [options]="select2OptionsMulti"
+                                                [value]="model.id_uffici"
+                                                (valueChanged)="select2Changed($event, model, 'id_uffici')"
+                                                cssImport="false"
+                                                [data]="uffici$ | async"></select2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="col-lg-6">
+                <section class="widget">
+                    <header>
+                        <h4><span class="fw-semi-bold">Delibera</span></h4>
+                    </header>
+                    <div class="widget-body">
+                        <delibere-upload [type]="'DEL'" [allegati]="model.allegati_DEL" [allowUpload]="allowUpload"></delibere-upload>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div class="row" myMatchHeight="widget">
+            <div class="col-lg-6">
+                <section class="widget">
+                    <header>
+                        <h4><span class="fw-semi-bold">Note</span></h4>
+                    </header>
+                    <div class="widget-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="note" class="hidden"><strong>Annotazioni</strong></label>
+                                    <textarea id="note" name="note"
+                                              rows="3" class="autogrow form-control transition-height"
+                                              autosize
+                                              placeholder="..."
+                                              [(ngModel)]="model.note" #note="ngModel"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="note_servizio" class="hidden"><strong>Appunti di servizio</strong></label>
+                                    <textarea id="note_servizio" name="note_servizio"
+                                              rows="3" class="autogrow form-control transition-height"
+                                              autosize
+                                              placeholder="..."
+                                              [(ngModel)]="model.note_servizio" #note_servizio="ngModel"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+            <div class="col-lg-6">
+                <section class="widget">
+                    <header>
+                        <h4><span class="fw-semi-bold">Allegati</span></h4>
+                    </header>
+                    <div class="widget-body">
+                        <delibere-upload [type]="'ALL'" [allegati]="model.allegati_ALL" [allowUpload]="allowUpload"></delibere-upload>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <delibere-firme [model]="model" [allowUpload]="allowUpload"></delibere-firme>
+    </div>
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="pull-right">
+                <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
+                <button type="submit" class="btn btn-primary btn-save">Salva</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<modal #myModal submitButtonLabel="Conferma" [hideCloseButton]="true" [closeOnEscape]="false" [closeOnOutsideClick]="false" (onSubmit)="confirmCodeNotification(myModal)">
+    <modal-header>
+        <h4 class="modal-title text-center fw-bold mt">Conferma creazione delibera</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="text-center mt-sm">
+            Il nuovo delibera è stato creato. Il codice assegnato è <strong>{{model.id}} </strong><br/>
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>
+
+<modal #deleteFileModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteFile(deleteFileModal)">
+    <modal-header>
+        <h4 class="modal-title text-center fw-bold mt">Conferma cancellazione file</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="text-center mt-sm">
+            Vuoi eliminare il file <strong>{{deletingFile.nome}}</strong><br/>
+            Dimensione: {{deletingFile.dimensione | fileSize}} - Data caricato: <time>{{deletingFile.data  | date: 'dd/MM/yyyy HH:mm'}}</time>
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>
+

@@ -60,7 +60,7 @@
                              class="full-width-select"
                              [options]="select2Options"
                              [value]="filter.id_titolari"
-                             cssImport="false"
+                             [cssImport]="false"
                              (valueChanged)="select2Changed($event,'id_titolari')"
                              [data]="titolari$ | async"></select2></div>
                             <!--id_titolari: {{filter.id_titolari}}-->
@@ -73,7 +73,7 @@
                              class="full-width-select"
                              [options]="select2Options"
                              [value]="filter.id_fascicoli"
-                             cssImport="false"
+                             [cssImport]="false"
                              (valueChanged)="select2Changed($event,'id_fascicoli')"
                              [data]="fascicoli$ | async | fascicoliByTitolarioDataFilter : filter.id_titolari"></select2></div>
                             <!--id_fascicoli: {{filter.id_fascicoli}}-->
@@ -86,7 +86,7 @@
                              class="full-width-select"
                              [options]="select2Options"
                              value="{{filter.id_mittenti}}"
-                             cssImport="false"
+                             [cssImport]="false"
                              (valueChanged)="select2Changed($event,'id_mittenti')"
                              [data]="mittenti$ | async"></select2></div>
                 </div>
@@ -125,8 +125,6 @@
         </div>
     </div>
 </section>
-
-
 
 <div class="row" *ngIf="apiService.commonDataready">
     <div class="col-lg-12">

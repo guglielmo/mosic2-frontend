@@ -19,6 +19,7 @@
                         <th>Elenco Telex e Fogli presenze</th>
                         <th>Osservazioni</th>
                         <th>Esito</th>
+                        <th>Pubblicato</th>
                         <th><mfDefaultSorter by="id">#</mfDefaultSorter></th>
                         <th>Azioni</th>
                     </tr>
@@ -57,11 +58,15 @@
                             </div>
                         </td>
                         <td>
-                            <div *ngIf="cipe.allegati_ESI" class="filetypes-small">
-                                <div *ngFor="let allegato of cipe.allegati_ESI">
+                            <div *ngIf="cipe.allegati_EST" class="filetypes-small">
+                                <div *ngFor="let allegato of cipe.allegati_EST">
                                     <i class="filetypes filetypes-{{allegato.tipo}}"></i> <a href="{{apiService.config.baseAPIURL}}/{{allegato.relURI}}" target="_blank" title="Dimensione: {{allegato.dimensione | fileSize}} - Data caricato: {{allegato.data  | date: 'dd/MM/yyyy HH:mm'}}">{{allegato.nome}}</a>
                                 </div>
                             </div>
+                        </td>
+                        <td class="text-center">
+                            <a *ngIf="cipe.public_reserved_url" target="_blank"
+                               href="{{cipe.public_reserved_url}}"> <i class="fa fa-lg fa-share-square-o"> </i> </a>
                         </td>
                         <td>{{cipe.id}}</td>
                         <td>

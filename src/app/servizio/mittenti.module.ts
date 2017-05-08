@@ -6,15 +6,13 @@ import { FormsModule,
 import { RouterModule } from '@angular/router';
 
 import { ModalModule } from 'ngx-modal';
-import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
+
 import { DataTableModule } from 'angular2-datatable';
 import { MittentiDataFilterPipe }   from '../_pipes/index';
 import { PipesDirectivesSharedModule } from '../_shared/index';
 
 import { MittentiListComponent } from './list/mittenti-list.component';
 import { MittentiEditComponent } from './edit/mittenti-edit.component';
-
-import { WidgetModule } from '../layout/widget/widget.module';
 
 export const routes = [
   {path: '', redirectTo: 'list', pathMatch: 'full'},
@@ -27,12 +25,11 @@ export const routes = [
 @NgModule({
   imports: [
     CommonModule,
-    WidgetModule,
     FormsModule,
     ReactiveFormsModule,
 
     ModalModule,
-    StickTheadModule,
+
     DataTableModule,
     PipesDirectivesSharedModule,
 

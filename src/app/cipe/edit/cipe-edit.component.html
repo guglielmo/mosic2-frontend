@@ -1,5 +1,5 @@
 <accordion [closeOthers]="false" class="mb-lg show" id="debug[{{model.id}}]">
-   <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="true">
+   <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="false">
       <div accordion-heading>
          <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
          <i class="fa float-right"
@@ -11,14 +11,14 @@
    </accordion-group>
 </accordion>
 
-<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
+<form *ngIf="model.id || mode == 'create'" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
 
-   <div class="pull-right">
+   <div class="float-right">
       <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
       <button type="submit" class="btn btn-primary btn-save">Salva</button>
    </div>
 
-   <h3 class="page-title"><a [routerLink]=" ['/app/cipe/list'] ">CIPE</a> /
+   <h3 class="page-title"><a [routerLink]=" ['/app/cipe/list'] ">Cipe</a> /
       <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
       <span *ngIf="mode == 'update'" class="fw-semi-bold">riunione del {{ model.data | date: 'dd/MM/yyyy' }}</span>
    </h3>
@@ -26,7 +26,7 @@
    <section class="widget">
       <div class="widget-body">
          <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-2">
                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !data.valid }">
                   <label for="data"><strong>Data della riunione</strong></label>
                   <datetime id="data" name="data"
@@ -35,7 +35,7 @@
                             [(ngModel)]="model.data" #data="ngModel" required></datetime>
                </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
                <div class="form-group">
                   <label for="ufficiale_riunione"><strong>Stato</strong></label>
                   <div>
@@ -50,16 +50,54 @@
                      </label>&nbsp;&nbsp;
                      <span *ngIf="model.ufficiale_riunione === '0' && officializingCipe === null"
                            class="badge badge-lg badge-danger rel-t-l10">Bozza</span>
-                     <span *ngIf="model.ufficiale_riunione === '1' && officializingCipe === null" class="badge badge-lg badge-success rel-t-l10">Ufficiale</span>
-                     <span *ngIf="officializingCipe !== null" class="rel-t-l10"> <i
-                           class="loading-spinner"></i> Pubblicazione in corso...</span>
+
+                     <span *ngIf="model.ufficiale_riunione === '1' && status === null || status === 'error'">
+                                <span class="d-inline-block text-center rel-t-m4 float-right">
+
+                                    <button *ngIf="model.public_reserved_url"
+                                            class="btn btn-secondary ml-2 btn-xs" role="button"
+                                            (click)="askUpdateCipe($event, updateCipeModal, model)"
+                                    > <i class="fa fa-lg fa-refresh"></i> &nbsp; Aggiorna </button>
+
+                                    <button *ngIf="!model.public_reserved_url"
+                                            class="btn btn-secondary ml-2 btn-xs" role="button"
+                                            (click)="askPublishCipe($event, publishCipeModal, model)"
+                                    > <i class="fa fa-lg fa-repeat"></i> &nbsp; Pubblica </button>
+
+
+                                    <button *ngIf="model.public_reserved_url"
+                                            class="btn btn-secondary ml-2 btn-xs" role="button"
+                                            (click)="askRemoveCipe($event, removeCipeModal, model)"
+                                    > <i class="fa fa-lg fa-trash"></i> &nbsp; Rimuovi </button>
+                                </span>
+                                <span class="badge badge-lg badge-success rel-t-l10">Ufficiale</span>
+                            </span>
+                     <span *ngIf="status === 'publishing'" class="rel-t-l10"> <i
+                             class="loading-spinner"></i> Pubblicazione in corso...</span>
+                            <span *ngIf="status_msg" class="rel-t-l10"> <span *ngIf="status === 'error'"><i
+                                    class="fa fa-warning"></i></span> {{status_msg}}</span>
                   </div>
+               </div>
+            </div>
+            <div class="col-md-5">
+               <div class="form-group">
+                  <label for="ufficiale_riunione"><strong>Indirizzo pubblico riservato</strong></label>
+
+                  <div *ngIf="model.public_reserved_url" class="rel-t-m4 mb-3">
+                     <a href="{{model.public_reserved_url}}" target="_blank" class="dont-break-out">{{model.public_reserved_url}}</a>
+                  </div>
+                  <div *ngIf="!model.public_reserved_url" class="rel-t-m4 mb-3">
+                     N/D
+                  </div>
+
+                  <div *ngIf="status === 'updating'"> <i class="loading-spinner"></i> Aggiornamento in corso...</div>
+                  <div *ngIf="status === 'removing'"> <i class="loading-spinner"></i> Rimozione in corso...</div>
+
                </div>
             </div>
          </div>
       </div>
    </section>
-
 
    <tabset #staticTabs>
       <tab [customClass]="'p-0'">
@@ -67,26 +105,46 @@
             <strong>Ordine del giorno</strong>
          </ng-template>
 
-         <div class="clearfix mb-lg">
-            <button type="button" class="btn btn-secondary float-right"
-                    (click)="addPuntoOdg()">
-               <i class="fa fa-lg fa-plus-circle"></i> Nuovo punto o.d.g.
-            </button>
+         <div>
+            <div class="row" sticktoolbar>
+               <div class="col-lg-6">
+                  <div class="py-2">
+                     <button type="button" class="btn btn-outline-primary rel-t-l4"
+                             (click)="createPuntoOdg($event, page_bottom);">
+                        <strong><i class="fa fa-lg fa-plus-square-o mr-2"></i> Nuovo punto o.d.g.</strong>
+                     </button>
+                  </div>
+               </div>
+               <div class="col-lg-6">
+                  <div class="text-right">
+                     <div class="py-2">
+                        <div class="btn-group">
+                           <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="compact" name="viewtype"
+                                  [tooltip]="'Vista compatta'" placement="top">
+                              <i class="fa fa-lg fa-list"></i>
+                           </label>
+                           <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="documents" name="viewtype"
+                                  [tooltip]="'Vista documenti'" placement="top">
+                              <i class="fa fa-lg fa-th-list"></i>
+                           </label>
+                           <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="detail" name="viewtype"
+                                  [tooltip]="'Vista&nbsp;dettaglio'" placement="top">
+                              <i class="fa fa-lg fa-list-alt"></i>
+                           </label>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
          </div>
 
          <ul [dragula]='"cipe_odg"' [dragulaModel]='model.cipe_odg' class="list-group">
             <li *ngFor="let item of model.cipe_odg" class="list-group-item">
-               <cipe-odg-item [item]="item"></cipe-odg-item>
+               <cipe-odg-item [item]="item" [viewtype]="viewtype" (deleteitem)="askDeletePuntoOdg($event, deletePuntoOdgModal)"></cipe-odg-item>
             </li>
          </ul>
 
-         <div class="clearfix mt-lg">
-            <button type="button" class="btn btn-secondary float-right"
-                    (click)="addPuntoOdg()">
-               <i class="fa fa-lg fa-plus-circle"></i> Nuovo punto o.d.g.
-            </button>
-         </div>
-
+         <div id="page-bottom" #page_bottom></div>
       </tab>
       <tab>
          <ng-template tabHeading>
@@ -96,7 +154,7 @@
       </tab>
       <tab>
          <ng-template tabHeading>
-            <strong>Elenco Telex e Fogli presenze<span *ngIf="model.allegati_TLX">({{model.allegati_TLX.length}})</span></strong>
+            <strong>Elenco Telex <span *ngIf="model.allegati_TLX">({{model.allegati_TLX.length}})</span></strong>
          </ng-template>
          <cipe-upload [type]="'TLX'" [allegati]="model.allegati_TLX" [allowUpload]="allowUpload"></cipe-upload>
       </tab>
@@ -108,9 +166,9 @@
       </tab>
       <tab>
          <ng-template tabHeading>
-            <strong>Esito <span *ngIf="model.allegati_OSS">({{model.allegati_ESI.length}})</span></strong>
+            <strong>Esito <span *ngIf="model.allegati_EST">({{model.allegati_EST.length}})</span></strong>
          </ng-template>
-         <cipe-upload [type]="'OSS'" [allegati]="model.allegati_OSS" [allowUpload]="allowUpload"></cipe-upload>
+         <cipe-upload [type]="'EST'" [allegati]="model.allegati_EST" [allowUpload]="allowUpload"></cipe-upload>
       </tab>
    </tabset>
 </form>
@@ -119,12 +177,75 @@
        (onSubmit)="confirmOfficializeCipe(officializeCipeModal)"
        (onCancel)="cancelOfficializeCipe(officializeCipeModal)">
    <modal-header>
-      <h4 class="modal-title fw-bold mt"><i class="fa fa-warning"></i> Confermi l'ufficializzazione del Pre-CIPE ?</h4>
+      <h4 class="modal-title fw-bold mt"><i class="fa fa-warning"></i> Confermi l'ufficializzazione del Cipe ?</h4>
    </modal-header>
    <modal-content>
       <h4 class="mt-sm">
          I punti all'o.d.g. e documenti allegati saranno pubblicati nell'area riservata.<br/><br/>
          A pubblicazione completa, in questa scheda sarà disponibile il collegamento per visualizzarli.
+      </h4>
+   </modal-content>
+   <modal-footer>
+   </modal-footer>
+</modal>
+
+<modal #publishCipeModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true"
+       (onSubmit)="confirmPublishCipe(publishCipeModal)"
+       (onCancel)="cancelPublishCipe(publishCipeModal)">
+   <modal-header>
+      <h4 class="modal-title fw-bold mt"><i class="fa fa-warning"></i> Confermi la pubblicazione del Cipe ?</h4>
+   </modal-header>
+   <modal-content>
+      <h4 class="mt-sm">
+         I punti all'o.d.g. e documenti allegati saranno pubblicati nell'area riservata.<br/><br/>
+         A pubblicazione completa, in questa scheda sarà disponibile il collegamento per visualizzarli.
+      </h4>
+   </modal-content>
+   <modal-footer>
+   </modal-footer>
+</modal>
+
+<modal #removeCipeModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true"
+       (onSubmit)="confirmRemoveCipe(removeCipeModal)"
+       (onCancel)="cancelRemoveCipe(removeCipeModal)">
+   <modal-header>
+      <h4 class="modal-title fw-bold mt"><i class="fa fa-warning"></i> Confermi la rimozione del Cipe dall'area pubblica riservata ?</h4>
+   </modal-header>
+   <modal-content>
+      <h4 class="mt-sm">
+         I punti all'o.d.g. e documenti allegati saranno rimossi dall'area riservata.<br/><br/>
+      </h4>
+   </modal-content>
+   <modal-footer>
+   </modal-footer>
+</modal>
+
+<modal #updateCipeModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true"
+       (onSubmit)="confirmUpdateCipe(updateCipeModal)"
+       (onCancel)="cancelUpdateCipe(updateCipeModal)">
+   <modal-header>
+      <h4 class="modal-title fw-bold mt"><i class="fa fa-warning"></i> Confermi l'aggiornamento del Cipe ?</h4>
+   </modal-header>
+   <modal-content>
+      <h4 class="mt-sm">
+         I punti all'o.d.g. e documenti allegati saranno aggiornati nell'area riservata.<br/><br/>
+         Ad aggiornamento completo, in questa scheda sarà nuovamente disponibile il collegamento per visualizzarli.
+      </h4>
+   </modal-content>
+   <modal-footer>
+   </modal-footer>
+</modal>
+
+<modal #deletePuntoOdgModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true"
+       (onSubmit)="confirmDeletePuntoOdg(deletePuntoOdgModal)"
+       (onCancel)="cancelDeletePuntoOdg(deletePuntoOdgModal)">
+   <modal-header>
+      <h4 class="modal-title fw-bold mt"><i class="fa fa-warning"></i> Confermi la cancellazione del punto all'o.d.g.?</h4>
+   </modal-header>
+   <modal-content>
+      <h4 class="mt-sm">
+         Il punto {{deletingPuntoOdg?.ordine}} - {{deletingPuntoOdg?.denominazione}}
+         sarà rimosso dall'o.d.g.
       </h4>
    </modal-content>
    <modal-footer>

@@ -16,6 +16,7 @@
                         <th><mfDefaultSorter by="codice">Codice</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="denominazione">Denominazione</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="descrizione">Descrizione</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="id_uffici">Ufficio</mfDefaultSorter></th>
                         <th>Azioni</th>
                     </tr>
                     </thead>
@@ -24,6 +25,7 @@
                         <td>{{titolario.codice}}</td>
                         <td>{{titolario.denominazione}}</td>
                         <td>{{titolario.descrizione}}</td>
+                        <td><span *ngIf="titolario.id_uffici" class="badge badge-lg badge-default">{{titolario.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' }}</span> </td>
                         <td>
                             <a (click)="askDeleteTitolari($event, myModal, titolario)"><i class="fa fa-trash-o"> </i></a>
                         </td>

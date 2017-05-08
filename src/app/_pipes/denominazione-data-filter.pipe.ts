@@ -2,9 +2,9 @@ import * as _ from "lodash";
 import {Pipe, PipeTransform} from "@angular/core";
 
 @Pipe({
-    name: "ufficiDataFilter"
+    name: "denominazioneDataFilter"
 })
-export class UfficiDataFilterPipe implements PipeTransform {
+export class DenominazioneDataFilterPipe implements PipeTransform {
 
     transform(array: any[], query: string, filteredCount: any): any {
 

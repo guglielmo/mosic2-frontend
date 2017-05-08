@@ -5,16 +5,16 @@ import { FormsModule, ReactiveFormsModule }     from '@angular/forms';
 import { RouterModule }                         from '@angular/router';
 
 import { ModalModule }                          from 'ngx-modal';
-import { StickTheadModule }                     from '../_directives/stickthead/stickthead.module';
 import { DataTableModule }                      from 'angular2-datatable';
 
-import { PipesDirectivesSharedModule }                    from '../_shared/index'
+import { PipesDirectivesSharedModule }          from '../_shared/index'
+import { Select2Module } from 'ng2-select2';
+
 
 
 import { TitolariListComponent }                from './list/titolari-list.component';
 import { TitolariEditComponent }                from './edit/titolari-edit.component';
 
-import { WidgetModule }                         from '../layout/widget/widget.module';
 
 export const routes = [
   {path: '', redirectTo: 'list', pathMatch: 'full'},
@@ -27,12 +27,11 @@ export const routes = [
 @NgModule({
   imports: [
     CommonModule,
-    WidgetModule,
     FormsModule,
     ReactiveFormsModule,
-
+    Select2Module,
     ModalModule,
-    StickTheadModule,
+
     DataTableModule,
     PipesDirectivesSharedModule,
     RouterModule.forChild(routes)

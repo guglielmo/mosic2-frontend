@@ -4,13 +4,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { ModalModule } from 'ngx-modal';
-import { StickTheadModule } from '../_directives/stickthead/stickthead.module';
+
 import { DataTableModule } from 'angular2-datatable';
 import { IfEmptyPipe } from '../_pipes/index';
 import { PipesDirectivesSharedModule } from '../_shared/index';
 import { Select2Module } from 'ng2-select2';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
-import { WidgetModule } from '../layout/widget/widget.module';
 import { TooltipModule } from 'ng2-bootstrap/tooltip';
 
 // ngx-uploader
@@ -30,13 +29,12 @@ export const routes = [
 @NgModule({
     imports: [
         CommonModule,
-        WidgetModule,
         FormsModule,
         ReactiveFormsModule,
 
         ModalModule,
         DataTableModule,
-        StickTheadModule,
+
         NKDatetimeModule,
         Select2Module,
         NgUploaderModule,

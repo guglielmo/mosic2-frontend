@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {RouterModule} from '@angular/router';
 
 import {ModalModule} from 'ngx-modal';
-import {StickTheadModule} from '../_directives/stickthead/stickthead.module';
 import {DataTableModule} from 'angular2-datatable';
 
 import { PipesDirectivesSharedModule } from '../_shared/index';
@@ -42,7 +41,7 @@ import { Select2Module } from 'ng2-select2';
         ReactiveFormsModule,
         ModalModule,
         DataTableModule,
-        StickTheadModule,
+
         Select2Module,
         PipesDirectivesSharedModule,
         RouterModule.forChild(routes)

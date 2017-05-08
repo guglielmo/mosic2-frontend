@@ -1,7 +1,7 @@
 <div class="pull-right">
     <a [routerLink]=" ['/app/mittenti/edit'] " class="btn btn-primary btn-save">Nuovo Mittente</a>
 </div>
-<h3 class="page-title">Mittente - <span class="fw-semi-bold">Tutti i mittenti</span></h3>
+<h3 class="page-title">Mittenti - <span class="fw-semi-bold">Tutti i mittenti</span></h3>
 
 <section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
     <header>
@@ -38,7 +38,7 @@
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">
                 <table class="table table-hover table-condensed mb-0 table-bordered"
-                       [mfData]="mittenti$ | async | mittentiDataFilter : filter.denominazione : filteredCount"
+                       [mfData]="mittenti$ | async | denominazioneDataFilter : filter.denominazione : filteredCount"
                        [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
                        #mf="mfDataTable" stickthead>
                     <thead>

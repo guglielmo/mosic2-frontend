@@ -6,6 +6,8 @@ import { AppConfig } from '../../app.config';
 import * as _ from 'lodash';
 import { Cipe, CipeOdg } from '../../_models/index';
 import { DragulaService } from 'ng2-dragula';
+import { ScrollToService } from 'ng2-scroll-to-el';
+
 
 @Component({
     templateUrl: 'cipe-edit.component.html'
@@ -22,23 +24,43 @@ export class CipeEditComponent implements OnInit {
 
     private error = '';
     public mode: string;
+    public compact: true;
+    public viewtype: string = 'documents';
     private loading= true;
     private id: number;
     private baseAPIURL: string;
+
     public datePickerOptions;
+    public timePickerOptions;
 
     public officializingCipe = null;
+    public publishingCipe: Cipe = null;
+    public removingCipe: Cipe = null;
+    public updatingCipe: Cipe = null;
+    public deletingPuntoOdg: CipeOdg = null;
+    public status: string = null;
+    public status_msg: null;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
                 public apiService: APICommonService,
                 private dragulaService: DragulaService,
+                private scrollService: ScrollToService,
                 config: AppConfig,
     ) {
         this.config = config.getConfig();
         this.baseAPIURL =  this.config.baseAPIURL + '/api/cipe/';
 
         this.datePickerOptions = config.datePickerOptions;
+
+ /*       this.timePickerOptions = {
+            minuteStep: 1,
+            template: 'modal',
+            appendWidgetTo: 'body',
+            showSeconds: false,
+            showMeridian: false,
+            defaultTime: false
+        };*/
 
         dragulaService.drag.subscribe((value) => {
             console.log(`drag: ${value[0]}`);
@@ -67,7 +89,7 @@ export class CipeEditComponent implements OnInit {
         switch ( this.mode ) {
             case 'create':
                 this.model = new Cipe();
-                this.addPuntoOdg();
+                this.createPuntoOdg();
 
                 //console.log(this.model);
                 this.loading = false;
@@ -80,13 +102,14 @@ export class CipeEditComponent implements OnInit {
                             this.model.data = new Date(this.model.data);
 
                             // todo: chiedere ad alessando di aggiungere i campi
-                            //this.model.cipe_odg = _.map(this.model.cipe_odg, o => _.extend({allegati_esclusi: [],
-                            // allegati_esclusi_approvati: []}, o));
+                            //this.model.public_reserved_url =
+                            // "http://www.google.it/bceykber6hiub8nbn8@#gdyuevcuhluickjdbuycgdkyhbckuydgcbdbvuykgwlsxvh";
 
                             this.loading = false;
                             this.allowUpload = true;
-                            // console.log(this.model);
 
+                            this.pollStatus(false);
+                            // console.log(this.model);
                         },
                         error => {
                             this.error = error; console.log(error);
@@ -96,8 +119,40 @@ export class CipeEditComponent implements OnInit {
         }
     }
 
-    addPuntoOdg() {
+    createPuntoOdg($event?, element?) {
+        if($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+        }
+
         this.model.cipe_odg.push(new CipeOdg());
+
+        if(element) {
+            this.scrollService.scrollTo(element, 1500);
+        }
+    }
+
+    askDeletePuntoOdg(id: number, modal: any) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.deletingPuntoOdg = _.find(this.model.cipe_odg, o => { return o.id === id });
+        console.log(id,this.deletingPuntoOdg);
+        modal.open();
+        return false;
+    }
+
+    confirmDeletePuntoOdg(modal: any) {
+        modal.close();
+        this.deletePuntoOdg(this.deletingPuntoOdg.id);
+    }
+
+    cancelDeletePuntoOdg(modal: any) {
+        modal.close();
+        this.deletingPuntoOdg = null;
+    }
+
+    deletePuntoOdg(id: number) {
+        this.model.cipe_odg = _.filter(this.model.cipe_odg, o => { return o.id !== id; });
     }
 
     castToArray(item) {
@@ -158,17 +213,92 @@ export class CipeEditComponent implements OnInit {
         // do something
     }
 
+    startPublishOrUpdate(){
+        this.apiService.getById('areariservata/cipe', this.id)
+            .subscribe(
+                response => {
+                    this.pollStatus();
+                    console.log(response);
+                },
+                error => {
+                    console.log(error);
+
+                }
+            );
+    }
+
+    pollStatus( repeat = true ){
+        let _self = this;
+        this.apiService.getById('areariservata/cipe/check', this.id)
+            .subscribe(
+                response => {
+                    if(response.data.message) {
+                        _self.status_msg = response.data.message;
+                    }
+
+                    if ( repeat ) {
+                        setTimeout(function () {
+                                _self.pollStatus();
+                        }, 5000);
+                    }
+
+
+                    console.log(response);
+                },
+                error => {
+
+                    if(error.error) {
+                        _self.status = 'error';
+                        if(error.error.message) {
+                            _self.status_msg = error.error.message;
+                        }
+                        if(error.error.url) {
+                            _self.model.public_reserved_url = error.error.url;
+                        }
+                    }
+
+                    console.log(error.error.url);
+                }
+            );
+    }
+
+    getStatus(id) {
+        this.apiService.getById('areariservata/cipe/check', id)
+            .subscribe(
+                response => {
+                    console.log(response);
+                },
+                error => {
+                    console.log(error);
+
+                }
+            );
+    }
+
+    startRemove(){
+        this.apiService.delete('areariservata/cipe', this.id)
+            .subscribe(
+                response => {
+                    console.log(response);
+                },
+                error => {
+                    console.log(error);
+
+                }
+            );
+    }
+
 
     /*
      *
-     * OFFICIALIZE PRE-CIPE
+     * OFFICIALIZE CIPE
      *
      */
 
-    askOfficializeCipe(event: any, modal: any, cipe: Cipe) {
+    askOfficializeCipe(event: any, modal: any, Cipe: Cipe) {
         event.stopPropagation();
         event.preventDefault();
-        this.officializingCipe = cipe;
+        this.officializingCipe = Cipe;
         modal.open();
         return false;
     }
@@ -176,6 +306,7 @@ export class CipeEditComponent implements OnInit {
     confirmOfficializeCipe(modal: any) {
         modal.close();
         this.officializeCipe(this.officializingCipe);
+        this.status = 'publishing';
     }
 
     cancelOfficializeCipe(modal: any) {
@@ -183,11 +314,96 @@ export class CipeEditComponent implements OnInit {
         this.officializingCipe = null;
     }
 
-    officializeCipe(cipe: Cipe){
-        setTimeout(() => {
-            this.model.ufficiale_riunione = '1';
-            this.officializingCipe = null;
-        }, 4000);
+    officializeCipe(Cipe: Cipe){
+        this.startPublishOrUpdate();
+    }
+
+    /*
+     *
+     * PUBLISH CIPE
+     *
+     */
+
+    askPublishCipe(event: any, modal: any, Cipe: Cipe) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.publishingCipe = Cipe;
+        modal.open();
+        return false;
+    }
+
+    confirmPublishCipe(modal: any) {
+        modal.close();
+        this.publishCipe(this.publishingCipe);
+        this.status = 'publishing';
+    }
+
+    cancelPublishCipe(modal: any) {
+        modal.close();
+        this.publishingCipe = null;
+    }
+
+    publishCipe(Cipe: Cipe){
+        this.startPublishOrUpdate();
+    }
+
+    /*
+     *
+     * REMOVE CIPE
+     *
+     */
+
+    askRemoveCipe(event: any, modal: any, Cipe: Cipe) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.removingCipe = Cipe;
+        modal.open();
+        return false;
+    }
+
+    confirmRemoveCipe(modal: any) {
+        modal.close();
+        this.removeCipe(this.removingCipe);
+        this.status = 'removing';
+    }
+
+    cancelRemoveCipe(modal: any) {
+        modal.close();
+        this.removingCipe = null;
+    }
+
+    removeCipe(cipe: Cipe){
+        this.startRemove();
+    }
+
+
+    /*
+     *
+     * UPDATE CIPE
+     *
+     */
+
+    askUpdateCipe(event: any, modal: any, Cipe: Cipe) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.updatingCipe = Cipe;
+        modal.open();
+        return false;
+    }
+
+    confirmUpdateCipe(modal: any) {
+        modal.close();
+        this.updateCipe(this.updatingCipe);
+        this.status = 'updating';
+    }
+
+    cancelUpdateCipe(modal: any) {
+        modal.close();
+        this.updatingCipe = null;
+    }
+
+    updateCipe(cipe: Cipe){
+        this.startPublishOrUpdate();
     }
 
     private jwt() {

@@ -1,7 +1,7 @@
 <div class="pull-right">
     <a [routerLink]=" ['/app/amministrazioni/edit'] " class="btn btn-primary btn-save">Nuova Amministrazione</a>
 </div>
-<h3 class="page-title">Amministrazione - <span class="fw-semi-bold">Tutte le amministrazioni</span></h3>
+<h3 class="page-title">Amministrazioni - <span class="fw-semi-bold">Tutte le amministrazioni</span></h3>
 
 <section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
     <header>
@@ -38,7 +38,7 @@
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">
                 <table class="table table-hover table-condensed mb-0 table-bordered"
-                       [mfData]="amministrazioni$ | async | amministrazioniDataFilter : filter.denominazione : filteredCount"
+                       [mfData]="amministrazioni$ | async | denominazioneDataFilter : filter.denominazione : filteredCount"
                        [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
                        #mf="mfDataTable" stickthead>
                     <thead>

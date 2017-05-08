@@ -25,7 +25,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
 
     private config: any;
     public model: any = {};
-    private error = '';
+    public error = '';
     public mode: string;
     private loading = false;
     private select2Debounce = false;

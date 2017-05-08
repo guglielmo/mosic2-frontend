@@ -8,7 +8,7 @@ export class CipeOdg {
     id_fascicoli: number;
     id_registri: number[];
     id_argomenti: number;
-    id_uffici: number;
+    id_uffici: string;
     ordine: string;
     denominazione: string;
     esito: number;

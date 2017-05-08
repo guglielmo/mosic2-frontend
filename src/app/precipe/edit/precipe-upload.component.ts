@@ -106,8 +106,10 @@ export class PreCipeUploadComponent implements OnInit {
             console.log(data);
 
         } else if (data && data.response) {
-
             // upload success
+            if(!Array.isArray(this.allegati)) {
+                this.allegati = [];
+            }
 
             if (data.done) {
                 this.allegati.push(JSON.parse(data.response));

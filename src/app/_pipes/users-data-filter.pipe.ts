@@ -2,11 +2,11 @@ import * as _ from "lodash";
 import {Pipe, PipeTransform} from "@angular/core";
 
 @Pipe({
-    name: "amministrazioniDataFilter"
+    name: "usersDataFilter"
 })
-export class AmministrazioniDataFilterPipe implements PipeTransform {
+export class UsersDataFilterPipe implements PipeTransform {
 
-    transform(array: any[], query: string, filteredCount: any): any {
+    transform(array: any[], query: string, id_uffici: any, id_ruoli_cipe: any, filteredCount: any): any {
 
         let keys = query.toUpperCase().split(' ');
         let keysLen = keys.length;
@@ -14,9 +14,13 @@ export class AmministrazioniDataFilterPipe implements PipeTransform {
 
         // pre-compute some conditions to execute checks outside the loop
         let qL = query.length > 2;
+        let tL = id_uffici != '';
+        let aL = id_ruoli_cipe != '';
 
         let results = _.filter(array, row => {
 
+            if (tL && row.id_uffici != id_uffici) return false;
+            if (aL && row.id_ruoli_cipe != id_ruoli_cipe) return false;
             if (qL) {
                 for (i = 0; i < keysLen; i++) {
                     if ((row.denominazione.toUpperCase()).indexOf((keys[i])) == -1) {

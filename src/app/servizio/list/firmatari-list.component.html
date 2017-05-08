@@ -1,0 +1,90 @@
+<div class="pull-right">
+    <a [routerLink]=" ['/app/firmatari/edit'] " class="btn btn-primary btn-save">Nuovo Firmatario</a>
+</div>
+<h3 class="page-title">Firmatari - <span class="fw-semi-bold">Tutti i firmatari</span></h3>
+
+<section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
+    <header>
+        <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">firmatari ...</span>
+            <span *ngIf="filter.denominazione_estesa.length > 2" class="float-lg-right mr-3">
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+            </span>
+        </h5>
+        <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">firmatari ...</span>
+            <span *ngIf="filter.denominazione_estesa.length > 2" class="float-lg-right mr-3">
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+            </span>
+        </h5>
+        <div class="widget-controls m-t-1">
+            <a data-widgster="expand" title="Apri"><i class="glyphicon glyphicon-chevron-down"></i></a>
+            <a data-widgster="collapse" title="Chiudi"><i class="glyphicon glyphicon-chevron-up"></i></a>
+        </div>
+    </header>
+    <div class="widget-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="argomento"><strong>Denominazione</strong></label>
+                    <input id="argomento" name="argomento" class="form-control" [(ngModel)]="filter.denominazione_estesa" placeholder="Digita almeno 3 caratteri..."/>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div *ngIf="apiService.commonDataready" class="row">
+    <div class="col-lg-12">
+        <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
+        <section class="widget py-0" widget>
+            <div class="widget-body widget-table-overflow">
+
+                <table class="table table-hover table-condensed mb-0 table-bordered"
+                       [mfData]="firmatari$ | async | denominazioneDataFilter : filter.denominazione_estesa : filteredCount"
+                       [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
+                       #mf="mfDataTable" stickthead>
+                    <thead>
+                    <tr>
+                        <th><mfDefaultSorter by="id">#</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="chiave">Codice</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="denominazione">Denominazione</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="denominazione_estesa">Denominazione estesa</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="tipo">Tipo</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="disattivato">Stato</mfDefaultSorter></th>
+                        <th>Azioni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let firmatario of mf.data" (click)="editId(firmatario.id)" class="clickable">
+                        <td>{{firmatario.id}}</td>
+                        <td>{{firmatario.chiave}}</td>
+                        <td>{{firmatario.denominazione}}</td>
+                        <td [innerHTML]="firmatario.denominazione_estesa | dataMark : filter.denominazione_estesa"></td>
+                        <td>{{firmatario.tipo}} - {{ firmatario.tipo | dataEnum : apiService.dataEnum : 'firmataritipo' : 'denominazione' }}</td>
+                        <td>
+                            <span *ngIf="firmatario.disattivato === 0" class="badge badge-success">Attivo</span>
+                            <span *ngIf="firmatario.disattivato === 1" class="badge badge-danger">Non attivo</span>
+                        <td>
+                            <a (click)="askDeleteFirmatari($event, myModal, firmatario)"><i class="fa fa-trash-o"> </i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <footer>
+            </footer>
+        </section>
+    </div>
+</div>
+
+<modal #myModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteFirmatari(myModal)">
+    <modal-header>
+        <h4 class="modal-title text-center fw-bold mt">Conferma cancellazione firmatario</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="text-center mt-sm">
+            Vuoi eliminare il firmatario {{deletingFirmatari.id}} {{deletingFirmatari.denominazione}} ?
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>

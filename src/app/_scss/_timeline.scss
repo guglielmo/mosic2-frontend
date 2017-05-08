@@ -1,0 +1,151 @@
+.iter_stepline {
+  margin: 30px 0 0 0;
+  padding: 0;
+  list-style: none;
+  position: relative;
+
+  /* The line */
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 12%;
+    width: 10px;
+    background: #dadada;
+    margin-left: -10px;
+  }
+
+  > li {
+    position: relative;
+
+    /* The title */
+    .iter_step_title {
+      display: block;
+      width: 14%;
+      padding-right: 100px;
+      position: absolute;
+
+      span {
+        display: block;
+        font-size: 1.2em;
+        font-weight: 600;
+        color: #333;
+      }
+    }
+
+    .iter_divider_box {
+      margin: 0 0 15px 15%;
+      color: #222;
+      line-height: 1.4;
+      position: relative;
+    }
+
+    /* Right content */
+    .iter_step_box {
+      margin: 0 0 15px 15%;
+      background: #fff;
+      color: #222;
+      padding: 1.5em;
+      line-height: 1.4;
+      position: relative;
+      border-radius: 5px;
+
+      /* The triangle */
+      &:after {
+        right: 100%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-right-color: #fff;
+        border-width: 10px;
+        top: 10px;
+      }
+    }
+
+    /* The bullet */
+    .iter_step_bullet {
+      width: 32px;
+      height: 32px;
+      position: absolute;
+      color: #fff;
+      background: #eeeeee;
+      border-radius: 50%;
+      box-shadow: 0 0 0 8px #dadada;
+      text-align: center;
+      left: 12%; top: 8px;
+      margin: 0 0 0 -21px;
+
+      &.green {
+        background: #64bd63;
+        box-shadow: 0 0 0 8px lighten(#64bd63, 15);
+      }
+    }
+  }
+
+  > li:nth-child(odd) {
+
+    /* Right content - Odd lines */
+    .iter_step_box {
+      background: #fff;
+
+      /* The triangle - Odd lines */
+      &:after {
+        border-right-color: #fff;
+      }
+    }
+  }
+}
+
+
+/* Example Media Queries */
+@media screen and (max-width: 65.375em) {
+
+  .iter_stepline > li .iter_step_title span:last-child {
+    font-size: 1.5em;
+  }
+}
+
+@media screen and (max-width: 47.2em) {
+  .iter_stepline:before {
+    display: none;
+  }
+
+  .iter_stepline > li .iter_step_title {
+    width: 100%;
+    position: relative;
+    padding: 0 0 20px 0;
+  }
+
+  .iter_stepline > li .iter_step_title span {
+    text-align: left;
+  }
+
+  .iter_stepline > li .iter_step_box {
+    margin: 0 0 30px 0;
+    padding: 1em;
+    font-weight: 400;
+    font-size: 95%;
+  }
+
+  .iter_stepline > li .iter_step_box:after {
+    right: auto;
+    left: 20px;
+    border-right-color: transparent;
+    border-bottom-color: #3594cb;
+    top: -20px;
+  }
+
+  .iter_stepline > li:nth-child(odd) .iter_step_box:after {
+    border-right-color: transparent;
+    border-bottom-color: #6cbfee;
+  }
+
+  .iter_stepline > li .iter_step_bullet {
+    position: relative;
+    float: right;
+    left: auto;
+    margin: -55px 5px 0 0px;
+  }
+}

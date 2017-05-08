@@ -3,10 +3,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 
-import { Fascicoli } from '../../_models/index';
-
+import { Titolari, Fascicoli, Uffici } from '../../_models/index';
 
 import { APICommonService } from '../../_services/index';
+import { AppConfig } from '../../app.config';
 
 @Component({
     templateUrl: 'titolari-edit.component.html'
@@ -14,19 +14,28 @@ import { APICommonService } from '../../_services/index';
 
 export class TitolariEditComponent implements OnInit {
 
-    public model: any = {};
-    private error = '';
+    private config: any;
+    public model: Titolari = new Titolari;
+    public error = '';
     public mode: string;
-    private loading= true;
+    public loading = true;
     private id: number;
 
     private filteredCount = {count: 0};
+    private uffici$: Observable<Uffici[]>;
     private fascicoli$: Observable<Fascicoli[]>;
+
+    public select2Options: Select2Options;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
+                config: AppConfig,
                 public apiService: APICommonService
     ) {
+        this.config = config.getConfig();
+        this.select2Options = config.select2Options;
+
+        this.uffici$ = this.apiService.subscribeToDataService('uffici');
         this.fascicoli$ = this.apiService.subscribeToDataService('fascicoli');
     }
 
@@ -110,5 +119,9 @@ export class TitolariEditComponent implements OnInit {
 
             return e[val] ? e[val]['denominazione'] : '';
         }
+    }
+
+    select2Changed(e: any, name: string): void {
+        this.model[name] = typeof e.value === 'object' ? e.value.join(',') : Number(e.value);
     }
 }

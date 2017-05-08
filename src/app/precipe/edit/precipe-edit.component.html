@@ -26,7 +26,7 @@
     <section class="widget">
         <div class="widget-body">
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !data.valid }">
                         <label for="data"><strong>Data della riunione</strong></label>
                         <datetime id="data" name="data"
@@ -35,7 +35,7 @@
                                   [(ngModel)]="model.data" #data="ngModel" required></datetime>
                     </div>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="ufficiale_riunione"><strong>Stato</strong></label>
                         <div>
@@ -51,21 +51,21 @@
                             <span *ngIf="model.ufficiale_riunione === '0' && officializingPreCipe === null"
                                   class="badge badge-lg badge-danger rel-t-l10">Bozza</span>
 
-                            <span *ngIf="model.ufficiale_riunione === '1' && status === null">
+                            <span *ngIf="model.ufficiale_riunione === '1' && status === null || status === 'error'">
                                 <span class="d-inline-block text-center rel-t-m4 float-right">
 
-                                    <button *ngIf="model.public_reserved_URL"
+                                    <button *ngIf="model.public_reserved_url"
                                             class="btn btn-secondary ml-2 btn-xs" role="button"
                                             (click)="askUpdatePreCipe($event, updatePreCipeModal, model)"
                                     > <i class="fa fa-lg fa-refresh"></i> &nbsp; Aggiorna </button>
 
-                                    <button *ngIf="!model.public_reserved_URL"
+                                    <button *ngIf="!model.public_reserved_url"
                                             class="btn btn-secondary ml-2 btn-xs" role="button"
                                             (click)="askPublishPreCipe($event, publishPreCipeModal, model)"
                                     > <i class="fa fa-lg fa-repeat"></i> &nbsp; Pubblica </button>
 
 
-                                    <button *ngIf="model.public_reserved_URL"
+                                    <button *ngIf="model.public_reserved_url"
                                             class="btn btn-secondary ml-2 btn-xs" role="button"
                                             (click)="askRemovePreCipe($event, removePreCipeModal, model)"
                                     > <i class="fa fa-lg fa-trash"></i> &nbsp; Rimuovi </button>
@@ -74,6 +74,11 @@
                             </span>
                             <span *ngIf="status === 'publishing'" class="rel-t-l10"> <i
                                     class="loading-spinner"></i> Pubblicazione in corso...</span>
+                            <span *ngIf="status_msg" class="rel-t-l10"> <span *ngIf="status === 'error'"><i
+                                    class="fa fa-warning"></i></span> {{status_msg}}</span>
+<!--                            <progressbar class="progress-striped active" [value]="" [max]="" [type]="'info'">
+                                {{type}} <i *ngIf="showWarning">!!!Watch out !!!</i>
+                            </progressbar>-->
                         </div>
                     </div>
                 </div>
@@ -81,10 +86,10 @@
                     <div class="form-group">
                         <label for="ufficiale_riunione"><strong>Indirizzo pubblico riservato</strong></label>
 
-                        <div *ngIf="model.public_reserved_URL" class="rel-t-m4 mb-3">
-                            <a href="{{model.public_reserved_URL}}" target="_blank" class="dont-break-out">{{model.public_reserved_URL}}</a>
+                        <div *ngIf="model.public_reserved_url" class="rel-t-m4 mb-3">
+                            <a href="{{model.public_reserved_url}}" target="_blank" class="dont-break-out">{{model.public_reserved_url}}</a>
                         </div>
-                        <div *ngIf="!model.public_reserved_URL" class="rel-t-m4 mb-3">
+                        <div *ngIf="!model.public_reserved_url" class="rel-t-m4 mb-3">
                             N/D
                         </div>
 
@@ -103,36 +108,38 @@
                 <strong>Ordine del giorno</strong>
             </ng-template>
 
-            <table class="table" stickthead>
-                <thead>
-                <tr>
-                    <th>
-                        <button type="button" class="btn btn-outline-primary rel-t-l4" href="#page-bottom" pageScroll [pageScrollEasing]="myEasing"
-                                (click)="createPuntoOdg()">
-                            <strong><i class="fa fa-lg fa-plus-square-o mr-2"></i> Nuovo punto o.d.g.</strong>
-                        </button>
-                    </th>
-                    <th>
+            <div>
+                <div class="row" sticktoolbar>
+                    <div class="col-lg-6">
+                        <div class="py-2">
+                            <button type="button" class="btn btn-outline-primary rel-t-l4"
+                                    (click)="createPuntoOdg($event, page_bottom);">
+                                <strong><i class="fa fa-lg fa-plus-square-o mr-2"></i> Nuovo punto o.d.g.</strong>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
                         <div class="text-right">
-                            <div class="btn-group">
-                                <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="compact" name="viewtype"
-                                       [tooltip]="'Vista compatta'" placement="top">
-                                    <i class="fa fa-lg fa-list"></i>
-                                </label>
-                                <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="documents" name="viewtype"
-                                       [tooltip]="'Vista documenti'" placement="top">
-                                    <i class="fa fa-lg fa-th-list"></i>
-                                </label>
-                                <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="detail" name="viewtype"
-                                       [tooltip]="'Vista&nbsp;dettaglio'" placement="top">
-                                    <i class="fa fa-lg fa-list-alt"></i>
-                                </label>
+                            <div class="py-2">
+                                <div class="btn-group">
+                                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="compact" name="viewtype"
+                                           [tooltip]="'Vista compatta'" placement="top">
+                                        <i class="fa fa-lg fa-list"></i>
+                                    </label>
+                                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="documents" name="viewtype"
+                                           [tooltip]="'Vista documenti'" placement="top">
+                                        <i class="fa fa-lg fa-th-list"></i>
+                                    </label>
+                                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="detail" name="viewtype"
+                                           [tooltip]="'Vista&nbsp;dettaglio'" placement="top">
+                                        <i class="fa fa-lg fa-list-alt"></i>
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                    </th>
-                </tr>
-                </thead>
-            </table>
+                    </div>
+                </div>
+            </div>
 
             <ul [dragula]='"precipe_odg"' [dragulaModel]='model.precipe_odg' class="list-group">
                 <li *ngFor="let item of model.precipe_odg" class="list-group-item">
@@ -140,13 +147,7 @@
                 </li>
             </ul>
 
-            <div class="clearfix mt-lg">
-                <button type="button" class="btn btn-outline-primary" href="#page-bottom" pageScroll [pageScrollEasing]="myEasing"
-                        (click)="createPuntoOdg()">
-                    <strong><i class="fa fa-lg fa-plus-square-o mr-2"></i> Nuovo punto o.d.g.</strong>
-                </button>
-            </div>
-            <div id="page-bottom"></div>
+            <div id="page-bottom" #page_bottom></div>
         </tab>
         <tab>
             <ng-template tabHeading>

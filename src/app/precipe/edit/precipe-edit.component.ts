@@ -1,8 +1,4 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import { DOCUMENT } from '@angular/platform-browser';
-import {PageScrollInstance, PageScrollService, EasingLogic} from 'ng2-page-scroll';
-
-
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { APICommonService } from '../../_services/index';
 import { AppConfig } from '../../app.config';
@@ -10,9 +6,11 @@ import { AppConfig } from '../../app.config';
 import * as _ from 'lodash';
 import { PreCipe, PreCipeOdg } from '../../_models/index';
 import { DragulaService } from 'ng2-dragula';
+import { ScrollToService } from 'ng2-scroll-to-el';
+
 
 @Component({
-    templateUrl: 'precipe-edit.component.html'
+    templateUrl: 'precipe-edit.component.html',
 })
 
 export class PreCipeEditComponent implements OnInit {
@@ -31,7 +29,9 @@ export class PreCipeEditComponent implements OnInit {
     private loading= true;
     private id: number;
     private baseAPIURL: string;
+
     public datePickerOptions;
+    public timePickerOptions;
 
     public officializingPreCipe: PreCipe = null;
     public publishingPreCipe: PreCipe = null;
@@ -39,19 +39,27 @@ export class PreCipeEditComponent implements OnInit {
     public updatingPreCipe: PreCipe = null;
     public deletingPuntoOdg: PreCipeOdg = null;
     public status: string = null;
+    public status_msg: null;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
                 public apiService: APICommonService,
                 private dragulaService: DragulaService,
-                @Inject(DOCUMENT) private document: any,
-                private pageScrollService: PageScrollService,
+                private scrollService: ScrollToService,
                 config: AppConfig,
     ) {
         this.config = config.getConfig();
         this.baseAPIURL =  this.config.baseAPIURL + '/api/precipe/';
 
         this.datePickerOptions = config.datePickerOptions;
+
+/*        this.timePickerOptions = {
+            minuteStep: 1,
+            template: 'modal',
+            appendWidgetTo: 'body',
+            showSeconds: false,
+            showMeridian: false
+        };*/
 
         dragulaService.drag.subscribe((value) => {
             console.log(`drag: ${value[0]}`);
@@ -93,12 +101,14 @@ export class PreCipeEditComponent implements OnInit {
                             this.model.data = new Date(this.model.data);
 
                             // todo: chiedere ad alessando di aggiungere i campi
-                            this.model.public_reserved_URL = "http://www.google.it/bceykber6hiub8nbn8@#gdyuevcuhluickjdbuycgdkyhbckuydgcbdbvuykgwlsxvh";
+                            //this.model.public_reserved_url =
+                            // "http://www.google.it/bceykber6hiub8nbn8@#gdyuevcuhluickjdbuycgdkyhbckuydgcbdbvuykgwlsxvh";
 
                             this.loading = false;
                             this.allowUpload = true;
-                            // console.log(this.model);
 
+                            this.pollStatus(false);
+                            // console.log(this.model);
                         },
                         error => {
                             this.error = error; console.log(error);
@@ -108,19 +118,18 @@ export class PreCipeEditComponent implements OnInit {
         }
     }
 
-    createPuntoOdg() {
-        this.model.precipe_odg.push(new PreCipeOdg());
-    }
-
-    public myEasing: EasingLogic = {
-        ease: (t: number, b: number, c: number, d: number): number => {
-            // easeInOutExpo easing
-            if (t === 0) return b;
-            if (t === d) return b + c;
-            if ((t /= d / 2) < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
-            return c / 2 * (-Math.pow(2, -10 * --t) + 2) + b;
+    createPuntoOdg($event?, element?) {
+        if($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
         }
-    };
+
+        this.model.precipe_odg.push(new PreCipeOdg());
+
+        if(element) {
+            this.scrollService.scrollTo(element, 1500);
+        }
+    }
 
     askDeletePuntoOdg(id: number, modal: any) {
         event.stopPropagation();
@@ -186,28 +195,32 @@ export class PreCipeEditComponent implements OnInit {
     private onDrag(args) {
         const [e, el] = args;
         // do something
+        console.log('ondrag',e, el);
     }
 
     private onDrop(args) {
         const [e, el] = args;
         // do something
+        console.log('ondrop',e, el);
     }
 
     private onOver(args) {
         const [e, el, container] = args;
         // do something
+        console.log('onover',e, el, container);
     }
 
     private onOut(args) {
         const [e, el, container] = args;
         // do something
+        console.log('onout',e, el, container);
     }
 
-    startPublishOrUpdate(id){
-        this.apiService.getById('areariservata/precipe',id)
+    startPublishOrUpdate(){
+        this.apiService.getById('areariservata/precipe',this.id)
             .subscribe(
                 response => {
-                    this.pollStatus(id);
+                    this.pollStatus();
                     console.log(response);
                 },
                 error => {
@@ -217,14 +230,57 @@ export class PreCipeEditComponent implements OnInit {
             );
     }
 
-    pollStatus(id){
-        this.apiService.getAll('precipe/'+id+'/upload_status')
+    pollStatus( repeat = true ){
+        let _self = this;
+        this.apiService.getById('areariservata/precipe/check', this.id)
             .subscribe(
                 response => {
-                    setTimeout(id => {
-                        this.pollStatus(id);
-                    },5000);
+                    if(response.data.message) {
+                        _self.status_msg = response.data.message;
+                    }
 
+
+                    if(response.data.public_reserved_url) {
+                        _self.model.public_reserved_url = response.data.public_reserved_url;
+                    }
+
+                    if(response.data.files_uploaded && response.data.files_total) {
+                        if (response.data.files_uploaded === response.data.files_total) {
+                            _self.status = null;
+                            return;
+                        }
+                    }
+
+                    if ( repeat ) {
+                        setTimeout(function () {
+                            _self.pollStatus();
+                        }, 2000);
+                    }
+
+
+                    console.log(response);
+                },
+                error => {
+
+                    if(error.error) {
+                        _self.status = 'error';
+                        if(error.error.message) {
+                            _self.status_msg = error.error.message;
+                        }
+                        if(error.error.url) {
+                            _self.model.public_reserved_url = error.error.url;
+                        }
+                    }                    
+                    
+                    console.log(error.error.url);
+                }
+            );
+    }
+
+    getStatus(id) {
+        this.apiService.getById('areariservata/precipe/check', id)
+            .subscribe(
+                response => {
                     console.log(response);
                 },
                 error => {
@@ -234,8 +290,29 @@ export class PreCipeEditComponent implements OnInit {
             );
     }
 
-    startRemove(id){
-
+    startRemove() {
+        let _self = this;
+        this.apiService.delete('areariservata/precipe', this.id)
+            .subscribe(
+                response => {
+                    if(response.data.message) {
+                        _self.status_msg = response.data.message;
+                        _self.model.public_reserved_url = null;
+                        _self.status = null;
+                    }
+                },
+                error => {
+                    if(error.error) {
+                        _self.status = 'error';
+                        if(error.error.message) {
+                            _self.status_msg = error.error.message;
+                        }
+                        if(error.error.url) {
+                            _self.model.public_reserved_url = error.error.url;
+                        }
+                    }
+                }
+            )
     }
 
 
@@ -265,14 +342,7 @@ export class PreCipeEditComponent implements OnInit {
     }
 
     officializePreCipe(precipe: PreCipe){
-        this.startPublishOrUpdate(this.id);
-
-/*        setTimeout(() => {
-            this.model.public_reserved_URL = "http://www.google.it/bceykber6hiub8nbn8@#gdyuevcuhluickjdbuycgdkyhbckuydgcbdbvuykgwlsxvh";
-            this.model.ufficiale_riunione = '1';
-            this.officializingPreCipe = null;
-            this.status = null;
-        }, 4000);*/
+        this.startPublishOrUpdate();
     }
 
     /*
@@ -301,14 +371,7 @@ export class PreCipeEditComponent implements OnInit {
     }
 
     publishPreCipe(precipe: PreCipe){
-        this.startPublishOrUpdate(this.id);
-
-/*        setTimeout(() => {
-            this.model.public_reserved_URL = "http://www.google.it/bceykber6hiub8nbn8@#gdyuevcuhluickjdbuycgdkyhbckuydgcbdbvuykgwlsxvh";
-            this.model.ufficiale_riunione = '1';
-            this.publishingPreCipe = null;
-            this.status = null;
-        }, 4000);*/
+        this.startPublishOrUpdate();
     }    
 
     /*
@@ -337,11 +400,7 @@ export class PreCipeEditComponent implements OnInit {
     }
 
     removePreCipe(precipe: PreCipe){
-        setTimeout(() => {
-            this.model.public_reserved_URL = null;
-            this.removingPreCipe = null;
-            this.status = null;
-        }, 4000);
+        this.startRemove();
     }
 
 
@@ -371,7 +430,7 @@ export class PreCipeEditComponent implements OnInit {
     }
 
     updatePreCipe(precipe: PreCipe){
-        this.startPublishOrUpdate(this.id);
+        this.startPublishOrUpdate();
     }
 
     private jwt() {

@@ -32,7 +32,7 @@
                                  class="form-control full-width-select"
                                  [options]="select2Options"
                                  value="{{model.id_titolari}}"
-                                 cssImport="false"
+                                 [cssImport]="false"
                                  (valueChanged)="select2Changed($event,'id_titolari')"
                                  [data]="titolari$ | async" required></select2></div>
                     </div>
@@ -72,7 +72,7 @@
                                  class="full-width-select"
                                  [options]="select2WithAddOptionsMulti"
                                  [value]="model.id_amministrazioni ? model.id_amministrazioni.split(',') : ''"
-                                 cssImport="false"
+                                 [cssImport]="false"
                                  (valueChanged)="select2Changed($event,'id_amministrazioni')"
                                  [data]="amministrazioni$ | async"></select2></div>
                     </div>
