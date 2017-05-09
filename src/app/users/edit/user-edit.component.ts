@@ -2,6 +2,9 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppConfig } from "../../app.config";
 import { APICommonService } from '../../_services/index';
+import { Observable } from 'rxjs/Observable';
+
+import { Uffici, RuoliCipe } from '../../_models/index'
 
 @Component({
     templateUrl: 'user-edit.component.html',
@@ -17,6 +20,9 @@ export class UserEditComponent implements OnInit {
     loading= false;
     id: number;
 
+    public uffici$: Observable<Uffici[]>;
+    public ruoli_cipe$: Observable<RuoliCipe[]>;
+
     public select2Options: Select2Options;
 
     constructor(private router: Router,
@@ -26,6 +32,8 @@ export class UserEditComponent implements OnInit {
     ) {
         this.config = config.getConfig();
         this.select2Options = config.select2Options;
+        this.uffici$ = this.apiService.subscribeToDataService('uffici');
+        this.ruoli_cipe$ = this.apiService.subscribeToDataService('ruoli_cipe');
     }
 
     ngOnInit() {
