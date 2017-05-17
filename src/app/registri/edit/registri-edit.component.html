@@ -23,6 +23,9 @@
     </h3>
     <h3 class="page-title fw-semi-bold"><span *ngIf="mode == 'update'">{{model.oggetto}}</span></h3>
 
+
+    {{f.form.valid}}
+
     <div class="row">
         <div class="col-lg-6">
 
@@ -99,7 +102,19 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="id_amministrazioni"><strong>Amministrazione</strong></label>
+                                        <div class="select2-H-keeper"><select2 id="id_amministrazioni"
+                                                                               class="full-width-select"
+                                                                               [options]="select2WithAddOptionsMulti"
+                                                                               [value]="model.id_amministrazioni ? model.id_amministrazioni.split(',') : ''"
+                                                                               [cssImport]="false"
+                                                                               (valueChanged)="select2Changed($event,'id_amministrazioni')"
+                                                                               [data]="amministrazioni$ | async"></select2></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="id_mittenti"><strong>Mittente</strong></label>
                                         <div class="select2-H-keeper"><select2 id="id_mittenti"
@@ -114,7 +129,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-7">
-                                    <div class="form-group">
+                                    <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !protocollo_mittente.valid }">
                                         <label for="Protocollo_Mittente">Numero</label>
                                         <input id="protocollo_mittente" name="protocollo_mittente"
                                                type="text" class="form-control"
@@ -123,12 +138,12 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-5">
-                                    <div class="form-group">
+                                    <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !data_mittente.valid }">
                                         <label for="data_mittente">Data</label>
                                         <datetime id="data_mittente" name="data_mittente"
                                                   [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                                   [timepicker]="false"
-                                                  [(ngModel)]="model.data_mittente" #data_mittente="ngModel" required></datetime>
+                                                  [(ngModel)]="model.data_mittente" #data_mittente="ngModel"></datetime>
                                     </div>
                                 </div>
                             </div>
@@ -151,36 +166,29 @@
                 <div class="widget-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="id_amministrazioni"><strong>Amministrazione</strong></label>
-                                <div class="select2-H-keeper"><select2 id="id_amministrazioni"
-                                         class="full-width-select"
-                                         [options]="select2WithAddOptionsMulti"
-                                         [value]="model.id_amministrazioni ? model.id_amministrazioni.split(',') : ''"
-                                         [cssImport]="false"
-                                         (valueChanged)="select2Changed($event,'id_amministrazioni')"
-                                         [data]="amministrazioni$ | async"></select2></div>
-                            </div>
-                            <div class="form-group">
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !id_titolari.valid }">
                                 <label for="id_titolari"><strong>Titolario</strong></label>
-                                <div class="select2-H-keeper"><select2 id="id_titolari" name="id_titolari"
+                                <div class="select2-H-keeper"><select2 id="id_titolari"
+                                         #id_titolari
+                                         name="id_titolari"
                                          class="full-width-select"
                                          [options]="select2Options"
                                          [value]="model.id_titolari"
                                          [cssImport]="false"
                                          (valueChanged)="select2Changed($event,'id_titolari')"
-                                         [data]="titolari$ | async"></select2></div>
+                                         [data]="titolari$ | async" required></select2></div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !id_fascicoli.valid }">
                                 <label for="id_fascicoli"><strong>Fascicolo</strong></label>
                                 <div class="select2-H-keeper"><select2 id="id_fascicoli"
+                                         #id_fascicoli
                                          name="id_fascicoli"
                                          class="full-width-select"
                                          [options]="select2Options"
                                          [value]="model.id_fascicoli"
                                          [cssImport]="false"
                                          (valueChanged)="select2Changed($event,'id_fascicoli')"
-                                         [data]="fascicoli$ | async | fascicoliByTitolarioDataFilter : model.id_titolari"></select2></div>
+                                         [data]="fascicoli$ | async | fascicoliByTitolarioDataFilter : model.id_titolari" required></select2></div>
                             </div>
                         </div>
                     </div>
@@ -200,7 +208,7 @@
                             <div class="form-group">
                                 <label for="annotazioni" class="hidden"><strong>Note di servizio, appunti, ecc.</strong></label>
                                 <textarea id="annotazioni" name="annotazioni"
-                                          rows="6" class="autogrow form-control transition-height"
+                                          rows="5" class="autogrow form-control transition-height"
                                           autosize
                                           placeholder="Scrivi annotazioni ad uso interno..."
                                           [(ngModel)]="model.annotazioni" #annotazioni="ngModel"></textarea>

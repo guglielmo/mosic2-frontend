@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TooltipModule } from 'ng2-bootstrap/tooltip';
-import { SimpleNotificationsModule } from 'angular2-notifications/components';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 import 'jquery-slimscroll';
 

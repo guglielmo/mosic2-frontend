@@ -9,7 +9,7 @@ import { DataTableModule } from 'angular2-datatable';
 import { PipesDirectivesSharedModule } from '../_shared/index';
 import { Select2Module } from 'ng2-select2';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
-import { TooltipModule } from 'ng2-bootstrap/tooltip';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 
 import { FascicoliListComponent } from './list/fascicoli-list.component';

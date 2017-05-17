@@ -12,7 +12,8 @@ import { AppConfig } from '../../app.config';
 
 import * as _ from 'lodash';
 import {Select2OptionData} from 'ng2-select2';
-import { Delibere, Uffici } from '../../_models/index';
+import { Delibere } from '../../_models/delibere';
+import { Uffici } from '../../_models/uffici';
 
 
 
@@ -30,6 +31,10 @@ export class DelibereListComponent implements OnInit {
         data_a: null,
         id_situazione: null
     };
+
+    public keysGetter = Object.keys;
+    public Math = Math;
+    public viewtype: string = 'normal';
     
     public situazione = [
         {id: 1, text: 'Da acquisire'},

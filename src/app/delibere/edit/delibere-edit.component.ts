@@ -1,21 +1,18 @@
-import {
-    Component,
-    OnInit,
-    ViewEncapsulation,
-    NgZone,
-    Inject,
-    EventEmitter,
-    AfterViewChecked,
-    OnDestroy
-} from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Delibere, Firmatari, Uffici, Allegati } from '../../_models/index';
-import { APICommonService } from '../../_services/index';
-import { AppConfig } from '../../app.config';
-import { NgUploaderOptions, UploadedFile } from 'ngx-uploader';
-import { Observable } from 'rxjs/Observable';
+import {AfterViewChecked, Component, EventEmitter, Inject, NgZone, OnDestroy, OnInit, ViewEncapsulation} from "@angular/core";
+import {ActivatedRoute, Router} from "@angular/router";
+import {APICommonService} from "../../_services/index";
+import {AppConfig} from "../../app.config";
+import {NgUploaderOptions, UploadedFile} from "ngx-uploader";
+import {Observable} from "rxjs/Observable";
 
-import * as _ from 'lodash';
+
+import {Delibere} from "../../_models/delibere"
+import {Firmatari} from "../../_models/firmatari";
+import {Uffici} from "../../_models/uffici";
+import {Allegati} from "../../_models/allegati";
+
+
+import * as _ from "lodash";
 
 @Component({
     templateUrl: 'delibere-edit.component.html',
@@ -28,7 +25,6 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
     public error = '';
     public mode: string;
     private loading = false;
-    private select2Debounce = false;
     private scrollDone = false;
     public allowUpload = false;
     private id: number;
@@ -48,6 +44,7 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
     public firmatari$: Observable<Firmatari[]>;
     public uffici$: Observable<Uffici[]>;
 
+    public datePickerOptions: any;
     public select2Options: Select2Options;
     public select2WithAddOptions: Select2Options;
     public select2OptionsMulti: Select2Options;
@@ -61,6 +58,7 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
 
         this.config = config.getConfig();
 
+        this.datePickerOptions = config.datePickerOptions;
         this.select2Options = config.select2Options;
         this.select2WithAddOptions = config.select2WithAddOptions;
         this.select2OptionsMulti = config.select2OptionsMulti;
@@ -114,9 +112,12 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
 
 
                             // instantiate every date
+                            let tz = new Date().getTimezoneOffset();
                             _.forEach(this.model, (value, key) => {
                                 if(key && key.indexOf('data') !== -1) {
-                                    this.model[key] = new Date(value);
+                                    if(value) {
+                                        this.model[key] = new Date(value + tz*60000);
+                                    }
                                 }
                             });
 
@@ -170,14 +171,28 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
     submit(event: any, modal: any) {
         this.loading = true;
 
+        console.log(new Delibere());
+
+        let post = $.extend(true, new Delibere(), this.model);
+        let tz = new Date().getTimezoneOffset();
+
+
+        // convert every date to milliseconds
+        _.forEach(post, (value, key) => {
+            if(key && key.indexOf('data') !== -1) {
+                console.log(key, typeof value, value);
+                if(value) {
+                    post[key] = new Date(value.getTime() - tz*60000);
+                }
+            }
+        });
+
         switch (this.mode) {
             case 'create':
-                this.apiService.create('delibere', this.model)
+                this.apiService.create('delibere', post)
                     .subscribe(
                         data => {
-                            console.log(data);
-                            this.model = data;
-                            modal.open();
+                            this.router.navigate(['/app/delibere/list']);
                         },
                         error => {
                             this.error = error; console.log(error);
@@ -186,7 +201,7 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
                 break;
 
             case 'update':
-                this.apiService.update('delibere', this.model)
+                this.apiService.update('delibere', post)
                     .subscribe(
                         data => {
                             this.router.navigate(['/app/delibere/list']);
@@ -201,121 +216,8 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
 
     select2Changed(e: any, name: string): void {
 
-        if (this.select2Debounce) {
-            this.select2Debounce = false;
-            return;
-        }
-
-        // converts value to arrays to handle multi-selects and selects in the same way
-        let V = [];
-        if (null != e.value) {
-            switch (typeof e.value) {
-                case 'string':
-                    V = e.value.split(',');
-                    break;
-                case 'object':
-                    V = e.value;
-                    break;
-            }
-        }
-
-        let selectedCount = 0;
-        if (typeof this.model[name] === 'string' && this.model[name] !== '') {
-            selectedCount = this.model[name].split(',').length;
-        }
-
-        if (V.length > selectedCount) {
-            // Value added
-            // console.log('value added');
-            this.mayBeCreateNewSelect2Values(name);
-
-        } else if (V.length < selectedCount) {
-            // Value removed
-            // console.log('value removed');
-
-        } else if (V.join(',') !== this.model[name]) {
-            // console.log('value changed');
-            this.mayBeCreateNewSelect2Values(name);
-        }
-
-        // don't allow upload when registro classification is changed
-        // as we first need to move the current files on the server
-        if (name === 'id_titolari' || name === 'id_fascicoli') {
-            this.allowUpload = false;
-        }
-
-        // go back to comma separated strings in the model value as the server handles
-        // both single and multi selects as strings
-        this.model[name] = V.join(',');
-
-        // debounce change events and reset id_fascicoli when titolari changes
-        if (name === 'id_titolari') {
-            this.select2Debounce = true;
-            this.model.id_fascicoli = '';
-        }
+        this.model[name] = e.value;
     }
-
-    mayBeCreateNewSelect2Values(name) {
-
-        const newValues = $('#' + name + ' select option[data-select2-tag="true"]');
-
-        if (newValues.length) {
-
-            const apipath = name.split('_')[1];
-
-            newValues.each((index: number, elem: HTMLInputElement) => {
-
-                this.apiService.create(apipath, { 'denominazione': elem.value } )
-                    .subscribe(
-                        response => {
-                            const id = response.data.id,
-                                 den = response.data.denominazione;
-
-                            const label = id + ' - ' + den;
-                            response.data.text = label;
-
-                            // creates the new entry on the relative apiService select2 data
-                            this.apiService[apipath + 'Select'].push(response.data);
-
-                            // find the select element and update temporary id with the new assigned id
-                            $('#' + name + ' select option[value="' + den + '"]').val(id).text(label);
-
-                            // replace the temporary id in the model with the new assigned id
-                            const selectedValues = this.model[name].split(',');
-
-                            const i = _.indexOf(selectedValues, _.find(selectedValues, den));
-                            selectedValues.splice(i, 1, id);
-
-                            this.model[name] = selectedValues.join(',');
-
-
-                            // update select2 data
-                            // $('#'+name+' select').select2('data',response.data, true);
-
-                            // find the select2 choice and update the temporary label with the new assigned id
-                            // $('#'+name+' .select2-selection__choice[title="'+den+'"]').prop('title',label);
-                        },
-                        error => {
-                            this.error = error; console.log(error);
-                        });
-            });
-        }
-    };
-
-
-/*
-    createTag(type: string, name: string) {
-        let data = {'denominazione': name};
-        this.apiService.create(type, data)
-            .subscribe(
-                data => {
-                    console.log(data);
-                },
-                error => {
-                    this.error = error; console.log(error);
-                });
-    }
-*/
 
     public confirmCodeNotification(modal: any) {
         modal.close();

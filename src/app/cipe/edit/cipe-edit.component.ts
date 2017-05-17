@@ -166,9 +166,21 @@ export class CipeEditComponent implements OnInit {
     submit() {
         this.loading = true;
 
+        let post = $.extend(true, {}, this.model);
+        let tz = new Date().getTimezoneOffset();
+
+        // convert every date to milliseconds
+        _.forEach(post, (value, key) => {
+            if(key && key.indexOf('data') !== -1) {
+                if(value) {
+                    post[key] = new Date(value.getTime() - tz*60000);
+                }
+            }
+        });
+
         switch ( this.mode ) {
             case 'create':
-                this.apiService.create('cipe', this.model)
+                this.apiService.create('cipe', post)
                     .subscribe(
                         data => {
                             this.router.navigate(['/app/cipe/list']);
@@ -180,7 +192,7 @@ export class CipeEditComponent implements OnInit {
                 break;
 
             case 'update':
-                this.apiService.update('cipe', this.model)
+                this.apiService.update('cipe', post)
                     .subscribe(
                         data => {
                             this.router.navigate(['/app/cipe/list']);

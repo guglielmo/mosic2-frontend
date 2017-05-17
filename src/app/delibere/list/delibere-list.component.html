@@ -84,6 +84,38 @@
             </div>
         </div>
     </div>
+    <div>
+        <div class="row" sticktoolbar>
+            <div class="col-lg-10">
+                <div class="py-2 text-center mt-2">
+                    <i class="square bg-dipe"> </i> Dipe
+                    <i class="square bg-mef"> </i> Mef
+                    <i class="square bg-firme"> </i> Firme
+                    <i class="square bg-cc"> </i> Corte dei Conti
+                    <i class="square bg-gu" > </i> Gazzetta Ufficiale
+                    <i class="square bg-stato"> </i> Annullata / Ritirata / Superata
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="text-right">
+                    <div class="py-2">
+                        <form #m="ngForm">
+                            <div class="btn-group">
+                                <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="compact" name="viewtype"
+                                       [tooltip]="'Vista compatta'" placement="top">
+                                    <i class="fa fa-lg fa-list"></i>
+                                </label>
+                                <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="normal" name="viewtype"
+                                       [tooltip]="'Vista normale'" placement="top">
+                                    <i class="fa fa-lg fa-th-list"></i>
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 <div class="row" *ngIf="apiService.commonDataready">
@@ -95,7 +127,7 @@
                        [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filteredCount"
                        [mfSortBy]="'data'" [mfSortOrder]="'desc'"
                        [mfRowsOnPage]="100"
-                       #mf="mfDataTable" stickthead>
+                       #mf="mfDataTable" stickthead [offsetY]="55">
                     <thead>
                     <tr>
                         <th>
@@ -105,13 +137,10 @@
                             <mfDefaultSorter by="data">Data</mfDefaultSorter>
                         </th>
                         <th>
-                            <mfDefaultSorter by="Argomento">Argomento</mfDefaultSorter>
+                            <mfDefaultSorter by="Argomento"><span *ngIf="viewtype !== 'compact'">Argomento /</span> Tempi Iter</mfDefaultSorter>
                         </th>
                         <th>
                             <mfDefaultSorter by="repertorio">Uffici</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="situazione">Stato</mfDefaultSorter>
                         </th>
                         <th>
                             <mfDefaultSorter by="situazione">Situazione</mfDefaultSorter>
@@ -120,29 +149,53 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let delibera of mf.data">
-                        <td><h5><strong>{{delibera.numero}}</strong></h5></td>
+                    <tr *ngFor="let delibera of mf.data as Delibera">
+                        <td><h5><strong><a [routerLink]="[ '/app/delibere/edit/' + delibera.id ]">{{delibera.numero}}</a></strong></h5></td>
                         <td>
-                            <h5><strong>{{delibera.data | amTimeAgo }}</strong></h5>
-                            <p class="fw-semi-bold text-capitalize">{{delibera.data | date: 'EEEE, dd MMMM yyyy' }}</p>
+                            <div *ngIf="viewtype !== 'compact'">
+                                <h5><strong>{{delibera.data | amTimeAgo }}</strong></h5>
+                                <p class="fw-semi-bold text-capitalize">{{delibera.data | date: 'EEEE, dd MMMM yyyy' }}</p>
+                            </div>
+                            <p *ngIf="viewtype === 'compact'" class="fw-semi-bold text-capitalize mb-0 mt-2 line-height-lg">{{delibera.data | date: 'dd/MM/yyyy' }}</p>
+                        </td>
+                        <td>
+                            <div *ngIf="viewtype !== 'compact'">
+                                <p><a [routerLink]="[ '/app/delibere/edit/' + delibera.id ]"
+                                      [innerHTML]="delibera.argomento | dataMark : filter.argomento"></a></p>
+                                <div *ngIf="delibera.note" class="alert alert-warning" role="alert">
+                                    <span class="fw-semi-bold">NOTE:</span> {{delibera.note}}
+                                </div>
+                                <div *ngIf="delibera.note_servizio" class="alert alert-warning" role="alert">
+                                    <span class="fw-semi-bold">NOTE DI SERVIZIO:</span> {{delibera.note_servizio}}
+                                </div>
+                            </div>
 
+<!--                            <div *ngIf="viewtype !== 'compact'" class="alert alert-danger">
+                                <i class="fa fa-bug"></i> <strong>Debug</strong> |
+                                <ng-template ngFor let-i="index" let-key [ngForOf]="keysGetter(delibera.giorni_iter)" *ngIf="viewtype !== 'compact'">
+                                    <span> {{ key + ' : ' + delibera.giorni_iter[key]}} | </span>
+                                </ng-template>
+                            </div>-->
+
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <div class="progress" >
+                                        <ng-template ngFor let-key [ngForOf]="keysGetter(delibera.giorni_iter)">
+                                            <div *ngIf="delibera.giorni_iter[key] > 0" class="progress-bar bg-{{key}}" role="progressbar" [style.width]="Math.max((delibera.giorni_iter[key]*2),10)+'px'"
+                                                 [attr.aria-valuenow]="delibera.giorni_iter[key]" aria-valuemin="0" aria-valuemax="360">
+                                                {{delibera.giorni_iter[key]}}
+                                            </div>
+                                        </ng-template>
+                                        <div *ngIf="delibera.id_stato > 0" class="progress-bar bg-stato" role="progressbar" style="width: 20px;"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                         <td>
-                            <p><a [routerLink]="[ '/app/delibere/edit/' + delibera.id ]"
-                               [innerHTML]="delibera.argomento | dataMark : filter.argomento"></a></p>
-                            <div *ngIf="delibera.note" class="alert alert-warning" role="alert">
-                                <span class="fw-semi-bold">NOTE:</span> {{delibera.note}}
-                            </div>
-                            <div *ngIf="delibera.note_servizio" class="alert alert-warning" role="alert">
-                                <span class="fw-semi-bold">NOTE DI SERVIZIO:</span> {{delibera.note_servizio}}
-                            </div>
-                        </td>
-                        <td>
-                            <span class="ml-1 badge badge-lg badge-default text-left line-height-lg"
+                            <span class="ml-1 badge badge-default text-left line-height-lg mt-2 max-w-4"
                                   [title]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici'"
                                   [innerHTML]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
                         </td>
-                        <td>{{delibera.id_stato}}</td>
                         <td>{{situazioneEnum[delibera.situazione]}}</td>
                         <td><p class="text-center"><a (click)="askDeleteDelibere($event, myModal, delibera)"><i class="fa fa-trash-o"> </i></a></p></td>
                     </tr>

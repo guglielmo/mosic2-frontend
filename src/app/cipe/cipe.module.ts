@@ -7,13 +7,13 @@ import { LOCALE_ID } from '@angular/core';
 
 import { ModalModule } from 'ngx-modal';
 
-import { ButtonsModule } from 'ng2-bootstrap/buttons';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { DataTableModule } from 'angular2-datatable';
-import { TooltipModule } from 'ng2-bootstrap/tooltip';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PipesDirectivesSharedModule } from '../_shared/index';
 import { DragulaModule } from 'ng2-dragula';
-import { TabsModule } from 'ng2-bootstrap/tabs';
-import { AccordionModule } from 'ng2-bootstrap/accordion';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { Select2Module } from 'ng2-select2';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 import { ScrollToModule } from 'ng2-scroll-to-el';

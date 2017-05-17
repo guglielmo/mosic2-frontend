@@ -20,7 +20,7 @@
 
     <h3 class="page-title"><a [routerLink]=" ['/app/precipe/list'] ">Pre-CIPE</a> /
         <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
-        <span *ngIf="mode == 'update'" class="fw-semi-bold">riunione del {{ model.data | date: 'dd/MM/yyyy' }}</span>
+        <span *ngIf="mode == 'update'" class="fw-semi-bold">riunione del {{ model.data | date: 'dd/MM/yyyy' : 'UTC' }}</span>
     </h3>
 
     <section class="widget">

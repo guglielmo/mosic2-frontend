@@ -117,6 +117,16 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
                             this.model = response.data;
                             this.model.data_arrivo = new Date(this.model.data_arrivo);
                             this.model.data_mittente = new Date(this.model.data_mittente);
+
+                            let tz = new Date().getTimezoneOffset();
+                            _.forEach(this.model, (value, key) => {
+                                if(key && key.indexOf('data') !== -1) {
+                                    if(value) {
+                                        this.model[key] = new Date(value.getTime() + tz*60000);
+                                    }
+                                }
+                            });
+
                             this.allowUpload = true;
                         },
                         error => {
@@ -161,9 +171,21 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
     submit(event: any, modal: any) {
         this.loading = true;
 
+        let post = $.extend(true, {}, this.model);
+        let tz = new Date().getTimezoneOffset();
+
+        // convert every date to milliseconds
+        _.forEach(post, (value, key) => {
+            if(key && key.indexOf('data') !== -1) {
+                if(value) {
+                    post[key] = new Date(value.getTime() - tz*60000);
+                }
+            }
+        });
+
         switch (this.mode) {
             case 'create':
-                this.apiService.create('registri', this.model)
+                this.apiService.create('registri', post)
                     .subscribe(
                         data => {
                             console.log(data);
@@ -177,7 +199,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
                 break;
 
             case 'update':
-                this.apiService.update('registri', this.model)
+                this.apiService.update('registri', post)
                     .subscribe(
                         data => {
                             this.router.navigate(['/app/registri/list']);

@@ -72,6 +72,10 @@ export class AppConfig {
         }
     };
 
+    dateTimeOptions = {
+        language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true
+    };
+
     // basic Select2 options
     select2Options = {
         theme: 'bootstrap',

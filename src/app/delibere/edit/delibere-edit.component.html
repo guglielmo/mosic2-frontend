@@ -11,7 +11,7 @@
     </accordion-group>
 </accordion>
 
-<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event, myModal)" #f="ngForm" novalidate>
+<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event)" #f="ngForm" novalidate>
     <div class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
@@ -20,44 +20,53 @@
         <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuova</span>
 
         <span *ngIf="mode == 'update'" class="fw-semi-bold">
-            {{model.data | date : 'y'}} - {{model.numero}}
+            {{model.data | date : 'y'}} / {{model.numero}}
         </span>
     </h3>
     <h3 class="page-title fw-semi-bold"><span *ngIf="mode == 'update'">{{model.argomento}}</span></h3>
 
-    <div class="mb-4">
+    <div class="mb-4 mx-3">
         <div>
             <div class="row bg-body-light" sticktoolbar>
                 <div [scrollTo]="'#A_segretariato'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
                      [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.id_segretariato && model.data_consegna > 0 }">
+                    <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Segretariato
+
                 </div>
                 <div [scrollTo]="'#A_capo_dipartimento'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
                      [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_direttore_ritorno > 0 }">
+                    <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Capo Dipartimento
                 </div>
                 <div [scrollTo]="'#A_MEF'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
                      [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_mef_ritorno > 0 }">
+                    <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     M.E.F.
                 </div>
                 <div [scrollTo]="'#A_segretario'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
                      [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_segretario_ritorno > 0 }">
+                    <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Segretario CIPE
                 </div>
                 <div [scrollTo]="'#A_presidente'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
                      [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_presidente_ritorno > 0}">
+                    <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Presidente CIPE
                 </div>
                 <div [scrollTo]="'#A_CC'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
                      [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_registrazione_cc > 0 }">
+                    <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Corte dei Conti
                 </div>
                 <div [scrollTo]="'#A_parlamento'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
                      [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_invio_p > 0 }">
+                    <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Parlamento
                 </div>
                 <div [scrollTo]="'#A_GU'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
                      [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_gu > 0 }">
+                    <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Gazzetta Ufficiale
                 </div>
             </div>
@@ -74,19 +83,19 @@
                     <div class="widget-body">
                         <div class="row">
                             <div class="col-sm-2">
-                                <div class="form-group">
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !numero.valid }">
                                     <label for="numero"><strong>Numero</strong></label>
                                     <input id="numero" name="numero"
                                            type="text" class="form-control"
                                            placeholder="Inserisci numero delibera..."
-                                           [(ngModel)]="model.numero" #numero="ngModel">
+                                           [(ngModel)]="model.numero" #numero="ngModel" required>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !data.valid }">
                                     <label for="data"><strong>Data</strong></label>
                                     <datetime id="data" name="Data_Delibera"
-                                              [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                              [datepicker]="datePickerOptions"
                                               [timepicker]="false"
                                               [(ngModel)]="model.data" #data="ngModel" required></datetime>
                                 </div>
@@ -143,23 +152,24 @@
                                     <textarea id="argomento" name="argomento"
                                               rows="3" class="autogrow form-control transition-height"
                                               placeholder="Scrivi l'argomento della delibera..."
-                                              [(ngModel)]="model.argomento" #argomento="ngModel" required autosize></textarea>
+                                              [(ngModel)]="model.argomento" #argomento="ngModel" required></textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
                                 <!-- UFFICIO -->
-                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !id_uffici.valid}">
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_uffici.length}">
                                     <!-- EDIT -->
                                     <div class="select2-H-keeper">
                                         <label for="id_uffici"><strong>Uffici competenti</strong></label>
                                         <select2
+                                                #id_uffici
                                                 id="id_uffici"
                                                 class="full-width-select"
                                                 [options]="select2OptionsMulti"
                                                 [value]="model.id_uffici"
-                                                (valueChanged)="select2Changed($event, model, 'id_uffici')"
+                                                (valueChanged)="select2Changed($event, 'id_uffici')"
                                                 cssImport="false"
                                                 [data]="uffici$ | async"></select2>
                                     </div>
@@ -227,7 +237,7 @@
             </div>
         </div>
 
-        <delibere-firme [model]="model" [allowUpload]="allowUpload"></delibere-firme>
+        <delibere-firme  [model]="model" [allowUpload]="allowUpload"></delibere-firme>
     </div>
     <div class="row">
         <div class="col-12 mb-4">
@@ -238,19 +248,6 @@
         </div>
     </div>
 </form>
-
-<modal #myModal submitButtonLabel="Conferma" [hideCloseButton]="true" [closeOnEscape]="false" [closeOnOutsideClick]="false" (onSubmit)="confirmCodeNotification(myModal)">
-    <modal-header>
-        <h4 class="modal-title text-center fw-bold mt">Conferma creazione delibera</h4>
-    </modal-header>
-    <modal-content>
-        <h4 class="text-center mt-sm">
-            Il nuovo delibera è stato creato. Il codice assegnato è <strong>{{model.id}} </strong><br/>
-        </h4>
-    </modal-content>
-    <modal-footer>
-    </modal-footer>
-</modal>
 
 <modal #deleteFileModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteFile(deleteFileModal)">
     <modal-header>

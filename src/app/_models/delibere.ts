@@ -1,4 +1,4 @@
-import { Allegati, RilieviCC } from './index';
+import {Allegati, RilieviCC} from "./index";
 
 export class Delibere {
     "id": number;
@@ -9,8 +9,10 @@ export class Delibere {
     "note": string;
     "note_servizio": string;
     "scheda": number;
+    "finanziamento": string;
     "data_consegna": number;
 
+    "id_direttore": number;
     "data_direttore_invio": number;
     "data_direttore_ritorno": number;
     "note_direttore": string;
@@ -33,12 +35,11 @@ export class Delibere {
 
     "data_invio_cc": number;
     "numero_cc": number;
-    "data_registrazione_cc":number;
+    "data_registrazione_cc": number;
     "id_registro_cc": number;
     "foglio_cc": number;
+    "tipo_registrazione_cc": number;
     "note_cc": string;
-
-    "rilievi_CC": RilieviCC[];
 
     "data_invio_p": number;
     "note_p": string;
@@ -56,145 +57,73 @@ export class Delibere {
     "note_gu": string;
 
     "id_uffici": number[];
-    "id_segretariato": number[]
+    "id_segretariato": number[];
+
+    "allegati_MEF": Allegati[];
+    "allegati_CC": Allegati[];
+    "allegati_GU": Allegati[];
+    "allegati_DEL": Allegati[];
+    "allegati_ALL": Allegati[];
+    "rilievi_CC": RilieviCC[];
+
+    "giorni_iter": any;
+
+    constructor() {
+        this.id = null;
+        this.data = null;
+        this.numero = null;
+        this.id_stato = null;
+        this.argomento = "";
+        this.note = "";
+        this.note_servizio = "";
+        this.scheda = null;
+        this.finanziamento = "";
+        this.data_consegna = null;
+        this.id_direttore = null;
+        this.data_direttore_invio = null;
+        this.data_direttore_ritorno = null;
+        this.note_direttore = "";
+        this.invio_mef = null;
+        this.data_mef_invio = null;
+        this.data_mef_pec = null;
+        this.data_mef_ritorno = null;
+        this.note_mef = "";
+        this.id_segretario = null;
+        this.data_segretario_invio = null;
+        this.data_segretario_ritorno = null;
+        this.note_segretario = "";
+        this.id_presidente = null;
+        this.data_presidente_invio = null;
+        this.data_presidente_ritorno = null;
+        this.note_presidente = "";
+        this.data_invio_cc = null;
+        this.numero_cc = null;
+        this.data_registrazione_cc = null;
+        this.id_registro_cc = null;
+        this.foglio_cc = null;
+        this.tipo_registrazione_cc = null;
+        this.note_cc = "";
+        this.data_invio_p = null;
+        this.note_p = "";
+        this.data_invio_gu = null;
+        this.numero_invio_gu = null;
+        this.tipo_gu = null;
+        this.data_gu = null;
+        this.numero_gu = null;
+        this.data_ec_gu = null;
+        this.numero_ec_gu = null;
+        this.data_co_gu = null;
+        this.numero_co_gu = null;
+        this.pubblicazione_gu = null;
+        this.note_gu = "";
+        this.id_uffici = null;
+        this.id_segretariato = null;
+        this.allegati_MEF = [];
+        this.allegati_CC = [];
+        this.allegati_GU = [];
+        this.allegati_DEL = [];
+        this.allegati_ALL = [];
+        this.rilievi_CC = [];
+        this.giorni_iter = {};
+    }
 }
-
-
-/*
-
-
-
- Numero_Verbale
- Codice_Settore
- Codice_Tipologia
- Finanziamento
-
- Codice_Funzionario
- Codice_Funzionario2
- Codice_Funzionario3
- Data_Consegna
- Consegna_Scheda
- Nota_Consegna
-
- Codice_Direttore
- Data_DirettoreInvio
- Data_DirettoreRitorno
- Nota_Direttore
-
- Invio_Ragioneria
- Data_RagioneriaInvio
- Data_RagioneriaRitorno
- Nota_Ragioneria
-
- Invio_Mef
- Data_MefInvio
- Data_MefPec
- Data_MefRitorno
- Osservazioni_Mef
- Nota_Mef
-
- Codice_Segretario
- Data_SegretarioInvio
- Data_SegretarioRitorno
- Nota_Segretario
-
- Codice_Presidente
- Data_PresidenteInvio
- Data_PresidenteRitorno
- Nota_Presidente
-
- Codice_Ufficio
- Codice_Ufficio2
- Codice_Ufficio3
-
- Allegato_1
- Allegato_2
- Allegato_3
-
- Codice_StatoDelibera
-
-
- Nota_CC
- Tipo_DocumentoCC
- Numero_InvioCC
- Data_InvioCC
- Numero_RilievoCC
- Data_RilievoCC
- Numero_RispostaCC
- Data_RispostaCC
- Tipo_Rilievo
- Nota_RilievoCC
- Tipo_DocumentoCC2
- Numero_RilievoCC2
- Data_RilievoCC2
- Numero_RispostaCC2
- Data_RispostaCC2
- Tipo_Rilievo2
- Nota_RilievoCC2
- Tipo_DocumentoCC3
- Numero_RilievoCC3
- Data_RilievoCC3
- Numero_RispostaCC3
- Data_RispostaCC3
- Tipo_Rilievo3
- Nota_RilievoCC3
-
- Data_ConferenzaStatoRegioni
- Numero_ConferenzaStatoRegioni
- Nota_ConferenzaStatoRegioni
- File_ConferenzaStatoRegioni
- A_Data_ConferenzaStatoRegioni
- A_Numero_ConferenzaStatoRegioni
- A_Nota_ConferenzaStatoRegioni
- A_File_ConferenzaStatoRegioni
-
- Data_ConferenzaUnificata
- Numero_ConferenzaUnificata
- Nota_ConferenzaUnificata
- File_ConferenzaUnificata
- A_Data_ConferenzaUnificata
- A_Numero_ConferenzaUnificata
- A_Nota_ConferenzaUnificata
- A_File_ConferenzaUnificata
-
- Data_CommissioneParlamentare
- Numero_CommissioneParlamentare
- Nota_CommissioneParlamentare
- File_CommissioneParlamentare
- A_Data_CommissioneParlamentare
- A_Numero_CommissioneParlamentare
- A_Nota_CommissioneParlamentare
- A_File_CommissioneParlamentare
-
- Data_Parlamento
- Nota_Parlamento
- File_Parlamento
-
- Registro_RegistrazioneCC
- Foglio_RegistrazioneCC
- Data_RegistrazioneCC
-
- Numero_InvioGU
- Data_InvioGU
- Tipo_GU
- Numero_GU
- Data_GU
- Nota_GU
-
- Numero_EC
- Data_EC
- Numero_Co
- Data_Co
-
-
-
- Tipo_Registrazione
- Tipo_Pubblicazione
- Inviata_Ragioneria
-
-
-
- Giorni_RilievoCC
- Giorni_RilievoCC2
- Giorni_RilievoCC3
- */

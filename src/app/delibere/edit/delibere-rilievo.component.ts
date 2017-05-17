@@ -33,7 +33,9 @@ export class DelibereRilievoComponent implements OnInit {
         // instantiate every date
         _.forEach(this.model, (value, key) => {
             if(key && key.indexOf('data') !== -1) {
-                this.model[key] = new Date(value);
+                if(value) {
+                    this.model[key] = new Date(value);
+                }
             }
         });
     }

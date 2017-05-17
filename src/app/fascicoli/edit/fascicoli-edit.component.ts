@@ -66,8 +66,9 @@ export class FascicoliEditComponent implements OnInit {
                 this.apiService.getById('fascicoli', this.id)
                     .subscribe(
                         response => {
+                            let tz = new Date().getTimezoneOffset();
                             this.model = response.data;
-                            this.model.data_magazzino = new Date(this.model.data_magazzino);
+                            this.model.data_magazzino = new Date(this.model.data_magazzino + tz*60000);
                         },
                         error => {
                             this.error = error; console.log(error);
@@ -84,9 +85,14 @@ export class FascicoliEditComponent implements OnInit {
 
     submit(event: any, modal: any) {
         this.loading = true;
+
+        let post = $.extend(true, {}, this.model);
+        let tz = new Date().getTimezoneOffset();
+        post.data_magazzino = new Date(post.data_magazzino - tz*60000);
+
         switch (this.mode) {
             case 'create':
-                this.apiService.create('fascicoli', this.model)
+                this.apiService.create('fascicoli', post)
                     .subscribe(
                         data => {
                             console.log(data);
@@ -102,7 +108,7 @@ export class FascicoliEditComponent implements OnInit {
                 break;
 
             case 'update':
-                this.apiService.update('fascicoli', this.model)
+                this.apiService.update('fascicoli', post)
                     .subscribe(
                         data => {
                             this.router.navigate(['/app/fascicoli/list']);

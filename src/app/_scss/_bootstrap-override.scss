@@ -913,7 +913,6 @@ small, .small {
 }
 
 .progress-bar{
-  border-radius: $border-radius;
   @include box-shadow(none);
 }
 

@@ -1,4 +1,4 @@
-import {Directive, ElementRef, OnDestroy, OnInit} from '@angular/core';
+import {Directive, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
 declare let jQuery: any;
 
 @Directive({
@@ -6,6 +6,7 @@ declare let jQuery: any;
 })
 
 export class StickThead implements OnInit, OnDestroy {
+    @Input() offsetY: number;
     $el: any;
     reflowInterval: any;
     reflowTimeout: any;
@@ -26,7 +27,7 @@ export class StickThead implements OnInit, OnDestroy {
             if (offset >= tableOffset && $fixedHeader.is(":hidden")) {
                 let headerOffset = $header.offset().left;
                 let headerWidth = $header.width();
-                $fixedHeader.css({left: headerOffset, width: headerWidth});
+                $fixedHeader.css({left: headerOffset, top: this.offsetY, width: headerWidth});
                 $fixedHeader.show();
                 //console.log('show');
 

@@ -14,7 +14,11 @@ export class GroupsEditComponent implements OnInit {
     loading= false;
     id: number;
 
-    supportedClasses: string[] = ['REGISTRI', 'FASCICOLI','TITOLARI', 'AMMINISTRAZIONI', 'MITTENTI', 'UTENTI', 'RUOLICIPE', 'TAGS', 'UFFICI'];
+    supportedClasses: string[] = [
+        'REGISTRI', 'FASCICOLI','TITOLARI', 'PRECIPE', 'CIPE', 'DELIBERE',
+        'UTENTI', 'GROUPS', 'RUOLICIPE',
+        'AMMINISTRAZIONI', 'MITTENTI', 'UFFICI', 'TAGS', 'FIRMATARI'
+    ];
     supportedPermissions: string[] = ['READ', 'CREATE', 'EDIT', 'DELETE'];
 
     roles: string[] = [];

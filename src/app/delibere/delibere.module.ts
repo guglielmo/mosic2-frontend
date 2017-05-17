@@ -5,18 +5,18 @@ import { RouterModule } from '@angular/router';
 import { LOCALE_ID } from '@angular/core';
 
 import { ModalModule } from 'ngx-modal';
-
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { DataTableModule } from 'angular2-datatable';
 import { PipesDirectivesSharedModule } from '../_shared/index';
 import { Select2Module } from 'ng2-select2';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
-import { TooltipModule } from 'ng2-bootstrap/tooltip';
-import { AccordionModule } from 'ng2-bootstrap/accordion';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ScrollToModule } from 'ng2-scroll-to-el';
 
 // ngx-uploader
 import { NgUploaderModule } from 'ngx-uploader';
-import { TabsModule } from 'ng2-bootstrap/tabs';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 import { DelibereListComponent } from './list/delibere-list.component';
 import { DelibereEditComponent } from './edit/delibere-edit.component';
@@ -39,7 +39,7 @@ export const routes = [
 
         ModalModule,
         DataTableModule,
-
+        ButtonsModule,
         NKDatetimeModule,
         Select2Module,
         NgUploaderModule,

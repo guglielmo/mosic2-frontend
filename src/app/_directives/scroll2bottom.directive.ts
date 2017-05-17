@@ -20,8 +20,6 @@ export class Scroll2Bottom implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.$el.on('click.scroll2bottom',function () {
-            console.log(this.document);
-            console.log('clicky clicky');
             this.document.animate({ scrollTop: $("#page-bottom").scrollTop() }, 1000);
         });
     }

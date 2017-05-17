@@ -12,4 +12,6 @@ export * from './data-mark.pipe';
 export * from './data-enum.pipe';
 export * from './if-empty';
 export * from './array-length';
+export * from './cast-to-string';
+
 export * from './delibere-data-filter.pipe';
