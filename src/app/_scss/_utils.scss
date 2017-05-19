@@ -348,6 +348,7 @@ $z-index-variants: (more: 1, less: -1, '10': 10, '-10': -10);
 .bt{ border-top: 1px solid $gray-semi-lighter }
 .br{ border-right: 1px solid $gray-semi-lighter }
 .bb{ border-bottom: 1px solid $gray-semi-lighter }
+.bb-2{ border-bottom: 2px solid $gray-darker }
 .bl{ border-left: 1px solid $gray-semi-lighter }
 
 .overflow-hidden{
@@ -664,3 +665,12 @@ i.square {
 .bg-stato { background-color: #000; border-color: lighten(#000, 25);}
 
 .max-w-4 { max-width: 140px; white-space: normal; }
+
+table.align-middle {
+  td { vertical-align: middle; }
+}
+
+table.align-center {
+  td { text-align: center; }
+}
+

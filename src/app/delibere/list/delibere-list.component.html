@@ -11,18 +11,23 @@
             filter.argomento.length > 2 ||
             filter.data_da ||
             filter.data_a ||
-            filter.id_situazione"
+            filter.id_situazione ||
+            filter.anno ||
+            filter.data_cipe"
                   class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
             </span>
         </h5>
-        <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">delibere ...</span>
+        <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Cerca <span
+                class="fw-semi-bold">delibere ...</span>
             <span *ngIf="
             filter.id ||
             filter.argomento.length > 2 ||
             filter.data_da ||
             filter.data_a ||
-            filter.id_situazione"
+            filter.id_situazione ||
+            filter.anno ||
+            filter.data_cipe"
                   class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
             </span>
@@ -40,26 +45,19 @@
                     <input id="numero" name="numero" class="form-control" [(ngModel)]="filter.numero" placeholder="Numero..."/>
                 </div>
             </div>
-            <div class="col-lg-3">
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <label for="data_da"><strong>Da data</strong></label>
-                            <datetime id="data_da" name="data_da"
-                                      [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
-                                      [timepicker]="false"
-                                      [(ngModel)]="filter.data_da" #data_da="ngModel" required></datetime>
-                        </div>
-                        <div class="col-lg-6">
-                            <label for="data_a"><strong>A data</strong></label>
-                            <datetime id="data_a" name="data_a"
-                                      [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
-                                      [timepicker]="false"
-                                      [(ngModel)]="filter.data_a" #data_a="ngModel" required></datetime>
-                        </div>
-
-                    </div>
-                </div>
+            <div class="col-lg-2">
+                <label for="data_da"><strong>Da data</strong></label>
+                <datetime id="data_da" name="data_da"
+                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                          [timepicker]="false"
+                          [(ngModel)]="filter.data_da" #data_da="ngModel" required></datetime>
+            </div>
+            <div class="col-lg-2">
+                <label for="data_a"><strong>A data</strong></label>
+                <datetime id="data_a" name="data_a"
+                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                          [timepicker]="false"
+                          [(ngModel)]="filter.data_a" #data_a="ngModel" required></datetime>
             </div>
             <div class="col-lg-3">
                 <div class="form-group">
@@ -68,7 +66,7 @@
                            placeholder="Digita almeno 3 caratteri..."/>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="form-group">
                     <label for="id_segretario"><strong>Situazione</strong></label>
                     <div class="select2-H-keeper">
@@ -83,34 +81,70 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div>
-        <div class="row" sticktoolbar>
-            <div class="col-lg-10">
-                <div class="py-2 text-center mt-2">
-                    <i class="square bg-dipe"> </i> Dipe
-                    <i class="square bg-mef"> </i> Mef
-                    <i class="square bg-firme"> </i> Firme
-                    <i class="square bg-cc"> </i> Corte dei Conti
-                    <i class="square bg-gu" > </i> Gazzetta Ufficiale
-                    <i class="square bg-stato"> </i> Annullata / Ritirata / Superata
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="anno"><strong>Anno</strong></label>
+                    <select id="anno" name="anno" class="form-control" data-style="btn-secondary" data-width="auto"
+                            [ngModel]="filter.anno" (change)="onYearChanged($event.target.value)">
+                        <option value=""></option>
+                        <ng-container *ngFor="let year of years">
+                            <option value="{{year}}">{{year}}</option>
+                        </ng-container>
+                    </select>
                 </div>
             </div>
             <div class="col-lg-2">
-                <div class="text-right">
-                    <div class="py-2">
-                        <form #m="ngForm">
-                            <div class="btn-group">
-                                <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="compact" name="viewtype"
-                                       [tooltip]="'Vista compatta'" placement="top">
-                                    <i class="fa fa-lg fa-list"></i>
-                                </label>
-                                <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="normal" name="viewtype"
-                                       [tooltip]="'Vista normale'" placement="top">
-                                    <i class="fa fa-lg fa-th-list"></i>
-                                </label>
-                            </div>
-                        </form>
+                <div class="form-group">
+                    <label for="data_cipe"><strong>Data CIPE</strong></label>
+                    <select id="data_cipe" name="data_cipe" class="form-control" data-style="btn-secondary" data-width="auto"
+                            [ngModel]="filter.data_cipe" (change)="onDataCipeChanged($event.target.value)">
+                        <option value=""></option>
+                        <ng-container *ngFor="let cipe of cipe$ | async">
+                            <option value="{{cipe.data}}">{{cipe.data | date: 'dd/MM/yyyy' }}</option>
+                        </ng-container>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div sticktoolbar>
+            <div class="row">
+                <div class="col-lg-10">
+                    <div class="py-2 text-center mt-2">
+                        <i class="square bg-dipe"> </i> Dipe
+                        <i class="square bg-mef"> </i> Mef
+                        <i class="square bg-firme"> </i> Firme
+                        <i class="square bg-cc"> </i> Corte dei Conti
+                        <i class="square bg-gu"> </i> Gazzetta Ufficiale
+                        <i class="square bg-stato"> </i> Annullata / Ritirata / Superata
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="text-right">
+                        <div class="py-2">
+                            <form #m="ngForm">
+                                <div class="btn-group">
+                                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="normal" name="viewtype"
+                                           [tooltip]="'Vista normale'" placement="top">
+                                        <i class="fa fa-lg fa-th-list"></i>
+                                    </label>
+                                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="chart" name="viewtype"
+                                           [tooltip]="'Vista grafica'" placement="top">
+                                        <i class="fa fa-lg fa-bar-chart fa-rotate-90"></i>
+                                    </label>
+                                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="sign" name="viewtype"
+                                           [tooltip]="'Vista firme'" placement="top">
+                                        <i class="fa fa-lg fa-pencil"></i>
+                                    </label>
+                                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="register" name="viewtype"
+                                           [tooltip]="'Vista&nbsp;registrazione'" placement="top">
+                                        <i class="fa fa-lg fa-book"></i>
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -123,7 +157,8 @@
         <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">
-                <table class="table table-hover table-condensed table-bordered mb-0"
+                <table *ngIf="viewtype === 'normal'"
+                       class="table table-hover table-condensed table-bordered mb-0"
                        [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filteredCount"
                        [mfSortBy]="'data'" [mfSortOrder]="'desc'"
                        [mfRowsOnPage]="100"
@@ -137,7 +172,7 @@
                             <mfDefaultSorter by="data">Data</mfDefaultSorter>
                         </th>
                         <th>
-                            <mfDefaultSorter by="Argomento"><span *ngIf="viewtype !== 'compact'">Argomento /</span> Tempi Iter</mfDefaultSorter>
+                            <mfDefaultSorter by="argomento">Argomento</mfDefaultSorter>
                         </th>
                         <th>
                             <mfDefaultSorter by="repertorio">Uffici</mfDefaultSorter>
@@ -152,43 +187,17 @@
                     <tr *ngFor="let delibera of mf.data as Delibera">
                         <td><h5><strong><a [routerLink]="[ '/app/delibere/edit/' + delibera.id ]">{{delibera.numero}}</a></strong></h5></td>
                         <td>
-                            <div *ngIf="viewtype !== 'compact'">
-                                <h5><strong>{{delibera.data | amTimeAgo }}</strong></h5>
-                                <p class="fw-semi-bold text-capitalize">{{delibera.data | date: 'EEEE, dd MMMM yyyy' }}</p>
-                            </div>
-                            <p *ngIf="viewtype === 'compact'" class="fw-semi-bold text-capitalize mb-0 mt-2 line-height-lg">{{delibera.data | date: 'dd/MM/yyyy' }}</p>
+                            <h5><strong>{{delibera.data | amTimeAgo }}</strong></h5>
+                            <p class="fw-semi-bold text-capitalize">{{delibera.data | date: 'EEEE, dd MMMM yyyy' }}</p>
                         </td>
                         <td>
-                            <div *ngIf="viewtype !== 'compact'">
-                                <p><a [routerLink]="[ '/app/delibere/edit/' + delibera.id ]"
-                                      [innerHTML]="delibera.argomento | dataMark : filter.argomento"></a></p>
-                                <div *ngIf="delibera.note" class="alert alert-warning" role="alert">
-                                    <span class="fw-semi-bold">NOTE:</span> {{delibera.note}}
-                                </div>
-                                <div *ngIf="delibera.note_servizio" class="alert alert-warning" role="alert">
-                                    <span class="fw-semi-bold">NOTE DI SERVIZIO:</span> {{delibera.note_servizio}}
-                                </div>
+                            <p><a [routerLink]="[ '/app/delibere/edit/' + delibera.id ]"
+                                  [innerHTML]="delibera.argomento | dataMark : filter.argomento"></a></p>
+                            <div *ngIf="delibera.note.an" class="alert alert-warning" role="alert">
+                                <span class="fw-semi-bold">NOTE:</span> {{delibera.note.an}}
                             </div>
-
-<!--                            <div *ngIf="viewtype !== 'compact'" class="alert alert-danger">
-                                <i class="fa fa-bug"></i> <strong>Debug</strong> |
-                                <ng-template ngFor let-i="index" let-key [ngForOf]="keysGetter(delibera.giorni_iter)" *ngIf="viewtype !== 'compact'">
-                                    <span> {{ key + ' : ' + delibera.giorni_iter[key]}} | </span>
-                                </ng-template>
-                            </div>-->
-
-                            <div class="row mt-3">
-                                <div class="col-12">
-                                    <div class="progress" >
-                                        <ng-template ngFor let-key [ngForOf]="keysGetter(delibera.giorni_iter)">
-                                            <div *ngIf="delibera.giorni_iter[key] > 0" class="progress-bar bg-{{key}}" role="progressbar" [style.width]="Math.max((delibera.giorni_iter[key]*2),10)+'px'"
-                                                 [attr.aria-valuenow]="delibera.giorni_iter[key]" aria-valuemin="0" aria-valuemax="360">
-                                                {{delibera.giorni_iter[key]}}
-                                            </div>
-                                        </ng-template>
-                                        <div *ngIf="delibera.id_stato > 0" class="progress-bar bg-stato" role="progressbar" style="width: 20px;"></div>
-                                    </div>
-                                </div>
+                            <div *ngIf="delibera.note.ns" class="alert alert-warning" role="alert">
+                                <span class="fw-semi-bold">NOTE DI SERVIZIO:</span> {{delibera.note.ns}}
                             </div>
                         </td>
                         <td>
@@ -197,7 +206,8 @@
                                   [innerHTML]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
                         </td>
                         <td>{{situazioneEnum[delibera.situazione]}}</td>
-                        <td><p class="text-center"><a (click)="askDeleteDelibere($event, myModal, delibera)"><i class="fa fa-trash-o"> </i></a></p></td>
+                        <td><p class="text-center"><a (click)="askDeleteDelibere($event, myModal, delibera)"><i class="fa fa-trash-o"> </i></a></p>
+                        </td>
                     </tr>
                     </tbody>
                     <tfoot>
@@ -208,9 +218,213 @@
                     </tr>
                     </tfoot>
                 </table>
+                <table *ngIf="viewtype === 'chart'"
+                       class="table table-hover table-condensed table-bordered mb-0"
+                       [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filteredCount"
+                       [mfSortBy]="'data'" [mfSortOrder]="'desc'"
+                       [mfRowsOnPage]="100"
+                       #mf="mfDataTable" stickthead [offsetY]="55">
+                    <thead>
+                    <tr>
+                        <th>
+                            <mfDefaultSorter by="numero">Nr.</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="data">Data</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="argomento">Tempi Iter</mfDefaultSorter>
+
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="repertorio">Uffici</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="situazione">Situazione</mfDefaultSorter>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let delibera of mf.data as Delibera">
+                        <td><h5><strong><a [routerLink]="[ '/app/delibere/edit/' + delibera.id ]">{{delibera.numero}}</a></strong></h5></td>
+                        <td>
+                            <p class="fw-semi-bold text-capitalize mb-0 mt-2 line-height-lg">{{delibera.data | date: 'dd/MM/yyyy' }}</p>
+                        </td>
+                        <td>
+                            <!--
+                                <div *ngIf="viewtype !== 'compact'" class="alert alert-danger">
+                                    <i class="fa fa-bug"></i> <strong>Debug</strong> |
+                                    <ng-template ngFor let-i="index" let-key [ngForOf]="keysGetter(delibera.giorni_iter)" *ngIf="viewtype !== 'compact'">
+                                        <span> {{ key + ' : ' + delibera.giorni_iter[key]}} | </span>
+                                    </ng-template>
+                                </div>
+                            -->
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <div class="progress">
+                                        <ng-template ngFor let-key [ngForOf]="keysGetter(delibera.giorni_iter)">
+                                            <div *ngIf="delibera.giorni_iter[key] > 0" class="progress-bar bg-{{key}}" role="progressbar"
+                                                 [style.width]="Math.max((delibera.giorni_iter[key]*2),10)+'px'"
+                                                 [attr.aria-valuenow]="delibera.giorni_iter[key]" aria-valuemin="0" aria-valuemax="360">
+                                                {{delibera.giorni_iter[key]}}
+                                            </div>
+                                        </ng-template>
+                                        <div *ngIf="delibera.id_stato > 0" class="progress-bar bg-stato" role="progressbar"
+                                             style="width: 20px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="ml-1 badge badge-default text-left line-height-lg mt-2 max-w-4"
+                                  [title]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici'"
+                                  [innerHTML]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
+                        </td>
+                        <td>{{situazioneEnum[delibera.situazione]}}</td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="10">
+                            <mfBootstrapPaginator [rowsOnPageSet]="[100,200,500,1000]"></mfBootstrapPaginator>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+                <table *ngIf="viewtype === 'sign'"
+                       class="table table-condensed table-bordered align-middle align-center mb-0"
+                       [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filteredCount"
+                       [mfSortBy]="'data'" [mfSortOrder]="'desc'"
+                       [mfRowsOnPage]="100"
+                       #mf="mfDataTable" stickthead [offsetY]="55">
+                    <thead>
+                    <tr>
+                        <th>
+                            <mfDefaultSorter by="numero">Nr.</mfDefaultSorter>
+                        </th>
+                        <th>Data</th>
+                        <th>Argomento</th>
+                        <th>Ufficio</th>
+                        <th>Segretariato</th>
+                        <th>Capo Dipartimento</th>
+                        <th>M.E.F.</th>
+                        <th>Segretario</th>
+                        <th>Presidente</th>
+                        <th>C.d.C.</th>
+                        <th>G.U.</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <ng-container *ngFor="let delibera of mf.data as Delibera">
+                        <tr>
+                            <td rowspan="2"><h5><strong><a [routerLink]="[ '/app/delibere/edit/' + delibera.id ]">{{delibera.numero}}</a></strong>
+                            </h5></td>
+                            <td rowspan="2">
+                                <p class="fw-semi-bold text-capitalize mb-0 mt-2 line-height-lg">{{delibera.data | date: 'dd/MM/yyyy' }}</p>
+
+                            </td>
+                            <td rowspan="2" class="text-left">
+                                <p><a [routerLink]="[ '/app/delibere/edit/' + delibera.id ]"
+                                      [innerHTML]="delibera.argomento | dataMark : filter.argomento"></a></p>
+                            </td>
+                            <td rowspan="2">
+                                <span class="ml-1 badge badge-default text-left line-height-lg mt-2 max-w-4"
+                                      [title]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici'"
+                                      [innerHTML]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
+                            </td>
+                            <td rowspan="2">{{delibera.firme.uff_a | date : 'dd/M/y'}}</td>
+                            <td>{{delibera.firme.cd_i | date : 'dd/MM/y'}}</td>
+                            <td>{{delibera.firme.mef_i | date : 'dd/MM/y'}}</td>
+                            <td>{{delibera.firme.seg_i | date : 'dd/MM/y'}}</td>
+                            <td>{{delibera.firme.pre_i | date : 'dd/MM/y'}}</td>
+                            <td>{{delibera.firme.cc_i | date : 'dd/MM/y'}}</td>
+                            <td>{{delibera.firme.gu_i | date : 'dd/MM/y'}}</td>
+                        </tr>
+                        <tr class="bb-2">
+                            <td>{{delibera.firme.cd_r | date : 'dd/MM/y'}}</td>
+                            <td>{{delibera.firme.mef_r | date : 'dd/MM/y'}}</td>
+                            <td>{{delibera.firme.seg_r | date : 'dd/MM/y'}}</td>
+                            <td>{{delibera.firme.pre_r | date : 'dd/MM/y'}}</td>
+                            <td>{{delibera.firme.cc_r | date : 'dd/MM/y'}}</td>
+                            <td>{{delibera.firme.gu_r | date : 'dd/MM/y'}}</td>
+                        </tr>
+                    </ng-container>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="11">
+                            <mfBootstrapPaginator [rowsOnPageSet]="[100,200,500,1000]"></mfBootstrapPaginator>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+                <table *ngIf="viewtype === 'register'"
+                       class="table table-condensed table-bordered table-hover mb-0"
+                       [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filteredCount"
+                       [mfSortBy]="'data'" [mfSortOrder]="'desc'"
+                       [mfRowsOnPage]="100"
+                       #mf="mfDataTable" stickthead [offsetY]="55">
+                    <thead>
+                    <tr>
+                        <th>
+                            <mfDefaultSorter by="numero">Nr.</mfDefaultSorter>
+                        </th>
+                        <th>Data</th>
+                        <th>Argomento</th>
+                        <th>Oss. C.d.C. e scadenza</th>
+                        <th>Registrazione C.d.C.</th>
+                        <th>Pubblicazione G.U.</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <ng-container *ngFor="let delibera of mf.data as Delibera">
+                        <tr>
+                            <td><h5><strong><a [routerLink]="[ '/app/delibere/edit/' + delibera.id ]">{{delibera.numero}}</a></strong></h5></td>
+                            <td>
+                                <p class="fw-semi-bold text-capitalize mb-0 mt-2 line-height-lg">{{delibera.data | date: 'dd/MM/yyyy' }}</p>
+                            </td>
+                            <td class="text-left">
+                                <p><a [routerLink]="[ '/app/delibere/edit/' + delibera.id ]"
+                                      [innerHTML]="delibera.argomento | dataMark : filter.argomento"></a></p>
+                            </td>
+                            <td>
+                                <div *ngFor="let osservazione of delibera.oss_cc">
+                                    <p>
+                                        <span class="badge badge-danger">
+                                            {{osservazioneEnum[osservazione.tipo_documento]}}
+                                        </span>
+                                        <span *ngIf="!osservazione.data_risposta" class="badge badge-danger">
+                                        {{countDaysFromToday(osservazione.data_max_risposta)}} gg.
+                                        </span>
+                                    </p>
+                                    <!--<p>{{osservazione.data_max_risposta | date : 'dd/MM/yyyy'}}</p>-->
+                                    <!-- <p>{{today | date : 'dd/MM/yyyy'}}</p> -->
+                                </div>
+                            </td>
+                            <td>
+                                <p *ngIf="delibera.registrazione_cc?.data">
+                                    <span *ngIf="delibera.registrazione_cc.numero">Nr. {{delibera.registrazione_cc.numero}}</span>
+                                    <span *ngIf="delibera.registrazione_cc.foglio">Fg. {{delibera.registrazione_cc.foglio}}</span>
+                                    del {{delibera.registrazione_cc.data | date : 'dd/MM/yyyy'}}
+                                </p>
+                            </td>
+                            <td>
+                                <p *ngIf="delibera.pub_gu?.nr">
+                                    Nr. {{delibera.pub_gu.nr}} del {{delibera.pub_gu.data | date : 'dd/MM/yyyy'}}
+                                </p>
+                            </td>
+                        </tr>
+                    </ng-container>
+                    </tbody>
+                    <tfoot class="mb-0">
+                    <tr>
+                        <td colspan="6">
+                            <mfBootstrapPaginator [rowsOnPageSet]="[100,200,500,1000]"></mfBootstrapPaginator>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
             </div>
-            <footer>
-            </footer>
         </section>
     </div>
 </div>

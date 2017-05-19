@@ -26,7 +26,7 @@ export class APICommonService {
     private _allData$: any = {};
     public dataEnum: any = {};
 
-    private currentStorageVersion = '73';
+    private currentStorageVersion = '84';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
@@ -47,7 +47,8 @@ export class APICommonService {
         'cipeesititipo',
         'cipeargomentitipo',
         'users',
-        'delibere'
+        'delibere',
+        'adempimenti'
 
 /*        'delibere',
         'adempimenti',
@@ -72,7 +73,8 @@ export class APICommonService {
         'cipeesititipo',
         'cipeargomentitipo',
         'users',
-        'delibere'
+        'delibere',
+        'adempimenti'
     ];
 
     constructor( private http: Http,
@@ -296,7 +298,7 @@ export class APICommonService {
     private cacheCommonIDB(apipath: string,  lastupdate: number) {
 
         const params = new URLSearchParams();
-        params.append('limit', '9999');
+        params.append('limit', '99999');
 
         this.getAll(apipath, params).subscribe(
             response => {

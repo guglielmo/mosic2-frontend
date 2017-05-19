@@ -8,9 +8,9 @@
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">
                 <table class="table table-hover table-condensed mb-0 table-bordered"
-                       [mfData]="cipe | async"
+                       [mfData]="cipe$ | async"
                        [mfSortBy]="'data'" [mfSortOrder]="'desc'"
-                       #mf="mfDataTable" stickthead>
+                       #mf="mfDataTable" stickthead [offsetY]="0">
                     <thead>
                     <tr>
                         <th><mfDefaultSorter by="data">Data</mfDefaultSorter></th>
@@ -76,8 +76,6 @@
                     </tbody>
                 </table>
             </div>
-            <footer>
-            </footer>
         </section>
     </div>
 </div>

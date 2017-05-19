@@ -71,7 +71,7 @@
                        #mf="mfDataTable"
                        [mfData]="fascicoli$ | async | fascicoliDataFilter : filter.argomento : filter.id_titolari : filter.id_amministrazioni: filter.numero_fascicolo : filteredCount"
                        [mfRowsOnPage]="100"
-                       stickthead>
+                       stickthead [offsetY]="0">
                     <thead>
                     <tr>
                         <th><mfDefaultSorter by="id_titolari">Titolario</mfDefaultSorter></th>
@@ -101,8 +101,6 @@
                     </tfoot>
                 </table>
             </div>
-            <footer>
-            </footer>
         </section>
     </div>
 </div>

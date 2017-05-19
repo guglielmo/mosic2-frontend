@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { User, Uffici, RuoliCipe } from '../../_models/index';
+import { Uffici, RuoliCipe } from '../../_models/index';
+import { User } from '../../_models/user'
 import { APICommonService } from '../../_services/index';
 
 import {AppConfig} from "../../app.config";
@@ -22,8 +23,6 @@ export class UsersListComponent {
     currentUser: User;
     deletingUser: User = new User;
     users$: Observable<User[]>;
-    uffici$: Observable<Uffici[]>;
-    ruoli_cipe$: Observable<RuoliCipe[]>;
     filteredCount = { count: 0 };
 
     private select2Options: Select2Options;
@@ -34,8 +33,6 @@ export class UsersListComponent {
     ) {
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.users$ = this.apiService.subscribeToDataService('users');
-        this.uffici$ = this.apiService.subscribeToDataService('uffici');
-        this.ruoli_cipe$ = this.apiService.subscribeToDataService('ruoli_cipe');
 
         this.select2Options = config.select2Options;
     }

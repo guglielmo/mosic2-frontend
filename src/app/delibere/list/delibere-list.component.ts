@@ -13,6 +13,7 @@ import { AppConfig } from '../../app.config';
 import * as _ from 'lodash';
 import {Select2OptionData} from 'ng2-select2';
 import { Delibere } from '../../_models/delibere';
+import { Cipe } from '../../_models/index';
 import { Uffici } from '../../_models/uffici';
 
 
@@ -29,8 +30,15 @@ export class DelibereListComponent implements OnInit {
         numero: null,
         data_da: null,
         data_a: null,
-        id_situazione: null
+        id_situazione: null,
+        anno: null,
+        data_cipe: null
     };
+
+    public today = new Date().getTime();
+    public firstYear = 1998;
+    public currentYear = new Date().getFullYear();
+    public years: number[] = [];
 
     public keysGetter = Object.keys;
     public Math = Math;
@@ -58,10 +66,17 @@ export class DelibereListComponent implements OnInit {
         8: 'Alla Gazzetta Ufficiale'        
     };
 
+    public osservazioneEnum = {
+        1: 'Rilievo',
+        2: 'Restituzione',
+        3: 'A Vuoto'
+    };
+
     deletingDelibere: Delibere = new Delibere;
 
     public delibere$: Observable<Delibere[]>;
     public uffici$: Observable<Uffici[]>;
+    public cipe$: Observable<Cipe[]>;
 
 
     public filteredCount = {count: 0};
@@ -70,15 +85,19 @@ export class DelibereListComponent implements OnInit {
     private select2Debounce = false;
     public argomentoControl = new FormControl();
 
-
-
     constructor(public apiService: APICommonService,
                 private router: Router,
                 private config: AppConfig
     ) {
         this.select2Options = config.select2Options;
+
+        for (let i = this.currentYear; i >= this.firstYear; i--) {
+            this.years.push(i);
+        }
+
         this.delibere$ = this.apiService.subscribeToDataService('delibere');
         this.uffici$ = this.apiService.subscribeToDataService('uffici');
+        this.cipe$ = this.apiService.subscribeToDataService('cipe');
     }
 
     ngOnInit() {
@@ -121,6 +140,44 @@ export class DelibereListComponent implements OnInit {
         this.filter[name] = e.value;
     }
 
+    public onYearChanged(year) {
+
+        this.filter.anno = year;
+
+        if(year !== '') {
+            let data_da = new Date();
+            data_da.setFullYear(year,0,1);
+
+            let data_a = new Date();
+            data_a.setFullYear(year,11,31);
+
+            this.filter.data_da = data_da;
+            this.filter.data_a = data_a;
+        } else {
+            this.filter.data_da = null;
+            this.filter.data_a = null;
+        }
+    }
+
+    public onDataCipeChanged(date) {
+
+        this.filter.data_cipe = date;
+
+        if(date !== '') {
+            let data_da = new Date();
+            data_da.setTime(date);
+
+            let data_a = new Date();
+            data_a.setTime(date);
+
+            this.filter.data_da = data_da;
+            this.filter.data_a = data_a;
+        } else {
+            this.filter.data_da = null;
+            this.filter.data_a = null;
+        }
+    }
+
     public resetFilters(): void {
         this.filter = {
             id: null,
@@ -128,7 +185,14 @@ export class DelibereListComponent implements OnInit {
             numero: null,
             data_da: null,
             data_a: null,
-            id_situazione: null
+            id_situazione: null,
+            anno: null,
+            data_cipe: null
         };
+    }
+
+    public countDaysFromToday(date: number): number {
+        let days = Math.floor((this.today - date)/86400000);
+        return days;
     }
 }

@@ -40,7 +40,7 @@
                 <table class="table table-hover table-condensed mb-0 table-bordered"
                        [mfData]="amministrazioni$ | async | denominazioneDataFilter : filter.denominazione : filteredCount"
                        [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
-                       #mf="mfDataTable" stickthead>
+                       #mf="mfDataTable" stickthead [offsetY]="0">
                     <thead>
                     <tr>
                         <th><mfDefaultSorter by="id">#</mfDefaultSorter></th>
@@ -61,8 +61,6 @@
                     </tbody>
                 </table>
             </div>
-            <footer>
-            </footer>
         </section>
     </div>
 </div>

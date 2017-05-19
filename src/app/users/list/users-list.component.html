@@ -71,7 +71,7 @@
             <div class="widget-body widget-table-overflow">
                 <table class="table table-hover table-condensed mb-0 table-bordered"
                        [mfData]="users$ | async | usersDataFilter : filter.denominazione : filter.id_uffici : filter.id_ruoli_cipe : filteredCount"
-                       #mf="mfDataTable" stickthead>
+                       #mf="mfDataTable" stickthead [offsetY]="0">
                     <thead>
                     <tr>
                         <th><mfDefaultSorter by="lastName">Cognome e Nome</mfDefaultSorter></th>
@@ -107,8 +107,6 @@
                     </tbody>
                 </table>
             </div>
-            <footer>
-            </footer>
         </section>
     </div>
 </div>

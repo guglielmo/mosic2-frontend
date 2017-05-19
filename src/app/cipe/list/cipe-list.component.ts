@@ -13,14 +13,14 @@ import { APICommonService } from '../../_services/index';
 })
 export class CipeListComponent {
 
-    public cipe: Observable<Cipe[]>;
+    public cipe$: Observable<Cipe[]>;
 
     deletingCipe: Cipe = new Cipe;
 
     constructor(public apiService: APICommonService,
                 private router: Router
     ) {
-        this.cipe = this.apiService.subscribeToDataService('cipe');
+        this.cipe$ = this.apiService.subscribeToDataService('cipe');
     }
 
     ngOnInit() {
@@ -47,17 +47,6 @@ export class CipeListComponent {
     deleteCipe(id: number) {
         this.apiService.delete('cipe', id).subscribe(() => {
             this.apiService.refreshCommonCache();
-            // this.loadAllCipe()
-        });
-    }
-
-    private loadAllCipe() {
-        let params = new URLSearchParams();
-        params.append('sort_by', 'data');
-        params.append('sort_order', 'desc');
-
-        this.apiService.getAll('cipe', params).subscribe(response => {
-            this.cipe = response.data;
         });
     }
 }

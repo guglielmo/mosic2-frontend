@@ -76,7 +76,7 @@
                        #mf="mfDataTable"
                        [mfData]="fascicoli$ | async | fascicoliDataFilter : '' : model.id : -1 : '' : filteredCount"
                        [mfRowsOnPage]="100"
-                       stickthead>
+                       stickthead [offsetY]="0">
                     <thead>
                     <tr>
                         <th><mfDefaultSorter by="id_titolari">Titolario</mfDefaultSorter></th>
@@ -102,8 +102,6 @@
                     </tfoot>
                 </table>
             </div>
-            <footer>
-            </footer>
         </section>
     </div>
 </div>

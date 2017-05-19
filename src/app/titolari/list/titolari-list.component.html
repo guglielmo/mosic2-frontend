@@ -10,7 +10,7 @@
                 <table class="table table-hover table-condensed mb-0 table-bordered"
                        [mfData]="titolari | async"
                        [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
-                       #mf="mfDataTable" stickthead>
+                       #mf="mfDataTable" stickthead [offsetY]="0">
                     <thead>
                     <tr>
                         <th><mfDefaultSorter by="codice">Codice</mfDefaultSorter></th>
@@ -33,8 +33,6 @@
                     </tbody>
                 </table>
             </div>
-            <footer>
-            </footer>
         </section>
     </div>
 </div>

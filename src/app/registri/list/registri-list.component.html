@@ -135,7 +135,7 @@
                        [mfData]="registri$ | async | registriDataFilter : [filter.id, filter.oggetto, filter.id_titolari, filter.id_mittenti, filter.protocollo_mittente, filter.protocollo_arrivo, filter.id_fascicoli, filter.data_arrivo_da, filter.data_arrivo_a, filteredCount]"
                        [mfSortBy]="'codice'" [mfSortOrder]="'desc'"
                        [mfRowsOnPage]="100"
-                       #mf="mfDataTable" stickthead>
+                       #mf="mfDataTable" stickthead [offsetY]="0">
                     <thead>
                     <tr>
                         <th colspan="4"></th>
@@ -189,7 +189,7 @@
                             <!--<br/> id_fascicoli:&nbsp;{{registro.id_fascicoli}}-->
                         </td>
                         <td>{{registro.protocollo_arrivo}}</td>
-                        <td class="nowrap">{{registro.data_arrivo | date: 'dd/MM/yyyy': 'UTC' }} {{registro.data_arrivo}}</td>
+                        <td class="nowrap">{{registro.data_arrivo | date: 'dd/MM/yyyy': 'UTC' }}</td>
                         <td>{{registro.protocollo_mittente}}</td>
                         <td class="nowrap">{{registro.data_mittente | date: 'dd/MM/yyyy' : 'UTC' }}</td>
                         <td><p class="text-center"><a [routerLink]="['/app/registri/edit/'+registro.id]" fragment="allegati"><i class="fa fa-files-o text-muted"> </i></a></p></td>
@@ -205,8 +205,6 @@
                     </tfoot>
                 </table>
             </div>
-            <footer>
-            </footer>
         </section>
     </div>
 </div>

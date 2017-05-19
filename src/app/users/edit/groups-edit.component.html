@@ -41,7 +41,7 @@
                     <h4><span class="fw-semi-bold">Permessi</span></h4>
                 </header>
                 <div class="widget-body">
-                    <table class="table table-hover table-condensed mb-0" [mfData]="supportedClasses" #mf="mfDataTable" stickthead>
+                    <table class="table table-hover table-condensed mb-0" [mfData]="supportedClasses" #mf="mfDataTable" stickthead [offsetY]="0">
                         <thead>
                         <tr>
                             <th>Classe</th>
@@ -98,8 +98,6 @@
                         </tbody>
                     </table>
                 </div>
-                <footer>
-                </footer>
             </section>
         </div>
     </div>

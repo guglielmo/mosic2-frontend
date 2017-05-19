@@ -136,7 +136,7 @@
                        [mfData]="registri$ | async | registriDataFilter : [null, '', null, null, '', '', model.id, null, null, filteredCount]"
                        [mfSortBy]="'codice'" [mfSortOrder]="'desc'"
                        [mfRowsOnPage]="100"
-                       #mf="mfDataTable" stickthead>
+                       #mf="mfDataTable" stickthead [offsetY]="0">
                     <thead>
                     <tr>
                         <th colspan="4"></th>
@@ -197,8 +197,6 @@
                     </tfoot>
                 </table>
             </div>
-            <footer>
-            </footer>
         </section>
     </div>
 </div>
