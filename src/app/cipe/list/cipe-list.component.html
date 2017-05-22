@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div *ngIf="apiService.userCan('CREATE_CIPE')" class="pull-right">
     <a [routerLink]=" ['/app/cipe/edit'] " class="btn btn-primary btn-save">Nuovo CIPE</a>
 </div>
 <h3 class="page-title">CIPE / <span class="fw-semi-bold">Tutti i CIPE</span></h3>
@@ -21,7 +21,7 @@
                         <th>Esito</th>
                         <th>Pubblicato</th>
                         <th><mfDefaultSorter by="id">#</mfDefaultSorter></th>
-                        <th>Azioni</th>
+                        <th *ngIf="apiService.userCan('DELETE_CIPE')">Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -69,7 +69,7 @@
                                href="{{cipe.public_reserved_url}}"> <i class="fa fa-lg fa-share-square-o"> </i> </a>
                         </td>
                         <td>{{cipe.id}}</td>
-                        <td>
+                        <td *ngIf="apiService.userCan('DELETE_CIPE')">
                             <a (click)="askDeleteCipe($event, myModal, cipe)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>

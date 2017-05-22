@@ -7,7 +7,11 @@ import * as _ from "lodash";
 import {AppConfig} from "../../app.config";
 import {APICommonService} from "../../_services/index";
 
-import {Fascicoli, PreCipeOdg, Registri, Titolari, Uffici} from "../../_models/index";
+import { Fascicoli } from "../../_models/fascicoli";
+import { PreCipeOdg } from "../../_models/precipe_odg";
+import { Registri } from "../../_models/registri";
+import { Titolari } from "../../_models/titolari";
+import { Uffici } from "../../_models/uffici";
 
 @Component({
     selector: 'precipe-odg-item',
@@ -16,7 +20,9 @@ import {Fascicoli, PreCipeOdg, Registri, Titolari, Uffici} from "../../_models/i
 })
 export class PreCipeOdgItemComponent implements OnInit {
     @Input() item: PreCipeOdg;
-    @Input() viewtype: any;
+    @Input() viewtype: string;
+    @Input() canEdit: boolean;
+    @Input() canDelete: boolean;
     @Output() deleteitem:EventEmitter<number> = new EventEmitter();
 
     public isNew;

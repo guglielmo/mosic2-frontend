@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-
-import { Titolari, Fascicoli, Uffici } from '../../_models/index';
+import { Titolari } from '../../_models/titolari';
+import { Fascicoli } from '../../_models/fascicoli';
+import { Uffici } from '../../_models/uffici';
 
 import { APICommonService } from '../../_services/index';
 import { AppConfig } from '../../app.config';
@@ -22,10 +23,12 @@ export class TitolariEditComponent implements OnInit {
     private id: number;
 
     private filteredCount = {count: 0};
-    private uffici$: Observable<Uffici[]>;
-    private fascicoli$: Observable<Fascicoli[]>;
+    public uffici$: Observable<Uffici[]>;
+    public fascicoli$: Observable<Fascicoli[]>;
 
     public select2Options: Select2Options;
+
+    public canEdit: boolean = false;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
@@ -44,6 +47,7 @@ export class TitolariEditComponent implements OnInit {
 
         this.id = +this.route.snapshot.params['id'];
         this.mode = isNaN(this.id) ? 'create' : 'update';
+        this.canEdit = isNaN(this.id) ? this.apiService.userCan('CREATE_TITOLARI') : this.apiService.userCan('EDIT_TITOLARI');
 
         switch( this.mode ) {
             case 'create':

@@ -21,6 +21,5 @@ export class DataEnumPipe implements PipeTransform {
 
         let retVal = _.get( dataseries, apipath + '["' + id + '"]' + prop, '');
         return retVal;
-
     }
 }

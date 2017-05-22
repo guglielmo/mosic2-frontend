@@ -15,9 +15,30 @@ export class GroupsEditComponent implements OnInit {
     id: number;
 
     supportedClasses: string[] = [
-        'REGISTRI', 'FASCICOLI','TITOLARI', 'PRECIPE', 'CIPE', 'DELIBERE',
-        'UTENTI', 'GROUPS', 'RUOLICIPE',
-        'AMMINISTRAZIONI', 'MITTENTI', 'UFFICI', 'TAGS', 'FIRMATARI'
+        'AMMINISTRAZIONI',
+        'MITTENTI',
+        'TITOLARI',
+        'FASCICOLI',
+        'REGISTRI',
+        'GROUPS',
+        'UFFICI',
+        'RUOLI_CIPE',
+        'TAGS',
+        'PRECIPE',
+        'AREARISERVATA_PRECIPE',
+        'AREARISERVATA_PRECIPE_CHECK',
+        'FIRMATARI',
+        'CIPE',
+        'AREARISERVATA_CIPE',
+        'AREARISERVATA_CIPE_CHECK',
+        'FIRMATARITIPO',
+        'CIPEESITI',
+        'CIPEESITITIPO',
+        'CIPEARGOMENTITIPO',
+        'USERS',
+        'DELIBERE',
+        'ADEMPIMENTI',
+        'MONITOR'
     ];
     supportedPermissions: string[] = ['READ', 'CREATE', 'EDIT', 'DELETE'];
 
@@ -33,7 +54,7 @@ export class GroupsEditComponent implements OnInit {
 
 
     ngOnInit() {
-        console.log(this.model);
+        //console.log(this.model);
         this.apiService.refreshCommonCache();
 
         this.id = +this.route.snapshot.params['id'];
@@ -71,7 +92,7 @@ export class GroupsEditComponent implements OnInit {
                 }
             }
         }
-        console.log(supportedclass,this.model.roles);
+        //console.log(supportedclass,this.model.roles);
     }
 
     cancel( event ) {

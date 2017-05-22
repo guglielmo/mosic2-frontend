@@ -1,0 +1,155 @@
+<accordion [closeOthers]="false" class="mb-lg show" id="debug[{{model.id}}]">
+    <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="false">
+        <div accordion-heading>
+            <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
+            <i class="fa float-right"
+               [ngClass]="{'fa-angle-down': accordionGroupDebug?.isOpen, 'fa-angle-right': !accordionGroupDebug?.isOpen}"></i>
+        </div>
+        <div>
+            <pre>model = {{model | json}}</pre>
+        </div>
+    </accordion-group>
+</accordion>
+
+<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event)" #f="ngForm" novalidate>
+    <div *ngIf="canEdit" class="pull-right">
+        <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
+        <button type="submit" class="btn btn-primary btn-save">Salva</button>
+    </div>
+    <h3 class="page-title"><a [routerLink]=" ['/app/adempimenti/list'] ">Adempimenti</a> /
+        <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
+
+        <span *ngIf="mode == 'update'" class="fw-semi-bold">
+            {{model.id}}
+        </span>
+    </h3>
+    <h3 class="page-title fw-semi-bold"><span *ngIf="mode == 'update'">{{model.descrizione}}</span></h3>
+
+
+    <div class="mb-2">
+        <div class="row" myMatchHeight="widget">
+            <div class="col-lg-6">
+                <section class="widget">
+                    <header>
+                        <h4><span class="fw-semi-bold">Definizione</span></h4>
+                    </header>
+                    <div class="widget-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !codice_fonte.valid }">
+                                    <label for="codice_fonte"><strong>Fonte</strong></label>
+                                    <div class="select2-H-keeper"><select2 id="codice_fonte"
+                                                                           #codice_fonte
+                                                                           name="codice_fonte"
+                                                                           class="full-width-select"
+                                                                           [options]="select2Options"
+                                                                           [value]="model.codice_fonte"
+                                                                           [cssImport]="false"
+                                                                           [disabled]="!canEdit"
+                                                                           (valueChanged)="select2Changed($event,'codice_fonte')"
+                                                                           [data]="fonteSelect2" required></select2></div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="data_cipe"><strong>Data delibera</strong></label>
+                                    <select id="data_cipe" name="data_cipe" class="form-control" data-style="btn-secondary" data-width="auto"
+                                            [ngModel]="" (change)="onDataCipeChanged($event.target.value)">
+                                        <option value=""></option>
+                                        <ng-container *ngFor="let cipe of cipe$ | async">
+                                            <option value="{{cipe.data}}">{{cipe.data | date: 'dd/MM/yyyy' }}</option>
+                                        </ng-container>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3">
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !descrizione.valid }">
+                                    <label for="descrizione"><strong>Descrizione</strong></label>
+                                    <textarea id="descrizione" name="descrizione"
+                                              rows="3" class="autogrow form-control transition-height"
+                                              placeholder="Scrivi l'descrizione della delibera..."
+                                              [(ngModel)]="model.descrizione" #descrizione="ngModel" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="note" class="hidden"><strong>Note</strong></label>
+                                    <textarea id="note" name="note"
+                                              rows="3" class="autogrow form-control transition-height"
+                                              autosize
+                                              placeholder="..."
+                                              [(ngModel)]="model.note" #note="ngModel"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="col-lg-6">
+                <section class="widget">
+                    <header>
+                        <h4><span class="fw-semi-bold">Scadenza</span></h4>
+                    </header>
+                    <div class="widget-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !data.valid }">
+                                    <label for="data_scadenza"><strong>Data di scadenza</strong></label>
+                                    <datetime id="data_scadenza" name="data_scadenza"
+                                              [datepicker]="datePickerOptions"
+                                              [timepicker]="false"
+                                              [(ngModel)]="model.data_scadenza" #data_scadenza="ngModel" required></datetime>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <p class="mt-4 mb-2"><strong>Scadenza dalla data di pubblicazione in G.U. (alternativo)</strong></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !giorni_scadenza.valid }">
+                                    <label for="giorni_scadenza">Giorni</label>
+                                    <input id="giorni_scadenza" name="giorni_scadenza"
+                                           type="text" class="form-control"
+                                           placeholder="numero del protocollo"
+                                           [disabled]="!canEdit"
+                                           [(ngModel)]="model.giorni_scadenza" #giorni_scadenza="ngModel" required>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !mesi_scadenza.valid }">
+                                    <label for="mesi_scadenza">Mesi</label>
+                                    <input id="mesi_scadenza" name="mesi_scadenza"
+                                           type="text" class="form-control"
+                                           placeholder="numero del protocollo"
+                                           [disabled]="!canEdit"
+                                           [(ngModel)]="model.mesi_scadenza" #mesi_scadenza="ngModel" required>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !anni_scadenza.valid }">
+                                    <label for="anni_scadenza">Anni</label>
+                                    <input id="anni_scadenza" name="anni_scadenza"
+                                           type="text" class="form-control"
+                                           placeholder="numero del protocollo"
+                                           [disabled]="!canEdit"
+                                           [(ngModel)]="model.anni_scadenza" #anni_scadenza="ngModel" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</form>
+

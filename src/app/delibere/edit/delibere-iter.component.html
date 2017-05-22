@@ -15,6 +15,7 @@
                                              [options]="select2OptionsMulti"
                                              [value]="model.id_segretariato"
                                              [cssImport]="false"
+                                             [disabled]="!canEdit"
                                              (valueChanged)="select2Changed($event,'id_segretariato')"
                                              [data]="firmatari$ | async | firmatariDataFilter : 4 : 0"></select2>
                                 </div>
@@ -27,6 +28,7 @@
                                 <datetime id="data_consegna"
                                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
+                                          [readonly]="!canEdit"
                                           [(ngModel)]="model.data_consegna" #data_consegna="ngModel" required></datetime>
                             </div>
                         </div>
@@ -36,6 +38,7 @@
                                 <textarea id="Nota_Consegna" name="Nota_Consegna"
                                           rows="1" class="autogrow form-control transition-height"
                                           placeholder="Scrivi la nota di consegna..."
+                                          [disabled]="!canEdit"
                                           [(ngModel)]="model.Nota_Consegna" #argomento="ngModel" autosize></textarea>
                             </div>
                         </div>
@@ -56,6 +59,7 @@
                                              [options]="select2Options"
                                              [value]="model.id_direttore"
                                              [cssImport]="false"
+                                             [disabled]="!canEdit"
                                              (valueChanged)="select2Changed($event,'id_direttore')"
                                              [data]="firmatari$ | async | firmatariDataFilter : 3 : 0"></select2>
                                 </div>
@@ -68,6 +72,7 @@
                                 <datetime id="data_direttore_invio"
                                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
+                                          [readonly]="!canEdit"
                                           [(ngModel)]="model.data_direttore_invio" #data_direttore_invio="ngModel" required></datetime>
 
                             </div>
@@ -78,6 +83,7 @@
                                 <datetime id="data_direttore_ritorno"
                                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
+                                          [readonly]="!canEdit"
                                           [(ngModel)]="model.data_direttore_ritorno" #data_direttore_ritorno="ngModel" required></datetime>
                             </div>
 
@@ -88,6 +94,7 @@
                                 <textarea id="note_direttore" name="note_direttore"
                                           rows="1" class="autogrow form-control transition-height"
                                           placeholder="Scrivi le note del direttore..."
+                                          [disabled]="!canEdit"
                                           [(ngModel)]="model.note_direttore" #note_direttore="ngModel" autosize></textarea>
                             </div>
                         </div>
@@ -103,6 +110,7 @@
                             <div class="form-group abc-checkbox abc-checkbox-primary rel-t-m20">
                                 <input id="invio_mef" name="invio_mef" type="checkbox"
                                        [checked]="model.invio_mef == 1"
+                                       [disabled]="!canEdit"
                                        (change)="model.invio_mef = $event.target.checked ? 1 : 0"
                                 >
                                 <label for="invio_mef">
@@ -117,6 +125,7 @@
                                 <datetime id="data_mef_pec"
                                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
+                                          [readonly]="!canEdit"
                                           [(ngModel)]="model.data_mef_pec" #data_mef_pec="ngModel" required></datetime>
                             </div>
                         </div>
@@ -126,6 +135,7 @@
                                 <datetime id="data_mef_ritorno"
                                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
+                                          [readonly]="!canEdit"
                                           [(ngModel)]="model.data_mef_ritorno" #data_mef_ritorno="ngModel" required></datetime>
                             </div>
                         </div>
@@ -135,13 +145,14 @@
                                 <textarea id="note_mef" name="note_mef"
                                           rows="1" class="autogrow form-control transition-height"
                                           placeholder="Scrivi le note del M.E.F. ..."
+                                          [disabled]="!canEdit"
                                           [(ngModel)]="model.note_mef" #note_mef="ngModel" autosize></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            <delibere-upload [type]="'MEF'" [allegati]="model.allegati_MEF" [allowUpload]="allowUpload"></delibere-upload>
+                            <delibere-upload [type]="'MEF'" [allegati]="model.allegati_MEF" [allowUpload]="allowUpload" [canEdit]="canEdit" [canDelete]="canDelete"></delibere-upload>
                         </div>
                     </div>
                 </div>
@@ -160,6 +171,7 @@
                                              [options]="select2Options"
                                              [value]="model.id_segretario"
                                              [cssImport]="false"
+                                             [disabled]="!canEdit"
                                              (valueChanged)="select2Changed($event,'id_segretario')"
                                              [data]="firmatari$ | async | firmatariDataFilter : 2 : 0"></select2>
                                 </div>
@@ -172,6 +184,7 @@
                                 <datetime id="data_segretario_invio"
                                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
+                                          [readonly]="!canEdit"
                                           [(ngModel)]="model.data_segretario_invio" #data_segretario_invio="ngModel" required></datetime>
                             </div>
                         </div>
@@ -181,6 +194,7 @@
                                 <datetime id="data_segretario_ritorno"
                                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
+                                          [readonly]="!canEdit"
                                           [(ngModel)]="model.data_segretario_ritorno" #data_segretario_ritorno="ngModel" required></datetime>
                             </div>
                         </div>
@@ -190,6 +204,7 @@
                                 <textarea id="note_segretario" name="note_segretario"
                                           rows="1" class="autogrow form-control transition-height"
                                           placeholder="Scrivi le note del Segretario ..."
+                                          [disabled]="!canEdit"
                                           [(ngModel)]="model.note_segretario" #note_segretario="ngModel" autosize></textarea>
                             </div>
                         </div>
@@ -210,6 +225,7 @@
                                              [options]="select2Options"
                                              [value]="model.id_presidente"
                                              [cssImport]="false"
+                                             [disabled]="!canEdit"
                                              (valueChanged)="select2Changed($event,'id_presidente')"
                                              [data]="firmatari$ | async | firmatariDataFilter : 1 : 0"></select2>
                                 </div>
@@ -222,6 +238,7 @@
                                 <datetime id="data_presidente_invio"
                                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
+                                          [readonly]="!canEdit"
                                           [(ngModel)]="model.data_presidente_invio" #data_presidente_invio="ngModel" required></datetime>
                             </div>
                         </div>
@@ -231,6 +248,7 @@
                                 <datetime id="data_presidente_ritorno"
                                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
+                                          [readonly]="!canEdit"
                                           [(ngModel)]="model.data_presidente_ritorno" #data_presidente_ritorno="ngModel" required></datetime>
                             </div>
                         </div>
@@ -240,6 +258,7 @@
                                 <textarea id="note_presidente" name="note_presidente"
                                           rows="1" class="autogrow form-control transition-height"
                                           placeholder="Scrivi le note del Presidente ..."
+                                          [disabled]="!canEdit"
                                           [(ngModel)]="model.note_presidente" #note_presidente="ngModel" autosize></textarea>
                             </div>
                         </div>
@@ -261,6 +280,7 @@
                                 <datetime id="data_invio_cc"
                                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
+                                          [readonly]="!canEdit"
                                           [(ngModel)]="model.data_invio_cc" #data_invio_cc="ngModel" required></datetime>
                             </div>
                         </div>
@@ -270,6 +290,7 @@
                                 <input id="numero_cc" name="numero_cc"
                                        type="text" class="form-control"
                                        placeholder="numero del protocollo"
+                                       [disabled]="!canEdit"
                                        [(ngModel)]="model.numero_cc" #numero_cc="ngModel">
                             </div>
                         </div>
@@ -279,13 +300,14 @@
                                 <textarea id="note_cc" name="note_cc"
                                           rows="1" class="autogrow form-control transition-height"
                                           placeholder="Scrivi le note della Corte dei Conti ..."
+                                          [disabled]="!canEdit"
                                           [(ngModel)]="model.note_cc" #note_cc="ngModel" autosize></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            <delibere-upload [type]="'CC'" [allegati]="model.allegati_CC" [allowUpload]="allowUpload"></delibere-upload>
+                            <delibere-upload [type]="'CC'" [allegati]="model.allegati_CC" [allowUpload]="allowUpload" [canEdit]="canEdit" [canDelete]="canDelete"></delibere-upload>
                         </div>
                     </div>
                 </div>
@@ -296,7 +318,7 @@
                     <delibere-rilievo [model]="rilievo"></delibere-rilievo>
                 </div>
                 <div class="iter_divider_box text-center">
-                    <button type="button" class="btn btn-outline-primary rel-t-l4 clickable"
+                    <button *ngIf="canEdit" type="button" class="btn btn-outline-primary rel-t-l4 clickable"
                             (click)="createRilievo_CC($event);">
                         <strong><i class="fa fa-lg fa-plus-square-o mr-2"></i> Nuovo rilievo della Corte dei Conti</strong>
                     </button>
@@ -314,6 +336,7 @@
                                              [options]="select2Options"
                                              [value]="model.tipo_registrazione_cc"
                                              [cssImport]="false"
+                                             [disabled]="!canEdit"
                                              (valueChanged)="select2Changed($event,'tipo_registrazione_cc')"
                                              [data]="tipo_registrazione_cc"></select2>
                                 </div>
@@ -325,6 +348,7 @@
                                 <datetime id="data_registrazione_cc"
                                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
+                                          [readonly]="!canEdit"
                                           [(ngModel)]="model.data_registrazione_cc" #data_registrazione_cc="ngModel" required></datetime>
 
                             </div>
@@ -335,6 +359,7 @@
                                 <input id="id_registro_cc" name="numero_cc"
                                        type="text" class="form-control"
                                        placeholder="numero del protocollo"
+                                       [disabled]="!canEdit"
                                        [(ngModel)]="model.id_registro_cc" #id_registro_cc="ngModel">
                             </div>
                         </div>
@@ -344,6 +369,7 @@
                                 <input id="foglio_cc" name="numero_cc"
                                        type="text" class="form-control"
                                        placeholder="numero del protocollo"
+                                       [disabled]="!canEdit"
                                        [(ngModel)]="model.foglio_cc" #foglio_cc="ngModel">
                             </div>
                         </div>
@@ -363,6 +389,7 @@
                                 <datetime id="data_invio_p"
                                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
+                                          [readonly]="!canEdit"
                                           [(ngModel)]="model.data_invio_p" #data_invio_p="ngModel" required></datetime>
                             </div>
                         </div>
@@ -373,6 +400,7 @@
                                 <textarea id="note_p" name="note_p"
                                           rows="1" class="autogrow form-control transition-height"
                                           placeholder="Scrivi le note del Parlamento ..."
+                                          [disabled]="!canEdit"
                                           [(ngModel)]="model.note_p" #note_p="ngModel" autosize></textarea>
                             </div>
                         </div>
@@ -388,6 +416,7 @@
                             <div class="form-group abc-checkbox abc-checkbox-primary rel-t-m20">
                                 <input id="pubblicazione_gu" name="pubblicazione_gu" type="checkbox"
                                        [checked]="model.pubblicazione_gu == 1"
+                                       [disabled]="!canEdit"
                                        (change)="model.pubblicazione_gu = $event.target.checked ? 1 : 0"
                                 >
                                 <label for="pubblicazione_gu">
@@ -401,6 +430,7 @@
                                 <datetime id="data_invio_gu"
                                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
+                                          [readonly]="!canEdit"
                                           [(ngModel)]="model.data_invio_gu" #data_invio_gu="ngModel" required></datetime>
                             </div>
                         </div>
@@ -410,6 +440,7 @@
                                 <input id="numero_invio_gu" name="numero_invio_gu"
                                        type="text" class="form-control"
                                        placeholder="numero del protocollo"
+                                       [disabled]="!canEdit"
                                        [(ngModel)]="model.numero_invio_gu" #numero_invio_gu="ngModel">
                             </div>
                         </div>
@@ -419,13 +450,14 @@
                                 <textarea id="note_gu" name="note_gu"
                                           rows="1" class="autogrow form-control transition-height"
                                           placeholder="Scrivi le note del Parlamento ..."
+                                          [disabled]="!canEdit"
                                           [(ngModel)]="model.note_gu" #note_gu="ngModel" autosize></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            <delibere-upload [type]="'GU'" [allegati]="model.allegati_GU" [allowUpload]="allowUpload"></delibere-upload>
+                            <delibere-upload [type]="'GU'" [allegati]="model.allegati_GU" [allowUpload]="allowUpload" [canEdit]="canEdit" [canDelete]="canDelete"></delibere-upload>
                         </div>
                     </div>
                     <div class="row">
@@ -439,7 +471,7 @@
                                             <input type="radio" name="tipo_gu" id="tipo_gu_ordinario"
                                                    [value]="0"
                                                    (click)="model.tipo_gu = 0"
-                                                   [checked]="model.tipo_gu === 0">
+                                                   [checked]="model.tipo_gu === 0" [disabled]="!canEdit">
                                             <label for="tipo_gu_ordinario">
                                                 <span [ngClass]="{ 'badge badge-lg badge-success': model.tipo_gu === 0 }">Ordinario</span>
                                             </label>
@@ -448,7 +480,7 @@
                                             <input type="radio" name="tipo_gu" id="tipo_gu_supplemento"
                                                    [value]="1"
                                                    (click)="model.tipo_gu = 1"
-                                                   [checked]="model.tipo_gu === 1">
+                                                   [checked]="model.tipo_gu === 1" [disabled]="!canEdit">
                                             <label for="tipo_gu_supplemento">
                                                 <span [ngClass]="{ 'badge badge-lg badge-success': model.tipo_gu === 1 }">Supplemento</span>
                                             </label>
@@ -462,6 +494,7 @@
                                         <input id="numero_gu" name="numero_gu"
                                                type="text" class="form-control"
                                                placeholder="numero del protocollo"
+                                               [disabled]="!canEdit"
                                                [(ngModel)]="model.numero_gu" #numero_gu="ngModel">
                                     </div>
                                 </div>
@@ -471,6 +504,7 @@
                                         <datetime id="data_gu"
                                                   [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                                   [timepicker]="false"
+                                                  [readonly]="!canEdit"
                                                   [(ngModel)]="model.data_gu" #data_gu="ngModel" required></datetime>
                                     </div>
                                 </div>
@@ -485,6 +519,7 @@
                                         <input id="numero_ec_gu" name="numero_gu"
                                                type="text" class="form-control"
                                                placeholder="numero del protocollo"
+                                               [disabled]="!canEdit"
                                                [(ngModel)]="model.numero_ec_gu" #numero_ec_gu="ngModel">
                                     </div>
                                 </div>
@@ -494,6 +529,7 @@
                                         <datetime id="data_ec_gu"
                                                   [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                                   [timepicker]="false"
+                                                  [readonly]="!canEdit"
                                                   [(ngModel)]="model.data_ec_gu" #data_ec_gu="ngModel" required></datetime>
                                     </div>
                                 </div>
@@ -508,6 +544,7 @@
                                         <input id="numero_co_gu" name="numero_gu"
                                                type="text" class="form-control"
                                                placeholder="numero del protocollo"
+                                               [disabled]="!canEdit"
                                                [(ngModel)]="model.numero_co_gu" #numero_co_gu="ngModel">
                                     </div>
                                 </div>
@@ -517,6 +554,7 @@
                                         <datetime id="data_co_gu"
                                                   [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                                   [timepicker]="false"
+                                                  [readonly]="!canEdit"
                                                   [(ngModel)]="model.data_co_gu" #data_co_gu="ngModel" required></datetime>
                                     </div>
                                 </div>

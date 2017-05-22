@@ -1,5 +1,5 @@
 <form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
-    <div class="pull-right">
+    <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
     </div>
@@ -15,36 +15,42 @@
                     <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !userName.valid }">
                         <label for="userName"><strong>Nome utente</strong></label>
                         <input type="text" class="form-control" id="userName" name="userName" placeholder="Nome utente"
+                               [disabled]="!canEdit"
                                [(ngModel)]="model.userName" #userName="ngModel" required>
                     </div>
 
                     <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !firstName.valid }">
                         <label for="firstName"><strong>Nome</strong></label>
                         <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Nome"
+                               [disabled]="!canEdit"
                                [(ngModel)]="model.firstName" #firstName="ngModel" required>
                     </div>
 
                     <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !lastName.valid }">
                         <label for="lastName"><strong>Cognome</strong></label>
                         <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Cognome"
+                               [disabled]="!canEdit"
                                [(ngModel)]="model.lastName" #lastName="ngModel" required>
                     </div>
 
                     <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !eMail.valid }">
                         <label for="eMail"><strong>E-mail</strong></label>
                         <input type="text" class="form-control" id="eMail" name="eMail" placeholder="Email"
+                               [disabled]="!canEdit"
                                [(ngModel)]="model.eMail" #eMail="ngModel" required>
                     </div>
 
                     <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !password.valid }">
                         <label for="password"><strong>Password</strong></label>
                         <input type="password" class="form-control" id="password" name="password" placeholder="Password"
+                               [disabled]="!canEdit"
                                [(ngModel)]="model.password" #password="ngModel">
                     </div>
 
                     <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !repeatPassword.valid }">
                         <label for="repeatPassword"><strong>Ripeti password</strong></label>
                         <input type="password" class="form-control" id="repeatPassword" name="repeatPassword" placeholder="Ripeti password"
+                               [disabled]="!canEdit"
                                [(ngModel)]="model.repeatPassword" #repeatPassword="ngModel">
                     </div>
 
@@ -69,12 +75,24 @@
                                    #registrationDate="ngModel" disabled>
                         </div>
                         <div class="form-group">
+                            <label for="id_groups"><strong>Gruppo</strong></label>
+                            <div class="select2-H-keeper"><select2 id="id_groups"
+                                                                   class="full-width-select"
+                                                                   [options]="select2Options"
+                                                                   value="{{model.id_groups}}"
+                                                                   [cssImport]="false"
+                                                                   [disabled]="!canEdit"
+                                                                   (valueChanged)="select2Changed($event,'id_groups')"
+                                                                   [data]="groups$ | async"></select2></div>
+                        </div>
+                        <div class="form-group">
                             <label for="id_uffici"><strong>Ufficio</strong></label>
                             <div class="select2-H-keeper"><select2 id="id_uffici"
                                      class="full-width-select"
                                      [options]="select2Options"
                                      value="{{model.id_uffici}}"
                                      [cssImport]="false"
+                                     [disabled]="!canEdit"
                                      (valueChanged)="select2Changed($event,'id_uffici')"
                                      [data]="uffici$ | async"></select2></div>
                         </div>
@@ -85,23 +103,27 @@
                                      [options]="select2Options"
                                      value="{{model.id_ruoli_cipe}}"
                                      [cssImport]="false"
+                                     [disabled]="!canEdit"
                                      (valueChanged)="select2Changed($event,'id_ruoli_cipe')"
                                      [data]="ruoli_cipe$ | async"></select2></div>
                         </div>
                         <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !ip.valid }">
                             <label for="ip"><strong>IP</strong></label>
                             <input type="text" class="form-control" id="ip" name="ip" placeholder="Indirizzo IP"
+                                   [disabled]="!canEdit"
                                    [(ngModel)]="model.ip" #ip="ngModel">
                         </div>
                         <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !stazione.valid }">
                             <label for="stazione"><strong>Stazione</strong></label>
                             <input type="text" class="form-control" id="stazione" name="stazione" placeholder="Stazione"
+                                   [disabled]="!canEdit"
                                    [(ngModel)]="model.stazione" #stazione="ngModel">
                         </div>
                         <br/>
                         <div class="form-group abc-checkbox abc-checkbox-primary">
                             <input id="cessatoServizio" name="cessatoServizio" type="checkbox"
                                    [checked]="model.cessatoServizio == '1'"
+                                   [disabled]="!canEdit"
                                    (change)="model.cessatoServizio = $event.target.checked == 1 ? '1' : '0'"
                             >
                             <label for="cessatoServizio">

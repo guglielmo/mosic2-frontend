@@ -13,7 +13,7 @@
 
 <form *ngIf="model.id || mode == 'create'" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
 
-    <div class="float-right">
+    <div *ngIf="canEdit" class="float-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
     </div>
@@ -32,6 +32,7 @@
                         <datetime id="data" name="data"
                                   [datepicker]="datePickerOptions"
                                   [timepicker]="false"
+                                  [readonly]="!canEdit"
                                   [(ngModel)]="model.data" #data="ngModel" required></datetime>
                     </div>
                 </div>
@@ -111,7 +112,7 @@
             <div>
                 <div class="row" sticktoolbar>
                     <div class="col-lg-6">
-                        <div class="py-2">
+                        <div *ngIf="canEdit" class="py-2">
                             <button type="button" class="btn btn-outline-primary rel-t-l4"
                                     (click)="createPuntoOdg($event, page_bottom);">
                                 <strong><i class="fa fa-lg fa-plus-square-o mr-2"></i> Nuovo punto o.d.g.</strong>
@@ -143,7 +144,7 @@
 
             <ul [dragula]='"precipe_odg"' [dragulaModel]='model.precipe_odg' class="list-group">
                 <li *ngFor="let item of model.precipe_odg" class="list-group-item">
-                    <precipe-odg-item [item]="item" [viewtype]="viewtype" (deleteitem)="askDeletePuntoOdg($event, deletePuntoOdgModal)"></precipe-odg-item>
+                    <precipe-odg-item [item]="item" [viewtype]="viewtype" [canEdit]="canEdit" [canDelete]="canDelete" (deleteitem)="askDeletePuntoOdg($event, deletePuntoOdgModal)"></precipe-odg-item>
                 </li>
             </ul>
 
@@ -153,19 +154,19 @@
             <ng-template tabHeading>
                 <strong>Appunto Generale <span *ngIf="model.allegati_APG">({{model.allegati_APG.length}})</span></strong>
             </ng-template>
-            <precipe-upload [type]="'APG'" [allegati]="model.allegati_APG" [allowUpload]="allowUpload"></precipe-upload>
+            <precipe-upload [type]="'APG'" [allegati]="model.allegati_APG" [allowUpload]="allowUpload" [canEdit]="canEdit" [canDelete]="canDelete"></precipe-upload>
         </tab>
         <tab>
             <ng-template tabHeading>
                 <strong>Elenco Telex <span *ngIf="model.allegati_TLX">({{model.allegati_TLX.length}})</span></strong>
             </ng-template>
-            <precipe-upload [type]="'TLX'" [allegati]="model.allegati_TLX" [allowUpload]="allowUpload"></precipe-upload>
+            <precipe-upload [type]="'TLX'" [allegati]="model.allegati_TLX" [allowUpload]="allowUpload" [canEdit]="canEdit" [canDelete]="canDelete"></precipe-upload>
         </tab>
         <tab>
             <ng-template tabHeading>
                 <strong>Osservazioni <span *ngIf="model.allegati_OSS">({{model.allegati_OSS.length}})</span></strong>
             </ng-template>
-            <precipe-upload [type]="'OSS'" [allegati]="model.allegati_OSS" [allowUpload]="allowUpload"></precipe-upload>
+            <precipe-upload [type]="'OSS'" [allegati]="model.allegati_OSS" [allowUpload]="allowUpload" [canEdit]="canEdit" [canDelete]="canDelete"></precipe-upload>
         </tab>
     </tabset>
 </form>

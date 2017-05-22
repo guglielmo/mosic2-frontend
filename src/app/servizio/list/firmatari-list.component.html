@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div *ngIf="apiService.userCan('CREATE_FIRMATARI')" class="pull-right">
     <a [routerLink]=" ['/app/firmatari/edit'] " class="btn btn-primary btn-save">Nuovo Firmatario</a>
 </div>
 <h3 class="page-title">Firmatari - <span class="fw-semi-bold">Tutti i firmatari</span></h3>
@@ -50,7 +50,7 @@
                         <th><mfDefaultSorter by="denominazione_estesa">Denominazione estesa</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="tipo">Tipo</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="disattivato">Stato</mfDefaultSorter></th>
-                        <th>Azioni</th>
+                        <th *ngIf="apiService.userCan('DELETE_FIRMATARI')">Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -63,7 +63,7 @@
                         <td>
                             <span *ngIf="firmatario.disattivato === 0" class="badge badge-success">Attivo</span>
                             <span *ngIf="firmatario.disattivato === 1" class="badge badge-danger">Non attivo</span>
-                        <td>
+                        <td *ngIf="apiService.userCan('DELETE_FIRMATARI')">
                             <a (click)="askDeleteFirmatari($event, myModal, firmatario)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>

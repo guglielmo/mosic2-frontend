@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { RuoliCipe } from '../../_models/index';
+import { RuoliCipe } from '../../_models/ruoli_cipe';
 import { APICommonService } from '../../_services/index';
 
 
@@ -15,6 +15,8 @@ export class RuoliCipeListComponent implements OnInit {
     deletingRole: RuoliCipe = new RuoliCipe;
     public ruoli_cipe$: Observable<RuoliCipe[]>;
 
+    public canEdit: boolean = false;
+    public canDelete: boolean = false;
 
     constructor(public apiService: APICommonService,
                 private router: Router
@@ -25,7 +27,9 @@ export class RuoliCipeListComponent implements OnInit {
 
     ngOnInit() {
         this.apiService.refreshCommonCache();
-        // this.loadAllRoles();
+
+        this.canEdit = this.apiService.userCan('CREATE_RUOLI_CIPE');
+        this.canDelete = this.apiService.userCan('DELETE_RUOLI_CIPE');
     }
 
     editId(id: number) {

@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div *ngIf="apiService.userCan('CREATE_TAGS')" class="pull-right">
     <a [routerLink]=" ['/app/tags/edit'] " class="btn btn-primary btn-save">Nuova Etichetta</a>
 </div>
 <h3 class="page-title">Etichette - <span class="fw-semi-bold">Tutte le etichette</span></h3>
@@ -45,14 +45,14 @@
                     <tr>
                         <th><mfDefaultSorter by="codice">#</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="denominazione">Denominazione</mfDefaultSorter></th>
-                        <th>Azioni</th>
+                        <th *ngIf="apiService.userCan('DELETE_TAGS')">Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr *ngFor="let tag of mf.data" (click)="editId(tag.id)" class="clickable">
                         <td>{{tag.id}}</td>
                         <td [innerHTML]="tag.denominazione | dataMark : filter.denominazione"></td>
-                        <td>
+                        <td *ngIf="apiService.userCan('DELETE_TAGS')">
                             <a (click)="askDeleteTags($event, myModal, tag)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>

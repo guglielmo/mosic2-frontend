@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div *ngIf="apiService.userCan('CREATE_MITTENTI')" class="pull-right">
     <a [routerLink]=" ['/app/mittenti/edit'] " class="btn btn-primary btn-save">Nuovo Mittente</a>
 </div>
 <h3 class="page-title">Mittenti - <span class="fw-semi-bold">Tutti i mittenti</span></h3>
@@ -45,14 +45,14 @@
                     <tr>
                         <th><mfDefaultSorter by="codice">#</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="denominazione">Denominazione</mfDefaultSorter></th>
-                        <th>Azioni</th>
+                        <th *ngIf="apiService.userCan('DELETE_MITTENTI')">Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr *ngFor="let mittente of mf.data" (click)="editId(mittente.id)" class="clickable">
                         <td>{{mittente.id}}</td>
                         <td [innerHTML]="mittente.denominazione | dataMark : filter.denominazione"></td>
-                        <td>
+                        <td *ngIf="apiService.userCan('DELETE_MITTENTI')">
                             <a (click)="askDeleteMittenti($event, myModal, mittente)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
-import { Select2OptionData } from 'ng2-select2';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Warehouse } from 'ngx-warehouse';
@@ -8,15 +7,14 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import * as _ from 'lodash';
 
-
-import { Titolari, Fascicoli, Registri, Amministrazioni, Mittenti, Uffici, RuoliCipe } from '../_models/index';
-
 import {AppConfig} from '../app.config';
 
 @Injectable()
 export class APICommonService {
     public config: any;
     public configFn: any;
+
+    private userCapabilities: any;
 
     public commonDataready = false;
     public activeRequests = 0;
@@ -26,7 +24,7 @@ export class APICommonService {
     private _allData$: any = {};
     public dataEnum: any = {};
 
-    private currentStorageVersion = '84';
+    private currentStorageVersion = '4';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
@@ -49,10 +47,6 @@ export class APICommonService {
         'users',
         'delibere',
         'adempimenti'
-
-/*        'delibere',
-        'adempimenti',
-        'monitor'*/
     ];
 
     private commonData: string[] = [
@@ -84,6 +78,12 @@ export class APICommonService {
         this.config = config.getConfig();
         this.configFn = config;
 
+        // gets and maps user capabilities to object for fast evaluation
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.userCapabilities = _.zipObject(currentUser.capabilities, _.map(currentUser.capabilities, () => { return true } ));
+
+        //console.log(this.userCapabilities);
+
         // creates containers for local in memory storage and Observable data arrays
         this.cachedApiDataMetods.forEach( apipath => {
             if ( !this._allData$[apipath] ) {
@@ -107,43 +107,73 @@ export class APICommonService {
     }
 
     // PUBLIC helper methods
-    public getAll(apipath: string, params?: URLSearchParams) {
-        this.startingRequest(apipath);
-        const query = params ? '?' + params.toString() : '';
-        return this.http.get(this.config.baseAPIURL + '/api/' + apipath + query, this.jwt())
-                        .map((response: Response) => response.json())
-                        .catch((response: Response) => this.handleError(response));
+    public getAll(apipath: string, params?: URLSearchParams): Observable<any> {
+
+        if( this.apiCan('READ_'+apipath.toUpperCase() ) ) {
+
+            this.startingRequest(apipath);
+            const query = params ? '?' + params.toString() : '';
+            return this.http.get(this.config.baseAPIURL + '/api/' + apipath + query, this.jwt())
+                .map((response: Response) => response.json())
+                .catch((response: Response) => this.handleError(response));
+        }
+
+        return Observable.of<any>({data:[]});
     }
 
-    public getById(apipath: string, id: number | string) {
-        this.startingRequest(apipath);
-        return this.http.get(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt())
-                        .map((response: Response)  => response.json())
-                        .catch((response: Response) => this.handleError(response));
+    public getById(apipath: string, id: number | string): Observable<any> {
+
+        if( this.apiCan('READ_'+apipath.toUpperCase() ) ) {
+
+            this.startingRequest(apipath);
+            return this.http.get(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt())
+                .map((response: Response)  => response.json())
+                .catch((response: Response) => this.handleError(response));
+        }
+
+        return Observable.of<any>({data:[]});
     }
 
     public create(apipath: string, data: any) {
-        this.startingRequest(apipath);
-        this.setDirty(apipath);
-        return this.http.post(this.config.baseAPIURL + '/api/' + apipath, data, this.jwt())
-                        .map((response: Response) => response.json())
-                        .catch((response: Response) => this.handleError(response));
+
+        if( this.apiCan('CREATE_'+apipath.toUpperCase() ) ) {
+
+            this.startingRequest(apipath);
+            this.setDirty(apipath);
+            return this.http.post(this.config.baseAPIURL + '/api/' + apipath, data, this.jwt())
+                .map((response: Response) => response.json())
+                .catch((response: Response) => this.handleError(response));
+        }
+
+        return Observable.of<any>({data:[]});
     }
 
     public update(apipath: string, data: any) {
-        this.startingRequest(apipath);
-        this.setDirty(apipath);
-        return this.http.put(this.config.baseAPIURL + '/api/' + apipath + '/' + data.id, data, this.jwt())
-                        .map((response: Response) => response.json())
-                        .catch((response: Response) => this.handleError(response));
+
+        if( this.apiCan('EDIT_'+apipath.toUpperCase() ) ) {
+
+            this.startingRequest(apipath);
+            this.setDirty(apipath);
+            return this.http.put(this.config.baseAPIURL + '/api/' + apipath + '/' + data.id, data, this.jwt())
+                .map((response: Response) => response.json())
+                .catch((response: Response) => this.handleError(response));
+        }
+
+        return Observable.of<any>({data:[]});
     }
 
     public delete(apipath: string, id: number | string) {
-        this.startingRequest(apipath);
-        this.setDirty(apipath);
-        return this.http.delete(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt())
-                        .map((response: Response) => response.json())
-                        .catch((response: Response) => this.handleError(response));
+
+        if( this.apiCan('DELETE_'+apipath.toUpperCase() ) ) {
+
+            this.startingRequest(apipath);
+            this.setDirty(apipath);
+            return this.http.delete(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt())
+                .map((response: Response) => response.json())
+                .catch((response: Response) => this.handleError(response));
+        }
+
+        return Observable.of<any>({data:[]});
     }
 
     public deleteFile(apipath: string, idContainer: number | string, idFile: number) {
@@ -152,65 +182,6 @@ export class APICommonService {
         return this.http.delete(this.config.baseAPIURL + '/api/' + apipath + '/' + idContainer + '/upload/' + idFile, this.jwt())
                         .map((response: Response) => response.json())
                         .catch((response: Response) => this.handleError(response));
-    }
-
-    private setDirty(apipath: string) {
-
-        if (this.cachedApiDataMetods.indexOf(apipath) !== -1) {
-
-            //
-            // retrive and set last update to zero for the method
-            //
-            const storedUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
-            storedUpdates[apipath] = 0;
-            localStorage.setItem('lastupdates', JSON.stringify(storedUpdates));
-
-            this.isDirty = true;
-        }
-
-    }
-
-    private getLastUpdates() {
-        this.startingRequest('lastupdates');
-        return this.http.get(this.config.baseAPIURL + '/api/lastupdates', this.jwt())
-                        .map((response: Response) => response.json())
-                        .catch((response: Response) => this.handleError(response));
-    }
-
-    private startingRequest ( apipath: string ) {
-        this.activeRequests++;
-        // console.log(this.activeRequests);
-    }
-
-    private finishRequest ( apipath: string ) {
-        this.activeRequests--;
-        // console.log(this.activeRequests);
-    }
-
-    private handleError (error: Response | any) {
-
-        console.log('handle',error);
-
-        let errMsg: string;
-        if (error instanceof Response) {
-
-            const body = error.json() || '';
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err.message}`;
-
-            const usermsg = err.message ? err.message : 'Errore non previsto, consultare la console per ulteriori informazioni';
-            this.notifyError(usermsg);
-
-        } else {
-            errMsg = error.message ? error.message : error.toString();
-        }
-        console.error('>>>>', errMsg);
-
-        return Observable.throw(errMsg);
-    }
-
-    public notifyError (msg: any) {
-        this.configFn.notify(msg);
     }
 
     public refreshCommonCache() {
@@ -293,6 +264,80 @@ export class APICommonService {
             localStorage.setItem('storageVersion', this.currentStorageVersion);
         });
 
+    }
+
+    public notifyError (msg: any) {
+        this.configFn.notify(msg);
+    }
+
+    public userCan (capability: string): boolean {
+
+        return this.userCapabilities['ROLE_'+capability] || false;
+    }
+
+    private apiCan (capability: string): boolean {
+
+        if( !this.userCapabilities['ROLE_'+capability] ) {
+
+            this.notifyError('Permesso negato: non disponi delle autorizzazioni per '+capability);
+            return false;
+        }
+        return true;
+    }
+
+    private setDirty(apipath: string) {
+
+        if (this.cachedApiDataMetods.indexOf(apipath) !== -1) {
+
+            //
+            // retrive and set last update to zero for the method
+            //
+            const storedUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
+            storedUpdates[apipath] = 0;
+            localStorage.setItem('lastupdates', JSON.stringify(storedUpdates));
+
+            this.isDirty = true;
+        }
+
+    }
+
+    private getLastUpdates() {
+        this.startingRequest('lastupdates');
+        return this.http.get(this.config.baseAPIURL + '/api/lastupdates', this.jwt())
+                        .map((response: Response) => response.json())
+                        .catch((response: Response) => this.handleError(response));
+    }
+
+    private startingRequest ( apipath: string ) {
+        this.activeRequests++;
+        // console.log(this.activeRequests);
+    }
+
+    private finishRequest ( apipath: string ) {
+        this.activeRequests--;
+        // console.log(this.activeRequests);
+    }
+
+    private handleError (error: Response | any) {
+
+        console.log('handle',error);
+
+        let errMsg: string;
+        if (error instanceof Response) {
+
+            const body = error.json() || '';
+            const err = body.error || JSON.stringify(body);
+            errMsg = `${error.status} - ${error.statusText || ''} ${err.message}`;
+
+            const usermsg = err.message ? err.message : 'Errore non previsto, consultare la console per ulteriori informazioni';
+            this.notifyError(usermsg);
+
+        } else {
+            errMsg = error.message ? error.message : error.toString();
+        }
+        console.error('>>>>', errMsg);
+
+        return Observable.throw(errMsg);
     }
 
     private cacheCommonIDB(apipath: string,  lastupdate: number) {
@@ -392,6 +437,9 @@ export class APICommonService {
                 break;
             case 'users':
                 _.each(data, (item) => { item.text = item['denominazione'] = item['lastName'] + ' ' + item['firstName'] } );
+                break;
+            case 'groups':
+                _.each(data, (item) => { item.text = item['name'] } );
                 break;
         }
     }

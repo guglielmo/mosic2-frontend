@@ -1,5 +1,5 @@
-<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event, myModal)" #f="ngForm" novalidate>
-    <div class="pull-right">
+<form *ngIf="apiService.commonDataready && (model.id || mode === 'create')" name="form" (ngSubmit)="f.form.valid && submit($event, myModal)" #f="ngForm" novalidate>
+    <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
     </div>
@@ -22,9 +22,6 @@
         </span>
     </h3>
     <h3 class="page-title fw-semi-bold"><span *ngIf="mode == 'update'">{{model.oggetto}}</span></h3>
-
-
-    {{f.form.valid}}
 
     <div class="row">
         <div class="col-lg-6">
@@ -49,6 +46,7 @@
                             <div class="form-group abc-checkbox abc-checkbox-primary rel-t-m20">
                                 <input id="proposta_cipe" name="proposta_cipe" type="checkbox"
                                        [checked]="model.proposta_cipe == 2"
+                                       [disabled]="!canEdit"
                                        (change)="model.proposta_cipe = $event.target.checked ? 2 : 1"
                                 >
                                 <label for="proposta_cipe">
@@ -64,6 +62,7 @@
                                 <textarea id="oggetto" name="oggetto"
                                           rows="6" class="autogrow form-control transition-height"
                                           placeholder="Scrivi l'oggetto del registro..."
+                                          [disabled]="!canEdit"
                                           [(ngModel)]="model.oggetto" #oggetto="ngModel" required></textarea>
                             </div>
                         </div>
@@ -88,6 +87,7 @@
                                         <input id="protocollo_arrivo" name="protocollo_arrivo"
                                                type="text" class="form-control"
                                                placeholder="numero del protocollo"
+                                               [disabled]="!canEdit"
                                                [(ngModel)]="model.protocollo_arrivo" #protocollo_arrivo="ngModel" required>
                                     </div>
                                 </div>
@@ -97,6 +97,7 @@
                                         <datetime id="data_arrivo" name="data_arrivo"
                                                   [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                                   [timepicker]="false"
+                                                  [readonly]="!canEdit"
                                                   [(ngModel)]="model.data_arrivo" #data_arrivo="ngModel" required></datetime>
                                     </div>
                                 </div>
@@ -110,6 +111,7 @@
                                                                                [options]="select2WithAddOptionsMulti"
                                                                                [value]="model.id_amministrazioni ? model.id_amministrazioni.split(',') : ''"
                                                                                [cssImport]="false"
+                                                                               [disabled]="!canEdit"
                                                                                (valueChanged)="select2Changed($event,'id_amministrazioni')"
                                                                                [data]="amministrazioni$ | async"></select2></div>
                                     </div>
@@ -122,6 +124,7 @@
                                                  [options]="select2WithAddOptions"
                                                  value="{{model.id_mittenti}}"
                                                  [cssImport]="false"
+                                                 [disabled]="!canEdit"
                                                  (valueChanged)="select2Changed($event,'id_mittenti')"
                                                  [data]="mittenti$ | async"></select2></div>
                                     </div>
@@ -134,6 +137,7 @@
                                         <input id="protocollo_mittente" name="protocollo_mittente"
                                                type="text" class="form-control"
                                                placeholder="numero del protocollo"
+                                               [disabled]="!canEdit"
                                                [(ngModel)]="model.protocollo_mittente" #protocollo_mittente="ngModel">
                                     </div>
                                 </div>
@@ -143,6 +147,7 @@
                                         <datetime id="data_mittente" name="data_mittente"
                                                   [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                                   [timepicker]="false"
+                                                  [readonly]="!canEdit"
                                                   [(ngModel)]="model.data_mittente" #data_mittente="ngModel"></datetime>
                                     </div>
                                 </div>
@@ -175,6 +180,7 @@
                                          [options]="select2Options"
                                          [value]="model.id_titolari"
                                          [cssImport]="false"
+                                         [disabled]="!canEdit"
                                          (valueChanged)="select2Changed($event,'id_titolari')"
                                          [data]="titolari$ | async" required></select2></div>
                             </div>
@@ -187,6 +193,7 @@
                                          [options]="select2Options"
                                          [value]="model.id_fascicoli"
                                          [cssImport]="false"
+                                         [disabled]="!canEdit"
                                          (valueChanged)="select2Changed($event,'id_fascicoli')"
                                          [data]="fascicoli$ | async | fascicoliByTitolarioDataFilter : model.id_titolari" required></select2></div>
                             </div>
@@ -210,6 +217,7 @@
                                 <textarea id="annotazioni" name="annotazioni"
                                           rows="5" class="autogrow form-control transition-height"
                                           autosize
+                                          [disabled]="!canEdit"
                                           placeholder="Scrivi annotazioni ad uso interno..."
                                           [(ngModel)]="model.annotazioni" #annotazioni="ngModel"></textarea>
                             </div>
@@ -236,7 +244,7 @@
                                 <i class="filetypes filetypes-{{allegato.tipo}} x2"></i>
                             </span>
                             <div class="news-item-info">
-                                <div class="float-lg-right"><a (click)="askDeleteFile($event, deleteFileModal, allegato)"><i class="fa fa-trash-o"> </i></a></div>
+                                <div *ngIf="canDelete" class="float-lg-right"><a (click)="askDeleteFile($event, deleteFileModal, allegato)"><i class="fa fa-trash-o"> </i></a></div>
                                 <h5 class="name no-margin mb-xs"><a href="{{apiService.config.baseAPIURL}}/{{allegato.relURI}}" target="_blank">{{allegato.nome}}</a></h5>
                                 <p class="fs-mini">Dimensione: {{allegato.dimensione | fileSize}} - Data caricato: <time>{{allegato.data  | date: 'dd/MM/yyyy HH:mm'}}</time>
                                 </p>
@@ -248,7 +256,7 @@
             </section>
         </div>
 
-        <div class="col-lg-6">
+        <div *ngIf="canEdit" class="col-lg-6">
 
             <section class="widget">
                 <header>

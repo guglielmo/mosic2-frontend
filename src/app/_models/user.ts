@@ -8,5 +8,5 @@
     password: string;
     repeatPassword: string;
     capabilities: string[]; // ['manageusers']
-    groups: string[];
+    id_groups: number;
 }

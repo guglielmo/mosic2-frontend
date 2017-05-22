@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 
 
 
-import { Cipe } from '../../_models/index';
+import { Cipe } from '../../_models/cipe';
 import { APICommonService } from '../../_services/index';
 
 @Component({

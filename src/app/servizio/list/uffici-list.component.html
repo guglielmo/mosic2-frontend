@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div *ngIf="apiService.userCan('CREATE_UFFICI')" class="pull-right">
     <a [routerLink]=" ['/app/uffici/edit'] " class="btn btn-primary btn-save">Nuovo Ufficio</a>
 </div>
 <h3 class="page-title">Uffici - <span class="fw-semi-bold">Tutti gli uffici</span></h3>
@@ -50,7 +50,7 @@
                         <th><mfDefaultSorter by="ordine_ufficio">Ordine ufficio</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="solo_delibere">Solo delibere</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="disattivo_ufficio">Stato</mfDefaultSorter></th>
-                        <th>Azioni</th>
+                        <th *ngIf="apiService.userCan('DELETE_UFFICI')">Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -66,7 +66,7 @@
                         <td>
                             <span *ngIf="ufficio.disattivo_ufficio === '0'" class="badge badge-success">Attivo</span>
                             <span *ngIf="ufficio.disattivo_ufficio === '1'" class="badge badge-danger">Non attivo</span>
-                        <td>
+                        <td *ngIf="apiService.userCan('DELETE_UFFICI')">
                             <a (click)="askDeleteUffici($event, myModal, ufficio)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>

@@ -1,15 +1,15 @@
-import {AfterViewChecked, Component, EventEmitter, Inject, NgZone, OnDestroy, OnInit, ViewEncapsulation} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
-import {APICommonService} from "../../_services/index";
-import {AppConfig} from "../../app.config";
-import {NgUploaderOptions, UploadedFile} from "ngx-uploader";
-import {Observable} from "rxjs/Observable";
+import { AfterViewChecked, Component, EventEmitter, Inject, NgZone, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import { APICommonService } from "../../_services/index";
+import { AppConfig } from "../../app.config";
+import { NgUploaderOptions, UploadedFile } from "ngx-uploader";
+import { Observable } from "rxjs/Observable";
 
 
-import {Delibere} from "../../_models/delibere"
-import {Firmatari} from "../../_models/firmatari";
-import {Uffici} from "../../_models/uffici";
-import {Allegati} from "../../_models/allegati";
+import { Delibere } from "../../_models/delibere"
+import { Firmatari } from "../../_models/firmatari";
+import { Uffici } from "../../_models/uffici";
+import { Allegati } from "../../_models/allegati";
 
 
 import * as _ from "lodash";
@@ -49,6 +49,9 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
     public select2WithAddOptions: Select2Options;
     public select2OptionsMulti: Select2Options;
     public select2WithAddOptionsMulti: Select2Options;
+
+    public canEdit: boolean = false;
+    public canDelete: boolean = false;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
@@ -94,6 +97,9 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
         });
 
         this.mode = isNaN(this.id) ? 'create' : 'update';
+        this.canEdit = isNaN(this.id) ? this.apiService.userCan('CREATE_DELIBERE') : this.apiService.userCan('EDIT_DELIBERE');
+        this.canDelete = this.apiService.userCan('DELETE_DELIBERE');
+
         switch (this.mode) {
             case 'create':
                 this.model = {

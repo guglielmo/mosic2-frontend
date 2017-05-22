@@ -40,15 +40,15 @@
                 <header>
                     <h4><span class="fw-semi-bold">Permessi</span></h4>
                 </header>
-                <div class="widget-body">
+                <div class="widget-body widget-table-overflow">
                     <table class="table table-hover table-condensed mb-0" [mfData]="supportedClasses" #mf="mfDataTable" stickthead [offsetY]="0">
                         <thead>
                         <tr>
                             <th>Classe</th>
-                            <th><p class="text-center">Lettura</p></th>
-                            <th><p class="text-center">Creazione</p></th>
-                            <th><p class="text-center">Modifica</p></th>
-                            <th><p class="text-center">Cancellazione</p></th>
+                            <th><p class="text-center mb-0">Lettura</p></th>
+                            <th><p class="text-center mb-0">Creazione</p></th>
+                            <th><p class="text-center mb-0">Modifica</p></th>
+                            <th><p class="text-center mb-0">Cancellazione</p></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -56,7 +56,7 @@
                             <td>{{supportedclass}}</td>
                             <td class="text-center">
                                 <div class="form-group abc-checkbox abc-checkbox-primary">
-                                    <p class="text-center">
+                                    <p class="text-center mb-0 mt-2">
                                         <input id="ROLE_READ_{{supportedclass}}" name="ROLE_READ_{{supportedclass}}" type="checkbox"
                                                [checked]="model.roles.indexOf('ROLE_READ_'+supportedclass) >= 0"
                                                (change)="updateCheckedOptions('ROLE_READ_'+supportedclass, $event)">
@@ -66,7 +66,7 @@
                             </td>
                             <td class="text-center">
                                 <div class="form-group abc-checkbox abc-checkbox-primary text-center">
-                                    <p class="text-center">
+                                    <p class="text-center mb-0 mt-2">
                                         <input id="ROLE_CREATE_{{supportedclass}}" name="ROLE_CREATE_{{supportedclass}}" type="checkbox"
                                                [checked]="model.roles.indexOf('ROLE_CREATE_'+supportedclass) >= 0"
                                                (change)="updateCheckedOptions('ROLE_CREATE_'+supportedclass, $event)">
@@ -76,7 +76,7 @@
                             </td>
                             <td class="text-center">
                                 <div class="form-group abc-checkbox abc-checkbox-primary">
-                                    <p class="text-center">
+                                    <p class="text-center mb-0 mt-2">
                                         <input id="ROLE_EDIT_{{supportedclass}}" name="ROLE_EDIT_{{supportedclass}}" type="checkbox"
                                                [checked]="model.roles.indexOf('ROLE_EDIT_'+supportedclass) >= 0"
                                                (change)="updateCheckedOptions('ROLE_EDIT_'+supportedclass, $event)">
@@ -86,7 +86,7 @@
                             </td>
                             <td class="text-center">
                                 <div class="form-group abc-checkbox abc-checkbox-primary">
-                                    <p class="text-center">
+                                    <p class="text-center mb-0 mt-2">
                                         <input id="ROLE_DELETE_{{supportedclass}}" name="ROLE_DELETE_{{supportedclass}}" type="checkbox"
                                                [checked]="model.roles.indexOf('ROLE_DELETE_'+supportedclass) >= 0"
                                                (change)="updateCheckedOptions('ROLE_DELETE_'+supportedclass, $event)">

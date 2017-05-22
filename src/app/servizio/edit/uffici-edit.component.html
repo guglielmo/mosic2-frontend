@@ -1,5 +1,5 @@
 <form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
-    <div class="pull-right">
+    <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
     </div>
@@ -17,6 +17,7 @@
                                 <label for="denominazione"><strong>Denominazione</strong></label>
                                 <input type="text" class="form-control" id="denominazione" name="denominazione"
                                        placeholder="Scrivi la denominazione del ufficio..."
+                                       [disabled]="!canEdit"
                                        [(ngModel)]="model.denominazione" #denominazione="ngModel" required>
                             </div>
                         </div>
@@ -25,7 +26,8 @@
                                 <label for="ordine_ufficio"><strong>Ordine ufficio</strong></label>
                                 <input id="ordine_ufficio" name="ordine_ufficio"
                                        type="text" class="form-control"
-                                       placeholder="numero del protocollo"
+                                       placeholder="ordine ufficio"
+                                       [disabled]="!canEdit"
                                        [(ngModel)]="model.ordine_ufficio" #ordine_ufficio="ngModel">
                             </div>
                         </div>
@@ -34,7 +36,8 @@
                                 <label for="codice_direzione"><strong>Codice direzione</strong></label>
                                 <input id="codice_direzione" name="codice_direzione"
                                        type="text" class="form-control"
-                                       placeholder="numero del protocollo"
+                                       placeholder="codice direzione"
+                                       [disabled]="!canEdit"
                                        [(ngModel)]="model.codice_direzione" #codice_direzione="ngModel">
                             </div>
                         </div>
@@ -44,6 +47,7 @@
                             <div class="form-group abc-checkbox abc-checkbox-primary">
                                 <input id="disattivo_ufficio" name="disattivo_ufficio" type="checkbox"
                                        [checked]="model.disattivo_ufficio == '1'"
+                                       [disabled]="!canEdit"
                                        (change)="model.disattivo_ufficio = $event.target.checked == 1 ? '1' : '0'"
                                 >
                                 <label for="disattivo_ufficio">
@@ -55,6 +59,7 @@
                             <div class="form-group abc-checkbox abc-checkbox-primary">
                                 <input id="solo_delibere" name="solo_delibere" type="checkbox"
                                        [checked]="model.solo_delibere == '1'"
+                                       [disabled]="!canEdit"
                                        (change)="model.solo_delibere = $event.target.checked == 1 ? '1' : '0'"
                                 >
                                 <label for="solo_delibere">

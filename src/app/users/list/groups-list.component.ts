@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router} from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-
-import { Groups } from '../../_models/index';
 import { APICommonService } from '../../_services/index';
-
+import { Groups } from '../../_models/groups';
 
 @Component({
     templateUrl: 'groups-list.component.html'
@@ -15,7 +13,7 @@ export class GroupsListComponent implements OnInit {
     deletingGroup: Groups = new Groups;
     public groups$: Observable<Groups[]>;
 
-    private supportedClasses: string[] = ['REGISTRI', 'FASCICOLI', 'TITOLARI', 'AMMINISTRAZIONI', 'MITTENTI', 'UTENTI'];
+    public canDelete: boolean = false;
 
     constructor(public apiService: APICommonService,
                 private router: Router
@@ -26,7 +24,8 @@ export class GroupsListComponent implements OnInit {
 
     ngOnInit() {
         this.apiService.refreshCommonCache();
-        // this.loadAllGroups();
+
+        this.canDelete = this.apiService.userCan('DELETE_GROUPS');
     }
 
     editId(id: number) {

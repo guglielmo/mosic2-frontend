@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, ElementRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { AppConfig } from '../../app.config';
+import { APICommonService } from '../../_services/index';
 declare const jQuery: any;
 
 @Component({
@@ -10,16 +11,38 @@ declare const jQuery: any;
 })
 
 export class SidebarComponent implements OnInit, AfterViewInit {
-  $el: any;
-  config: any;
-  router: Router;
-  location: Location;
+  private $el: any;
+  public config: any;
+  private router: Router;
+  private location: Location;
 
-  constructor(config: AppConfig, el: ElementRef, router: Router, location: Location) {
+  constructor(
+      config: AppConfig,
+      el: ElementRef,
+      router: Router,
+      location: Location,
+      public apiService: APICommonService
+
+  ) {
     this.$el = jQuery(el.nativeElement);
     this.config = config.getConfig();
     this.router = router;
     this.location = location;
+  }
+
+  ngOnInit(): void {
+    jQuery(window).on('sn:resize', this.initSidebarScroll.bind(this));
+    this.initSidebarScroll();
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.changeActiveNavigationItem(this.location);
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.changeActiveNavigationItem(this.location);
   }
 
   initSidebarScroll(): void {
@@ -50,20 +73,5 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     // uncollapse parent
     $newActiveLink.closest('.collapse').addClass('in').css('height', '')
       .siblings('a[data-toggle=collapse]').removeClass('collapsed');
-  }
-
-  ngAfterViewInit(): void {
-    this.changeActiveNavigationItem(this.location);
-  }
-
-  ngOnInit(): void {
-    jQuery(window).on('sn:resize', this.initSidebarScroll.bind(this));
-    this.initSidebarScroll();
-
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.changeActiveNavigationItem(this.location);
-      }
-    });
   }
 }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { URLSearchParams } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/debounceTime';
@@ -10,14 +9,10 @@ import 'rxjs/add/operator/throttleTime';
 import { APICommonService } from '../../_services/index';
 import { AppConfig } from '../../app.config';
 
-import * as _ from 'lodash';
-import {Select2OptionData} from 'ng2-select2';
 import { Titolari } from '../../_models/titolari';
 import { Registri } from '../../_models/registri';
 import { Fascicoli } from '../../_models/fascicoli';
 import { Mittenti} from '../../_models/mittenti';
-
-
 
 @Component({
     templateUrl: 'registri-list.component.html',
@@ -48,8 +43,6 @@ export class RegistriListComponent implements OnInit {
     private select2Debounce = false;
     public oggettoControl = new FormControl();
 
-
-
     constructor(public apiService: APICommonService,
                 private router: Router,
                 private config: AppConfig
@@ -65,7 +58,6 @@ export class RegistriListComponent implements OnInit {
         // debounce keystroke events
         this.oggettoControl.valueChanges.debounceTime(400).subscribe(newValue => this.filter.oggetto = newValue);
         this.apiService.refreshCommonCache();
-        // this.loadAllRegistri();
     }
 
     askDeleteRegistri(event: any, modal: any, registri: Registri) {
@@ -86,7 +78,6 @@ export class RegistriListComponent implements OnInit {
 
     deleteRegistri(id: number) {
         this.apiService.delete('registri', id).subscribe(() => {
-            // this.loadAllRegistri()
             this.apiService.refreshCommonCache();
         });
     }

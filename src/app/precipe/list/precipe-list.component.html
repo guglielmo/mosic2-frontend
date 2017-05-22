@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div *ngIf="apiService.userCan('CREATE_PRECIPE')" class="pull-right">
     <a [routerLink]=" ['/app/precipe/edit'] " class="btn btn-primary btn-save">Nuovo pre-CIPE</a>
 </div>
 <h3 class="page-title">Pre-CIPE / <span class="fw-semi-bold">Tutti i pre-CIPE</span></h3>
@@ -20,7 +20,7 @@
                         <th>Osservazioni</th>
                         <th>Pubblicato</th>
                         <th><mfDefaultSorter by="id">#</mfDefaultSorter></th>
-                        <th>Azioni</th>
+                        <th *ngIf="apiService.userCan('DELETE_PRECIPE')">Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -61,7 +61,7 @@
                                href="{{precipe.public_reserved_url}}"> <i class="fa fa-lg fa-share-square-o"> </i> </a>
                         </td>
                         <td>{{precipe.id}}</td>
-                        <td>
+                        <td *ngIf="apiService.userCan('DELETE_PRECIPE')">
                             <a (click)="askDeletePreCipe($event, myModal, precipe)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>

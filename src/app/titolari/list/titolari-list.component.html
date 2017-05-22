@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div *ngIf="apiService.userCan('CREATE_TITOLARI')" class="pull-right">
     <a [routerLink]=" ['/app/titolari/edit'] " class="btn btn-primary btn-save">Nuovo Titolario</a>
 </div>
 <h3 class="page-title">Titolari / <span class="fw-semi-bold">Tutti i titolari</span></h3>
@@ -17,7 +17,7 @@
                         <th><mfDefaultSorter by="denominazione">Denominazione</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="descrizione">Descrizione</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="id_uffici">Ufficio</mfDefaultSorter></th>
-                        <th>Azioni</th>
+                        <th *ngIf="apiService.userCan('DELETE_TITOLARI')">Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -26,7 +26,7 @@
                         <td>{{titolario.denominazione}}</td>
                         <td>{{titolario.descrizione}}</td>
                         <td><span *ngIf="titolario.id_uffici" class="badge badge-lg badge-default">{{titolario.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' }}</span> </td>
-                        <td>
+                        <td *ngIf="apiService.userCan('DELETE_TITOLARI')">
                             <a (click)="askDeleteTitolari($event, myModal, titolario)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>

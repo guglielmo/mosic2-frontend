@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
-import { LayoutComponent } from './layout.component';
 import { AuthGuard } from '../_guards/auth.guard';
+import { LayoutComponent } from './layout.component';
 
 export const routes: Routes = [
     { path: '', component: LayoutComponent, children: [
@@ -14,6 +13,7 @@ export const routes: Routes = [
         { path: 'precipe', loadChildren: '../precipe/precipe.module#PreCipeModule', canActivate: [AuthGuard] },
         { path: 'cipe', loadChildren: '../cipe/cipe.module#CipeModule', canActivate: [AuthGuard] },
         { path: 'delibere', loadChildren: '../delibere/delibere.module#DelibereModule', canActivate: [AuthGuard] },
+        { path: 'adempimenti', loadChildren: '../adempimenti/adempimenti.module#AdempimentiModule', canActivate: [AuthGuard] },
         { path: 'users', loadChildren: '../users/users.module#UsersModule', canActivate: [AuthGuard] },
         { path: 'mittenti', loadChildren: '../servizio/mittenti.module#MittentiModule', canActivate: [AuthGuard] },
         { path: 'amministrazioni', loadChildren: '../servizio/amministrazioni.module#AmministrazioniModule', canActivate: [AuthGuard] },

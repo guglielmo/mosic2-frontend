@@ -3,6 +3,7 @@
         <a href="index.html">{{config.name}}</a>
     </header>
     <!-- main notification links are placed inside of .sidebar-nav -->
+
     <ul class="sidebar-nav">
         <li><a [routerLink]="['dashboard']"><span class="icon"><i class="fa fa-child"></i></span> Bacheca </a></li>
 <!--
@@ -20,81 +21,81 @@
             </ul>
         </li>
  -->
-        <li>
-            <a class="collapsed" data-target="#sidebar-register" data-toggle="collapse" data-parent="#sidebar">
+        <li *ngIf="apiService.userCan('READ_REGISTRI') || apiService.userCan('CREATE_REGISTRI')">
+            <a [routerLink]="['registri/list']" class="collapsed" data-target="#sidebar-register" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="simpleicon icon-docs"></i></span>
                 Registri
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-register" class="collapse">
-                <li><a [routerLink]=" ['registri/list'] ">Tutti i registri</a></li>
-                <li><a [routerLink]=" ['registri/edit'] ">Crea nuovo</a></li>
+                <li *ngIf="apiService.userCan('READ_REGISTRI')"><a [routerLink]="['registri/list']">Tutti i registri</a></li>
+                <li *ngIf="apiService.userCan('CREATE_REGISTRI')"><a [routerLink]="['registri/edit']">Crea nuovo</a></li>
             </ul>
         </li>
-        <li>
-            <a class="collapsed" data-target="#sidebar-file" data-toggle="collapse" data-parent="#sidebar">
+        <li *ngIf="apiService.userCan('READ_FASCICOLI') || apiService.userCan('CREATE_FASCICOLI')" >
+            <a [routerLink]="['fascicoli/list']" class="collapsed" data-target="#sidebar-file" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="simpleicon icon-folder"></i></span>
                 Fascicoli
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-file" class="collapse">
-                <li><a [routerLink]=" ['fascicoli/list'] ">Tutti i fascicoli</a></li>
-                <li><a [routerLink]=" ['fascicoli/edit'] ">Crea nuovo</a></li>
+                <li *ngIf="apiService.userCan('READ_FASCICOLI')"><a [routerLink]="['fascicoli/list']">Tutti i fascicoli</a></li>
+                <li *ngIf="apiService.userCan('CREATE_FASCICOLI')"><a [routerLink]="['fascicoli/edit']">Crea nuovo</a></li>
             </ul>
         </li>
-        <li>
+        <li *ngIf="apiService.userCan('READ_TITOLARI') || apiService.userCan('CREATE_TITOLARI')">
             <a class="collapsed" data-target="#sidebar-filingplan" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="simpleicon icon-drawer"></i></span>
                 Titolari
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-filingplan" class="collapse">
-                <li><a [routerLink]=" ['titolari/list'] ">Tutti i titolari</a></li>
-                <li><a [routerLink]=" ['titolari/edit'] ">Crea nuovo</a></li>
+                <li *ngIf="apiService.userCan('READ_TITOLARI')"><a [routerLink]=" ['titolari/list'] ">Tutti i titolari</a></li>
+                <li *ngIf="apiService.userCan('CREATE_TITOLARI')"><a [routerLink]=" ['titolari/edit'] ">Crea nuovo</a></li>
             </ul>
         </li>
-        <li>
+        <li *ngIf="apiService.userCan('READ_PRECIPE') || apiService.userCan('CREATE_PRECIPE')">
             <a class="collapsed" data-target="#sidebar-precipe" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="simpleicon icon-bubbles"></i></span>
                 Pre-CIPE
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-precipe" class="collapse">
-                <li><a [routerLink]=" ['precipe/list'] ">Tutti i pre-CIPE</a></li>
-                <li><a [routerLink]=" ['precipe/edit'] ">Crea nuovo</a></li>
+                <li *ngIf="apiService.userCan('READ_PRECIPE')"><a [routerLink]=" ['precipe/list'] ">Tutti i pre-CIPE</a></li>
+                <li *ngIf="apiService.userCan('CREATE_PRECIPE')"><a [routerLink]=" ['precipe/edit'] ">Crea nuovo</a></li>
             </ul>
         </li>
-        <li>
+        <li *ngIf="apiService.userCan('READ_CIPE') || apiService.userCan('CREATE_CIPE')">
             <a class="collapsed" data-target="#sidebar-cipe" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="fa fa-handshake-o"></i></span>
                 CIPE
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-cipe" class="collapse">
-                <li><a [routerLink]=" ['cipe/list'] ">Tutti i CIPE</a></li>
-                <li><a [routerLink]=" ['cipe/edit'] ">Crea nuovo</a></li>
+                <li *ngIf="apiService.userCan('READ_CIPE')"><a [routerLink]=" ['cipe/list'] ">Tutti i CIPE</a></li>
+                <li *ngIf="apiService.userCan('CREATE_CIPE')"><a [routerLink]=" ['cipe/edit'] ">Crea nuovo</a></li>
             </ul>
         </li>
-        <li>
+        <li *ngIf="apiService.userCan('READ_DELIBERE') || apiService.userCan('CREATE_DELIBERE')">
             <a class="collapsed" data-target="#sidebar-delibere" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="fa fa-gavel"></i></span>
                 Delibere
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-delibere" class="collapse">
-                <li><a [routerLink]=" ['delibere/list'] ">Tutte le delibere</a></li>
-                <li><a [routerLink]=" ['delibere/edit'] ">Crea nuova</a></li>
+                <li *ngIf="apiService.userCan('READ_DELIBERE')"><a [routerLink]=" ['delibere/list'] ">Tutte le delibere</a></li>
+                <li *ngIf="apiService.userCan('CREATE_DELIBERE')"><a [routerLink]=" ['delibere/edit'] ">Crea nuova</a></li>
             </ul>
         </li>
-        <li>
+        <li *ngIf="apiService.userCan('READ_ADEMPIMENTI') || apiService.userCan('CREATE_ADEMPIMENTI')">
             <a class="collapsed" data-target="#sidebar-adempimenti" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="fa fa-check-square-o"></i></span>
                 Adempimenti
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-adempimenti" class="collapse">
-                <li><a [routerLink]=" ['adempimenti/list'] ">Tutti gli adempimenti</a></li>
-                <li><a [routerLink]=" ['adempimenti/edit'] ">Crea nuovo</a></li>
+                <li *ngIf="apiService.userCan('READ_ADEMPIMENTI')"><a [routerLink]=" ['adempimenti/list'] ">Tutti gli adempimenti</a></li>
+                <li *ngIf="apiService.userCan('CREATE_ADEMPIMENTI')"><a [routerLink]=" ['adempimenti/edit'] ">Crea nuovo</a></li>
             </ul>
         </li>
         <li>
@@ -109,31 +110,31 @@
                 <li><a [routerLink]=" ['monitor/analisi'] ">Analisi delle fasi</a></li>
             </ul>
         </li>
-        <li>
+        <li *ngIf="apiService.userCan('READ_USERS') || apiService.userCan('CREATE_USERS') || apiService.userCan('READ_GROUPS') || apiService.userCan('READ_RUOLI_CIPE')">
             <a class="collapsed" data-target="#sidebar-users" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="simpleicon icon-people"></i></span>
                 Utenti
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-users" class="collapse">
-                <li><a [routerLink]=" ['users/list'] ">Tutti gli utenti</a></li>
-                <li><a [routerLink]=" ['users/edit'] ">Crea nuovo</a></li>
-                <li><a [routerLink]=" ['users/groups/list'] ">Gruppi</a></li>
-                <li><a [routerLink]=" ['users/ruoli_cipe/list'] ">Ruoli</a></li>
+                <li *ngIf="apiService.userCan('READ_USERS')"><a [routerLink]=" ['users/list'] ">Tutti gli utenti</a></li>
+                <li *ngIf="apiService.userCan('CREATE_USERS')"><a [routerLink]=" ['users/edit'] ">Crea nuovo</a></li>
+                <li *ngIf="apiService.userCan('READ_GROUPS')"><a [routerLink]=" ['users/groups/list'] ">Gruppi</a></li>
+                <li *ngIf="apiService.userCan('READ_RUOLI_CIPE')"><a [routerLink]=" ['users/ruoli_cipe/list'] ">Ruoli</a></li>
             </ul>
         </li>
-        <li>
+        <li *ngIf="apiService.userCan('READ_AMMINISTRAZIONI') || apiService.userCan('READ_MITTENTI') || apiService.userCan('READ_UFFICI') || apiService.userCan('READ_TAGS') || apiService.userCan('READ_FIRMATARI')">
             <a class="collapsed" data-target="#sidebar-service" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="simpleicon icon-wrench"></i></span>
                 Servizio
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-service" class="collapse">
-                <li><a [routerLink]=" ['amministrazioni/list'] ">Amministrazioni</a></li>
-                <li><a [routerLink]=" ['mittenti/list'] ">Mittenti</a></li>
-                <li><a [routerLink]=" ['uffici/list'] ">Uffici</a></li>
-                <li><a [routerLink]=" ['tags/list'] ">Etichette</a></li>
-                <li><a [routerLink]=" ['firmatari/list'] ">Firmatari</a></li>
+                <li *ngIf="apiService.userCan('READ_AMMINISTRAZIONI')"><a [routerLink]=" ['amministrazioni/list'] ">Amministrazioni</a></li>
+                <li *ngIf="apiService.userCan('READ_MITTENTI')"><a [routerLink]=" ['mittenti/list'] ">Mittenti</a></li>
+                <li *ngIf="apiService.userCan('READ_UFFICI')"><a [routerLink]=" ['uffici/list'] ">Uffici</a></li>
+                <li *ngIf="apiService.userCan('READ_TAGS')"><a [routerLink]=" ['tags/list'] ">Etichette</a></li>
+                <li *ngIf="apiService.userCan('READ_FIRMATARI')"><a [routerLink]=" ['firmatari/list'] ">Firmatari</a></li>
             </ul>
         </li>
     </ul>

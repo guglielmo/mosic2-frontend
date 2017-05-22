@@ -1,0 +1,27 @@
+DESCRIZIONI ADEMIPIMENTI
+
+“Codice_DescrizioneAdempimento”,“Descrizione_Adempimento”
+1,“Aspetti amministrativi”
+2,“Aspetti economico-finanziari”
+3,“Aspetti giuridici”
+4,“Aspetti giuridici-espropri”
+0,“”
+9,“Altro”
+
+ESITI ADEMPIMENTI
+“Codice_EsitoAdempimento”,“Descrizione_EsitoAdempimento”
+0,“”
+1,“Ottemperato”
+2,“Superato”
+3,“Esaurito”
+
+FONTI ADEMPIMENTI
+“Codice_FonteAdempimento”,“Descrizione_FonteAdempimento”
+0,“”
+1,“delibera”
+2,“M.E.F.”
+3,“Corte dei Conti”
+4,“Conferenza Stato/Regioni”
+5,“Parlamento”
+6,“Legge”
+9,“altro”

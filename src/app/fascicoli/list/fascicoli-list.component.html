@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div *ngIf="apiService.userCan('CREATE_FASCICOLI')" class="pull-right">
     <a [routerLink]=" ['/app/fascicoli/edit'] " class="btn btn-primary btn-save">Nuovo Fascicolo</a>
 </div>
 <h3 class="page-title">Fascicoli / <span class="fw-semi-bold">Tutti i fascicoli</span></h3>
@@ -78,7 +78,7 @@
                         <th><mfDefaultSorter by="numero_fascicolo">Fascicolo</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="argomento">Argomento</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="amministrazioni">Amministrazione</mfDefaultSorter></th>
-                        <th>Azioni</th>
+                        <th *ngIf="apiService.userCan('DELETE_FASCICOLI')">Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -87,7 +87,7 @@
                         <td>{{fascicolo.numero_fascicolo}}</td>
                         <td [innerHTML]="fascicolo.argomento | dataMark : filter.argomento"></td>
                         <td>{{amministrazioniEnum(fascicolo.id_amministrazioni)}}</td>
-                        <td>
+                        <td *ngIf="apiService.userCan('DELETE_FASCICOLI')">
                             <a (click)="askDeleteFascicoli($event, myModal, fascicolo)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>

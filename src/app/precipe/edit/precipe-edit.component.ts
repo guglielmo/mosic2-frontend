@@ -4,10 +4,10 @@ import { APICommonService } from '../../_services/index';
 import { AppConfig } from '../../app.config';
 
 import * as _ from 'lodash';
-import { PreCipe, PreCipeOdg } from '../../_models/index';
+import { PreCipe } from '../../_models/precipe';
+import { PreCipeOdg } from '../../_models/precipe_odg';
 import { DragulaService } from 'ng2-dragula';
 import { ScrollToService } from 'ng2-scroll-to-el';
-
 
 @Component({
     templateUrl: 'precipe-edit.component.html',
@@ -20,7 +20,7 @@ export class PreCipeEditComponent implements OnInit {
 
     public _: any;
 
-    private allowUpload= false;
+    public allowUpload= false;
 
     private error = '';
     public mode: string;
@@ -31,7 +31,6 @@ export class PreCipeEditComponent implements OnInit {
     private baseAPIURL: string;
 
     public datePickerOptions;
-    public timePickerOptions;
 
     public officializingPreCipe: PreCipe = null;
     public publishingPreCipe: PreCipe = null;
@@ -40,6 +39,9 @@ export class PreCipeEditComponent implements OnInit {
     public deletingPuntoOdg: PreCipeOdg = null;
     public status: string = null;
     public status_msg: null;
+
+    public canEdit: boolean = false;
+    public canDelete: boolean = false;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
@@ -52,14 +54,6 @@ export class PreCipeEditComponent implements OnInit {
         this.baseAPIURL =  this.config.baseAPIURL + '/api/precipe/';
 
         this.datePickerOptions = config.datePickerOptions;
-
-/*        this.timePickerOptions = {
-            minuteStep: 1,
-            template: 'modal',
-            appendWidgetTo: 'body',
-            showSeconds: false,
-            showMeridian: false
-        };*/
 
         dragulaService.drag.subscribe((value) => {
             console.log(`drag: ${value[0]}`);
@@ -84,6 +78,8 @@ export class PreCipeEditComponent implements OnInit {
 
         this.id = +this.route.snapshot.params['id'];
         this.mode = isNaN(this.id) ? 'create' : 'update';
+        this.canEdit = isNaN(this.id) ? this.apiService.userCan('CREATE_PRECIPE') : this.apiService.userCan('EDIT_PRECIPE');
+        this.canDelete = this.apiService.userCan('DELETE_PRECIPE');
 
         switch ( this.mode ) {
             case 'create':
@@ -100,15 +96,10 @@ export class PreCipeEditComponent implements OnInit {
                             this.model = response.data;
                             this.model.data = new Date(this.model.data);
 
-                            // todo: chiedere ad alessando di aggiungere i campi
-                            //this.model.public_reserved_url =
-                            // "http://www.google.it/bceykber6hiub8nbn8@#gdyuevcuhluickjdbuycgdkyhbckuydgcbdbvuykgwlsxvh";
-
                             this.loading = false;
                             this.allowUpload = true;
 
                             this.pollStatus(false);
-                            // console.log(this.model);
                         },
                         error => {
                             this.error = error; console.log(error);

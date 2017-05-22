@@ -1,26 +1,40 @@
 export class Adempimenti {
     id: number;
-    id_delibera: number;
-    descrizione_codificata: number;
-    descrizione_estesa: string;
+    id_delibere: number;
+    descrizione: string;
+    codice_descrizione: number;
+    codice_fonte: number;
+    codice_esito: number;
     fonti: number;
-    data_scadenza: string;
-    vincolante: number;
-    esito: number;
+    data_scadenza: number;
+    vincolo: number;
     note: string;
 
     constructor() {
         this.id = null;
-        this.id_delibera = null;
-        this.descrizione_codificata = null;
-        this.descrizione_estesa = null;
+        this.id_delibere = null;
+        this.descrizione = null;
+        this.codice_descrizione = null;
+        this.codice_fonte = null;
+        this.codice_esito = null;
         this.fonti = null;
         this.data_scadenza = null;
-        this.vincolante = null;
-        this.esito = null;
+        this.vincolo = null;
         this.note = null;
     }
 }
+
+/*{
+    "codice": 1,
+    "progressivo": 1,
+    "codice_scheda": 616,
+    "data_scadenza": "",
+    "giorni_scadenza": 0,
+    "mesi_scadenza": 0,
+    "anni_scadenza": 0,
+    "utente": 0,
+    "data_modifica": 1412632800000
+},*/
 
 
 

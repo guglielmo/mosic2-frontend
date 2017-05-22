@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div *ngIf="apiService.userCan('CREATE_USERS')" class="pull-right">
     <a [routerLink]=" ['/app/users/edit'] " class="btn btn-primary btn-save">Nuovo Utente</a>
 </div>
 <h3 class="page-title">Utenti / <span class="fw-semi-bold">Tutti gli utenti</span></h3>
@@ -6,12 +6,20 @@
 <section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
     <header>
         <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">utenti ...</span>
-            <span *ngIf="filter.denominazione.length > 2 || filter.id_ruoli_cipe !== '' || filter.id_uffici !== ''" class="float-lg-right mr-3">
+            <span *ngIf="filter.denominazione.length > 2 ||
+                         filter.id_groups !== '' ||
+                         filter.id_ruoli_cipe !== '' ||
+                         filter.id_uffici !== ''"
+                  class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
             </span>
         </h5>
         <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">utenti ...</span>
-            <span *ngIf="filter.denominazione.length > 2 || filter.id_ruoli_cipe !== '' || filter.id_uffici !== ''" class="float-lg-right mr-3">
+            <span *ngIf="filter.denominazione.length > 2 ||
+                         filter.id_groups !== '' ||
+                         filter.id_ruoli_cipe !== '' ||
+                         filter.id_uffici !== ''"
+                  class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
             </span>
         </h5>
@@ -22,13 +30,29 @@
     </header>
     <div class="widget-body">
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="form-group">
                     <label for="argomento"><strong>Cognome e Nome</strong></label>
                     <input id="argomento" name="argomento" class="form-control" [(ngModel)]="filter.denominazione" placeholder="Digita almeno 3 caratteri..."/>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <!-- EDIT -->
+                    <div class="select2-H-keeper">
+                        <label for="id_groups"><strong>Gruppo</strong></label>
+                        <select2
+                                id="id_groups"
+                                class="full-width-select"
+                                [options]="select2Options"
+                                [value]="filter.id_groups"
+                                (valueChanged)="select2Changed($event, 'id_groups')"
+                                cssImport="false"
+                                [data]="groups$ | async"></select2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
                 <div class="form-group">
                     <!-- EDIT -->
                     <div class="select2-H-keeper">
@@ -44,7 +68,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="form-group">
                     <!-- EDIT -->
                     <div class="select2-H-keeper">
@@ -70,7 +94,7 @@
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">
                 <table class="table table-hover table-condensed mb-0 table-bordered"
-                       [mfData]="users$ | async | usersDataFilter : filter.denominazione : filter.id_uffici : filter.id_ruoli_cipe : filteredCount"
+                       [mfData]="users$ | async | usersDataFilter : filter.denominazione : filter.id_uffici : filter.id_ruoli_cipe : filter.id_groups : filteredCount"
                        #mf="mfDataTable" stickthead [offsetY]="0">
                     <thead>
                     <tr>
@@ -78,12 +102,13 @@
                         <th><mfDefaultSorter by="userName">Nome utente</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="eMail">E-Mail</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="registrationDate">Data registrazione</mfDefaultSorter></th>
-                        <th>Ruolo</th>
-                        <th>Ufficio</th>
-                        <th>IP</th>
-                        <th>Stazione</th>
-                        <th>Stato</th>
-                        <th>Azioni</th>
+                        <th><mfDefaultSorter by="id_groups">Gruppo</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="id_ruoli_cipe">Ruolo</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="id_uffici">Ufficio</mfDefaultSorter></th>
+<!--                        <th>IP</th>
+                        <th>Stazione</th>-->
+                        <th><mfDefaultSorter by="registrationDate">Stato</mfDefaultSorter></th>
+                        <th *ngIf="canDelete">Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -92,15 +117,16 @@
                         <td>{{user.userName}}</td>
                         <td>{{user.eMail}}</td>
                         <td>{{user.registrationDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+                        <td>{{user.id_groups | dataEnum : apiService.dataEnum : 'groups' : 'name' }}</td>
                         <td>{{user.id_ruoli_cipe}} - {{user.id_ruoli_cipe | dataEnum : apiService.dataEnum : 'ruoli_cipe' : 'denominazione' }}</td>
                         <td>{{user.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' }}</td>
-                        <td>{{user.ip}}</td>
-                        <td>{{user.stazione}}</td>
+<!--                        <td>{{user.ip}}</td>
+                        <td>{{user.stazione}}</td>-->
                         <td>
                             <span *ngIf="user.cessatoServizio === '0'" class="badge badge-success">Attivo</span>
                             <span *ngIf="user.cessatoServizio === '1'" class="badge badge-danger">Cessato servizio</span>
                         </td>
-                        <td>
+                        <td *ngIf="canDelete">
                             <a (click)="askDeleteUser($event, myModal, user)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>

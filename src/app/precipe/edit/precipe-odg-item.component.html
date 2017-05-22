@@ -86,12 +86,12 @@
     <div class="col-md-10">
 
         <div class="clearfix mb-3">
-            <div class="float-md-right visible-parent-hover-or-active ml-2">
+            <div *ngIf="canDelete" class="float-md-right visible-parent-hover-or-active ml-2">
                 <button type="button" class="btn btn-xs btn-outline-danger" (click)="deleteOdg()">
                     <i class="fa fa-trash fa-lg"> </i> Elimina
                 </button>
             </div>
-            <div class="float-right visible-parent-hover-or-active ml-2">
+            <div *ngIf="canEdit" class="float-right visible-parent-hover-or-active ml-2">
                 <button type="button" class="btn btn-xs" (click)="toggleEdit(odgItemForm)"
                         [ngClass]="{'btn-outline-primary': !edit, 'btn-primary': edit}">
                     <span *ngIf="!edit"><i class="fa fa-edit fa-lg"> </i> Modifica</span>
@@ -284,6 +284,7 @@
                         <div *ngFor="let allegato of item.allegati[id_registri_odg]">
                             <input type="checkbox"
                                    [checked]="allegatoIsChecked(item, allegato.id)"
+                                   [disabled]="!canEdit && !edit"
                                    (change)="allegato.escluso = !allegato.escluso"
                                    (click)="toggleAllegato(item, allegato.id)">
                             <label class="rel-t-m4">

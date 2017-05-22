@@ -55,6 +55,9 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
     public select2OptionsMulti: Select2Options;
     public select2WithAddOptionsMulti: Select2Options;
 
+    public canEdit: boolean = false;
+    public canDelete: boolean = false;
+
     constructor(private router: Router,
                 private route: ActivatedRoute,
                 public apiService: APICommonService,
@@ -100,6 +103,9 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
         });
 
         this.mode = isNaN(this.id) ? 'create' : 'update';
+        this.canEdit = isNaN(this.id) ? this.apiService.userCan('CREATE_REGISTRI') : this.apiService.userCan('EDIT_REGISTRI');
+        this.canDelete = this.apiService.userCan('DELETE_REGISTRI');
+
         switch (this.mode) {
             case 'create':
                 this.model = {

@@ -1,5 +1,5 @@
 <form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
-    <div class="pull-right">
+    <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
     </div>
@@ -12,11 +12,12 @@
             <section class="widget">
                 <div class="widget-body">
                     <div class="row">
-                        <div class="col-sm-10">
+                        <div class="col-12">
                             <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !denominazione.valid }">
                                 <label for="denominazione">Denominazione</label>
                                 <input type="text" class="form-control" id="denominazione" name="denominazione"
                                        placeholder="Scrivi la denominazione del tag..."
+                                       [disabled]="!canEdit"
                                        [(ngModel)]="model.denominazione" #denominazione="ngModel" required>
                             </div>
                         </div>

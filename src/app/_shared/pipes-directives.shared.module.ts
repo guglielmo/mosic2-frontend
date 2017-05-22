@@ -17,6 +17,7 @@ import {
     DataEnumPipe,
     ArrayLengthPipe,
     DelibereDataFilterPipe,
+    AdempimentiDataFilterPipe,
     Cast2String
 
 } from '../_pipes/index';
@@ -43,6 +44,7 @@ import 'moment/locale/it';
         DataEnumPipe,
         ArrayLengthPipe,
         DelibereDataFilterPipe,
+        AdempimentiDataFilterPipe,
         Cast2String,
         Autosize,
         MatchHeightDirective,
@@ -67,6 +69,7 @@ import 'moment/locale/it';
         DataEnumPipe,
         ArrayLengthPipe,
         DelibereDataFilterPipe,
+        AdempimentiDataFilterPipe,
         Cast2String,
         MomentModule,
         Autosize,

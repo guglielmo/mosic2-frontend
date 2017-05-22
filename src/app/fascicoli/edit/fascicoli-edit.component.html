@@ -1,5 +1,5 @@
 <form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event, myModal)" #f="ngForm" novalidate>
-    <div class="pull-right">
+    <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
     </div>
@@ -33,6 +33,7 @@
                                  [options]="select2Options"
                                  value="{{model.id_titolari}}"
                                  [cssImport]="false"
+                                 [disabled]="!canEdit"
                                  (valueChanged)="select2Changed($event,'id_titolari')"
                                  [data]="titolari$ | async" required></select2></div>
                     </div>
@@ -53,6 +54,7 @@
                                 <datetime id="data_magazzino" name="data_magazzino"
                                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
+                                          [readonly]="!canEdit"
                                           [(ngModel)]="model.data_magazzino" #data_magazzino="ngModel" required></datetime>
                             </div>
                         </div>
@@ -64,6 +66,7 @@
                                   rows="4" class="autogrow form-control transition-height"
                                   autosize
                                   placeholder="Scrivi l'argomento del registro..."
+                                  [disabled]="!canEdit"
                                   [(ngModel)]="model.argomento" #argomento="ngModel" required></textarea>
                     </div>
                     <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !id_amministrazioni.valid }">
@@ -75,6 +78,7 @@
                                  [options]="select2WithAddOptionsMulti"
                                  [value]="model.id_amministrazioni ? model.id_amministrazioni.split(',') : ''"
                                  [cssImport]="false"
+                                 [disabled]="!canEdit"
                                  (valueChanged)="select2Changed($event,'id_amministrazioni')"
                                  [data]="amministrazioni$ | async" required></select2></div>
                     </div>
@@ -92,6 +96,7 @@
                         <input id="archiviazione_repertorio" name="archiviazione_repertorio"
                                type="text" class="form-control"
                                placeholder="Inserisci il luogo fisico di archiviazione..."
+                               [disabled]="!canEdit"
                                [(ngModel)]="model.archiviazione_repertorio" #archiviazione_repertorio="ngModel">
                     </div>
                 </div>
@@ -109,6 +114,7 @@
                                           rows="6" class="autogrow form-control transition-height"
                                           autosize
                                           placeholder="Scrivi annotazioni ad uso interno..."
+                                          [disabled]="!canEdit"
                                           [(ngModel)]="model.annotazioni" #annotazioni="ngModel"></textarea>
                             </div>
                         </div>

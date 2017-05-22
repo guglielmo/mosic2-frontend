@@ -14,6 +14,9 @@ export class MittentiEditComponent implements OnInit {
     loading= true;
     id: number;
 
+    public canEdit: boolean = false;
+    public canDelete: boolean = false;
+
     constructor(private router: Router,
                 private route: ActivatedRoute,
                 public apiService: APICommonService
@@ -26,6 +29,8 @@ export class MittentiEditComponent implements OnInit {
 
         this.id = +this.route.snapshot.params['id'];
         this.mode = isNaN(this.id) ? 'create' : 'update';
+        this.canEdit = isNaN(this.id) ? this.apiService.userCan('CREATE_MITTENTI') : this.apiService.userCan('EDIT_MITTENTI');
+        this.canDelete = this.apiService.userCan('DELETE_MITTENTI');
 
         switch( this.mode ) {
             case 'create':

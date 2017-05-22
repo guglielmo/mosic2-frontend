@@ -15,6 +15,8 @@ export class DelibereUploadComponent implements OnInit {
     @Input() type: string;
     @Input() allegati: Allegati[];
     @Input() allowUpload: boolean;
+    @Input() canEdit: boolean;
+    @Input() canDelete: boolean;
 
     private config: any;
 

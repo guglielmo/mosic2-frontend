@@ -11,12 +11,14 @@ import {RilieviCC} from "../../_models/rilievi_cc";
 
 
 @Component({
-    selector: 'delibere-firme',
+    selector: 'delibere-iter',
     templateUrl: './delibere-iter.component.html'
 })
 export class DelibereIterComponent implements OnInit {
     @Input() model: any;
     @Input() allowUpload: boolean;
+    @Input() canEdit: boolean;
+    @Input() canDelete: boolean;
 
     public tipo_registrazione_cc = [
             { id: 1, text:'NO CORTE DEI CONTI'},

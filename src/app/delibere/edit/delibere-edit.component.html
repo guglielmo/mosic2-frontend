@@ -12,7 +12,7 @@
 </accordion>
 
 <form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event)" #f="ngForm" novalidate>
-    <div class="pull-right">
+    <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
     </div>
@@ -88,6 +88,7 @@
                                     <input id="numero" name="numero"
                                            type="text" class="form-control"
                                            placeholder="Inserisci numero delibera..."
+                                           [disabled]="!canEdit"
                                            [(ngModel)]="model.numero" #numero="ngModel" required>
                                 </div>
                             </div>
@@ -97,6 +98,7 @@
                                     <datetime id="data" name="Data_Delibera"
                                               [datepicker]="datePickerOptions"
                                               [timepicker]="false"
+                                              [readonly]="!canEdit"
                                               [(ngModel)]="model.data" #data="ngModel" required></datetime>
                                 </div>
                             </div>
@@ -108,7 +110,7 @@
                                         <input type="radio" name="id_stato" id="id_stato_ordinario"
                                                [value]="null"
                                                (click)="model.id_stato = 0"
-                                               [checked]="model.id_stato === 0">
+                                               [checked]="model.id_stato === 0" [disabled]="!canEdit">
                                         <label for="id_stato_ordinario">
                                             <span [ngClass]="{ 'badge badge-lg badge-success': model.id_stato === 0 }">N/D</span>
                                         </label>
@@ -119,7 +121,7 @@
                                         <input type="radio" name="id_stato" id="id_stato_ritirata"
                                                [value]="1"
                                                (click)="model.id_stato = 1"
-                                               [checked]="model.id_stato === 1">
+                                               [checked]="model.id_stato === 1" [disabled]="!canEdit">
                                         <label for="id_stato_ritirata">
                                             <span [ngClass]="{ 'badge badge-lg badge-danger': model.id_stato === 1 }">Ritirata</span>
                                         </label>
@@ -128,7 +130,7 @@
                                         <input type="radio" name="id_stato" id="id_stato_annullata"
                                                [value]="1"
                                                (click)="model.id_stato = 2"
-                                               [checked]="model.id_stato === 2">
+                                               [checked]="model.id_stato === 2" [disabled]="!canEdit">
                                         <label for="id_stato_annullata">
                                             <span [ngClass]="{ 'badge badge-lg badge-danger': model.id_stato === 2 }">Annullata</span>
                                         </label>
@@ -137,7 +139,7 @@
                                         <input type="radio" name="id_stato" id="id_stato_superata"
                                                [value]="1"
                                                (click)="model.id_stato = 3"
-                                               [checked]="model.id_stato === 3">
+                                               [checked]="model.id_stato === 3" [disabled]="!canEdit">
                                         <label for="id_stato_superata">
                                             <span [ngClass]="{ 'badge badge-lg badge-danger': model.id_stato === 3 }">Superata</span>
                                         </label>
@@ -152,6 +154,7 @@
                                     <textarea id="argomento" name="argomento"
                                               rows="3" class="autogrow form-control transition-height"
                                               placeholder="Scrivi l'argomento della delibera..."
+                                              [disabled]="!canEdit"
                                               [(ngModel)]="model.argomento" #argomento="ngModel" required></textarea>
                                 </div>
                             </div>
@@ -171,6 +174,7 @@
                                                 [value]="model.id_uffici"
                                                 (valueChanged)="select2Changed($event, 'id_uffici')"
                                                 cssImport="false"
+                                                [disabled]="!canEdit"
                                                 [data]="uffici$ | async"></select2>
                                     </div>
                                 </div>
@@ -185,7 +189,7 @@
                         <h4><span class="fw-semi-bold">Delibera</span></h4>
                     </header>
                     <div class="widget-body">
-                        <delibere-upload [type]="'DEL'" [allegati]="model.allegati_DEL" [allowUpload]="allowUpload"></delibere-upload>
+                        <delibere-upload [type]="'DEL'" [allegati]="model.allegati_DEL" [allowUpload]="allowUpload" [canEdit]="canEdit" [canDelete]="canDelete"></delibere-upload>
                     </div>
                 </section>
             </div>
@@ -205,6 +209,7 @@
                                               rows="3" class="autogrow form-control transition-height"
                                               autosize
                                               placeholder="..."
+                                              [disabled]="!canEdit"
                                               [(ngModel)]="model.note" #note="ngModel"></textarea>
                                 </div>
                             </div>
@@ -217,6 +222,7 @@
                                               rows="3" class="autogrow form-control transition-height"
                                               autosize
                                               placeholder="..."
+                                              [disabled]="!canEdit"
                                               [(ngModel)]="model.note_servizio" #note_servizio="ngModel"></textarea>
                                 </div>
                             </div>
@@ -231,13 +237,13 @@
                         <h4><span class="fw-semi-bold">Allegati</span></h4>
                     </header>
                     <div class="widget-body">
-                        <delibere-upload [type]="'ALL'" [allegati]="model.allegati_ALL" [allowUpload]="allowUpload"></delibere-upload>
+                        <delibere-upload [type]="'ALL'" [allegati]="model.allegati_ALL" [allowUpload]="allowUpload" [canEdit]="canEdit" [canDelete]="canDelete"></delibere-upload>
                     </div>
                 </section>
             </div>
         </div>
 
-        <delibere-firme  [model]="model" [allowUpload]="allowUpload"></delibere-firme>
+        <delibere-iter  [model]="model" [allowUpload]="allowUpload" [canEdit]="canEdit" [canDelete]="canDelete"></delibere-iter>
     </div>
     <div class="row">
         <div class="col-12 mb-4">

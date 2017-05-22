@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div *ngIf="apiService.userCan('CREATE_DELIBERE')" class="pull-right">
     <a [routerLink]=" ['/app/delibere/edit'] " class="btn btn-primary btn-save">Nuova Delibera</a>
 </div>
 <h3 class="page-title">Delibere / <span class="fw-semi-bold">Tutte le delibere</span></h3>
@@ -180,7 +180,7 @@
                         <th>
                             <mfDefaultSorter by="situazione">Situazione</mfDefaultSorter>
                         </th>
-                        <th>Azioni</th>
+                        <th *ngIf="apiService.userCan('DELETE_DELIBERE')">Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -206,7 +206,7 @@
                                   [innerHTML]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
                         </td>
                         <td>{{situazioneEnum[delibera.situazione]}}</td>
-                        <td><p class="text-center"><a (click)="askDeleteDelibere($event, myModal, delibera)"><i class="fa fa-trash-o"> </i></a></p>
+                        <td *ngIf="apiService.userCan('DELETE_DELIBERE')"><p class="text-center"><a (click)="askDeleteDelibere($event, myModal, delibera)"><i class="fa fa-trash-o"> </i></a></p>
                         </td>
                     </tr>
                     </tbody>

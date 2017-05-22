@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div *ngIf="apiService.userCan('CREATE_GROUPS')" class="pull-right">
     <a [routerLink]=" ['/app/users/groups/edit'] " class="btn btn-primary btn-save">Nuovo Gruppo</a>
 </div>
 <h3 class="page-title">Gruppi / <span class="fw-semi-bold">Tutti i gruppi</span></h3>
@@ -13,14 +13,14 @@
                     <tr>
                         <th><mfDefaultSorter by="codice">#</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="name">Nome</mfDefaultSorter></th>
-                        <th>Azioni</th>
+                        <th *ngIf="canDelete">Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr *ngFor="let group of mf.data" (click)="editId(group.id)" class="clickable">
                         <td>{{group.codice}}</td>
                         <td>{{group.name}}</td>
-                        <td>
+                        <td *ngIf="canDelete">
                             <a (click)="askDeleteGroup($event, myModal, group)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>

@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div *ngIf="apiService.userCan('CREATE_AMMINISTRAZIONI')" class="pull-right">
     <a [routerLink]=" ['/app/amministrazioni/edit'] " class="btn btn-primary btn-save">Nuova Amministrazione</a>
 </div>
 <h3 class="page-title">Amministrazioni - <span class="fw-semi-bold">Tutte le amministrazioni</span></h3>
@@ -46,7 +46,7 @@
                         <th><mfDefaultSorter by="id">#</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="codice">Codice</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="denominazione">Denominazione</mfDefaultSorter></th>
-                        <th>Azioni</th>
+                        <th *ngIf="apiService.userCan('DELETE_AMMINISTRAZIONI')">Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -54,7 +54,7 @@
                         <td>{{amministrazione.id}}</td>
                         <td>{{amministrazione.codice}}</td>
                         <td [innerHTML]="amministrazione.denominazione | dataMark : filter.denominazione"></td>
-                        <td>
+                        <td *ngIf="apiService.userCan('DELETE_AMMINISTRAZIONI')">
                             <a (click)="askDeleteAmministrazioni($event, myModal, amministrazione)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>

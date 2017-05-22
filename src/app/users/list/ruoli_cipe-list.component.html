@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div *ngIf="canEdit" class="pull-right">
     <a [routerLink]=" ['/app/users/ruoli_cipe/edit'] " class="btn btn-primary btn-save">Nuovo Ruolo</a>
 </div>
 <h3 class="page-title">Ruoli / <span class="fw-semi-bold">Tutti i ruoli</span></h3>
@@ -13,14 +13,14 @@
                     <tr>
                         <th><mfDefaultSorter by="codice">Codice</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="name">Denominazione</mfDefaultSorter></th>
-                        <th>Azioni</th>
+                        <th *ngIf="canDelete">Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr *ngFor="let role of mf.data" (click)="editId(role.id)" class="clickable">
                         <td>{{role.codice}}</td>
                         <td>{{role.denominazione}}</td>
-                        <td>
+                        <td *ngIf="canDelete">
                             <a (click)="askDeleteRole($event, myModal, role)"><i class="fa fa-trash-o"> </i></a>
                         </td>
                     </tr>

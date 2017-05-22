@@ -82,6 +82,11 @@ datetime .input-group {
   }
 }
 
+
+datetime .form-control[readonly="false"]{
+  background-color: #ffffff !important;
+}
+
 /* ng2-select2 */
 
 .form-control.full-width-select { padding: 0; border-color: transparent; }
@@ -589,6 +594,7 @@ input[type="text"].form-control-lg {
     padding: 0 4px; font-size: 20px;
 }
 
+.simple-notification-wrapper { width: 400px !important; }
 .simple-notification { min-height: 70px; }
 
 .input-group.date { max-width: 145px; margin-right: 15px }

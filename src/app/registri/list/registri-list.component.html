@@ -1,4 +1,4 @@
-<div class="pull-right">
+<div *ngIf="apiService.userCan('CREATE_REGISTRI')" class="pull-right">
     <a [routerLink]=" ['/app/registri/edit'] " class="btn btn-primary btn-save">Nuovo Registro</a>
 </div>
 <h3 class="page-title">Registri / <span class="fw-semi-bold">Tutti i registri</span></h3>
@@ -171,7 +171,7 @@
                         <th>
                             <mfDefaultSorter by="nome_documento">Allegati</mfDefaultSorter>
                         </th>
-                        <th>Azioni</th>
+                        <th *ngIf="apiService.userCan('DELETE_REGISTRI')">Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -193,7 +193,7 @@
                         <td>{{registro.protocollo_mittente}}</td>
                         <td class="nowrap">{{registro.data_mittente | date: 'dd/MM/yyyy' : 'UTC' }}</td>
                         <td><p class="text-center"><a [routerLink]="['/app/registri/edit/'+registro.id]" fragment="allegati"><i class="fa fa-files-o text-muted"> </i></a></p></td>
-                        <td><p class="text-center"><a (click)="askDeleteRegistri($event, myModal, registro)"><i class="fa fa-trash-o"> </i></a></p></td>
+                        <td *ngIf="apiService.userCan('DELETE_REGISTRI')"><p class="text-center"><a (click)="askDeleteRegistri($event, myModal, registro)"><i class="fa fa-trash-o"> </i></a></p></td>
                     </tr>
                     </tbody>
                     <tfoot>

@@ -664,6 +664,33 @@ i.square {
 .bg-gu { background-color: #ff6; border-color: darken(#ff6, 25); color: darken(#ff6, 65);}
 .bg-stato { background-color: #000; border-color: lighten(#000, 25);}
 
+.bg-attivo { background-color: #E0FFBF; border-color: darken(#E0FFBF, 25); }
+.bg-in_scadenza { background-color: #FFFF99; border-color: darken(#FFFF99, 25); }
+.bg-scaduto { background-color: #ff4040; border-color: darken(#ff4040, 25);}
+.bg-ottemperato { background-color: #fff; border-color: darken(#fff, 25);}
+.bg-superato { background-color: #FF9F71; border-color: darken(#FF9F71, 25);}
+.bg-esaurito { background-color: #BBBBBB; border-color: darken(#BBBBBB, 25); color: darken(#bbb, 65);}
+.bg-parzialmente_ottemperato { background-color: #FFFFFF; border-color: darken(#fff, 25); }
+
+/*
+
+
+
+
+<tr>
+<td bgcolor="#BBBBBB" style="border-bottom: 1px solid rgb(204,204,204);border-right: 1px solid rgb(204,204,204);"><font face="Arial, Helvetica, sans-serif" size="1">&nbsp;</font></td>
+<td style="border-bottom: 1px solid rgb(204,204,204);"><font face="Arial, Helvetica, sans-serif" size="1">esaurito</font></td>
+</tr>
+
+
+<tr>
+<td bgcolor="#FFFFFF" style="border-bottom: 1px solid rgb(204,204,204);border-right: 1px solid rgb(204,204,204);"><font face="Arial, Helvetica, sans-serif" size="1">&nbsp;</font></td>
+<td style="border-bottom: 1px solid rgb(204,204,204);"><font face="Arial, Helvetica, sans-serif" size="1">parzialmente ottemperato</font></td>
+</tr>
+
+
+</tbody>*/
+
 .max-w-4 { max-width: 140px; white-space: normal; }
 
 table.align-middle {

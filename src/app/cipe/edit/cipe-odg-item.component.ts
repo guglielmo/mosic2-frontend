@@ -17,6 +17,8 @@ import {Fascicoli, CipeOdg, Registri, Titolari, Uffici} from "../../_models/inde
 export class CipeOdgItemComponent implements OnInit {
     @Input() item: CipeOdg;
     @Input() viewtype: any;
+    @Input() canEdit: boolean;
+    @Input() canDelete: boolean;
     @Output() deleteitem:EventEmitter<number> = new EventEmitter();
 
     public isNew;

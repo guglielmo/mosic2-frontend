@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import {Select2OptionData} from 'ng2-select2';
-
-import {Titolari, Amministrazioni, Registri} from '../../_models/index';
-import {APICommonService} from '../../_services/index';
-import {AppConfig} from '../../app.config';
+import { Registri } from '../../_models/registri';
+import { Titolari } from '../../_models/titolari';
+import { Amministrazioni } from '../../_models/amministrazioni';
+import { APICommonService } from '../../_services/index';
+import { AppConfig } from '../../app.config';
 import * as _ from 'lodash';
 
 
@@ -33,6 +33,8 @@ export class FascicoliEditComponent implements OnInit {
     public amministrazioni$: Observable<Amministrazioni[]>;
     public registri$: Observable<Registri[]>;
 
+    public canEdit: boolean = false;
+
     constructor(private router: Router,
                 private route: ActivatedRoute,
                 public apiService: APICommonService,
@@ -53,8 +55,7 @@ export class FascicoliEditComponent implements OnInit {
 
         this.id = +this.route.snapshot.params['id'];
         this.mode = isNaN(this.id) ? 'create' : 'update';
-
-
+        this.canEdit = isNaN(this.id) ? this.apiService.userCan('CREATE_FASCICOLI') : this.apiService.userCan('EDIT_FASCICOLI');
 
         switch (this.mode) {
             case 'create':

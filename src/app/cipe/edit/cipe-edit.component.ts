@@ -4,7 +4,8 @@ import { APICommonService } from '../../_services/index';
 import { AppConfig } from '../../app.config';
 
 import * as _ from 'lodash';
-import { Cipe, CipeOdg } from '../../_models/index';
+import { Cipe } from '../../_models/cipe';
+import { CipeOdg } from '../../_models/cipe_odg';
 import { DragulaService } from 'ng2-dragula';
 import { ScrollToService } from 'ng2-scroll-to-el';
 
@@ -20,7 +21,7 @@ export class CipeEditComponent implements OnInit {
 
     public _: any;
 
-    private allowUpload= false;
+    public allowUpload= false;
 
     private error = '';
     public mode: string;
@@ -31,7 +32,6 @@ export class CipeEditComponent implements OnInit {
     private baseAPIURL: string;
 
     public datePickerOptions;
-    public timePickerOptions;
 
     public officializingCipe = null;
     public publishingCipe: Cipe = null;
@@ -40,6 +40,9 @@ export class CipeEditComponent implements OnInit {
     public deletingPuntoOdg: CipeOdg = null;
     public status: string = null;
     public status_msg: null;
+
+    public canEdit: boolean = false;
+    public canDelete: boolean = false;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
@@ -52,15 +55,6 @@ export class CipeEditComponent implements OnInit {
         this.baseAPIURL =  this.config.baseAPIURL + '/api/cipe/';
 
         this.datePickerOptions = config.datePickerOptions;
-
- /*       this.timePickerOptions = {
-            minuteStep: 1,
-            template: 'modal',
-            appendWidgetTo: 'body',
-            showSeconds: false,
-            showMeridian: false,
-            defaultTime: false
-        };*/
 
         dragulaService.drag.subscribe((value) => {
             console.log(`drag: ${value[0]}`);
@@ -85,6 +79,8 @@ export class CipeEditComponent implements OnInit {
 
         this.id = +this.route.snapshot.params['id'];
         this.mode = isNaN(this.id) ? 'create' : 'update';
+        this.canEdit = isNaN(this.id) ? this.apiService.userCan('CREATE_CIPE') : this.apiService.userCan('EDIT_CIPE');
+        this.canDelete = this.apiService.userCan('DELETE_CIPE');
 
         switch ( this.mode ) {
             case 'create':
