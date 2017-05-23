@@ -24,7 +24,7 @@ export class APICommonService {
     private _allData$: any = {};
     public dataEnum: any = {};
 
-    private currentStorageVersion = '4';
+    private currentStorageVersion = '111';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
