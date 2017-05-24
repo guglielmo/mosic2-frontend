@@ -1,5 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { Router, CanActivate, ActivatedRoute, Params } from '@angular/router';
+import { Router, CanActivate } from '@angular/router';
 import { APICommonService } from '../_services/api-common.service'
 
 @Injectable()
@@ -11,6 +11,7 @@ export class AuthGuard implements CanActivate {
 
     canActivate() {
         if (localStorage.getItem('currentUser')) {
+            this.apiService.setCapabilities();
             // logged in so return true
             return true;
         }

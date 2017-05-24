@@ -2,7 +2,8 @@
 import { Http, Response } from '@angular/http';
 import 'rxjs/add/operator/map'
 
-import {AppConfig} from '../app.config';
+import { AppConfig } from '../app.config';
+import { APICommonService } from '../_services/api-common.service'
 
 
 @Injectable()
@@ -11,6 +12,7 @@ export class AuthenticationService {
 
     constructor(private http: Http,
                 private appconfig: AppConfig,
+                public apiService: APICommonService
     ) {
         this.config = appconfig.getConfig();
     }
@@ -23,6 +25,7 @@ export class AuthenticationService {
                 if (user.data && user.data.token) {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('currentUser', JSON.stringify(user.data));
+                    this.apiService.setCapabilities();
                 }
             });
     }

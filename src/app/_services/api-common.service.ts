@@ -269,7 +269,6 @@ export class APICommonService {
 
     public userCan (capability: string): boolean {
 
-        this.checkCapabilities();
         return this.userCapabilities && this.userCapabilities['ROLE_'+capability] || false;
     }
 
@@ -277,7 +276,6 @@ export class APICommonService {
 
         capability = capability.replace(/\//g,'_');
 
-        this.checkCapabilities();
         if( this.userCapabilities && !this.userCapabilities['ROLE_'+capability] ) {
 
             this.notifyError('Permesso negato: non disponi delle autorizzazioni per '+capability);
@@ -286,15 +284,14 @@ export class APICommonService {
         return true;
     }
 
-    private checkCapabilities () {
+    public setCapabilities () {
 
-        if(this.userCapabilities === null) {
-            // gets and maps user capabilities to object for fast evaluation
-            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            if(currentUser && Array.isArray(currentUser.capabilities)) {
-                this.userCapabilities = _.zipObject(currentUser.capabilities, _.map(currentUser.capabilities, () => { return true } ));
-            }
+        // gets and maps user capabilities to object for fast evaluation
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if(currentUser && Array.isArray(currentUser.capabilities)) {
+            this.userCapabilities = _.zipObject(currentUser.capabilities, _.map(currentUser.capabilities, () => { return true } ));
         }
+
     }
 
     private setDirty(apipath: string) {
