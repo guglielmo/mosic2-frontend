@@ -28,44 +28,57 @@
     <div class="mb-4 mx-3">
         <div>
             <div class="row bg-body-light" sticktoolbar>
-                <div [scrollTo]="'#A_segretariato'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
-                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.id_segretariato && model.data_consegna > 0 }">
+                <div [scrollTo]="'#A_segretariato'" class="col clickable p-4 alert m-0" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{
+                      'alert-success fw-semi-bold' : model.id_segretariato && model.data_consegna > 0 }">
                     <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Segretariato
 
                 </div>
-                <div [scrollTo]="'#A_capo_dipartimento'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
-                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_direttore_ritorno > 0 }">
+                <div [scrollTo]="'#A_capo_dipartimento'" class="col clickable p-4 alert m-0" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{
+                      'alert-warning fw-semi-bold' : model.data_direttore_invio > 0 && !model.data_direttore_ritorno,
+                      'alert-success fw-semi-bold' : model.data_direttore_invio > 0 && model.data_direttore_ritorno > 0 }">
                     <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Capo Dipartimento
                 </div>
-                <div [scrollTo]="'#A_MEF'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
-                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_mef_ritorno > 0 }">
+                <div [scrollTo]="'#A_MEF'" class="col clickable p-4 alert m-0" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{
+                      'alert-warning fw-semi-bold' : model.data_mef_invio > 0 && !model.data_mef_ritorno,
+                      'alert-success fw-semi-bold' : model.data_mef_invio > 0 && model.data_mef_ritorno > 0 }">
                     <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     M.E.F.
                 </div>
-                <div [scrollTo]="'#A_segretario'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
-                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_segretario_ritorno > 0 }">
+                <div [scrollTo]="'#A_segretario'" class="col clickable p-4 alert m-0" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{
+                      'alert-warning fw-semi-bold' : model.data_segretario_invio > 0 && !model.data_segretario_ritorno,
+                      'alert-success fw-semi-bold' : model.data_segretario_invio > 0 && model.data_segretario_ritorno > 0 }">
                     <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Segretario CIPE
                 </div>
-                <div [scrollTo]="'#A_presidente'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
-                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_presidente_ritorno > 0}">
+                <div [scrollTo]="'#A_presidente'" class="col clickable p-4 alert m-0" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{
+                      'alert-warning fw-semi-bold' : model.data_presidente_invio > 0 && !model.data_presidente_ritorno,
+                      'alert-success fw-semi-bold' : model.data_presidente_invio > 0 && model.data_presidente_ritorno > 0}">
                     <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Presidente CIPE
                 </div>
-                <div [scrollTo]="'#A_CC'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
-                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_registrazione_cc > 0 }">
+                <div [scrollTo]="'#A_CC'" class="col clickable p-4 alert m-0" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{
+                      'alert-warning fw-semi-bold' : model.data_invio_cc > 0 && !model.data_registrazione_cc,
+                      'alert-success fw-semi-bold' : model.data_invio_cc > 0 && model.data_registrazione_cc > 0 }">
                     <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Corte dei Conti
                 </div>
-                <div [scrollTo]="'#A_parlamento'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
-                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_invio_p > 0 }">
+                <div [scrollTo]="'#A_parlamento'" class="col clickable p-4 alert m-0" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{ 'alert-success fw-semi-bold' : model.data_invio_p > 0 }">
                     <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Parlamento
                 </div>
-                <div [scrollTo]="'#A_GU'" class="col clickable p-4" [scrollDuration]="500" [scrollOffset]="-100"
-                     [ngClass]="{ 'alert alert-success fw-semi-bold m-0' : model.data_gu > 0 }">
+                <div [scrollTo]="'#A_GU'" class="col clickable p-4 alert m-0" [scrollDuration]="500" [scrollOffset]="-100"
+                     [ngClass]="{
+                      'alert-warning fw-semi-bold' : model.data_invio_gu > 0 && !model.data_gu,
+                      'alert-success fw-semi-bold' : model.data_invio_gu > 0 && model.data_gu > 0 }">
                     <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Gazzetta Ufficiale
                 </div>

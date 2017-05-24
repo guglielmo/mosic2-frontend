@@ -112,7 +112,7 @@
         <div sticktoolbar>
             <div class="row">
                 <div class="col-lg-10">
-                    <div class="py-2 text-center mt-2">
+                    <div *ngIf="viewtype === 'chart'" class="py-2 text-center mt-2">
                         <i class="square bg-dipe"> </i> Dipe
                         <i class="square bg-mef"> </i> Mef
                         <i class="square bg-firme"> </i> Firme
