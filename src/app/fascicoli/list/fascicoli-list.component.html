@@ -62,6 +62,16 @@
     </div>
 </section>
 
+<style>
+    @media only screen and (max-width: 992px) {
+        td:nth-of-type(1):before { content: "Titolario"; }
+        td:nth-of-type(2):before { content: "Fascicolo"; }
+        td:nth-of-type(3):before { content: "Argomento"; }
+        td:nth-of-type(4):before { content: "Amministrazione"; }
+        td:nth-of-type(5):before { content: "Azioni"; }
+    }
+</style>
+
 <div class="row" *ngIf="apiService.commonDataready">
     <div class="col-lg-12">
         <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
@@ -78,7 +88,7 @@
                         <th><mfDefaultSorter by="numero_fascicolo">Fascicolo</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="argomento">Argomento</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="amministrazioni">Amministrazione</mfDefaultSorter></th>
-                        <th *ngIf="apiService.userCan('DELETE_FASCICOLI')">Azioni</th>
+                        <th *ngIf="apiService.userCan('DELETE_FASCICOLI')"><mfDefaultSorter>Azioni</mfDefaultSorter></th>
                     </tr>
                     </thead>
                     <tbody>
