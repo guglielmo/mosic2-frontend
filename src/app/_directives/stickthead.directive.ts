@@ -28,6 +28,7 @@ export class StickThead implements OnInit, OnDestroy {
 
             if (offset >= tableOffset && $fixedHeader.is(":hidden")) {
 
+                let $fixedHeader = jQuery("#header-fixed").empty().append($header.clone());
                 this.copyHeaderWidths($header, $fixedHeader);
                 $fixedHeader.show();
             }
