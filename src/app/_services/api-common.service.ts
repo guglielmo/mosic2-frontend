@@ -14,7 +14,7 @@ export class APICommonService {
     public config: any;
     public configFn: any;
 
-    private userCapabilities: any;
+    private userCapabilities: any = null;
 
     public commonDataready = false;
     public activeRequests = 0;
@@ -77,10 +77,6 @@ export class APICommonService {
     ) {
         this.config = config.getConfig();
         this.configFn = config;
-
-        // gets and maps user capabilities to object for fast evaluation
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.userCapabilities = _.zipObject(currentUser.capabilities, _.map(currentUser.capabilities, () => { return true } ));
 
         //console.log(this.userCapabilities);
 
@@ -193,6 +189,7 @@ export class APICommonService {
             //
             const storedLastUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
             const lastupdates = response.data;
+            const storageVersion = localStorage.getItem('storageVersion');
 
             //
             // for every cached API method
@@ -203,7 +200,7 @@ export class APICommonService {
                 //
                 // if storage version didn't change or data is not stored or fresher on the backend
                 //
-                if (this.storageVersion !== this.currentStorageVersion
+                if (storageVersion !== this.currentStorageVersion
                     || !storedLastUpdates[apipath]
                     || lastupdates[apipath] > storedLastUpdates[apipath]
                 ) {
@@ -272,17 +269,32 @@ export class APICommonService {
 
     public userCan (capability: string): boolean {
 
-        return this.userCapabilities['ROLE_'+capability] || false;
+        this.checkCapabilities();
+
+        return this.userCapabilities && this.userCapabilities['ROLE_'+capability] || false;
     }
 
     private apiCan (capability: string): boolean {
 
-        if( !this.userCapabilities['ROLE_'+capability] ) {
+        this.checkCapabilities();
+
+        if( this.userCapabilities && !this.userCapabilities['ROLE_'+capability] ) {
 
             this.notifyError('Permesso negato: non disponi delle autorizzazioni per '+capability);
             return false;
         }
         return true;
+    }
+
+    private checkCapabilities () {
+
+        if(this.userCapabilities === null) {
+            // gets and maps user capabilities to object for fast evaluation
+            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if(currentUser && Array.isArray(currentUser.capabilities)) {
+                this.userCapabilities = _.zipObject(currentUser.capabilities, _.map(currentUser.capabilities, () => { return true } ));
+            }
+        }
     }
 
     private setDirty(apipath: string) {
