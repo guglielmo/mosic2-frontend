@@ -270,14 +270,14 @@ export class APICommonService {
     public userCan (capability: string): boolean {
 
         this.checkCapabilities();
-
         return this.userCapabilities && this.userCapabilities['ROLE_'+capability] || false;
     }
 
     private apiCan (capability: string): boolean {
 
-        this.checkCapabilities();
+        capability = capability.replace(/\//g,'_');
 
+        this.checkCapabilities();
         if( this.userCapabilities && !this.userCapabilities['ROLE_'+capability] ) {
 
             this.notifyError('Permesso negato: non disponi delle autorizzazioni per '+capability);
