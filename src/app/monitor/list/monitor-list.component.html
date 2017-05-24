@@ -1,0 +1,87 @@
+<accordion [closeOthers]="false" class="mb-lg show" id="debug[{{model.id}}]">
+    <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="false">
+        <div accordion-heading>
+            <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
+            <i class="fa float-right"
+               [ngClass]="{'fa-angle-down': accordionGroupDebug?.isOpen, 'fa-angle-right': !accordionGroupDebug?.isOpen}"></i>
+        </div>
+        <div>
+            <pre>model = {{model | json}}</pre>
+        </div>
+    </accordion-group>
+</accordion>
+
+<h3 class="page-title">Monitor</h3>
+
+<section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
+    <header>
+        <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Anno del  <span class="fw-semi-bold">monitoraggio ...</span>
+            <span *ngIf="filter.anno != null" class="float-lg-right mr-3">
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+            </span>
+        </h5>
+        <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Anno del <span class="fw-semi-bold">monitoraggio ...</span>
+            <span *ngIf="filter.anno != null" class="float-lg-right mr-3">
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+            </span>
+        </h5>
+        <div class="widget-controls m-t-1">
+            <a data-widgster="expand" title="Apri"><i class="glyphicon glyphicon-chevron-down"></i></a>
+            <a data-widgster="collapse" title="Chiudi"><i class="glyphicon glyphicon-chevron-up"></i></a>
+        </div>
+    </header>
+    <div class="widget-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    <label for="anno"><strong>Anno</strong></label>
+                    <select id="anno" name="anno" class="form-control" data-style="btn-secondary" data-width="auto"
+                            [ngModel]="filter.anno" (change)="onYearChanged($event.target.value)">
+                        <option value=""></option>
+                        <ng-container *ngFor="let year of years">
+                            <option value="{{year}}">{{year}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div *ngIf="apiService.commonDataready" class="row">
+    <div class="col-lg-12">
+        <div class="mb-1">Risultati: {{model.length}}</div>
+        <section class="widget py-0" widget>
+            <div class="widget-body widget-table-overflow">
+                <table class="table table-hover table-condensed mb-0 table-bordered"
+                       [mfData]="model"
+                       [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
+                       #mf="mfDataTable" stickthead [offsetY]="0">
+                    <thead>
+                    <tr>
+                        <th>Data</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let delibera of mf.data" class="clickable">
+                        <td>{{delibera.id | date : 'dd/MM/yyyy'}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+
+<modal #myModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDeleteTags(myModal)">
+    <modal-header>
+        <h4 class="modal-title text-center fw-bold mt">Conferma cancellazione tag</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="text-center mt-sm">
+            Vuoi eliminare il tag {{deletingTags.id}} {{deletingTags.denominazione}} ?
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>

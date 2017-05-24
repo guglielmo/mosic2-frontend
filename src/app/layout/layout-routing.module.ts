@@ -14,6 +14,7 @@ export const routes: Routes = [
         { path: 'cipe', loadChildren: '../cipe/cipe.module#CipeModule', canActivate: [AuthGuard] },
         { path: 'delibere', loadChildren: '../delibere/delibere.module#DelibereModule', canActivate: [AuthGuard] },
         { path: 'adempimenti', loadChildren: '../adempimenti/adempimenti.module#AdempimentiModule', canActivate: [AuthGuard] },
+        { path: 'monitor', loadChildren: '../monitor/monitor.module#MonitorModule', canActivate: [AuthGuard] },
         { path: 'users', loadChildren: '../users/users.module#UsersModule', canActivate: [AuthGuard] },
         { path: 'mittenti', loadChildren: '../servizio/mittenti.module#MittentiModule', canActivate: [AuthGuard] },
         { path: 'amministrazioni', loadChildren: '../servizio/amministrazioni.module#AmministrazioniModule', canActivate: [AuthGuard] },
