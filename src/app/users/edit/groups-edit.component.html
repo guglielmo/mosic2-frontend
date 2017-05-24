@@ -1,5 +1,5 @@
 <form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
-    <div class="pull-right">
+    <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
     </div>
@@ -59,6 +59,7 @@
                                     <p class="text-center mb-0 mt-2">
                                         <input id="ROLE_READ_{{supportedclass}}" name="ROLE_READ_{{supportedclass}}" type="checkbox"
                                                [checked]="model.roles.indexOf('ROLE_READ_'+supportedclass) >= 0"
+                                               [disabled]="!canEdit"
                                                (change)="updateCheckedOptions('ROLE_READ_'+supportedclass, $event)">
                                         <label for="ROLE_READ_{{supportedclass}}"></label>
                                     </p>
@@ -69,6 +70,7 @@
                                     <p class="text-center mb-0 mt-2">
                                         <input id="ROLE_CREATE_{{supportedclass}}" name="ROLE_CREATE_{{supportedclass}}" type="checkbox"
                                                [checked]="model.roles.indexOf('ROLE_CREATE_'+supportedclass) >= 0"
+                                               [disabled]="!canEdit"
                                                (change)="updateCheckedOptions('ROLE_CREATE_'+supportedclass, $event)">
                                         <label for="ROLE_CREATE_{{supportedclass}}"></label>
                                     </p>
@@ -79,6 +81,7 @@
                                     <p class="text-center mb-0 mt-2">
                                         <input id="ROLE_EDIT_{{supportedclass}}" name="ROLE_EDIT_{{supportedclass}}" type="checkbox"
                                                [checked]="model.roles.indexOf('ROLE_EDIT_'+supportedclass) >= 0"
+                                               [disabled]="!canEdit"
                                                (change)="updateCheckedOptions('ROLE_EDIT_'+supportedclass, $event)">
                                         <label for="ROLE_EDIT_{{supportedclass}}"></label>
                                     </p>
@@ -89,6 +92,7 @@
                                     <p class="text-center mb-0 mt-2">
                                         <input id="ROLE_DELETE_{{supportedclass}}" name="ROLE_DELETE_{{supportedclass}}" type="checkbox"
                                                [checked]="model.roles.indexOf('ROLE_DELETE_'+supportedclass) >= 0"
+                                               [disabled]="!canEdit"
                                                (change)="updateCheckedOptions('ROLE_DELETE_'+supportedclass, $event)">
                                         <label for="ROLE_DELETE_{{supportedclass}}"></label>
                                     </p>
