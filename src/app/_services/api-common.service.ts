@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Warehouse } from 'ngx-warehouse';
@@ -71,9 +72,10 @@ export class APICommonService {
         'adempimenti'
     ];
 
-    constructor( private http: Http,
-                 public warehouse: Warehouse,
-                 config: AppConfig
+    constructor(
+                private http: Http,
+                public warehouse: Warehouse,
+                config: AppConfig
     ) {
         this.config = config.getConfig();
         this.configFn = config;
@@ -96,6 +98,8 @@ export class APICommonService {
         this.warehouse.get('apiServiceLastInitTime').subscribe(data => {
             console.log('apiServiceLastInitTime', data);  // <-- returns null at first execution
         });
+
+        this.setUserCapabilities();
     }
 
     public subscribeToDataService( apipath: string ): Observable<any[]> {
@@ -284,13 +288,35 @@ export class APICommonService {
         return true;
     }
 
-    public setCapabilities () {
+    public setUserCapabilities () {
 
-        // gets and maps user capabilities to object for fast evaluation
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if(currentUser && Array.isArray(currentUser.capabilities)) {
-            this.userCapabilities = _.zipObject(currentUser.capabilities, _.map(currentUser.capabilities, () => { return true } ));
+        let capabilities = [];
+
+        // get the current user object and group id
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+        if( currentUser ) {
+            const group = currentUser.id_group[0];
+
+            // check the capabilities by Group ID if the data was already loaded
+            if( this.dataEnum['groups'][group] && Array.isArray(this.dataEnum['groups'][group]['roles'])) {
+
+                capabilities = this.dataEnum['groups'][group]['roles'];
+
+                // otherwise uses the login time declared capabilities (from /api/authenticate response)
+            } else if(currentUser && Array.isArray(currentUser.capabilities)) {
+
+                capabilities = currentUser.capabilities;
+
+            } else {
+
+                this.notifyError("Impossibile determinare i permessi dell'utente");
+
+            }
         }
+
+        // maps user capabilities to object for fast evaluation
+        this.userCapabilities = _.zipObject(capabilities, _.map(capabilities, () => { return true } ));
 
     }
 
@@ -377,6 +403,13 @@ export class APICommonService {
                 // creates a data hashmap for a convenient and quick lookup access by id
                 //
                 _.each(this._allData[apipath], item => { this.dataEnum[apipath][item.id] = item;  } );
+
+                //
+                // updates current user capabilities if we just loaded new groups capabilities
+                //
+                if( apipath === 'groups') {
+                    this.setUserCapabilities();
+                }
 
                 //
                 // notifies the subscribers with the new data
