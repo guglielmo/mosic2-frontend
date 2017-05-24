@@ -38,7 +38,8 @@ export class GroupsEditComponent implements OnInit {
         'USERS',
         'DELIBERE',
         'ADEMPIMENTI',
-        'MONITOR'
+        'MONITOR',
+        'MONITOR_GROUP'
     ];
     supportedPermissions: string[] = ['READ', 'CREATE', 'EDIT', 'DELETE'];
 
