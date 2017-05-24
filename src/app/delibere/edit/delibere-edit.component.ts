@@ -1,18 +1,18 @@
-import { AfterViewChecked, Component, EventEmitter, Inject, NgZone, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { APICommonService } from "../../_services/index";
-import { AppConfig } from "../../app.config";
-import { NgUploaderOptions, UploadedFile } from "ngx-uploader";
-import { Observable } from "rxjs/Observable";
+import { AfterViewChecked, Component, EventEmitter, Inject, NgZone, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { APICommonService } from '../../_services/index';
+import { AppConfig } from '../../app.config';
+import { NgUploaderOptions, UploadedFile } from 'ngx-uploader';
+import { Observable } from 'rxjs/Observable';
 
 
-import { Delibere } from "../../_models/delibere"
-import { Firmatari } from "../../_models/firmatari";
-import { Uffici } from "../../_models/uffici";
-import { Allegati } from "../../_models/allegati";
+import { Delibere } from '../../_models/delibere'
+import { Firmatari } from '../../_models/firmatari';
+import { Uffici } from '../../_models/uffici';
+import { Allegati } from '../../_models/allegati';
 
 
-import * as _ from "lodash";
+import * as _ from 'lodash';
 
 @Component({
     templateUrl: 'delibere-edit.component.html',
