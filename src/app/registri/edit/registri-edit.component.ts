@@ -9,11 +9,16 @@ import {
     OnDestroy
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Titolari, Fascicoli, Amministrazioni, Mittenti, Allegati } from '../../_models/index';
 import { APICommonService } from '../../_services/index';
 import { AppConfig } from '../../app.config';
 import { NgUploaderOptions, UploadedFile } from 'ngx-uploader';
 import { Observable } from 'rxjs/Observable';
+
+import { Titolari } from '../../_models/titolari';
+import { Fascicoli } from '../../_models/fascicoli';
+import { Amministrazioni } from '../../_models/amministrazioni';
+import { Mittenti } from '../../_models/mittenti';
+import { Allegati } from '../../_models/allegati';
 
 import * as _ from 'lodash';
 

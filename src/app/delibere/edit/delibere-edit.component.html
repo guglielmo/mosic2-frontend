@@ -44,8 +44,8 @@
                 </div>
                 <div [scrollTo]="'#A_MEF'" class="col clickable p-4 alert m-0" [scrollDuration]="500" [scrollOffset]="-100"
                      [ngClass]="{
-                      'alert-warning fw-semi-bold' : model.data_mef_invio > 0 && !model.data_mef_ritorno,
-                      'alert-success fw-semi-bold' : model.data_mef_invio > 0 && model.data_mef_ritorno > 0 }">
+                      'alert-warning fw-semi-bold' : model.data_mef_pec > 0 && !model.data_mef_ritorno,
+                      'alert-success fw-semi-bold' : model.data_mef_pec > 0 && model.data_mef_ritorno > 0 }">
                     <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     M.E.F.
                 </div>
@@ -65,6 +65,7 @@
                 </div>
                 <div [scrollTo]="'#A_CC'" class="col clickable p-4 alert m-0" [scrollDuration]="500" [scrollOffset]="-100"
                      [ngClass]="{
+                     'alert-danger fw-semi-bold' : model.data_invio_cc > 0 && !model.data_registrazione_cc,
                       'alert-warning fw-semi-bold' : model.data_invio_cc > 0 && !model.data_registrazione_cc,
                       'alert-success fw-semi-bold' : model.data_invio_cc > 0 && model.data_registrazione_cc > 0 }">
                     <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>

@@ -15,6 +15,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   public config: any;
   private router: Router;
   private location: Location;
+  public currentYear: any;
 
   constructor(
       config: AppConfig,
@@ -28,6 +29,9 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     this.config = config.getConfig();
     this.router = router;
     this.location = location;
+
+    const d =  new Date();
+    this.currentYear = d.getFullYear();
   }
 
   ngOnInit(): void {

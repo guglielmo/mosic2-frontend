@@ -26,9 +26,10 @@ import { DelibereUploadComponent } from './edit/delibere-upload.component';
 
 export const routes = [
     {path: '', redirectTo: 'list', pathMatch: 'full'},
-    {path: 'list', component: DelibereListComponent},
     {path: 'edit', component: DelibereEditComponent},
-    {path: 'edit/:id', component: DelibereEditComponent}
+    {path: 'edit/:id', component: DelibereEditComponent},
+    {path: ':viewtype', component: DelibereListComponent},
+    {path: ':viewtype/:dateFilter', component: DelibereListComponent}
 ];
 
 @NgModule({

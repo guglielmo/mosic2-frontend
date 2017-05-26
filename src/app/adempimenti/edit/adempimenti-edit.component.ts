@@ -7,6 +7,7 @@ import { AppConfig } from "../../app.config";
 
 import { Adempimenti } from "../../_models/adempimenti"
 import { Cipe } from "../../_models/cipe"
+import { Delibere } from "../../_models/delibere"
 
 
 import * as _ from "lodash";
@@ -39,6 +40,7 @@ export class AdempimentiEditComponent implements OnInit {
     ];
 
     public cipe$: Observable<Cipe[]>;
+    public delibere$: Observable<Delibere[]>;
 
     public datePickerOptions: any;
     public select2Options: Select2Options;
@@ -58,6 +60,7 @@ export class AdempimentiEditComponent implements OnInit {
         this.select2Options = config.select2Options;
 
         this.cipe$ = this.apiService.subscribeToDataService('cipe');
+        this.delibere$ = this.apiService.subscribeToDataService('delibere');
 
     }
 
@@ -73,6 +76,8 @@ export class AdempimentiEditComponent implements OnInit {
         switch (this.mode) {
             case 'create':
                 this.model = {
+                    'id_cipe': '',
+                    'id_delibere': '',
                 };
                 break;
 
@@ -80,11 +85,16 @@ export class AdempimentiEditComponent implements OnInit {
                 this.apiService.getById('adempimenti', this.id)
                     .subscribe(
                         response => {
+
+                            console.log(response.data);
+
                             if(Array.isArray(response.data)) {
                                 this.model = response.data[0];
                             } else {
                                 this.model = response.data;
                             }
+
+                            this.model.id_cipe = '';
 
 
                             // instantiate every date

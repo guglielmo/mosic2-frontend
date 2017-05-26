@@ -76,7 +76,7 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
     ngOnInit() {
         this.apiService.refreshCommonCache();
 
-        this.id = +this.route.snapshot.params['id'];
+        this.id = this.route.snapshot.params['id'];
 
         this.NGUPoptions = new NgUploaderOptions({
             url: this.config.baseAPIURL + '/api/delibere/' + this.id + '/upload',

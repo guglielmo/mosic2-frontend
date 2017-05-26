@@ -83,8 +83,11 @@
                 <i class="toggle fa fa-angle-down"></i>
             </a>
             <ul id="sidebar-delibere" class="collapse">
-                <li *ngIf="apiService.userCan('READ_DELIBERE')"><a [routerLink]=" ['delibere/list'] ">Tutte le delibere</a></li>
+                <li *ngIf="apiService.userCan('READ_DELIBERE')"><a [routerLink]=" ['delibere/list/'+currentYear] ">Tutte le delibere</a></li>
                 <li *ngIf="apiService.userCan('CREATE_DELIBERE')"><a [routerLink]=" ['delibere/edit'] ">Crea nuova</a></li>
+                <li *ngIf="apiService.userCan('READ_DELIBERE')"><a [routerLink]=" ['delibere/grafica/'+currentYear] ">Vista grafica</a></li>
+                <li *ngIf="apiService.userCan('READ_DELIBERE')"><a [routerLink]=" ['delibere/firme/'+currentYear] ">Vista firme</a></li>
+                <li *ngIf="apiService.userCan('READ_DELIBERE')"><a [routerLink]=" ['delibere/registrazione/'+currentYear] ">Vista registrazione</a></li>
             </ul>
         </li>
         <li *ngIf="apiService.userCan('READ_ADEMPIMENTI') || apiService.userCan('CREATE_ADEMPIMENTI')">

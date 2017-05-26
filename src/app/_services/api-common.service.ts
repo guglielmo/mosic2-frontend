@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Warehouse } from 'ngx-warehouse';
@@ -25,7 +25,7 @@ export class APICommonService {
     private _allData$: any = {};
     public dataEnum: any = {};
 
-    private currentStorageVersion = '111';
+    private currentStorageVersion = '115';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
@@ -47,7 +47,7 @@ export class APICommonService {
         'cipeargomentitipo',
         'users',
         'delibere',
-        'adempimenti'
+        'adempimenti',
     ];
 
     private commonData: string[] = [
@@ -74,6 +74,7 @@ export class APICommonService {
 
     constructor(
                 private http: Http,
+                private datePipe: DatePipe,
                 public warehouse: Warehouse,
                 config: AppConfig
     ) {
@@ -483,6 +484,12 @@ export class APICommonService {
             case 'groups':
                 _.each(data, (item) => { item.text = item['name'] } );
                 break;
+            case 'delibere':
+                _.each(data, (item) => { item.text = item['numero'] + ' - ' + item['argomento'] } );
+                break;
+            case 'cipe':
+                _.each(data, (item) => { item.text = this.transformDate(item['data'],'dd/MM/yyyy') } );
+                break;
         }
     }
 
@@ -496,5 +503,9 @@ export class APICommonService {
             const headers = new Headers({'Authorization': 'Bearer ' + currentUser.token});
             return new RequestOptions({headers: headers});
         }
+    }
+
+    transformDate(date, format) {
+        return this.datePipe.transform(date, format);
     }
 }

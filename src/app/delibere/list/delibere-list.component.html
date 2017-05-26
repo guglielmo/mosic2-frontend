@@ -51,6 +51,9 @@
                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                           [timepicker]="false"
                           [(ngModel)]="filter.data_da" #data_da="ngModel" required></datetime>
+<!--
+                {{filter.data_da | date : 'medium'}}
+-->
             </div>
             <div class="col-lg-2">
                 <label for="data_a"><strong>A data</strong></label>
@@ -58,6 +61,9 @@
                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                           [timepicker]="false"
                           [(ngModel)]="filter.data_a" #data_a="ngModel" required></datetime>
+<!--
+                {{filter.data_a | date : 'medium'}}
+-->
             </div>
             <div class="col-lg-3">
                 <div class="form-group">
@@ -101,56 +107,56 @@
                             [ngModel]="filter.data_cipe" (change)="onDataCipeChanged($event.target.value)">
                         <option value=""></option>
                         <ng-container *ngFor="let cipe of cipe$ | async">
-                            <option value="{{cipe.data}}">{{cipe.data | date: 'dd/MM/yyyy' }}</option>
+                            <option value="{{cipe.data | date: 'yyyy-MM-dd' }}">{{cipe.data | date: 'dd/MM/yyyy' }}</option>
                         </ng-container>
                     </select>
                 </div>
             </div>
-        </div>
-    </div>
-    <div>
-        <div sticktoolbar>
-            <div class="row">
-                <div class="col-lg-10">
-                    <div *ngIf="viewtype === 'chart'" class="py-2 text-center mt-2">
-                        <i class="square bg-dipe"> </i> Dipe
-                        <i class="square bg-mef"> </i> Mef
-                        <i class="square bg-firme"> </i> Firme
-                        <i class="square bg-cc"> </i> Corte dei Conti
-                        <i class="square bg-gu"> </i> Gazzetta Ufficiale
-                        <i class="square bg-stato"> </i> Annullata / Ritirata / Superata
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <div class="text-right">
-                        <div class="py-2">
-                            <form #m="ngForm">
-                                <div class="btn-group">
-                                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="normal" name="viewtype"
-                                           [tooltip]="'Vista normale'" placement="top">
-                                        <i class="fa fa-lg fa-th-list"></i>
-                                    </label>
-                                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="chart" name="viewtype"
-                                           [tooltip]="'Vista grafica'" placement="top">
-                                        <i class="fa fa-lg fa-bar-chart fa-rotate-90"></i>
-                                    </label>
-                                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="sign" name="viewtype"
-                                           [tooltip]="'Vista firme'" placement="top">
-                                        <i class="fa fa-lg fa-pencil"></i>
-                                    </label>
-                                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="register" name="viewtype"
-                                           [tooltip]="'Vista&nbsp;registrazione'" placement="top">
-                                        <i class="fa fa-lg fa-book"></i>
-                                    </label>
-                                </div>
-                            </form>
-                        </div>
+            <div class="col-lg-8">
+                <div class="text-right">
+                    <div class="mt-4">
+                        <form #m="ngForm">
+                            <div class="btn-group">
+                                <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="list" name="viewtype"
+                                       [tooltip]="'Vista normale'" placement="top" (click)="onViewTypeChange('list')">
+                                    <i class="fa fa-lg fa-th-list"></i>
+                                </label>
+                                <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="grafica" name="viewtype"
+                                       [tooltip]="'Vista grafica'" placement="top" (click)="onViewTypeChange('grafica')">
+                                    <i class="fa fa-lg fa-bar-chart fa-rotate-90"></i>
+                                </label>
+                                <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="firme" name="viewtype"
+                                       [tooltip]="'Vista firme'" placement="top" (click)="onViewTypeChange('firme')">
+                                    <i class="fa fa-lg fa-pencil"></i>
+                                </label>
+                                <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="registrazione" name="viewtype"
+                                       [tooltip]="'Vista&nbsp;registrazione'" placement="top" (click)="onViewTypeChange('registrazione')">
+                                    <i class="fa fa-lg fa-book"></i>
+                                </label>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<div>
+    <div sticktoolbar>
+        <div class="row">
+            <div class="col-lg-12">
+                <div *ngIf="viewtype === 'grafica'" class="py-2 text-center">
+                    <i class="square bg-dipe"> </i> Dipe
+                    <i class="square bg-mef"> </i> Mef
+                    <i class="square bg-firme"> </i> Firme
+                    <i class="square bg-cc"> </i> Corte dei Conti
+                    <i class="square bg-gu"> </i> Gazzetta Ufficiale
+                    <i class="square bg-stato"> </i> Annullata / Ritirata / Superata
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <style>
     @media only screen and (max-width: 992px) {
@@ -168,12 +174,12 @@
         <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">
-                <table *ngIf="viewtype === 'normal'"
+                <table *ngIf="viewtype === 'list'"
                        class="table table-hover table-condensed table-bordered mb-0"
                        [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filteredCount"
-                       [mfSortBy]="'data'" [mfSortOrder]="'desc'"
+                       [mfSortBy]="'numero'" [mfSortOrder]="'asc'"
                        [mfRowsOnPage]="100"
-                       #mf="mfDataTable" stickthead [offsetY]="55">
+                       #mf="mfDataTable" stickthead [offsetY]="0">
                     <thead>
                     <tr>
                         <th>
@@ -200,6 +206,9 @@
                         <td>
                             <h5><strong>{{delibera.data | amTimeAgo }}</strong></h5>
                             <p class="fw-semi-bold text-capitalize">{{delibera.data | date: 'EEEE, dd MMMM yyyy' }}</p>
+<!--
+                            <p>{{delibera.data}} > {{delibera.data | date : 'medium'}}</p>
+-->
                         </td>
                         <td>
                             <p><a [routerLink]="[ '/app/delibere/edit/' + delibera.id ]"
@@ -229,12 +238,12 @@
                     </tr>
                     </tfoot>
                 </table>
-                <table *ngIf="viewtype === 'chart'"
+                <table *ngIf="viewtype === 'grafica'"
                        class="table table-hover table-condensed table-bordered mb-0"
                        [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filteredCount"
-                       [mfSortBy]="'data'" [mfSortOrder]="'desc'"
+                       [mfSortBy]="'numero'" [mfSortOrder]="'asc'"
                        [mfRowsOnPage]="100"
-                       #mf="mfDataTable" stickthead [offsetY]="55">
+                       #mf="mfDataTable" stickthead [offsetY]="35">
                     <thead>
                     <tr>
                         <th>
@@ -272,12 +281,12 @@
                             -->
                             <div class="row mt-3">
                                 <div class="col-12">
-                                    <div class="progress">
+                                    <div class="progress progress-lg rel-t-l6">
                                         <ng-template ngFor let-key [ngForOf]="keysGetter(delibera.giorni_iter)">
                                             <div *ngIf="delibera.giorni_iter[key] > 0" class="progress-bar bg-{{key}}" role="progressbar"
-                                                 [style.width]="Math.max((delibera.giorni_iter[key]*2),10)+'px'"
+                                                 [style.width]="Math.max((delibera.giorni_iter[key]*2),14)+'px'"
                                                  [attr.aria-valuenow]="delibera.giorni_iter[key]" aria-valuemin="0" aria-valuemax="360">
-                                                {{delibera.giorni_iter[key]}}
+                                                <strong>{{delibera.giorni_iter[key]}}</strong>
                                             </div>
                                         </ng-template>
                                         <div *ngIf="delibera.id_stato > 0" class="progress-bar bg-stato" role="progressbar"
@@ -302,12 +311,12 @@
                     </tr>
                     </tfoot>
                 </table>
-                <table *ngIf="viewtype === 'sign'"
+                <table *ngIf="viewtype === 'firme'"
                        class="table table-condensed table-bordered align-middle align-center mb-0"
                        [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filteredCount"
-                       [mfSortBy]="'data'" [mfSortOrder]="'desc'"
+                       [mfSortBy]="'numero'" [mfSortOrder]="'asc'"
                        [mfRowsOnPage]="100"
-                       #mf="mfDataTable" stickthead [offsetY]="55">
+                       #mf="mfDataTable" stickthead [offsetY]="0">
                     <thead>
                     <tr>
                         <th>
@@ -369,12 +378,12 @@
                     </tr>
                     </tfoot>
                 </table>
-                <table *ngIf="viewtype === 'register'"
+                <table *ngIf="viewtype === 'registrazione'"
                        class="table table-condensed table-bordered table-hover mb-0"
                        [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filteredCount"
-                       [mfSortBy]="'data'" [mfSortOrder]="'desc'"
+                       [mfSortBy]="'numero'" [mfSortOrder]="'asc'"
                        [mfRowsOnPage]="100"
-                       #mf="mfDataTable" stickthead [offsetY]="55">
+                       #mf="mfDataTable" stickthead [offsetY]="0">
                     <thead>
                     <tr>
                         <th>
@@ -382,7 +391,7 @@
                         </th>
                         <th>Data</th>
                         <th>Argomento</th>
-                        <th>Oss. C.d.C. e scadenza</th>
+                        <th>Osservazioni C.d.C. e scadenza</th>
                         <th>Registrazione C.d.C.</th>
                         <th>Pubblicazione G.U.</th>
                     </tr>

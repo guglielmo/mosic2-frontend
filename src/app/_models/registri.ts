@@ -1,3 +1,5 @@
+import { Allegati } from './allegati';
+
 export class Registri {
     id: number; // INT(10)
     data_arrivo: string; // DATETIME
@@ -13,7 +15,7 @@ export class Registri {
     proposta_cipe: number; // TINYINT(1)
     annotazioni: number; // INT(11)
     tags: number; // INT(11)
-    allegati: number; // INT(11)
+    allegati: Allegati; // INT(11)
     sottofascicoli_id: number; // INT(10)
     mittenti_id: number; // INT(10)
     id_titolari: number; // INT(10)
