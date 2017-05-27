@@ -16,4 +16,4 @@ export * from './cast-to-string';
 
 export * from './delibere-data-filter.pipe';
 export * from './adempimenti-data-filter.pipe';
-export * from './delibere-by-cipe-data-filter.pipe';
+export * from './delibere-by-date-data-filter.pipe';

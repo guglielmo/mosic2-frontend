@@ -14,9 +14,9 @@
                               [innerHTML]="item.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
                     </div>
                     <h6 class="ml-1">
-                        <span *ngIf="item.esito !== 1 && item.esito !== 2" class="badge badge-lg badge-default rel-t-l2">N/D</span>
-                        <span *ngIf="item.esito === 2" class="badge badge-lg badge-warning rel-t-l2">Rinviato</span>
-                        <span *ngIf="item.esito === 1" class="badge badge-lg badge-success rel-t-l2">Positivo</span>
+                        <span *ngIf="item.risultanza !== 1 && item.risultanza !== 2" class="badge badge-lg badge-default rel-t-l2">N/D</span>
+                        <span *ngIf="item.risultanza === 2" class="badge badge-lg badge-warning rel-t-l2">Rinviato</span>
+                        <span *ngIf="item.risultanza === 1" class="badge badge-lg badge-success rel-t-l2">Positivo</span>
                     </h6>
                 </div>
 
@@ -50,33 +50,33 @@
                 <div *ngIf="edit" class="mt-1">
                     <label><strong>Esito</strong></label>
                     <div class="radio abc-radio abc-radio-default">
-                        <input type="radio" name="esito[{{item.id}}]" id="esito_nd[{{item.id}}]"
+                        <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_nd[{{item.id}}]"
                                [value]="null"
                                [disableCond]="!edit"
-                               [formControl]="odgItemForm.controls['esito']"
-                               (click)="item.esito = null">
-                        <label for="esito_nd[{{item.id}}]">
-                            <span [ngClass]="{ 'badge badge-lg badge-default': item.esito !== 1 && item.esito !== 2 }">N/D</span>
+                               [formControl]="odgItemForm.controls['risultanza']"
+                               (click)="item.risultanza = null">
+                        <label for="risultanza_nd[{{item.id}}]">
+                            <span [ngClass]="{ 'badge badge-lg badge-default': item.risultanza !== 1 && item.risultanza !== 2 }">N/D</span>
                         </label>
                     </div>
                     <div class="radio abc-radio abc-radio-warning">
-                        <input type="radio" name="esito[{{item.id}}]" id="esito_rinviato[{{item.id}}]"
+                        <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_rinviato[{{item.id}}]"
                                [value]="2"
                                [disableCond]="!edit"
-                               [formControl]="odgItemForm.controls['esito']"
-                               (click)="item.esito = 2">
-                        <label for="esito_rinviato[{{item.id}}]">
-                            <span [ngClass]="{ 'badge badge-lg badge-warning': item.esito === 2 }">Rinviato</span>
+                               [formControl]="odgItemForm.controls['risultanza']"
+                               (click)="item.risultanza = 2">
+                        <label for="risultanza_rinviato[{{item.id}}]">
+                            <span [ngClass]="{ 'badge badge-lg badge-warning': item.risultanza === 2 }">Rinviato</span>
                         </label>
                     </div>
                     <div class="radio abc-radio abc-radio-success">
-                        <input type="radio" name="esito[{{item.id}}]" id="esito_positivo[{{item.id}}]"
+                        <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_positivo[{{item.id}}]"
                                [value]="1"
                                [disableCond]="!edit"
-                               [formControl]="odgItemForm.controls['esito']"
-                               (click)="item.esito = 1">
-                        <label for="esito_positivo[{{item.id}}]">
-                            <span [ngClass]="{ 'badge badge-lg badge-success': item.esito === 1 }">Positivo</span>
+                               [formControl]="odgItemForm.controls['risultanza']"
+                               (click)="item.risultanza = 1">
+                        <label for="risultanza_positivo[{{item.id}}]">
+                            <span [ngClass]="{ 'badge badge-lg badge-success': item.risultanza === 1 }">Positivo</span>
                         </label>
                     </div>
                     <br/>

@@ -58,7 +58,7 @@ export class CipeOdgItemComponent implements OnInit {
             id_uffici: [{value:'', disabled: true}, Validators.required],
             ordine: [{value:'', disabled: true}, Validators.required],
             denominazione: [{value:'', disabled: true}, Validators.required],
-            esito: [{value:'', disabled: true}],
+            risultanza: [{value:'', disabled: true}],
             annotazioni: [{value:'', disabled: true}]
         });
 

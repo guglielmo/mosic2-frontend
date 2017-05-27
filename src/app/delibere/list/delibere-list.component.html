@@ -3,7 +3,7 @@
 </div>
 <h3 class="page-title">Delibere / <span class="fw-semi-bold">Tutte le delibere</span></h3>
 
-<section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
+<section *ngIf="apiService.isDataReady(['delibere','uffici','cipe'])" class="widget" widget data-widgster-collapsed="false">
     <header>
         <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">delibere ...</span>
             <span *ngIf="
@@ -169,7 +169,7 @@
     }
 </style>
 
-<div class="row" *ngIf="apiService.commonDataready">
+<div class="row" *ngIf="apiService.isDataReady(['delibere','uffici','cipe'])">
     <div class="col-lg-12">
         <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
         <section class="widget py-0" widget>

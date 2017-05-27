@@ -103,7 +103,7 @@
         </div>
     </section>
 
-    <tabset #staticTabs>
+    <tabset #staticTabs *ngIf="apiService.isDataReady(['fascicoli','titolari','registri','uffici'])">
         <tab [customClass]="'p-0'">
             <ng-template tabHeading>
                 <strong>Ordine del giorno</strong>

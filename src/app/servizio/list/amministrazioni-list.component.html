@@ -3,7 +3,7 @@
 </div>
 <h3 class="page-title">Amministrazioni - <span class="fw-semi-bold">Tutte le amministrazioni</span></h3>
 
-<section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
+<section *ngIf="apiService.isDataReady(['amministrazioni'])" class="widget" widget data-widgster-collapsed="false">
     <header>
         <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">amministrazioni ...</span>
             <span *ngIf="filter.denominazione.length > 2" class="float-lg-right mr-3">
@@ -41,7 +41,7 @@
     }
 </style>
 
-<div *ngIf="apiService.commonDataready" class="row">
+<div *ngIf="apiService.isDataReady(['amministrazioni'])" class="row">
     <div class="col-lg-12">
         <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
         <section class="widget py-0" widget>

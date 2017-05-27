@@ -16,7 +16,7 @@
     }
 </style>
 
-<div class="row">
+<div class="row" *ngIf="apiService.isDataReady(['precipe'])">
     <div class="col-lg-12">
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">

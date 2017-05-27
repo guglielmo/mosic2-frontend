@@ -3,7 +3,7 @@
 </div>
 <h3 class="page-title">Fascicoli / <span class="fw-semi-bold">Tutti i fascicoli</span></h3>
 
-<section *ngIf="apiService.commonDataready && !apiService.isDirty" class="widget" widget data-widgster-collapsed="false">
+<section *ngIf="apiService.isDataReady(['fascicoli','titolari','amministrazioni']) && !apiService.isDirty" class="widget" widget data-widgster-collapsed="false">
     <header>
         <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">fascicoli ...</span>
             <span *ngIf="filter.argomento.length > 2 || filter.id_amministrazioni != -1 || filter.id_titolari != -1 || filter.numero_fascicolo" class="float-lg-right mr-3">
@@ -72,7 +72,7 @@
     }
 </style>
 
-<div class="row" *ngIf="apiService.commonDataready">
+<div class="row" *ngIf="apiService.isDataReady(['fascicoli','titolari','amministrazioni'])">
     <div class="col-lg-12">
         <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
         <section class="widget py-0" widget>

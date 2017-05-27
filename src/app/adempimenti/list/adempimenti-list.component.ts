@@ -8,8 +8,9 @@ import "rxjs/add/operator/throttleTime";
 
 import {APICommonService} from "../../_services/index";
 import {AppConfig} from "../../app.config";
+
 import {Adempimenti} from "../../_models/adempimenti";
-import {Cipe} from "../../_models/index";
+import {Cipe} from "../../_models/cipe";
 import {Uffici} from "../../_models/uffici";
 
 
@@ -208,8 +209,8 @@ export class AdempimentiListComponent implements OnInit {
 
             if(this.today > adempimento.data_scadenza) {
                 return 12;
-            } else if(adempimento.data_scadenza &&  (adempimento.data_scadenza - 604800000) > this.today ) {
-                //console.log(new Date(adempimento.data_scadenza - 604800000), new Date(this.today));
+            } else if(adempimento.data_scadenza &&  (adempimento.data_scadenza - 15768000000) < this.today ) {
+                // 15768000000 = 6 months in milliseconds
                 return 11;
             } else {
                 return 10;

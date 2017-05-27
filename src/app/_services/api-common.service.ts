@@ -25,7 +25,7 @@ export class APICommonService {
     private _allData$: any = {};
     public dataEnum: any = {};
 
-    private currentStorageVersion = '115';
+    private currentStorageVersion = '126';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
@@ -185,6 +185,18 @@ export class APICommonService {
                         .catch((response: Response) => this.handleError(response));
     }
 
+    public isDataReady( apipaths: string[] ): boolean {
+        let checkIsReady = true;
+        _.each(apipaths, v => {
+            //console.log(v, this._allData);
+            if (!this._allData[v] || this._allData[v].length === 0) {
+                checkIsReady = false;
+                return false; // <-- note: this is the lodash way to break iteration;
+            }
+        });
+        return checkIsReady;
+    }
+
     public refreshCommonCache() {
 
         this.getLastUpdates().subscribe(response => {
@@ -238,15 +250,7 @@ export class APICommonService {
                             //
                             // checks if all cached api methods are loaded
                             //
-                            let checkIsReady = true;
-                            _.each(this.commonData, v => {
-                                //console.log(v, this._allData);
-                                if (this._allData[v].length === 0) {
-                                    checkIsReady = false;
-                                    return false; // <-- note: this is the lodash way to break iteration;
-                                }
-                            });
-                            this.commonDataready = checkIsReady;
+                            this.commonDataready = this.isDataReady(this.commonData);
 
                             //
                             // creates a data hashmap for a convenient and quick lookup access by id
@@ -490,6 +494,13 @@ export class APICommonService {
             case 'cipe':
                 _.each(data, (item) => { item.text = this.transformDate(item['data'],'dd/MM/yyyy') } );
                 break;
+            case 'adempimenti':
+
+/*                <td>{{adempimento.id_delibere | dataEnum : apiService.dataEnum : 'delibere' : 'data' : '' | date : 'dd/MM/yyyy'}}</td>
+                <td>{{adempimento.id_delibere | dataEnum : apiService.dataEnum : 'delibere' : 'numero' : '' }}</td>
+                <td>{{adempimento.id_delibere | dataEnum : apiService.dataEnum : 'delibere' : 'argomento' : ''}}</td>*/
+
+                break;
         }
     }
 
@@ -505,7 +516,7 @@ export class APICommonService {
         }
     }
 
-    transformDate(date, format) {
+    public transformDate(date, format) {
         return this.datePipe.transform(date, format);
     }
 }

@@ -36,7 +36,7 @@
                     <div class="widget-body">
                         <div class="row">
                             <div class="col-6">
-                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !codice_fonte.valid }">
+                                <div class="form-group">
                                     <label for="codice_fonte"><strong>Fonte</strong></label>
                                     <div class="select2-H-keeper"><select2 id="codice_fonte"
                                                                            #codice_fonte
@@ -47,7 +47,22 @@
                                                                            [cssImport]="false"
                                                                            [disabled]="!canEdit"
                                                                            (valueChanged)="select2Changed($event,'codice_fonte')"
-                                                                           [data]="fonteSelect2" required></select2></div>
+                                                                           [data]="fonteSelect2"></select2></div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="codice_fonte"><strong>Descrizione codificata</strong></label>
+                                    <div class="select2-H-keeper"><select2 id="codice_descrizione"
+                                                                           #codice_descrizione
+                                                                           name="codice_descrizione"
+                                                                           class="full-width-select"
+                                                                           [options]="select2Options"
+                                                                           [value]="model.codice_descrizione"
+                                                                           [cssImport]="false"
+                                                                           [disabled]="!canEdit"
+                                                                           (valueChanged)="select2Changed($event,'codice_descrizione')"
+                                                                           [data]="descrizioneSelect2"></select2></div>
                                 </div>
                             </div>
                         </div>
@@ -60,12 +75,18 @@
                                                                            name="id_cipe"
                                                                            class="full-width-select"
                                                                            [options]="select2Options"
-                                                                           [value]="model.id_cipe"
+                                                                           [value]="getCipeIdByDate(getDeliberaDateById(model.id_delibere))"
                                                                            [cssImport]="false"
                                                                            [disabled]="!canEdit"
                                                                            (valueChanged)="select2Changed($event,'id_cipe')"
                                                                            [data]="cipe$ | async" required></select2></div>
                                 </div>
+<!--
+                                {{model.id_delibere | dataEnum : apiService.dataEnum : 'delibere' : 'data' | date : 'dd/MM/y'}}
+-->
+<!--                                {{getDeliberaDateById(model.id_delibere) | date : 'dd/MM/y'}}
+                                {{getCipeIdByDate(getDeliberaDateById(model.id_delibere))}}-->
+
                             </div>
                             <div class="col-9">
                                 <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_delibere}">
@@ -79,14 +100,16 @@
                                                                        [cssImport]="false"
                                                                        [disabled]="!canEdit"
                                                                        (valueChanged)="select2Changed($event,'id_delibere')"
-                                                                       [data]="delibere$ | async" required></select2></div>
+                                                                       [data]="delibere$ | async | delibereByDateDataFilter : filter.data_cipe" required></select2></div>
                                 </div>
+
+                                <!--{{filter.data_cipe}}-->
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !descrizione.valid }">
-                                    <label for="descrizione"><strong>Descrizione</strong></label>
+                                    <label for="descrizione"><strong>Descrizione estesa</strong></label>
                                     <textarea id="descrizione" name="descrizione"
                                               rows="3" class="autogrow form-control transition-height"
                                               placeholder="Scrivi l'descrizione della delibera..."
@@ -96,14 +119,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="note" class="hidden"><strong>Note</strong></label>
-                                    <textarea id="note" name="note"
-                                              rows="3" class="autogrow form-control transition-height"
-                                              autosize
-                                              placeholder="..."
-                                              [(ngModel)]="model.note" #note="ngModel" autosize></textarea>
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -116,13 +132,26 @@
                     </header>
                     <div class="widget-body">
                         <div class="row">
-                            <div class="col-12">
-                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !data.valid }">
+                            <div class="col-4">
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && checkScadenzaRequired() }">
                                     <label for="data_scadenza"><strong>Data di scadenza</strong></label>
                                     <datetime id="data_scadenza" name="data_scadenza"
                                               [datepicker]="datePickerOptions"
                                               [timepicker]="false"
-                                              [(ngModel)]="model.data_scadenza" #data_scadenza="ngModel" required></datetime>
+                                              [(ngModel)]="model.data_scadenza" #data_scadenza="ngModel" [required]="checkScadenzaRequired()"></datetime>
+                                </div>
+                            </div>
+                            <div class="col-8">
+                                <div class="mb-3"> </div>
+                                <div class="form-group abc-checkbox abc-checkbox-primary rel-t-m20">
+                                    <input id="vincolo" name="vincolo" type="checkbox"
+                                           [checked]="model.vincolo == 2"
+                                           [disabled]="!canEdit"
+                                           (change)="model.vincolo = $event.target.checked ? 2 : 1"
+                                    >
+                                    <label for="vincolo">
+                                        Adempimento vincolante
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -133,35 +162,76 @@
                         </div>
                         <div class="row">
                             <div class="col-4">
-                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !giorni_scadenza.valid }">
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && checkScadenzaRequired() }">
                                     <label for="giorni_scadenza">Giorni</label>
                                     <input id="giorni_scadenza" name="giorni_scadenza"
                                            type="text" class="form-control"
                                            placeholder="numero del protocollo"
                                            [disabled]="!canEdit"
-                                           [(ngModel)]="model.giorni_scadenza" #giorni_scadenza="ngModel" required>
+                                           [(ngModel)]="model.giorni_scadenza" #giorni_scadenza="ngModel" [required]="checkScadenzaRequired()">
                                 </div>
                             </div>
                             <div class="col-4">
-                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !mesi_scadenza.valid }">
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && checkScadenzaRequired() }">
                                     <label for="mesi_scadenza">Mesi</label>
                                     <input id="mesi_scadenza" name="mesi_scadenza"
                                            type="text" class="form-control"
                                            placeholder="numero del protocollo"
                                            [disabled]="!canEdit"
-                                           [(ngModel)]="model.mesi_scadenza" #mesi_scadenza="ngModel" required>
+                                           [(ngModel)]="model.mesi_scadenza" #mesi_scadenza="ngModel" [required]="checkScadenzaRequired()">
                                 </div>
                             </div>
                             <div class="col-4">
-                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !anni_scadenza.valid }">
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && checkScadenzaRequired() }">
                                     <label for="anni_scadenza">Anni</label>
                                     <input id="anni_scadenza" name="anni_scadenza"
                                            type="text" class="form-control"
                                            placeholder="numero del protocollo"
                                            [disabled]="!canEdit"
-                                           [(ngModel)]="model.anni_scadenza" #anni_scadenza="ngModel" required>
+                                           [(ngModel)]="model.anni_scadenza" #anni_scadenza="ngModel" [required]="checkScadenzaRequired()">
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div class="row" myMatchHeight="widget">
+            <div class="col-lg-6">
+                <section class="widget">
+                    <header>
+                        <h4><span class="fw-semi-bold">Note</span></h4>
+                    </header>
+                    <div class="widget-body">
+                        <div class="form-group">
+                            <label for="note" class="sr-only"><strong>Note</strong></label>
+                            <textarea id="note" name="note"
+                                      rows="3" class="autogrow form-control transition-height"
+                                      autosize
+                                      placeholder="..."
+                                      [(ngModel)]="model.note" #note="ngModel" autosize></textarea>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="col-lg-6">
+                <section class="widget">
+                    <header>
+                        <h4><span class="fw-semi-bold">Esito</span></h4>
+                    </header>
+                    <div class="widget-body">
+                        <div class="form-group">
+                            <label for="codice_fonte" class="sr-only"><strong>Esito adempimento</strong></label>
+                            <div class="select2-H-keeper"><select2 id="codice_esito"
+                                                                   #codice_esito
+                                                                   name="codice_esito"
+                                                                   class="full-width-select"
+                                                                   [options]="select2Options"
+                                                                   [value]="model.codice_esito"
+                                                                   [cssImport]="false"
+                                                                   [disabled]="!canEdit"
+                                                                   (valueChanged)="select2Changed($event,'codice_esito')"
+                                                                   [data]="esitoSelect2"></select2></div>
                         </div>
                     </div>
                 </section>

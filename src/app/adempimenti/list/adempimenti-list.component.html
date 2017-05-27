@@ -3,7 +3,8 @@
 </div>
 <h3 class="page-title">Adempimenti / <span class="fw-semi-bold">Tutti gli adempimenti</span></h3>
 
-<section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
+<section *ngIf="apiService.isDataReady(['adempimenti','delibere','cipe'])"
+         class="widget" widget data-widgster-collapsed="false">
     <header>
         <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">adempimenti ...</span>
             <span *ngIf="
@@ -41,39 +42,7 @@
         <div class="row">
             <div class="col-lg-2">
                 <div class="form-group">
-                    <label for="numero"><strong>Numero</strong></label>
-                    <input id="numero" name="numero" class="form-control" [(ngModel)]="filter.numero" placeholder="Numero..."/>
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <label for="data_da"><strong>Da data</strong></label>
-                <datetime id="data_da" name="data_da"
-                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
-                          [timepicker]="false"
-                          [(ngModel)]="filter.data_da" #data_da="ngModel" required></datetime>
-            </div>
-            <div class="col-lg-2">
-                <label for="data_a"><strong>A data</strong></label>
-                <datetime id="data_a" name="data_a"
-                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
-                          [timepicker]="false"
-                          [(ngModel)]="filter.data_a" #data_a="ngModel" required></datetime>
-            </div>
-            <div class="col-lg-3">
-                <div class="form-group">
-                    <label for="descrizione"><strong>Descrizione</strong></label>
-                    <input id="descrizione" name="descrizione" class="form-control" [formControl]="descrizioneControl"
-                           placeholder="Digita almeno 3 caratteri..."/>
-                </div>
-            </div>
-            <div class="col-lg-3">
-
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-2">
-                <div class="form-group">
-                    <label for="anno"><strong>Anno</strong></label>
+                    <label for="anno"><strong>Anno delibera</strong></label>
                     <select id="anno" name="anno" class="form-control" data-style="btn-secondary" data-width="auto"
                             [ngModel]="filter.anno" (change)="onYearChanged($event.target.value)">
                         <option value=""></option>
@@ -95,26 +64,39 @@
                     </select>
                 </div>
             </div>
-        </div>
-        <div>
-            <div sticktoolbar>
-                <div class="row" style="height: 55px">
-                    <div class="col-lg-12">
-                        <div class="py-2 text-center mt-2">
-                            <i class="square bg-attivo"> </i> attivo
-                            <i class="square bg-in_scadenza"> </i> in scadenza
-                            <i class="square bg-scaduto"> </i> scaduto
-                            <i class="square bg-ottemperato"> </i> ottemperato
-                            <i class="square bg-superato"> </i> superato
-                            <i class="square bg-esaurito"> </i> esaurito
-                            <i class="square bg-parzialmente_ottemperato"> </i> parzialmente ottemperato
-                        </div>
-                    </div>
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="numero"><strong>Numero delibera</strong></label>
+                    <input id="numero" name="numero" class="form-control" [(ngModel)]="filter.numero" placeholder="Numero..."/>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="descrizione"><strong>Adempimento</strong></label>
+                    <input id="descrizione" name="descrizione" class="form-control" [formControl]="descrizioneControl"
+                           placeholder="Digita almeno 3 caratteri..."/>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<div>
+    <div sticktoolbar>
+        <div class="row">
+            <div class="col-lg-12">
+                <div *ngIf="this.apiService.commonDataready" class="py-2 text-center">
+                    <i class="square bg-attivo"> </i> attivo
+                    <i class="square bg-in_scadenza"> </i> in scadenza
+                    <i class="square bg-scaduto"> </i> scaduto
+                    <i class="square bg-ottemperato"> </i> ottemperato
+                    <i class="square bg-superato"> </i> superato
+                    <i class="square bg-esaurito"> </i> esaurito
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <style>
     @media only screen and (max-width: 992px) {
@@ -141,10 +123,10 @@
             <div class="widget-body widget-table-overflow">
                 <table
                        class="table table-hover table-condensed table-bordered mb-0"
-                       [mfData]="adempimenti$ | async | adempimentiDataFilter : filter.descrizione : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filteredCount"
-                       [mfSortBy]="'data'" [mfSortOrder]="'desc'"
+                       [mfData]="adempimenti$ | async | adempimentiDataFilter : filter.descrizione : filter.numero : filter.id_situazione : filteredCount"
+                       [mfSortBy]="'id_delibere'" [mfSortOrder]="'asc'"
                        [mfRowsOnPage]="100"
-                       #mf="mfDataTable" stickthead [offsetY]="55">
+                       #mf="mfDataTable" stickthead [offsetY]="35">
                     <thead>
                     <tr>
                         <th colspan="2"></th>
@@ -153,7 +135,7 @@
                     </tr>
                     <tr>
                         <th>
-                            <mfDefaultSorter by="numero">Id</mfDefaultSorter>
+                            <mfDefaultSorter by="id">Id</mfDefaultSorter>
                         </th>
                         <th>
                             <mfDefaultSorter by="codice">Codice</mfDefaultSorter>
@@ -192,7 +174,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let adempimento of mf.data as Adempimento" class="{{codiceEsitoEnum[getEsito(adempimento)].class}}">
+                    <tr *ngFor="let adempimento of mf.data as Adempimento">
                         <td>{{adempimento.id}}</td>
                         <td><h5><strong><a [routerLink]="[ '/app/adempimenti/edit/' + adempimento.id ]">{{adempimento.codice}}</a></strong></h5></td>
                         <td>{{adempimento.id_delibere | dataEnum : apiService.dataEnum : 'delibere' : 'data' : '' | date : 'dd/MM/yyyy'}}</td>
@@ -206,7 +188,7 @@
                         <td>{{fonteEnum[adempimento.codice_fonte]}}</td>
                         <td>{{vincoloEnum[adempimento.vincolo]}}</td>
                         <td>{{adempimento.data_scadenza | date : 'dd/MM/yyyy'}}</td>
-                        <td>{{codiceEsitoEnum[getEsito(adempimento)].label}}</td>
+                        <td class="{{codiceEsitoEnum[getEsito(adempimento)].class}}">{{codiceEsitoEnum[getEsito(adempimento)].label}}</td>
                         <td>{{adempimento.utente | dataEnum : apiService.dataEnum : 'users' : 'denominazione'}}</td>
                         <td *ngIf="canDelete"><p class="text-center"><a (click)="askDeleteAdempimenti($event, myModal, adempimento)"><i class="fa fa-trash-o"> </i></a></p>
                         </td>
@@ -214,7 +196,7 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <td colspan="10">
+                        <td colspan="13">
                             <mfBootstrapPaginator [rowsOnPageSet]="[100,200,500,1000]"></mfBootstrapPaginator>
                         </td>
                     </tr>

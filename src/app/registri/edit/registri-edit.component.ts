@@ -1,13 +1,4 @@
-import {
-    Component,
-    OnInit,
-    ViewEncapsulation,
-    NgZone,
-    Inject,
-    EventEmitter,
-    AfterViewChecked,
-    OnDestroy
-} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, NgZone, Inject, EventEmitter, AfterViewChecked, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { APICommonService } from '../../_services/index';
 import { AppConfig } from '../../app.config';
