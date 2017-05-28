@@ -3,7 +3,7 @@
 </div>
 <h3 class="page-title">Utenti / <span class="fw-semi-bold">Tutti gli utenti</span></h3>
 
-<section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
+<section *ngIf="apiService.isDataReady(['users','uffici','groups','ruoli_cipe'])" class="widget" widget data-widgster-collapsed="false">
     <header>
         <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">utenti ...</span>
             <span *ngIf="filter.denominazione.length > 2 ||
@@ -102,7 +102,7 @@
     }
 </style>
 
-<div class="row" *ngIf="apiService.commonDataready">
+<div class="row" *ngIf="apiService.isDataReady(['users','uffici','groups','ruoli_cipe'])">
     <div class="col-lg-12">
         <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
         <section class="widget py-0" widget>
@@ -132,7 +132,7 @@
                         <td>{{user.eMail}}</td>
                         <td>{{user.registrationDate | date: 'dd/MM/yyyy HH:mm'}}</td>
                         <td>{{user.id_groups | dataEnum : apiService.dataEnum : 'groups' : 'name' }}</td>
-                        <td>{{user.id_ruoli_cipe}} - {{user.id_ruoli_cipe | dataEnum : apiService.dataEnum : 'ruoli_cipe' : 'denominazione' }}</td>
+                        <td>{{user.id_ruoli_cipe | dataEnum : apiService.dataEnum : 'ruoli_cipe' : 'denominazione' }}</td>
                         <td>{{user.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' }}</td>
 <!--                        <td>{{user.ip}}</td>
                         <td>{{user.stazione}}</td>-->

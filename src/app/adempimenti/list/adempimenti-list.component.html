@@ -13,7 +13,7 @@
             filter.data_da ||
             filter.data_a ||
             filter.id_situazione ||
-            filter.anno ||
+            filter.anno_delibera ||
             filter.data_cipe"
                   class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
@@ -27,7 +27,7 @@
             filter.data_da ||
             filter.data_a ||
             filter.id_situazione ||
-            filter.anno ||
+            filter.anno_delibera ||
             filter.data_cipe"
                   class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
@@ -42,9 +42,9 @@
         <div class="row">
             <div class="col-lg-2">
                 <div class="form-group">
-                    <label for="anno"><strong>Anno delibera</strong></label>
-                    <select id="anno" name="anno" class="form-control" data-style="btn-secondary" data-width="auto"
-                            [ngModel]="filter.anno" (change)="onYearChanged($event.target.value)">
+                    <label for="anno_delibera"><strong>Anno delibera</strong></label>
+                    <select id="anno_delibera" name="anno_delibera" class="form-control" data-style="btn-secondary" data-width="auto"
+                            [ngModel]="filter.anno_delibera" (change)="onYearChanged($event.target.value)">
                         <option value=""></option>
                         <ng-container *ngFor="let year of years">
                             <option value="{{year}}">{{year}}</option>
@@ -66,8 +66,8 @@
             </div>
             <div class="col-lg-2">
                 <div class="form-group">
-                    <label for="numero"><strong>Numero delibera</strong></label>
-                    <input id="numero" name="numero" class="form-control" [(ngModel)]="filter.numero" placeholder="Numero..."/>
+                    <label for="numero_delibera"><strong>Numero delibera</strong></label>
+                    <input id="numero_delibera" name="numero_delibera" class="form-control" [(ngModel)]="filter.numero_delibera" placeholder="Numero..."/>
                 </div>
             </div>
             <div class="col-lg-3">
@@ -75,6 +75,17 @@
                     <label for="descrizione"><strong>Adempimento</strong></label>
                     <input id="descrizione" name="descrizione" class="form-control" [formControl]="descrizioneControl"
                            placeholder="Digita almeno 3 caratteri..."/>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="codice_esito"><strong>Stato</strong></label>
+                    <select id="codice_esito" name="codice_esito" class="form-control" data-style="btn-secondary" data-width="auto"
+                            [(ngModel)]="filter.codice_esito">
+                        <ng-container *ngFor="let codice of esitoSelect2">
+                            <option value="{{codice.id}}">{{codice.text}}</option>
+                        </ng-container>
+                    </select>
                 </div>
             </div>
         </div>
@@ -123,7 +134,7 @@
             <div class="widget-body widget-table-overflow">
                 <table
                        class="table table-hover table-condensed table-bordered mb-0"
-                       [mfData]="adempimenti$ | async | adempimentiDataFilter : filter.descrizione : filter.numero : filter.id_situazione : filteredCount"
+                       [mfData]="adempimenti$ | async | adempimentiDataFilter : filter.data_da : filter.data_a : filter.numero_delibera : filter.descrizione : filter.codice_esito : filteredCount"
                        [mfSortBy]="'id_delibere'" [mfSortOrder]="'asc'"
                        [mfRowsOnPage]="100"
                        #mf="mfDataTable" stickthead [offsetY]="35">
@@ -177,9 +188,9 @@
                     <tr *ngFor="let adempimento of mf.data as Adempimento">
                         <td>{{adempimento.id}}</td>
                         <td><h5><strong><a [routerLink]="[ '/app/adempimenti/edit/' + adempimento.id ]">{{adempimento.codice}}</a></strong></h5></td>
-                        <td>{{adempimento.id_delibere | dataEnum : apiService.dataEnum : 'delibere' : 'data' : '' | date : 'dd/MM/yyyy'}}</td>
-                        <td>{{adempimento.id_delibere | dataEnum : apiService.dataEnum : 'delibere' : 'numero' : '' }}</td>
-                        <td>{{adempimento.id_delibere | dataEnum : apiService.dataEnum : 'delibere' : 'argomento' : ''}}</td>
+                        <td>{{adempimento.data_delibera | date : 'dd/MM/yyyy' }}</td>
+                        <td>{{adempimento.numero_delibera}}</td>
+                        <td>{{adempimento.argomento_delibera}}</td>
                         <td>
                             <p><a [routerLink]="[ '/app/adempimenti/edit/' + adempimento.id ]"
                                   [innerHTML]="adempimento.descrizione | dataMark : filter.descrizione"></a></p>
@@ -188,7 +199,7 @@
                         <td>{{fonteEnum[adempimento.codice_fonte]}}</td>
                         <td>{{vincoloEnum[adempimento.vincolo]}}</td>
                         <td>{{adempimento.data_scadenza | date : 'dd/MM/yyyy'}}</td>
-                        <td class="{{codiceEsitoEnum[getEsito(adempimento)].class}}">{{codiceEsitoEnum[getEsito(adempimento)].label}}</td>
+                        <td class="{{codiceEsitoEnum[adempimento.codice_esito].class}}">{{codiceEsitoEnum[adempimento.codice_esito].label}}</td>
                         <td>{{adempimento.utente | dataEnum : apiService.dataEnum : 'users' : 'denominazione'}}</td>
                         <td *ngIf="canDelete"><p class="text-center"><a (click)="askDeleteAdempimenti($event, myModal, adempimento)"><i class="fa fa-trash-o"> </i></a></p>
                         </td>

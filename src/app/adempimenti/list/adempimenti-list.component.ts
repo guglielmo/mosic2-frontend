@@ -6,6 +6,8 @@ import {Observable} from "rxjs/Observable";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/throttleTime";
 
+import * as _ from 'lodash';
+
 import {APICommonService} from "../../_services/index";
 import {AppConfig} from "../../app.config";
 
@@ -22,12 +24,13 @@ export class AdempimentiListComponent implements OnInit {
     public filter = {
         id: null,
         descrizione: '',
-        numero: null,
+        numero_delibera: null,
         data_da: null,
         data_a: null,
         id_situazione: null,
-        anno: null,
-        data_cipe: null
+        anno_delibera: null,
+        data_cipe: null,
+        codice_esito: null
     };
 
     public today = new Date().getTime();
@@ -76,6 +79,17 @@ export class AdempimentiListComponent implements OnInit {
         13: { label: 'Parzialmente ottemperato', class: 'bg-parzialmente_ottemperato'}
     };
 
+    public esitoSelect2 = [
+        { id: 0, text: ''},
+        { id: 1, text: 'Ottemperato' },
+        { id: 2, text: 'Superato' },
+        { id: 3, text: 'Esaurito' },
+        { id: 10, text: 'Attivo' },
+        { id: 11, text: 'In scadenza' },
+        { id: 12, text: 'Scaduto' },
+        { id: 13, text: 'Parzialmente ottemperato' }
+    ];
+
 
     deletingAdempimenti: Adempimenti = new Adempimenti;
 
@@ -102,7 +116,7 @@ export class AdempimentiListComponent implements OnInit {
             this.years.push(i);
         }
 
-        this.adempimenti$ = this.apiService.subscribeToDataService('adempimenti');
+        this.adempimenti$ = this.apiService.subscribeToDataService('adempimenti').map( adempimenti => this.decorateData(adempimenti) );
         this.uffici$ = this.apiService.subscribeToDataService('uffici');
         this.cipe$ = this.apiService.subscribeToDataService('cipe');
     }
@@ -113,6 +127,22 @@ export class AdempimentiListComponent implements OnInit {
         this.apiService.refreshCommonCache();
 
         this.canDelete = this.apiService.userCan('DELETE_ADEMPIMENTI');
+    }
+
+    decorateData (adempimenti) {
+
+        _.forEach(adempimenti, (adempimento) => {
+            adempimento.codice_esito = this.getEsito(adempimento);
+
+            const delibera = _.get( this.apiService.dataEnum, 'delibere["' + adempimento.id_delibere + '"]', '');
+            if(delibera) {
+                adempimento.data_delibera = delibera.data;
+                adempimento.numero_delibera = delibera.numero;
+                adempimento.argomento_delibera = delibera.argomento;
+            }
+        });
+
+        return adempimenti;
     }
 
     askDeleteAdempimenti(event: any, modal: any, adempimenti: Adempimenti) {
@@ -150,7 +180,8 @@ export class AdempimentiListComponent implements OnInit {
 
     public onYearChanged(year) {
 
-        this.filter.anno = year;
+        this.filter.data_cipe = null;
+        this.filter.anno_delibera = year;
 
         if(year !== '') {
             let data_da = new Date();
@@ -170,6 +201,7 @@ export class AdempimentiListComponent implements OnInit {
     public onDataCipeChanged(date) {
 
         this.filter.data_cipe = date;
+        this.filter.anno_delibera = null;
 
         if(date !== '') {
             let data_da = new Date();
@@ -186,16 +218,21 @@ export class AdempimentiListComponent implements OnInit {
         }
     }
 
+    public onFilterChanged(value, type) {
+        this.filter[type] = value;
+    }
+
     public resetFilters(): void {
         this.filter = {
             id: null,
             descrizione: '',
-            numero: null,
+            numero_delibera: null,
             data_da: null,
             data_a: null,
             id_situazione: null,
-            anno: null,
-            data_cipe: null
+            anno_delibera: null,
+            data_cipe: null,
+            codice_esito: null
         };
     }
 

@@ -9,6 +9,7 @@ import { Titolari } from '../../_models/titolari';
 import { Fascicoli } from '../../_models/fascicoli';
 import { Amministrazioni } from '../../_models/amministrazioni';
 import { Mittenti } from '../../_models/mittenti';
+import { Tags } from '../../_models/tags';
 import { Allegati } from '../../_models/allegati';
 
 import * as _ from 'lodash';
@@ -45,6 +46,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
     public fascicoli$: Observable<Fascicoli[]>;
     public amministrazioni$: Observable<Amministrazioni[]>;
     public mittenti$: Observable<Mittenti[]>;
+    public tags$: Observable<Tags[]>;
 
     public select2Options: Select2Options;
     public select2WithAddOptions: Select2Options;
@@ -71,6 +73,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
         this.fascicoli$ = this.apiService.subscribeToDataService('fascicoli');
         this.amministrazioni$ = this.apiService.subscribeToDataService('amministrazioni');
         this.mittenti$ = this.apiService.subscribeToDataService('mittenti');
+        this.tags$ = this.apiService.subscribeToDataService('tags');
 
         this.inputUploadEvents = new EventEmitter<string>();
     }
@@ -290,7 +293,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
                             response.data.text = label;
 
                             // creates the new entry on the relative apiService select2 data
-                            this.apiService[apipath + 'Select'].push(response.data);
+                            // this.apiService[apipath + 'Select'].push(response.data);
 
                             // find the select element and update temporary id with the new assigned id
                             $('#' + name + ' select option[value="' + den + '"]').val(id).text(label);
@@ -302,7 +305,6 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
                             selectedValues.splice(i, 1, id);
 
                             this.model[name] = selectedValues.join(',');
-
 
                             // update select2 data
                             // $('#'+name+' select').select2('data',response.data, true);

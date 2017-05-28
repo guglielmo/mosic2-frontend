@@ -25,7 +25,7 @@ export class APICommonService {
     private _allData$: any = {};
     public dataEnum: any = {};
 
-    private currentStorageVersion = '126';
+    private currentStorageVersion = '131';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
@@ -464,23 +464,11 @@ export class APICommonService {
             case 'amministrazioni':
                 _.each(data, (item) => { item.text = item['codice'] + ' - ' + item['denominazione']; item.id = String(item.id) });
                 break;
-            case 'mittenti':
-                _.each(data, (item) => { item.text = item['denominazione'] } );
-                break;
             case 'registri':
                 _.each(data, (item) => { item.text = item['id'] + ' - ' + item['oggetto'] } );
                 break;
-            case 'uffici':
-                _.each(data, (item) => { item.text = item['id'] + ' - ' + item['denominazione'] } );
-                break;
-            case 'ruoli_cipe':
-                _.each(data, (item) => { item.text = item['denominazione'] } );
-                break;
             case 'firmatari':
                 _.each(data, (item) => { item.text = item['denominazione_estesa'] } );
-                break;
-            case 'firmataritipo':
-                _.each(data, (item) => { item.text = item['denominazione'] } );
                 break;
             case 'users':
                 _.each(data, (item) => { item.text = item['denominazione'] = item['lastName'] + ' ' + item['firstName'] } );
@@ -494,12 +482,12 @@ export class APICommonService {
             case 'cipe':
                 _.each(data, (item) => { item.text = this.transformDate(item['data'],'dd/MM/yyyy') } );
                 break;
-            case 'adempimenti':
-
-/*                <td>{{adempimento.id_delibere | dataEnum : apiService.dataEnum : 'delibere' : 'data' : '' | date : 'dd/MM/yyyy'}}</td>
-                <td>{{adempimento.id_delibere | dataEnum : apiService.dataEnum : 'delibere' : 'numero' : '' }}</td>
-                <td>{{adempimento.id_delibere | dataEnum : apiService.dataEnum : 'delibere' : 'argomento' : ''}}</td>*/
-
+            case 'uffici':
+            case 'mittenti':
+            case 'ruoli_cipe':
+            case 'firmataritipo':
+            case 'tags':
+                _.each(data, (item) => { item.text = item['denominazione'] } );
                 break;
         }
     }
