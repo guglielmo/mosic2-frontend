@@ -31,7 +31,7 @@ export class CipeOdg {
         this.id_uffici = null;
         this.ordine = null;
         this.denominazione = null;
-        this.risultanza = null;
+        this.risultanza = 0;
         this.numero_delibera = null;
         this.annotazioni = null;
         this.stato = null;

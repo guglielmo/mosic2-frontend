@@ -149,16 +149,20 @@ export class CipeEditComponent implements OnInit {
 
     deletePuntoOdg(id: number) {
 
-        this.apiService.delete('cipeodg', id)
-            .subscribe(
-                response => {
-                    console.log(response);
-                    this.model.cipe_odg = _.filter(this.model.cipe_odg, o => { return o.id !== id; });
-                },
-                error => {
-                    console.log(error);
-                }
-            )
+        if(id === null) {
+            this.model.cipe_odg = _.filter(this.model.cipe_odg, o => { return o.id !== id; });
+        } else {
+            this.apiService.delete('cipeodg', id)
+                .subscribe(
+                    response => {
+                        console.log(response);
+                        this.model.cipe_odg = _.filter(this.model.cipe_odg, o => { return o.id !== id; });
+                    },
+                    error => {
+                        console.log(error);
+                    }
+                )
+        }
     }
 
     castToArray(item) {

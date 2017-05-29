@@ -51,7 +51,7 @@
                     <label><strong>Esito</strong></label>
                     <div class="radio abc-radio abc-radio-default">
                         <input type="radio" name="risultanza[{{item.id}}]" id="risultanza_nd[{{item.id}}]"
-                               [value]="null"
+                               [value]="0"
                                [disableCond]="!edit"
                                [formControl]="odgItemForm.controls['risultanza']"
                                (click)="item.risultanza = null">

@@ -142,17 +142,21 @@ export class PreCipeEditComponent implements OnInit {
     }
 
     deletePuntoOdg(id: number) {
-
-        this.apiService.delete('precipeodg', id)
-            .subscribe(
-                response => {
-                    console.log(response);
-                    this.model.precipe_odg = _.filter(this.model.precipe_odg, o => { return o.id !== id; });
-                },
-                error => {
-                    console.log(error);
-                }
-            )
+        
+        if(id === null) {
+            this.model.precipe_odg = _.filter(this.model.precipe_odg, o => { return o.id !== id; });
+        } else {
+            this.apiService.delete('precipeodg', id)
+                .subscribe(
+                    response => {
+                        console.log(response);
+                        this.model.precipe_odg = _.filter(this.model.precipe_odg, o => { return o.id !== id; });
+                    },
+                    error => {
+                        console.log(error);
+                    }
+                )
+        }
     }
 
     castToArray(item) {
