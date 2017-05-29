@@ -13,7 +13,8 @@
             filter.data_a ||
             filter.id_situazione ||
             filter.anno ||
-            filter.data_cipe"
+            filter.data_cipe ||
+            filter.id_tags"
                   class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
             </span>
@@ -27,7 +28,8 @@
             filter.data_a ||
             filter.id_situazione ||
             filter.anno ||
-            filter.data_cipe"
+            filter.data_cipe ||
+            filter.id_tags"
                   class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
             </span>
@@ -45,27 +47,7 @@
                     <input id="numero" name="numero" class="form-control" [(ngModel)]="filter.numero" placeholder="Numero..."/>
                 </div>
             </div>
-            <div class="col-lg-2">
-                <label for="data_da"><strong>Da data</strong></label>
-                <datetime id="data_da" name="data_da"
-                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
-                          [timepicker]="false"
-                          [(ngModel)]="filter.data_da" #data_da="ngModel" required></datetime>
-<!--
-                {{filter.data_da | date : 'medium'}}
--->
-            </div>
-            <div class="col-lg-2">
-                <label for="data_a"><strong>A data</strong></label>
-                <datetime id="data_a" name="data_a"
-                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
-                          [timepicker]="false"
-                          [(ngModel)]="filter.data_a" #data_a="ngModel" required></datetime>
-<!--
-                {{filter.data_a | date : 'medium'}}
--->
-            </div>
-            <div class="col-lg-3">
+            <div class="col-lg-4">
                 <div class="form-group">
                     <label for="argomento"><strong>Argomento</strong></label>
                     <input id="argomento" name="argomento" class="form-control" [formControl]="argomentoControl"
@@ -84,6 +66,18 @@
                                  (valueChanged)="select2Changed($event,'id_situazione')"
                                  [data]="situazione"></select2>
                     </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="id_tags"><strong>Etichette</strong></label>
+                    <div class="select2-H-keeper"><select2 id="id_tags"
+                                                           class="full-width-select"
+                                                           [options]="select2Options"
+                                                           value="{{filter.id_tags}}"
+                                                           [cssImport]="false"
+                                                           (valueChanged)="select2Changed($event,'id_tags')"
+                                                           [data]="tags$ | async"></select2></div>
                 </div>
             </div>
         </div>
@@ -112,7 +106,27 @@
                     </select>
                 </div>
             </div>
-            <div class="col-lg-8">
+            <div class="col-lg-2">
+                <label for="data_da"><strong>Da data</strong></label>
+                <datetime id="data_da" name="data_da"
+                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                          [timepicker]="false"
+                          [(ngModel)]="filter.data_da" #data_da="ngModel" required></datetime>
+                <!--
+                                {{filter.data_da | date : 'medium'}}
+                -->
+            </div>
+            <div class="col-lg-2">
+                <label for="data_a"><strong>A data</strong></label>
+                <datetime id="data_a" name="data_a"
+                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                          [timepicker]="false"
+                          [(ngModel)]="filter.data_a" #data_a="ngModel" required></datetime>
+                <!--
+                                {{filter.data_a | date : 'medium'}}
+                -->
+            </div>
+            <div class="col-lg-4">
                 <div class="text-right">
                     <div class="mt-4">
                         <form #m="ngForm">
@@ -176,7 +190,7 @@
             <div class="widget-body widget-table-overflow">
                 <table *ngIf="viewtype === 'list'"
                        class="table table-hover table-condensed table-bordered mb-0"
-                       [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filteredCount"
+                       [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filter.id_tags : filteredCount"
                        [mfSortBy]="'numero'" [mfSortOrder]="'asc'"
                        [mfRowsOnPage]="100"
                        #mf="mfDataTable" stickthead [offsetY]="0">
@@ -197,6 +211,7 @@
                         <th>
                             <mfDefaultSorter by="situazione">Situazione</mfDefaultSorter>
                         </th>
+                        <th><mfDefaultSorter by="id_tags">Etichette</mfDefaultSorter></th>
                         <th *ngIf="apiService.userCan('DELETE_DELIBERE')">Azioni</th>
                     </tr>
                     </thead>
@@ -221,11 +236,16 @@
                             </div>
                         </td>
                         <td>
-                            <span class="ml-1 badge badge-default text-left line-height-lg mt-2 max-w-4"
+                            <span class="ml-1 badge badge-default text-left line-height-lg badge-lg-limit"
                                   [title]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici'"
                                   [innerHTML]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
                         </td>
                         <td>{{situazioneEnum[delibera.situazione]}}</td>
+                        <td>
+                            <span class="ml-1 badge badge-default text-left line-height-lg badge-lg-limit"
+                                  [title]="delibera.id_tags | dataEnum : apiService.dataEnum : 'tags'"
+                                  [innerHTML]="delibera.id_tags | dataEnum : apiService.dataEnum : 'tags' : 'denominazione' : '<br/>'"></span>
+                        </td>
                         <td *ngIf="apiService.userCan('DELETE_DELIBERE')"><p class="text-center"><a (click)="askDeleteDelibere($event, myModal, delibera)"><i class="fa fa-trash-o"> </i></a></p>
                         </td>
                     </tr>
@@ -240,7 +260,7 @@
                 </table>
                 <table *ngIf="viewtype === 'grafica'"
                        class="table table-hover table-condensed table-bordered mb-0"
-                       [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filteredCount"
+                       [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filter.id_tags : filteredCount"
                        [mfSortBy]="'numero'" [mfSortOrder]="'asc'"
                        [mfRowsOnPage]="100"
                        #mf="mfDataTable" stickthead [offsetY]="35">
@@ -296,7 +316,7 @@
                             </div>
                         </td>
                         <td>
-                            <span class="ml-1 badge badge-default text-left line-height-lg mt-2 max-w-4"
+                            <span class="ml-1 badge badge-default text-left line-height-lg badge-lg-limit"
                                   [title]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici'"
                                   [innerHTML]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
                         </td>
@@ -313,7 +333,7 @@
                 </table>
                 <table *ngIf="viewtype === 'firme'"
                        class="table table-condensed table-bordered align-middle align-center mb-0"
-                       [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filteredCount"
+                       [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filter.id_tags : filteredCount"
                        [mfSortBy]="'numero'" [mfSortOrder]="'asc'"
                        [mfRowsOnPage]="100"
                        #mf="mfDataTable" stickthead [offsetY]="0">
@@ -348,7 +368,7 @@
                                       [innerHTML]="delibera.argomento | dataMark : filter.argomento"></a></p>
                             </td>
                             <td rowspan="2">
-                                <span class="ml-1 badge badge-default text-left line-height-lg mt-2 max-w-4"
+                                <span class="ml-1 badge badge-default text-left line-height-lg badge-lg-limit"
                                       [title]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici'"
                                       [innerHTML]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
                             </td>
@@ -380,7 +400,7 @@
                 </table>
                 <table *ngIf="viewtype === 'registrazione'"
                        class="table table-condensed table-bordered table-hover mb-0"
-                       [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filteredCount"
+                       [mfData]="delibere$ | async | delibereDataFilter : filter.argomento : filter.numero : filter.data_da : filter.data_a : filter.id_situazione : filter.id_tags : filteredCount"
                        [mfSortBy]="'numero'" [mfSortOrder]="'asc'"
                        [mfRowsOnPage]="100"
                        #mf="mfDataTable" stickthead [offsetY]="0">

@@ -10,6 +10,7 @@ import { Delibere } from '../../_models/delibere'
 import { Firmatari } from '../../_models/firmatari';
 import { Uffici } from '../../_models/uffici';
 import { Allegati } from '../../_models/allegati';
+import { Tags } from '../../_models/tags';
 
 
 import * as _ from 'lodash';
@@ -43,6 +44,7 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
 
     public firmatari$: Observable<Firmatari[]>;
     public uffici$: Observable<Uffici[]>;
+    public tags$: Observable<Tags[]>;
 
     public datePickerOptions: any;
     public select2Options: Select2Options;
@@ -69,6 +71,7 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
 
         this.firmatari$ = this.apiService.subscribeToDataService('firmatari');
         this.uffici$ = this.apiService.subscribeToDataService('uffici');
+        this.tags$ = this.apiService.subscribeToDataService('tags');
 
         this.inputUploadEvents = new EventEmitter<string>();
     }
@@ -131,8 +134,6 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
                                 this.model.data_mef_pec = this.model.data_mef_invio;
                             }
 
-                            //this.model.data_arrivo = new Date(this.model.data_arrivo);
-                            //this.model.data_mittente = new Date(this.model.data_mittente);
                             this.allowUpload = true;
                         },
                         error => {
@@ -141,15 +142,6 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
                         });
                 break;
         }
-
-/*        $('#content').on("select2:select", "#id_mittenti", (e: any) => {
-            //console.log('on("select2:select")');
-            //console.log('select2:select',e.params.data.id);
-            if (e.params.data.isNew) {
-                console.log('isNew!', e.params.data);
-                this.createTag('mittenti', e.params.data.id);
-            }
-        });*/
     }
 
     ngAfterViewChecked() {
@@ -222,13 +214,85 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
 
     select2Changed(e: any, name: string): void {
 
-        this.model[name] = e.value;
+        // console.log(name, typeof e.value, e.value);
+
+        // converts value to arrays to handle multi-selects and selects in the same way
+        const V = typeof e.value === 'string' ? e.value.split(',') : e.value;
+
+        const selectedCount = this.model[name] ? this.model[name].split(',').length : 0;
+
+        if (V.length > selectedCount) {
+            // Value added
+            console.log('value added');
+            this.mayBeCreateNewSelect2Values(name);
+
+        } else if (V.length < selectedCount) {
+            // Value removed
+            // console.log('value removed');
+
+        } else if (V.join(',') !== this.model[name]) {
+            // console.log('value changed');
+            this.mayBeCreateNewSelect2Values(name);
+        }
+
+        // go back to comma separated strings in the model value as the server handles
+        // both single and multi selects as strings
+        this.model[name] = typeof e.value === 'object' && e.value != null ? e.value.join(',') : e.value;
+
     }
 
-    public confirmCodeNotification(modal: any) {
-        modal.close();
-        this.router.navigate(['/app/registri/edit/' + this.model.id]);
-    }
+
+    mayBeCreateNewSelect2Values(name) {
+
+        // console.log('trying to add new ' + name, '#' + name + ' select option[data-select2-tag="true"]');
+
+        const newValues = $('#' + name + ' select option[data-select2-tag="true"]');
+
+        // console.log(newValues.length);
+
+        if (newValues.length) {
+
+            const apipath = name.split('_')[1];
+
+            newValues.each((index: number, elem: HTMLInputElement) => {
+
+                // console.log(name, newValues, elem);
+
+                this.apiService.create(apipath, { 'denominazione': elem.value } )
+                    .subscribe(
+                        response => {
+                            const id = response.data.id,
+                                den = response.data.denominazione;
+
+                            const label = id + ' - ' + den;
+                            response.data.text = label;
+
+                            // creates the new entry on the relative apiService select2 data
+                            // this.apiService[apipath+'Select'].push(response.data);
+
+                            // find the select element and update temporary id with the new assigned id
+                            $('#' + name + ' select option[value="' + den + '"]').val(id).text(label);
+
+                            // replace the temporary id in the model with the new assigned id
+                            const selectedValues = this.model[name].split(',');
+
+                            const i = _.indexOf(selectedValues, _.find(selectedValues, den));
+                            selectedValues.splice(i, 1, id);
+
+                            this.model[name] = selectedValues.join(',');
+
+                            // update select2 data
+                            // $('#'+name+' select').select2('data',response.data, true);
+
+                            // find the select2 choice and update the temporary label with the new assigned id
+                            // $('#'+name+' .select2-selection__choice[title="'+den+'"]').prop('title',label);
+                        },
+                        error => {
+                            this.error = error; console.log(error);
+                        });
+            });
+        }
+    };
 
     askDeleteFile(event: any, modal: any, allegato: Allegati) {
         event.stopPropagation();

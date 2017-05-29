@@ -105,6 +105,8 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
         this.canEdit = isNaN(this.id) ? this.apiService.userCan('CREATE_REGISTRI') : this.apiService.userCan('EDIT_REGISTRI');
         this.canDelete = this.apiService.userCan('DELETE_REGISTRI');
 
+        console.log('canedit:',this.canEdit);
+
         switch (this.mode) {
             case 'create':
                 this.model = {
@@ -225,22 +227,9 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
         }
 
         // converts value to arrays to handle multi-selects and selects in the same way
-        let V = [];
-        if (null != e.value) {
-            switch (typeof e.value) {
-                case 'string':
-                    V = e.value.split(',');
-                    break;
-                case 'object':
-                    V = e.value;
-                    break;
-            }
-        }
+        const V = typeof e.value === 'string' ? e.value.split(',') : e.value;
 
-        let selectedCount = 0;
-        if (typeof this.model[name] === 'string' && this.model[name] !== '') {
-            selectedCount = this.model[name].split(',').length;
-        }
+        const selectedCount = this.model[name] ? this.model[name].split(',').length : 0;
 
         if (V.length > selectedCount) {
             // Value added
@@ -264,7 +253,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
 
         // go back to comma separated strings in the model value as the server handles
         // both single and multi selects as strings
-        this.model[name] = V.join(',');
+        this.model[name] = typeof e.value === 'object' && e.value != null ? e.value.join(',') : e.value;
 
         // debounce change events and reset id_fascicoli when titolari changes
         if (name === 'id_titolari') {

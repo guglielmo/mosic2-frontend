@@ -597,7 +597,12 @@ input[type="text"].form-control-lg {
 .simple-notification-wrapper { width: 400px !important; }
 .simple-notification { min-height: 70px; }
 
-.input-group.date { max-width: 145px; margin-right: 15px }
+.input-group.date {
+  max-width: 125px; margin-right: 15px;
+  .form-control {
+    padding-left: 6px; padding-right: 6px;
+  }
+}
 .input-group.bootstrap-timepicker.timepicker { max-width: 150px; }
 
 .bootstrap-timepicker-widget.modal {

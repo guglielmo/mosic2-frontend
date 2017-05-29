@@ -3,7 +3,7 @@
 </div>
 <h3 class="page-title">Registri / <span class="fw-semi-bold">Tutti i registri</span></h3>
 
-<section *ngIf="apiService.isDataReady(['registri','titolari','fascicoli','mittenti'])"
+<section *ngIf="apiService.isDataReady(['registri','titolari','fascicoli','mittenti','tags'])"
          class="widget" widget data-widgster-collapsed="false">
     <header>
         <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">registri ...</span>
@@ -16,7 +16,8 @@
             filter.protocollo_mittente ||
             filter.protocollo_arrivo ||
             filter.data_arrivo_da ||
-            filter.data_arrivo_a"
+            filter.data_arrivo_a ||
+            filter.id_tags"
                   class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
             </span>
@@ -31,7 +32,8 @@
             filter.protocollo_mittente ||
             filter.protocollo_arrivo ||
             filter.data_arrivo_da ||
-            filter.data_arrivo_a"
+            filter.data_arrivo_a ||
+            filter.id_tags"
                   class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
             </span>
@@ -43,7 +45,7 @@
     </header>
     <div class="widget-body">
         <div class="row">
-            <div class="col-lg-2">
+            <div class="col-lg-3">
                 <div class="form-group">
                     <label for="id"><strong>Codice</strong></label>
                     <input id="id" name="id" class="form-control" [(ngModel)]="filter.id" placeholder="Numero..."/>
@@ -54,7 +56,7 @@
                            placeholder="Digita almeno 3 caratteri..."/>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="form-group">
                     <label for="id_titolari"><strong>Titolario</strong></label>
                     <div class="select2-H-keeper"><select2 id="id_titolari"
@@ -98,14 +100,14 @@
                             <datetime id="data_arrivo_da" name="data_arrivo_da"
                                       [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                       [timepicker]="false"
-                                      [(ngModel)]="filter.data_arrivo_da" #data_arrivo_da="ngModel" required></datetime>
+                                      [(ngModel)]="filter.data_arrivo_da" #data_arrivo_da="ngModel"></datetime>
                         </div>
                         <div class="col-lg-6">
                             <label for="data_arrivo_a"><strong>A data di arrivo</strong></label>
                             <datetime id="data_arrivo_a" name="data_arrivo_a"
                                       [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                       [timepicker]="false"
-                                      [(ngModel)]="filter.data_arrivo_a" #data_arrivo_a="ngModel" required></datetime>
+                                      [(ngModel)]="filter.data_arrivo_a" #data_arrivo_a="ngModel"></datetime>
                         </div>
                     </div>
                 </div>
@@ -121,7 +123,18 @@
                     <input id="protocollo_arrivo" name="protocollo_arrivo" class="form-control" [(ngModel)]="filter.protocollo_arrivo"
                            placeholder="Codice..."/>
                 </div>
-
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="id_tags"><strong>Etichette</strong></label>
+                    <div class="select2-H-keeper"><select2 id="id_tags"
+                                                           class="full-width-select"
+                                                           [options]="select2Options"
+                                                           value="{{filter.id_tags}}"
+                                                           [cssImport]="false"
+                                                           (valueChanged)="select2Changed($event,'id_tags')"
+                                                           [data]="tags$ | async"></select2></div>
+                </div>
             </div>
         </div>
     </div>
@@ -142,13 +155,13 @@
     }
 </style>
 
-<div class="row" *ngIf="apiService.isDataReady(['registri','titolari','fascicoli','mittenti'])">
+<div class="row" *ngIf="apiService.isDataReady(['registri','titolari','fascicoli','mittenti','tags'])">
     <div class="col-lg-12">
         <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">
                 <table class="table table-hover table-condensed table-bordered mb-0"
-                       [mfData]="registri$ | async | registriDataFilter : [filter.id, filter.oggetto, filter.id_titolari, filter.id_mittenti, filter.protocollo_mittente, filter.protocollo_arrivo, filter.id_fascicoli, filter.data_arrivo_da, filter.data_arrivo_a, filteredCount]"
+                       [mfData]="registri$ | async | registriDataFilter : [filter.id, filter.oggetto, filter.id_titolari, filter.id_mittenti, filter.protocollo_mittente, filter.protocollo_arrivo, filter.id_fascicoli, filter.data_arrivo_da, filter.data_arrivo_a, filter.id_tags, filteredCount]"
                        [mfSortBy]="'codice'" [mfSortOrder]="'desc'"
                        [mfRowsOnPage]="100"
                        #mf="mfDataTable" stickthead [offsetY]="0">
@@ -157,36 +170,19 @@
                         <th colspan="4"></th>
                         <th colspan="2">Protocollo&nbsp;Arrivo</th>
                         <th colspan="2">Protocollo&nbsp;Mittente</th>
-                        <th colspan="2"></th>
+                        <th colspan="3"></th>
                     </tr>
                     <tr>
-                        <th>
-                            <mfDefaultSorter by="codice">Codice</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="oggetto">Oggetto</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="mittenti">Mittente</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="repertorio">Repertorio</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="protocollo_arrivo">Numero</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="data_arrivo">Data</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="protocollo_mittente">Numero</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="data_mittente">Data</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="nome_documento">Allegati</mfDefaultSorter>
-                        </th>
+                        <th><mfDefaultSorter by="codice">Codice</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="oggetto">Oggetto</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="mittenti">Mittente</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="repertorio">Repertorio</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="protocollo_arrivo">Numero</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="data_arrivo">Data</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="protocollo_mittente">Numero</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="data_mittente">Data</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="id_tags">Etichette</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="nome_documento">Allegati</mfDefaultSorter></th>
                         <th *ngIf="apiService.userCan('DELETE_REGISTRI')">Azioni</th>
                     </tr>
                     </thead>
@@ -208,6 +204,11 @@
                         <td class="nowrap">{{registro.data_arrivo | date: 'dd/MM/yyyy': 'UTC' }}</td>
                         <td>{{registro.protocollo_mittente}}</td>
                         <td class="nowrap">{{registro.data_mittente | date: 'dd/MM/yyyy' : 'UTC' }}</td>
+                        <td>
+                            <span class="ml-1 badge badge-default text-left line-height-lg badge-lg-limit"
+                                  [title]="registro.id_tags | dataEnum : apiService.dataEnum : 'tags'"
+                                  [innerHTML]="registro.id_tags | dataEnum : apiService.dataEnum : 'tags' : 'denominazione' : '<br/>'"></span>
+                        </td>
                         <td><p class="text-center"><a [routerLink]="['/app/registri/edit/'+registro.id]" fragment="allegati"><i class="fa fa-files-o text-muted"> </i></a></p></td>
                         <td *ngIf="apiService.userCan('DELETE_REGISTRI')"><p class="text-center"><a (click)="askDeleteRegistri($event, myModal, registro)"><i class="fa fa-trash-o"> </i></a></p></td>
                     </tr>

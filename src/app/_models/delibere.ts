@@ -1,4 +1,5 @@
-import {Allegati, RilieviCC} from "./index";
+import { Allegati } from "./allegati";
+import { RilieviCC } from "./rilievi_cc";
 
 export class Delibere {
     "id": number;
@@ -58,6 +59,7 @@ export class Delibere {
 
     "id_uffici": number[];
     "id_segretariato": number[];
+    "id_tags": string;
 
     "allegati_MEF": Allegati[];
     "allegati_CC": Allegati[];
@@ -118,6 +120,7 @@ export class Delibere {
         this.note_gu = "";
         this.id_uffici = null;
         this.id_segretariato = null;
+        this.id_tags = "";
         this.allegati_MEF = [];
         this.allegati_CC = [];
         this.allegati_GU = [];

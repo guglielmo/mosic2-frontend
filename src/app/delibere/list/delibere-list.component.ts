@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { URLSearchParams } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/debounceTime';
@@ -13,6 +12,7 @@ import { AppConfig } from '../../app.config';
 import { Delibere } from '../../_models/delibere';
 import { Cipe } from '../../_models/cipe';
 import { Uffici } from '../../_models/uffici';
+import { Tags } from '../../_models/tags';
 
 @Component({
     templateUrl: 'delibere-list.component.html',
@@ -30,9 +30,10 @@ export class DelibereListComponent implements OnInit {
         numero: null,
         data_da: null,
         data_a: null,
-        id_situazione: null,
+        id_situazione: '',
         anno: null,
-        data_cipe: null
+        data_cipe: null,
+        id_tags: ''
     };
 
     private dateFilter: any;
@@ -74,12 +75,12 @@ export class DelibereListComponent implements OnInit {
     public delibere$: Observable<Delibere[]>;
     public uffici$: Observable<Uffici[]>;
     public cipe$: Observable<Cipe[]>;
+    public tags$: Observable<Tags[]>;
 
 
     public filteredCount = {count: 0};
 
     public select2Options: Select2Options;
-    private select2Debounce = false;
     public argomentoControl = new FormControl();
 
     constructor(public apiService: APICommonService,
@@ -99,6 +100,7 @@ export class DelibereListComponent implements OnInit {
         this.delibere$ = this.apiService.subscribeToDataService('delibere');
         this.uffici$ = this.apiService.subscribeToDataService('uffici');
         this.cipe$ = this.apiService.subscribeToDataService('cipe');
+        this.tags$ = this.apiService.subscribeToDataService('tags');
 
         this.router.events
             .subscribe((event) => {
@@ -159,11 +161,6 @@ export class DelibereListComponent implements OnInit {
     }
 
     public select2Changed(e: any, name: string): void {
-
-        if (this.select2Debounce) {
-            this.select2Debounce = false;
-            return;
-        }
 
         this.filter[name] = e.value;
     }
@@ -236,9 +233,10 @@ export class DelibereListComponent implements OnInit {
             numero: null,
             data_da: null,
             data_a: null,
-            id_situazione: null,
+            id_situazione: '',
             anno: null,
-            data_cipe: null
+            data_cipe: null,
+            id_tags: ''
         };
     }
 

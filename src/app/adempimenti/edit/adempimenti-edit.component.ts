@@ -133,15 +133,14 @@ public filter = {
         console.log(new Adempimenti());
 
         let post = $.extend(true, new Adempimenti(), this.model);
-        let tz = new Date().getTimezoneOffset();
 
-
-        // convert every date to milliseconds
+        // instantiate every date
         _.forEach(post, (value, key) => {
             if(key && key.indexOf('data') !== -1) {
-                console.log(key, typeof value, value);
                 if(value) {
-                    post[key] = new Date(value.getTime() - tz*60000);
+                    let d = new Date(value);
+                    d.setHours(0,0,0,0);
+                    post[key] = d;
                 }
             }
         });

@@ -44,14 +44,14 @@
                         <label for="password"><strong>Password</strong></label>
                         <input type="password" class="form-control" id="password" name="password" placeholder="Password"
                                [disabled]="!canEdit"
-                               [(ngModel)]="model.password" #password="ngModel">
+                               [(ngModel)]="model.password" #password="ngModel" [required]="mode === 'create' ? 'required' : null">
                     </div>
 
                     <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !repeatPassword.valid }">
                         <label for="repeatPassword"><strong>Ripeti password</strong></label>
                         <input type="password" class="form-control" id="repeatPassword" name="repeatPassword" placeholder="Ripeti password"
                                [disabled]="!canEdit"
-                               [(ngModel)]="model.repeatPassword" #repeatPassword="ngModel">
+                               [(ngModel)]="model.repeatPassword" #repeatPassword="ngModel" [required]="mode === 'create' ? 'required' : null">
                     </div>
 
                     <div class="row">

@@ -17,7 +17,7 @@
                 <div [innerHtml]="apiService.dataEnum['fascicoli'][model.id_fascicoli]['text']"></div>
             </ng-template>
             <a [routerLink]=" ['/app/fascicoli/edit/'+model.id_fascicoli ]"
-               [tooltip]="fascicoliTooltip" placement="bottom">{{model.numero_fascicolo}}</a> /
+               [tooltip]="fascicoliTooltip" placement="bottom">{{apiService.dataEnum['fascicoli'][model.id_fascicoli]['numero_fascicolo']}}</a> /
             {{model.id}}
         </span>
     </h3>
@@ -26,7 +26,7 @@
     <div class="row">
         <div class="col-12">
             <div class="form-group">
-                <label for="id_amministrazioni"><strong>Etichette</strong></label>
+                <label for="id_tags"><strong>Etichette</strong></label>
                 <div class="select2-H-keeper"><select2 id="id_tags"
                                                        class="full-width-select"
                                                        [options]="select2WithAddOptionsMulti"

@@ -65,7 +65,6 @@
                 </div>
                 <div [scrollTo]="'#A_CC'" class="col clickable p-4 alert m-0" [scrollDuration]="500" [scrollOffset]="-100"
                      [ngClass]="{
-                     'alert-danger fw-semi-bold' : model.data_invio_cc > 0 && !model.data_registrazione_cc,
                       'alert-warning fw-semi-bold' : model.data_invio_cc > 0 && !model.data_registrazione_cc,
                       'alert-success fw-semi-bold' : model.data_invio_cc > 0 && model.data_registrazione_cc > 0 }">
                     <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
@@ -83,6 +82,22 @@
                     <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Gazzetta Ufficiale
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="id_tags"><strong>Etichette</strong></label>
+                <div class="select2-H-keeper"><select2 id="id_tags"
+                                                       class="full-width-select"
+                                                       [options]="select2WithAddOptionsMulti"
+                                                       [value]="model.id_tags ? model.id_tags.split(',') : ''"
+                                                       [cssImport]="false"
+                                                       [disabled]="!canEdit"
+                                                       (valueChanged)="select2Changed($event,'id_tags')"
+                                                       [data]="tags$ | async"></select2></div>
             </div>
         </div>
     </div>

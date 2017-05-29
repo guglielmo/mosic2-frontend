@@ -9,7 +9,7 @@ export class RegistriDataFilterPipe implements PipeTransform {
     transform(array: any[],
               args: any[]): any {
 
-        // pardon the ugly hack but angular 2.4 supports up to 10 pipe parameters, and here we need 11
+        // pardon the ugly hack but angular 2.4 supports up to 10 pipe parameters, and here we need 12
         let id = args[0];
         let oggetto = args[1];
         let id_titolari = args[2];
@@ -19,7 +19,8 @@ export class RegistriDataFilterPipe implements PipeTransform {
         let id_fascicoli = args[6];
         let data_arrivo_da = args[7];
         let data_arrivo_a = args[8];
-        let filteredCount = args[9];
+        let id_tags = args[9];
+        let filteredCount = args[10];
         // end ugly hack
 
         let keys = oggetto.toUpperCase().split(' ');
@@ -35,6 +36,7 @@ export class RegistriDataFilterPipe implements PipeTransform {
         let dF = data_arrivo_da ? new Date(data_arrivo_da).getTime() : false;
         let dT = data_arrivo_a ? new Date(data_arrivo_a).getTime() : false;
         let qL = oggetto.length > 2;
+        let iT = id_tags !== '';
 
         let result = _.filter(array, row => {
             if (id && row.id != id) return false;
@@ -45,6 +47,7 @@ export class RegistriDataFilterPipe implements PipeTransform {
             if (fL && row.id_fascicoli != id_fascicoli) return false;
             if (dF && row.data_arrivo < dF) return false;
             if (dT && row.data_arrivo > dT) return false;
+            if (iT && row.id_tags.indexOf(Number(id_tags)) === -1) return false;
             if (qL) {
                 for (i = 0; i < keysLen; i++) {
                     if ((row.oggetto.toUpperCase()).indexOf((keys[i])) == -1) {
