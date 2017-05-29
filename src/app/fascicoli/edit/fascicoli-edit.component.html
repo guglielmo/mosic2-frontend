@@ -155,7 +155,7 @@
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">
                 <table class="table table-hover table-condensed table-bordered mb-0"
-                       [mfData]="registri$ | async | registriDataFilter : [null, '', null, null, '', '', model.id, null, null, filteredCount]"
+                       [mfData]="registri$ | async | registriDataFilter : ['', '', null, null, '', '', model.id, '', '', null, filteredCount]"
                        [mfSortBy]="'codice'" [mfSortOrder]="'desc'"
                        [mfRowsOnPage]="100"
                        #mf="mfDataTable" stickthead [offsetY]="0">

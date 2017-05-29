@@ -22,7 +22,7 @@ export class TitolariEditComponent implements OnInit {
     public loading = true;
     private id: number;
 
-    private filteredCount = {count: 0};
+    public filteredCount = {count: 0};
     public uffici$: Observable<Uffici[]>;
     public fascicoli$: Observable<Fascicoli[]>;
 
