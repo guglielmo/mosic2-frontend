@@ -19,10 +19,10 @@ export class FascicoliListComponent implements OnInit {
 
     public filter = {
         argomento: '',
-        id_titolari: -1,
-        id_amministrazioni: -1,
+        id_titolari: null,
+        id_amministrazioni: null,
         numero_fascicolo: '',
-        id_tags: ''
+        id_tags: null
     };
     public deletingFascicoli: Fascicoli = new Fascicoli;
     public fascicoli: Observable<Fascicoli[]>;
@@ -90,7 +90,7 @@ export class FascicoliListComponent implements OnInit {
             id_titolari: -1,
             id_amministrazioni: -1,
             numero_fascicolo: '',
-            id_tags: ''
+            id_tags: null
         };
     }
 

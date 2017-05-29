@@ -36,7 +36,7 @@ export class RegistriDataFilterPipe implements PipeTransform {
         let dF = data_arrivo_da ? new Date(data_arrivo_da).getTime() : false;
         let dT = data_arrivo_a ? new Date(data_arrivo_a).getTime() : false;
         let qL = oggetto.length > 2;
-        let iT = id_tags !== '';
+        let iT = id_tags != null;
 
         let result = _.filter(array, row => {
             if (id && row.id != id) return false;

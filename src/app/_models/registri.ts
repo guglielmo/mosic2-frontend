@@ -19,4 +19,5 @@ export class Registri {
     sottofascicoli_id: number; // INT(10)
     mittenti_id: number; // INT(10)
     id_titolari: number; // INT(10)
+    id_tags: string;
 }

@@ -300,6 +300,8 @@ export class APICommonService {
         // get the current user object and group id
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
+        //console.log('setUserCapabilities',currentUser);
+
         if( currentUser ) {
             const group = currentUser.id_group[0];
 
@@ -322,6 +324,8 @@ export class APICommonService {
 
         // maps user capabilities to object for fast evaluation
         this.userCapabilities = _.zipObject(capabilities, _.map(capabilities, () => { return true } ));
+
+        //console.log(this.userCapabilities);
 
     }
 

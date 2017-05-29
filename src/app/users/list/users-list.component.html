@@ -9,7 +9,8 @@
             <span *ngIf="filter.denominazione.length > 2 ||
                          filter.id_groups !== '' ||
                          filter.id_ruoli_cipe !== '' ||
-                         filter.id_uffici !== ''"
+                         filter.id_uffici !== '' ||
+                         filter.cessatoServizio !== ''"
                   class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
             </span>
@@ -18,7 +19,8 @@
             <span *ngIf="filter.denominazione.length > 2 ||
                          filter.id_groups !== '' ||
                          filter.id_ruoli_cipe !== '' ||
-                         filter.id_uffici !== ''"
+                         filter.id_uffici !== '' ||
+                         filter.cessatoServizio !== ''"
                   class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
             </span>
@@ -30,7 +32,7 @@
     </header>
     <div class="widget-body">
         <div class="row">
-            <div class="col-lg-3">
+            <div class="col-lg-2">
                 <div class="form-group">
                     <label for="argomento"><strong>Cognome e Nome</strong></label>
                     <input id="argomento" name="argomento" class="form-control" [(ngModel)]="filter.denominazione" placeholder="Digita almeno 3 caratteri..."/>
@@ -68,7 +70,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-2">
                 <div class="form-group">
                     <!-- EDIT -->
                     <div class="select2-H-keeper">
@@ -82,6 +84,17 @@
                                 cssImport="false"
                                 [data]="ruoli_cipe$ | async"></select2>
                     </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="anno"><strong>Stato</strong></label>
+                    <select id="anno" name="anno" class="form-control" data-style="btn-secondary" data-width="auto"
+                            [(ngModel)]="filter.cessatoServizio">
+                        <option value=""></option>
+                        <option value="0">Attivo</option>
+                        <option value="1">Cessato servizio</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -108,7 +121,7 @@
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">
                 <table class="table table-hover table-condensed mb-0 table-bordered"
-                       [mfData]="users$ | async | usersDataFilter : filter.denominazione : filter.id_uffici : filter.id_ruoli_cipe : filter.id_groups : filteredCount"
+                       [mfData]="users$ | async | usersDataFilter : filter.denominazione : filter.id_uffici : filter.id_ruoli_cipe : filter.id_groups : filter.cessatoServizio : filteredCount"
                        #mf="mfDataTable" stickthead [offsetY]="0">
                     <thead>
                     <tr>

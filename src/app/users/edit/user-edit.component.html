@@ -1,4 +1,4 @@
-<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
+<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="checkRequired() && f.form.valid && submit()" #f="ngForm" novalidate>
     <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
@@ -74,38 +74,41 @@
                                    [ngModel]="model.registrationDate | date: 'dd/MM/yyyy HH:mm'" (ngModelChange)="item.value=$event"
                                    #registrationDate="ngModel" disabled>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_groups }">
                             <label for="id_groups"><strong>Gruppo</strong></label>
                             <div class="select2-H-keeper"><select2 id="id_groups"
-                                                                   class="full-width-select"
-                                                                   [options]="select2Options"
-                                                                   value="{{model.id_groups}}"
-                                                                   [cssImport]="false"
-                                                                   [disabled]="!canEdit"
-                                                                   (valueChanged)="select2Changed($event,'id_groups')"
-                                                                   [data]="groups$ | async"></select2></div>
+                                    #id_groups
+                                    class="full-width-select"
+                                    [options]="select2Options"
+                                    value="{{model.id_groups}}"
+                                    [cssImport]="false"
+                                    [disabled]="!canEdit"
+                                    (valueChanged)="select2Changed($event,'id_groups')"
+                                    [data]="groups$ | async" required></select2></div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_uffici }">
                             <label for="id_uffici"><strong>Ufficio</strong></label>
                             <div class="select2-H-keeper"><select2 id="id_uffici"
-                                     class="full-width-select"
-                                     [options]="select2Options"
-                                     value="{{model.id_uffici}}"
-                                     [cssImport]="false"
-                                     [disabled]="!canEdit"
-                                     (valueChanged)="select2Changed($event,'id_uffici')"
-                                     [data]="uffici$ | async"></select2></div>
+                                    #id_uffici
+                                    class="full-width-select"
+                                    [options]="select2Options"
+                                    value="{{model.id_uffici}}"
+                                    [cssImport]="false"
+                                    [disabled]="!canEdit"
+                                    (valueChanged)="select2Changed($event,'id_uffici')"
+                                    [data]="uffici$ | async" required></select2></div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_ruoli_cipe }">
                             <label for="id_ruoli_cipe"><strong>Ruolo</strong></label>
                             <div class="select2-H-keeper"><select2 id="id_ruoli_cipe"
-                                     class="full-width-select"
-                                     [options]="select2Options"
-                                     value="{{model.id_ruoli_cipe}}"
-                                     [cssImport]="false"
-                                     [disabled]="!canEdit"
-                                     (valueChanged)="select2Changed($event,'id_ruoli_cipe')"
-                                     [data]="ruoli_cipe$ | async"></select2></div>
+                                    #id_ruoli_cipe
+                                    class="full-width-select"
+                                    [options]="select2Options"
+                                    value="{{model.id_ruoli_cipe}}"
+                                    [cssImport]="false"
+                                    [disabled]="!canEdit"
+                                    (valueChanged)="select2Changed($event,'id_ruoli_cipe')"
+                                    [data]="ruoli_cipe$ | async" required></select2></div>
                         </div>
                         <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !ip.valid }">
                             <label for="ip"><strong>IP</strong></label>

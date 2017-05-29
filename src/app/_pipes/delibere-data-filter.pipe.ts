@@ -20,7 +20,7 @@ export class DelibereDataFilterPipe implements PipeTransform {
         let dA = data_a !== null ? new Date(data_a).getTime() : null;
 
         let iS = id_situazione !== '';
-        let iT = id_tags !== '';
+        let iT = id_tags != null;
 
         let results = _.filter(array, row => {
 

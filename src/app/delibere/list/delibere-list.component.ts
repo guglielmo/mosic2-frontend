@@ -33,7 +33,7 @@ export class DelibereListComponent implements OnInit {
         id_situazione: '',
         anno: null,
         data_cipe: null,
-        id_tags: ''
+        id_tags: null
     };
 
     private dateFilter: any;
@@ -236,7 +236,7 @@ export class DelibereListComponent implements OnInit {
             id_situazione: '',
             anno: null,
             data_cipe: null,
-            id_tags: ''
+            id_tags: null
         };
     }
 

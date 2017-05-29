@@ -14,10 +14,10 @@ export class FascicoliDataFilterPipe implements PipeTransform {
 
         // pre-compute some conditions to execute checks outside the loop
         let qL = query.length > 2;
-        let tL = id_titolari != -1;
-        let aL = id_amministrazioni != -1;
+        let tL = id_titolari != null;
+        let aL = id_amministrazioni != null;
         let fL = numero_fascicolo.length > 0;
-        let iT = id_tags !== '';
+        let iT = id_tags != null;
 
         let results = _.filter(array, row => {
 

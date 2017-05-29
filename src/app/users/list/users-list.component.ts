@@ -20,7 +20,8 @@ export class UsersListComponent {
         denominazione: '',
         id_groups: '',
         id_uffici: '',
-        id_ruoli_cipe: ''
+        id_ruoli_cipe: '',
+        cessatoServizio: ''
     };
 
     currentUser: User;
@@ -87,7 +88,8 @@ export class UsersListComponent {
             denominazione: '',
             id_groups: '',
             id_uffici: '',
-            id_ruoli_cipe: ''
+            id_ruoli_cipe: '',
+            cessatoServizio: ''
         };
     }
 

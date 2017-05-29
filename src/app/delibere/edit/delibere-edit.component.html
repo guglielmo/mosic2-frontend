@@ -11,7 +11,7 @@
     </accordion-group>
 </accordion>
 
-<form *ngIf="apiService.isDataReady(['firmatari','uffici']) && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event)" #f="ngForm" novalidate>
+<form *ngIf="apiService.isDataReady(['firmatari','uffici','tags']) && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event)" #f="ngForm" novalidate>
     <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>

@@ -101,7 +101,7 @@
                 <li *ngIf="apiService.userCan('CREATE_ADEMPIMENTI')"><a [routerLink]=" ['adempimenti/edit'] ">Crea nuovo</a></li>
             </ul>
         </li>
-        <li>
+        <li *ngIf="apiService.userCan('READ_MONITOR')">
             <a class="collapsed" data-target="#sidebar-monitor" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="fa fa-eye"></i></span>
                 Monitor

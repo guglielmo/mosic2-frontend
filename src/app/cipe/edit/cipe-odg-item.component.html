@@ -87,7 +87,7 @@
 
             <div class="clearfix mb-3">
                 <div *ngIf="canDelete" class="float-md-right visible-parent-hover-or-active ml-2">
-                    <button type="button" class="btn btn-xs btn-outline-danger" (click)="deleteOdg()">
+                    <button type="button" class="btn btn-xs btn-outline-danger" (click)="deleteOdg($event,item.id)">
                         <i class="fa fa-trash fa-lg"> </i> Elimina
                     </button>
                 </div>

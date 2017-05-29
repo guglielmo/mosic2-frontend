@@ -123,8 +123,8 @@ export class PreCipeEditComponent implements OnInit {
     }
 
     askDeletePuntoOdg(id: number, modal: any) {
-        event.stopPropagation();
-        event.preventDefault();
+        //event.stopPropagation();
+        //event.preventDefault();
         this.deletingPuntoOdg = _.find(this.model.precipe_odg, o => { return o.id === id });
         console.log(id,this.deletingPuntoOdg);
         modal.open();
@@ -142,7 +142,17 @@ export class PreCipeEditComponent implements OnInit {
     }
 
     deletePuntoOdg(id: number) {
-        this.model.precipe_odg = _.filter(this.model.precipe_odg, o => { return o.id !== id; });
+
+        this.apiService.delete('precipeodg', id)
+            .subscribe(
+                response => {
+                    console.log(response);
+                    this.model.precipe_odg = _.filter(this.model.precipe_odg, o => { return o.id !== id; });
+                },
+                error => {
+                    console.log(error);
+                }
+            )
     }
 
     castToArray(item) {

@@ -86,8 +86,8 @@ export class CipeOdgItemComponent implements OnInit {
 
     }
 
-    deleteOdg(){
-            this.deleteitem.emit(this.item.id);
+    deleteOdg($event, id){
+            this.deleteitem.emit(id);
     }
 
     toggleAllegato(item:any, allegato_id: number) {
