@@ -11,7 +11,6 @@ export class AuthGuard implements CanActivate {
 
     canActivate() {
         if (localStorage.getItem('currentUser')) {
-            this.apiService.setCapabilities();
             // logged in so return true
             return true;
         }

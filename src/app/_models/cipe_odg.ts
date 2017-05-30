@@ -11,7 +11,7 @@ export class CipeOdg {
     id_uffici: string;
     ordine: string;
     denominazione: string;
-    esito: number;
+    risultanza: number;
     numero_delibera: number;
     annotazioni: string;
     stato: number;
@@ -31,7 +31,7 @@ export class CipeOdg {
         this.id_uffici = null;
         this.ordine = null;
         this.denominazione = null;
-        this.esito = null;
+        this.risultanza = 0;
         this.numero_delibera = null;
         this.annotazioni = null;
         this.stato = null;

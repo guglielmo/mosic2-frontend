@@ -12,7 +12,8 @@ import { AppConfig } from '../../app.config';
 import { Titolari } from '../../_models/titolari';
 import { Registri } from '../../_models/registri';
 import { Fascicoli } from '../../_models/fascicoli';
-import { Mittenti} from '../../_models/mittenti';
+import { Mittenti } from '../../_models/mittenti';
+import { Tags } from '../../_models/tags';
 
 @Component({
     templateUrl: 'registri-list.component.html',
@@ -28,7 +29,8 @@ export class RegistriListComponent implements OnInit {
         protocollo_mittente: '',
         protocollo_arrivo: '',
         data_arrivo_da: '',
-        data_arrivo_a: ''
+        data_arrivo_a: '',
+        id_tags: null
     };
     deletingRegistri: Registri = new Registri;
 
@@ -36,6 +38,7 @@ export class RegistriListComponent implements OnInit {
     public registri$: Observable<Registri[]>;
     public fascicoli$: Observable<Fascicoli[]>;
     public mittenti$: Observable<Mittenti[]>;
+    public tags$: Observable<Tags[]>;
 
     public filteredCount = {count: 0};
 
@@ -52,6 +55,7 @@ export class RegistriListComponent implements OnInit {
         this.registri$ = this.apiService.subscribeToDataService('registri');
         this.fascicoli$ = this.apiService.subscribeToDataService('fascicoli');
         this.mittenti$ = this.apiService.subscribeToDataService('mittenti');
+        this.tags$ = this.apiService.subscribeToDataService('tags');
     }
 
     ngOnInit() {
@@ -107,7 +111,8 @@ export class RegistriListComponent implements OnInit {
             protocollo_mittente: '',
             protocollo_arrivo: '',
             data_arrivo_da: '',
-            data_arrivo_a: ''
+            data_arrivo_a: '',
+            id_tags: null
         };
     }
 }

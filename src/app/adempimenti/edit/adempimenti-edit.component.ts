@@ -1,13 +1,12 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Observable } from 'rxjs/Observable';
+import { Observable } from "rxjs/Observable";
 import { APICommonService } from "../../_services/index";
 import { AppConfig } from "../../app.config";
 
-
-import { Adempimenti } from "../../_models/adempimenti"
-import { Cipe } from "../../_models/cipe"
-
+import { Adempimenti } from "../../_models/adempimenti";
+import { Cipe } from "../../_models/cipe";
+import { Delibere } from "../../_models/delibere";
 
 import * as _ from "lodash";
 
@@ -25,8 +24,6 @@ export class AdempimentiEditComponent implements OnInit {
 
     private id: number;
 
-    private routeFragmentSubscription: any;
-
     public fonteSelect2 = [
         { id: 0, text: ' ' },
         { id: 1, text: 'delibera' },
@@ -38,10 +35,32 @@ export class AdempimentiEditComponent implements OnInit {
         { id: 9, text: 'altro' }
     ];
 
+    public descrizioneSelect2 = [
+        {id: 0, text: ''},
+        {id: 1, text: 'Aspetti amministrativi'},
+        {id: 2, text: 'Aspetti economico-finanziari'},
+        {id: 3, text: 'Aspetti giuridici'},
+        {id: 4, text: 'Aspetti giuridici-espropri'},
+        {id: 9, text: 'Altro'}
+    ];
+
+    public esitoSelect2 = [
+        { id: 0, text: '', class: ''},
+        { id: 1, text: 'Ottemperato', class: 'bg-ottemperato'},
+        { id: 2, text: 'Superato', class: 'bg-superato'},
+        { id: 3, text: 'Esaurito', class: 'bg-esaurito'}
+    ];
+
+public filter = {
+      data_cipe: null
+    };
+
     public cipe$: Observable<Cipe[]>;
+    public delibere$: Observable<Delibere[]>;
 
     public datePickerOptions: any;
     public select2Options: Select2Options;
+    private select2Debounce: boolean = false;
 
     public canEdit: boolean = false;
     public canDelete: boolean = false;
@@ -58,6 +77,7 @@ export class AdempimentiEditComponent implements OnInit {
         this.select2Options = config.select2Options;
 
         this.cipe$ = this.apiService.subscribeToDataService('cipe');
+        this.delibere$ = this.apiService.subscribeToDataService('delibere');
 
     }
 
@@ -69,10 +89,12 @@ export class AdempimentiEditComponent implements OnInit {
         this.canEdit = isNaN(this.id) ? this.apiService.userCan('CREATE_ADEMPIMENTI') : this.apiService.userCan('EDIT_ADEMPIMENTI');
         this.canDelete = this.apiService.userCan('DELETE_ADEMPIMENTI');
 
-
         switch (this.mode) {
             case 'create':
                 this.model = {
+                    'id_cipe': null,
+                    'id_delibere': null,
+                    'descrizione': ''
                 };
                 break;
 
@@ -80,27 +102,18 @@ export class AdempimentiEditComponent implements OnInit {
                 this.apiService.getById('adempimenti', this.id)
                     .subscribe(
                         response => {
-                            if(Array.isArray(response.data)) {
-                                this.model = response.data[0];
-                            } else {
-                                this.model = response.data;
-                            }
-
+                            this.model = response.data;
 
                             // instantiate every date
-                            let tz = new Date().getTimezoneOffset();
                             _.forEach(this.model, (value, key) => {
                                 if(key && key.indexOf('data') !== -1) {
                                     if(value) {
-                                        this.model[key] = new Date(value + tz*60000);
+                                        let d = new Date(value);
+                                        d.setHours(0,0,0,0);
+                                        this.model[key] = d;
                                     }
                                 }
                             });
-
-                            if(!this.model.data_mef_pec && this.model.data_mef_invio) {
-                                this.model.data_mef_pec = this.model.data_mef_invio;
-                            }
-
                         },
                         error => {
                             this.error = error; console.log(error);
@@ -108,7 +121,6 @@ export class AdempimentiEditComponent implements OnInit {
                         });
                 break;
         }
-
     }
 
     cancel(event) {
@@ -121,15 +133,14 @@ export class AdempimentiEditComponent implements OnInit {
         console.log(new Adempimenti());
 
         let post = $.extend(true, new Adempimenti(), this.model);
-        let tz = new Date().getTimezoneOffset();
 
-
-        // convert every date to milliseconds
+        // instantiate every date
         _.forEach(post, (value, key) => {
             if(key && key.indexOf('data') !== -1) {
-                console.log(key, typeof value, value);
                 if(value) {
-                    post[key] = new Date(value.getTime() - tz*60000);
+                    let d = new Date(value);
+                    d.setHours(0,0,0,0);
+                    post[key] = d;
                 }
             }
         });
@@ -161,14 +172,60 @@ export class AdempimentiEditComponent implements OnInit {
         }
     }
 
+    public checkIdCipe() {
+        if(!this.model.id_cipe && this.model.id_delibere) {
+            const id_cipe = this.getCipeIdByDate(this.getDeliberaDateById(this.model.id_delibere));
+            if(id_cipe) {
+                this.model.id_cipe = id_cipe;
+            }
+        }
+    }
+
+    public getDeliberaDateById(id) {
+        //console.log('getDeliberaDateById');
+        if(id) {
+            return _.get( this.apiService.dataEnum, 'delibere["' + id + '"]data', '');
+        }
+        return null;
+    }
+
+    public getCipeIdByDate(date) {
+        //console.log('getCipeIdByDate');
+        let item = null;
+        if(date) {
+            item = _.find(this.apiService.dataEnum.cipe, function(o) { return o.data === date; });
+        }
+
+        if(item && item.id) {
+            return item.id;
+        }
+        return null;
+    }
+
     public select2Changed(e: any, name: string): void {
+
+        if (this.select2Debounce) {
+            this.select2Debounce = false;
+            return;
+        }
+
+        if(name === 'id_cipe') {
+            this.select2Debounce = true;
+            const id = e.value;
+            const data_cipe = _.get( this.apiService.dataEnum, 'cipe["' + id + '"]data', '');
+            this.filter.data_cipe = data_cipe;
+
+            console.log(e.value, data_cipe);
+        }
 
         this.model[name] = e.value;
     }
 
-    public onDataCipeChanged(date) {
-
-
+    public checkScadenzaRequired () {
+        if(this.model.data_scadenza || this.model.giorni_scadenza || this.model.mesi_scadenza || this.model.anni_scadenza ) {
+            return null;
+        }
+        return 'required';
     }
 
     private jwt() {

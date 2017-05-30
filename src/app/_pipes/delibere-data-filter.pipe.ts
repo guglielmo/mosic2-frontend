@@ -6,7 +6,7 @@ import {Pipe, PipeTransform} from "@angular/core";
 })
 export class DelibereDataFilterPipe implements PipeTransform {
 
-    transform(array: any[], query: string, numero: string, data_da: number, data_a: number, id_situazione: number, filteredCount: any): any {
+    transform(array: any[], query: string, numero: string, data_da: number, data_a: number, id_situazione: string, id_tags: string, filteredCount: any): any {
 
         let keys = query.toUpperCase().split(' ');
         let keysLen = keys.length;
@@ -19,7 +19,8 @@ export class DelibereDataFilterPipe implements PipeTransform {
         let dD = data_da !== null ? new Date(data_da).getTime() : null;
         let dA = data_a !== null ? new Date(data_a).getTime() : null;
 
-        let iS = id_situazione !== null && id_situazione > 0;
+        let iS = id_situazione !== '';
+        let iT = id_tags != null;
 
         let results = _.filter(array, row => {
 
@@ -27,9 +28,10 @@ export class DelibereDataFilterPipe implements PipeTransform {
             if (dA && row.data > dA ) return false;
             if (fL && row.numero != numero) return false;
             if (iS && row.situazione != id_situazione) return false;
+            if (iT && row.id_tags.indexOf(Number(id_tags)) === -1) return false;
             if (qL) {
                 for (i = 0; i < keysLen; i++) {
-                    if ((row.argomento.toUpperCase()).indexOf((keys[i])) == -1) {
+                    if ((row.argomento.toUpperCase()).indexOf((keys[i])) === -1) {
                         return false;
                     }
                 }

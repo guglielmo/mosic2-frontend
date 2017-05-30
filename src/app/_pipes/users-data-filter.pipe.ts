@@ -6,7 +6,7 @@ import {Pipe, PipeTransform} from "@angular/core";
 })
 export class UsersDataFilterPipe implements PipeTransform {
 
-    transform(array: any[], query: string, id_uffici: any, id_ruoli_cipe: any, id_groups: any, filteredCount: any): any {
+    transform(array: any[], query: string, id_uffici: any, id_ruoli_cipe: any, id_groups: any, cessatoServizio: string, filteredCount: any): any {
 
         let keys = query.toUpperCase().split(' ');
         let keysLen = keys.length;
@@ -17,12 +17,14 @@ export class UsersDataFilterPipe implements PipeTransform {
         let tL = id_uffici != '';
         let aL = id_ruoli_cipe != '';
         let aG = id_groups != '';
+        let cS = cessatoServizio != '';
 
         let results = _.filter(array, row => {
 
             if (tL && row.id_uffici != id_uffici) return false;
             if (aL && row.id_ruoli_cipe != id_ruoli_cipe) return false;
             if (aG && row.id_groups != id_groups) return false;
+            if (cS && row.cessatoServizio != cessatoServizio) return false;
             if (qL) {
                 for (i = 0; i < keysLen; i++) {
                     if ((row.denominazione.toUpperCase()).indexOf((keys[i])) == -1) {

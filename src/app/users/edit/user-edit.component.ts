@@ -110,4 +110,8 @@ export class UserEditComponent implements OnInit {
                 break;
         }
     }
+
+    checkRequired() {
+        return this.model.id_groups && this.model.id_ruoli_cipe && this.model.id_uffici;
+    }
 }

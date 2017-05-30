@@ -3,7 +3,17 @@
 </div>
 <h3 class="page-title">Titolari / <span class="fw-semi-bold">Tutti i titolari</span></h3>
 
-<div class="row">
+<style>
+    @media only screen and (max-width: 992px) {
+        td:nth-of-type(1):before { content: "Codice"; }
+        td:nth-of-type(2):before { content: "Denominazione"; }
+        td:nth-of-type(3):before { content: "Descrizione"; }
+        td:nth-of-type(4):before { content: "Ufficio"; }
+        td:nth-of-type(5):before { content: "Azioni"; }
+    }
+</style>
+
+<div class="row" *ngIf="apiService.isDataReady(['titolari','uffici'])">
     <div class="col-lg-12">
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">

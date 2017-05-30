@@ -25,10 +25,12 @@ export class GroupsEditComponent implements OnInit {
         'RUOLI_CIPE',
         'TAGS',
         'PRECIPE',
+        'PRECIPEODG',
         'AREARISERVATA_PRECIPE',
         'AREARISERVATA_PRECIPE_CHECK',
         'FIRMATARI',
         'CIPE',
+        'CIPEODG',
         'AREARISERVATA_CIPE',
         'AREARISERVATA_CIPE_CHECK',
         'FIRMATARITIPO',
@@ -38,7 +40,8 @@ export class GroupsEditComponent implements OnInit {
         'USERS',
         'DELIBERE',
         'ADEMPIMENTI',
-        'MONITOR'
+        'MONITOR',
+        'MONITOR_GROUP'
     ];
     supportedPermissions: string[] = ['READ', 'CREATE', 'EDIT', 'DELETE'];
 

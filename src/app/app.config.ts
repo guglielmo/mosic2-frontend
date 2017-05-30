@@ -18,11 +18,15 @@ export class AppConfig {
     config = {
         name: 'mosic 2.0',
         title: 'Mo.Si.C. - Monitoraggio Sistema CIPE',
-	version: '2.0.0-alpha.2',
+	version: '2.0.0-alpha.3',
+
 	// development
 	// baseAPIURL: 'http://localhost:8080/mosic2-service',
+
+	// staging tdrynx.com
+	// baseAPIURL: 'http://mosicapi.tdrynx.info',
 	
-	// staging
+	// staging celata.com
 	baseAPIURL: 'http://mosic2.celata.com/service',
 
 	// production
@@ -85,7 +89,8 @@ export class AppConfig {
     select2Options = {
         theme: 'bootstrap',
         placeholder: 'Inizia a scrivere per selezionare...',
-        // allowClear: true, <-- not yet available for a bug in ng2-select2 as of version 1.0.0-beta.10
+        // allowClear: true, // <-- not yet available for a bug in ng2-select2 as of version 1.0.0-beta.10
+        // query: (q) => { console.log(q); return q; },
         templateResult: (item) => {
             // No need to template the searching text
             if (item.loading) {
@@ -111,6 +116,7 @@ export class AppConfig {
             return markup;
         },
         matcher: (term: string, text: string, option: any): boolean => {
+
             if (term.trim() === '') {
                 return true;
             }
@@ -132,8 +138,18 @@ export class AppConfig {
     // deep clone basic Select2 options and add functions to prepare for "tags" (or whatever) creation
     select2WithAddOptions = $.extend(true, {}, this.select2Options, {
         tags: true,
+        minimumInputLength: 3,
+        language: {
+            inputTooShort: function (args) {
+                const remainingChars = args.minimum - args.input.length;
+
+                const message = 'Inserisci ' + remainingChars + ' o più caratteri';
+
+                return message;
+            }
+        },
         insertTag: (data, tag) => {
-            // console.log("select2WithAddOptions['insertTag']", data.length);
+            //console.log("select2WithAddOptions['insertTag']", data.length);
 
             let markup = '';
             if (data.length === 0) {

@@ -160,7 +160,7 @@ export class LayoutComponent implements OnInit {
 
     collapseNavIfSmallScreen(): void {
         if (this.configFn.isScreen('xs')
-            || this.configFn.isScreen('sm') || this.configFn.isScreen('md')) {
+            || this.configFn.isScreen('sm') || this.configFn.isScreen('md') ) {
             this.collapseNavigation();
         }
     }

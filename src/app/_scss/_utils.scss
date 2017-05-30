@@ -672,26 +672,11 @@ i.square {
 .bg-esaurito { background-color: #BBBBBB; border-color: darken(#BBBBBB, 25); color: darken(#bbb, 65);}
 .bg-parzialmente_ottemperato { background-color: #FFFFFF; border-color: darken(#fff, 25); }
 
-/*
 
+.bg-sum { background-color: #aaccff; color: darken(#aaccff, 60); }
+.bg-oddcol { background-color: #E1F0FF; color: darken(#E1F0FF, 70); }
 
-
-
-<tr>
-<td bgcolor="#BBBBBB" style="border-bottom: 1px solid rgb(204,204,204);border-right: 1px solid rgb(204,204,204);"><font face="Arial, Helvetica, sans-serif" size="1">&nbsp;</font></td>
-<td style="border-bottom: 1px solid rgb(204,204,204);"><font face="Arial, Helvetica, sans-serif" size="1">esaurito</font></td>
-</tr>
-
-
-<tr>
-<td bgcolor="#FFFFFF" style="border-bottom: 1px solid rgb(204,204,204);border-right: 1px solid rgb(204,204,204);"><font face="Arial, Helvetica, sans-serif" size="1">&nbsp;</font></td>
-<td style="border-bottom: 1px solid rgb(204,204,204);"><font face="Arial, Helvetica, sans-serif" size="1">parzialmente ottemperato</font></td>
-</tr>
-
-
-</tbody>*/
-
-.max-w-4 { max-width: 140px; white-space: normal; }
+.badge-lg-limit { max-width: 140px; white-space: normal; }
 
 table.align-middle {
   td { vertical-align: middle; }
@@ -701,3 +686,45 @@ table.align-center {
   td { text-align: center; }
 }
 
+
+@media only screen and (max-width: 992px) {
+
+  /* Force table to not be like tables anymore */
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  /* Hide table headers (but not display: none;, for accessibility) */
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  tr { border: 1px solid #555; }
+
+  td {
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 180px !important;
+    min-height: 38px;
+  }
+
+  td, td.text-center {
+    text-align: left !important;
+    p, p.text-center { text-align: left !important; }
+  }
+
+  td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 6px;
+    left: 6px;
+    width: 180px;
+    padding-right: 10px;
+    font-weight: 600;
+  }
+}

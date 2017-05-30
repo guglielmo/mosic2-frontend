@@ -6,7 +6,10 @@ import { Observable } from 'rxjs/Observable';
 import { APICommonService } from '../../_services/index';
 import { AppConfig } from '../../app.config';
 
-import { Amministrazioni, Titolari, Fascicoli } from '../../_models/index';
+import { Amministrazioni } from '../../_models/amministrazioni';
+import { Titolari } from '../../_models/titolari';
+import { Fascicoli } from '../../_models/fascicoli';
+import { Tags } from '../../_models/tags';
 
 
 @Component({
@@ -16,9 +19,10 @@ export class FascicoliListComponent implements OnInit {
 
     public filter = {
         argomento: '',
-        id_titolari: -1,
-        id_amministrazioni: -1,
-        numero_fascicolo: ''
+        id_titolari: null,
+        id_amministrazioni: null,
+        numero_fascicolo: '',
+        id_tags: null
     };
     public deletingFascicoli: Fascicoli = new Fascicoli;
     public fascicoli: Observable<Fascicoli[]>;
@@ -28,6 +32,7 @@ export class FascicoliListComponent implements OnInit {
     public titolari$: Observable<Titolari[]>;
     public fascicoli$: Observable<Fascicoli[]>;
     public amministrazioni$: Observable<Amministrazioni[]>;
+    public tags$: Observable<Tags[]>;
 
     constructor(public apiService: APICommonService,
                 private router: Router,
@@ -39,6 +44,7 @@ export class FascicoliListComponent implements OnInit {
         this.titolari$ = this.apiService.subscribeToDataService('titolari');
         this.fascicoli$ = this.apiService.subscribeToDataService('fascicoli');
         this.amministrazioni$ = this.apiService.subscribeToDataService('amministrazioni');
+        this.tags$ = this.apiService.subscribeToDataService('tags');
     }
 
     ngOnInit() {
@@ -83,7 +89,8 @@ export class FascicoliListComponent implements OnInit {
             argomento: '',
             id_titolari: -1,
             id_amministrazioni: -1,
-            numero_fascicolo: ''
+            numero_fascicolo: '',
+            id_tags: null
         };
     }
 

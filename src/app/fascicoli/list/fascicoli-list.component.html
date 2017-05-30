@@ -3,15 +3,23 @@
 </div>
 <h3 class="page-title">Fascicoli / <span class="fw-semi-bold">Tutti i fascicoli</span></h3>
 
-<section *ngIf="apiService.commonDataready && !apiService.isDirty" class="widget" widget data-widgster-collapsed="false">
+<section *ngIf="apiService.isDataReady(['fascicoli','titolari','amministrazioni','tags'])" class="widget" widget data-widgster-collapsed="false">
     <header>
         <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">fascicoli ...</span>
-            <span *ngIf="filter.argomento.length > 2 || filter.id_amministrazioni != -1 || filter.id_titolari != -1 || filter.numero_fascicolo" class="float-lg-right mr-3">
+            <span *ngIf="filter.argomento.length > 2 ||
+                         filter.id_amministrazioni != -1 ||
+                         filter.id_titolari != -1 ||
+                         filter.numero_fascicolo ||
+                         filter.id_tags" class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
             </span>
         </h5>
         <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">fascicoli ...</span>
-            <span *ngIf="filter.argomento.length > 2 || filter.id_amministrazioni != -1 || filter.id_titolari != -1 || filter.numero_fascicolo" class="float-lg-right mr-3">
+            <span *ngIf="filter.argomento.length > 2 ||
+                         filter.id_amministrazioni != -1 ||
+                         filter.id_titolari != -1 ||
+                         filter.numero_fascicolo ||
+                         filter.id_tags" class="float-lg-right mr-3">
                 <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
             </span>
         </h5>
@@ -22,7 +30,7 @@
     </header>
     <div class="widget-body">
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="form-group">
                     <label for="titolari_id"><strong>Titolario</strong></label>
                     <div class="select2-H-keeper"><select2 id="titolari_id"
@@ -34,13 +42,13 @@
                              [data]="titolari$ | async"></select2></div>
                 </div>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-1">
                 <div class="form-group">
                     <label for="numero_fascicolo"><strong>Fascicolo</strong></label>
                     <input id="numero_fascicolo" name="numero_fascicolo" class="form-control" [(ngModel)]="filter.numero_fascicolo" placeholder="Numero..."/>
                 </div>
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-2">
                 <div class="form-group">
                     <label for="argomento"><strong>Argomento</strong></label>
                     <input id="argomento" name="argomento" class="form-control" [(ngModel)]="filter.argomento" placeholder="Digita almeno 3 caratteri..."/>
@@ -58,18 +66,40 @@
                              [data]="amministrazioni$ | async"></select2></div>
                 </div>
             </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label for="id_tags"><strong>Etichette</strong></label>
+                    <div class="select2-H-keeper"><select2 id="id_tags"
+                                                           class="full-width-select"
+                                                           [options]="select2Options"
+                                                           value="{{filter.id_tags}}"
+                                                           [cssImport]="false"
+                                                           (valueChanged)="select2Changed($event,'id_tags')"
+                                                           [data]="tags$ | async"></select2></div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<div class="row" *ngIf="apiService.commonDataready">
+<style>
+    @media only screen and (max-width: 992px) {
+        td:nth-of-type(1):before { content: "Titolario"; }
+        td:nth-of-type(2):before { content: "Fascicolo"; }
+        td:nth-of-type(3):before { content: "Argomento"; }
+        td:nth-of-type(4):before { content: "Amministrazione"; }
+        td:nth-of-type(5):before { content: "Azioni"; }
+    }
+</style>
+
+<div class="row" *ngIf="apiService.isDataReady(['fascicoli','titolari','amministrazioni','tags'])">
     <div class="col-lg-12">
         <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">
                 <table class="table table-hover table-condensed mb-0 table-bordered"
                        #mf="mfDataTable"
-                       [mfData]="fascicoli$ | async | fascicoliDataFilter : filter.argomento : filter.id_titolari : filter.id_amministrazioni: filter.numero_fascicolo : filteredCount"
+                       [mfData]="fascicoli$ | async | fascicoliDataFilter : filter.argomento : filter.id_titolari : filter.id_amministrazioni: filter.numero_fascicolo : filter.id_tags : filteredCount"
                        [mfRowsOnPage]="100"
                        stickthead [offsetY]="0">
                     <thead>
@@ -78,7 +108,8 @@
                         <th><mfDefaultSorter by="numero_fascicolo">Fascicolo</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="argomento">Argomento</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="amministrazioni">Amministrazione</mfDefaultSorter></th>
-                        <th *ngIf="apiService.userCan('DELETE_FASCICOLI')">Azioni</th>
+                        <th><mfDefaultSorter by="id_tags">Etichette</mfDefaultSorter></th>
+                        <th *ngIf="apiService.userCan('DELETE_FASCICOLI')"><mfDefaultSorter>Azioni</mfDefaultSorter></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -87,6 +118,11 @@
                         <td>{{fascicolo.numero_fascicolo}}</td>
                         <td [innerHTML]="fascicolo.argomento | dataMark : filter.argomento"></td>
                         <td>{{amministrazioniEnum(fascicolo.id_amministrazioni)}}</td>
+                        <td>
+                            <span class="ml-1 badge badge-default text-left line-height-lg badge-lg-limit"
+                                  [title]="fascicolo.id_tags | dataEnum : apiService.dataEnum : 'tags'"
+                                  [innerHTML]="fascicolo.id_tags | dataEnum : apiService.dataEnum : 'tags' : 'denominazione' : '<br/>'"></span>
+                        </td>
                         <td *ngIf="apiService.userCan('DELETE_FASCICOLI')">
                             <a (click)="askDeleteFascicoli($event, myModal, fascicolo)"><i class="fa fa-trash-o"> </i></a>
                         </td>
@@ -94,7 +130,7 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <td colspan="5">
+                        <td colspan="6">
                             <mfBootstrapPaginator [rowsOnPageSet]="[100,200,500,1000]"></mfBootstrapPaginator>
                         </td>
                     </tr>

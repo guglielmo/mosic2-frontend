@@ -58,7 +58,7 @@ export class CipeOdgItemComponent implements OnInit {
             id_uffici: [{value:'', disabled: true}, Validators.required],
             ordine: [{value:'', disabled: true}, Validators.required],
             denominazione: [{value:'', disabled: true}, Validators.required],
-            esito: [{value:'', disabled: true}],
+            risultanza: [{value:'', disabled: true}],
             annotazioni: [{value:'', disabled: true}]
         });
 
@@ -86,8 +86,8 @@ export class CipeOdgItemComponent implements OnInit {
 
     }
 
-    deleteOdg(){
-            this.deleteitem.emit(this.item.id);
+    deleteOdg($event, id){
+            this.deleteitem.emit(id);
     }
 
     toggleAllegato(item:any, allegato_id: number) {

@@ -1,4 +1,4 @@
-<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
+<form *ngIf="apiService.isDataReady(['firmataritipo']) && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
     <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
@@ -17,7 +17,7 @@
                                 <label for="denominazione"><strong>Denominazione</strong></label>
                                 <input type="text" class="form-control" id="denominazione" name="denominazione"
                                        placeholder="Scrivi la denominazione del firmatario..."
-                                       [disabled]="canEdit"
+                                       [disabled]="!canEdit"
                                        [(ngModel)]="model.denominazione" #denominazione="ngModel" required>
                             </div>
                         </div>
@@ -26,7 +26,7 @@
                                 <label for="denominazione_estesa"><strong>Denominazione estesa</strong></label>
                                 <input type="text" class="form-control" id="denominazione_estesa" name="denominazione_estesa"
                                        placeholder="Scrivi la denominazione estesa del firmatario..."
-                                       [disabled]="canEdit"
+                                       [disabled]="!canEdit"
                                        [(ngModel)]="model.denominazione_estesa" #denominazione_estesa="ngModel" required>
                             </div>
                         </div>
@@ -35,7 +35,7 @@
                                 <label for="chiave"><strong>Codice</strong></label>
                                 <input type="text" class="form-control" id="chiave" name="chiave"
                                        placeholder="Scrivi il codice..."
-                                       [disabled]="canEdit"
+                                       [disabled]="!canEdit"
                                        [(ngModel)]="model.chiave" #chiave="ngModel">
                             </div>
                         </div>
@@ -47,7 +47,7 @@
                                                                        [options]="select2Options"
                                                                        [value]="model.tipo"
                                                                        [cssImport]="false"
-                                                                       [disabled]="canEdit"
+                                                                       [disabled]="!canEdit"
                                                                        (valueChanged)="select2Changed($event,'tipo')"
                                                                        [data]="firmataritipo$ | async"></select2></div>
                             </div>
@@ -58,7 +58,7 @@
                             <div class="form-group abc-checkbox abc-checkbox-primary">
                                 <input id="disattivato" name="disattivato" type="checkbox"
                                        [checked]="model.disattivato == 1"
-                                       [disabled]="canEdit"
+                                       [disabled]="!canEdit"
                                        (change)="model.disattivato = $event.target.checked == 1 ? '1' : '0'"
                                 >
                                 <label for="disattivato">

@@ -36,7 +36,7 @@
                </div>
             </div>
             <div class="col-md-5">
-               <div class="form-group">
+               <div *ngIf="model.id" class="form-group">
                   <label for="ufficiale_riunione"><strong>Stato</strong></label>
                   <div>
                      <label class="switch">
@@ -44,7 +44,7 @@
                                class="ios"
                                [checked]="model.ufficiale_riunione == '1'"
                                (change)="model.ufficiale_riunione = $event.target.checked ? '1' : '0'"
-                               (click)="askOfficializeCipe($event, officializeCipeModal, model)"
+                               (click)="canEdit && askOfficializeCipe($event, officializeCipeModal, model)"
                                [disabled]="officializingCipe != null || model.ufficiale_riunione === '1'"
                         ><i></i>
                      </label>&nbsp;&nbsp;
@@ -54,18 +54,18 @@
                      <span *ngIf="model.ufficiale_riunione === '1' && status === null || status === 'error'">
                                 <span class="d-inline-block text-center rel-t-m4 float-right">
 
-                                    <button *ngIf="model.public_reserved_url"
+                                    <button *ngIf="canEdit && model.public_reserved_url"
                                             class="btn btn-secondary ml-2 btn-xs" role="button"
                                             (click)="askUpdateCipe($event, updateCipeModal, model)"
                                     > <i class="fa fa-lg fa-refresh"></i> &nbsp; Aggiorna </button>
 
                                     <button *ngIf="!model.public_reserved_url"
                                             class="btn btn-secondary ml-2 btn-xs" role="button"
-                                            (click)="askPublishCipe($event, publishCipeModal, model)"
+                                            (click)="canEdit && askPublishCipe($event, publishCipeModal, model)"
                                     > <i class="fa fa-lg fa-repeat"></i> &nbsp; Pubblica </button>
 
 
-                                    <button *ngIf="model.public_reserved_url"
+                                    <button *ngIf="canDelete && model.public_reserved_url"
                                             class="btn btn-secondary ml-2 btn-xs" role="button"
                                             (click)="askRemoveCipe($event, removeCipeModal, model)"
                                     > <i class="fa fa-lg fa-trash"></i> &nbsp; Rimuovi </button>
@@ -99,7 +99,7 @@
       </div>
    </section>
 
-   <tabset #staticTabs>
+   <tabset #staticTabs *ngIf="apiService.isDataReady(['fascicoli','titolari','registri','uffici'])">
       <tab [customClass]="'p-0'">
          <ng-template tabHeading>
             <strong>Ordine del giorno</strong>

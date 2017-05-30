@@ -1,4 +1,5 @@
 import { NgModule, ApplicationRef } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
@@ -60,6 +61,7 @@ const WH_CONFIG: WarehouseConfig = {
         // ENV_PROVIDERS,
         APP_PROVIDERS,
         AuthGuard,
+        DatePipe,
         APICommonService,
         AuthenticationService
         // Fake Backend

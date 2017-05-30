@@ -11,7 +11,7 @@
     </accordion-group>
 </accordion>
 
-<form *ngIf="apiService.commonDataready && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event)" #f="ngForm" novalidate>
+<form *ngIf="apiService.isDataReady(['firmatari','uffici','tags']) && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event)" #f="ngForm" novalidate>
     <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
         <button type="submit" class="btn btn-primary btn-save">Salva</button>
@@ -44,8 +44,8 @@
                 </div>
                 <div [scrollTo]="'#A_MEF'" class="col clickable p-4 alert m-0" [scrollDuration]="500" [scrollOffset]="-100"
                      [ngClass]="{
-                      'alert-warning fw-semi-bold' : model.data_mef_invio > 0 && !model.data_mef_ritorno,
-                      'alert-success fw-semi-bold' : model.data_mef_invio > 0 && model.data_mef_ritorno > 0 }">
+                      'alert-warning fw-semi-bold' : model.data_mef_pec > 0 && !model.data_mef_ritorno,
+                      'alert-success fw-semi-bold' : model.data_mef_pec > 0 && model.data_mef_ritorno > 0 }">
                     <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     M.E.F.
                 </div>
@@ -82,6 +82,22 @@
                     <span class="circle"><i class="fa fa-lg fa-arrow-right"></i></span>
                     Gazzetta Ufficiale
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="id_tags"><strong>Etichette</strong></label>
+                <div class="select2-H-keeper"><select2 id="id_tags"
+                                                       class="full-width-select"
+                                                       [options]="select2WithAddOptionsMulti"
+                                                       [value]="model.id_tags ? model.id_tags.split(',') : ''"
+                                                       [cssImport]="false"
+                                                       [disabled]="!canEdit"
+                                                       (valueChanged)="select2Changed($event,'id_tags')"
+                                                       [data]="tags$ | async"></select2></div>
             </div>
         </div>
     </div>

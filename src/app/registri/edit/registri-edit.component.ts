@@ -1,19 +1,16 @@
-import {
-    Component,
-    OnInit,
-    ViewEncapsulation,
-    NgZone,
-    Inject,
-    EventEmitter,
-    AfterViewChecked,
-    OnDestroy
-} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, NgZone, Inject, EventEmitter, AfterViewChecked, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Titolari, Fascicoli, Amministrazioni, Mittenti, Allegati } from '../../_models/index';
 import { APICommonService } from '../../_services/index';
 import { AppConfig } from '../../app.config';
 import { NgUploaderOptions, UploadedFile } from 'ngx-uploader';
 import { Observable } from 'rxjs/Observable';
+
+import { Titolari } from '../../_models/titolari';
+import { Fascicoli } from '../../_models/fascicoli';
+import { Amministrazioni } from '../../_models/amministrazioni';
+import { Mittenti } from '../../_models/mittenti';
+import { Tags } from '../../_models/tags';
+import { Allegati } from '../../_models/allegati';
 
 import * as _ from 'lodash';
 
@@ -49,6 +46,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
     public fascicoli$: Observable<Fascicoli[]>;
     public amministrazioni$: Observable<Amministrazioni[]>;
     public mittenti$: Observable<Mittenti[]>;
+    public tags$: Observable<Tags[]>;
 
     public select2Options: Select2Options;
     public select2WithAddOptions: Select2Options;
@@ -75,6 +73,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
         this.fascicoli$ = this.apiService.subscribeToDataService('fascicoli');
         this.amministrazioni$ = this.apiService.subscribeToDataService('amministrazioni');
         this.mittenti$ = this.apiService.subscribeToDataService('mittenti');
+        this.tags$ = this.apiService.subscribeToDataService('tags');
 
         this.inputUploadEvents = new EventEmitter<string>();
     }
@@ -105,6 +104,8 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
         this.mode = isNaN(this.id) ? 'create' : 'update';
         this.canEdit = isNaN(this.id) ? this.apiService.userCan('CREATE_REGISTRI') : this.apiService.userCan('EDIT_REGISTRI');
         this.canDelete = this.apiService.userCan('DELETE_REGISTRI');
+
+        console.log('canedit:',this.canEdit);
 
         switch (this.mode) {
             case 'create':
@@ -226,22 +227,9 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
         }
 
         // converts value to arrays to handle multi-selects and selects in the same way
-        let V = [];
-        if (null != e.value) {
-            switch (typeof e.value) {
-                case 'string':
-                    V = e.value.split(',');
-                    break;
-                case 'object':
-                    V = e.value;
-                    break;
-            }
-        }
+        const V = typeof e.value === 'string' ? e.value.split(',') : e.value;
 
-        let selectedCount = 0;
-        if (typeof this.model[name] === 'string' && this.model[name] !== '') {
-            selectedCount = this.model[name].split(',').length;
-        }
+        const selectedCount = this.model[name] ? this.model[name].split(',').length : 0;
 
         if (V.length > selectedCount) {
             // Value added
@@ -265,7 +253,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
 
         // go back to comma separated strings in the model value as the server handles
         // both single and multi selects as strings
-        this.model[name] = V.join(',');
+        this.model[name] = typeof e.value === 'object' && e.value != null ? e.value.join(',') : e.value;
 
         // debounce change events and reset id_fascicoli when titolari changes
         if (name === 'id_titolari') {
@@ -294,7 +282,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
                             response.data.text = label;
 
                             // creates the new entry on the relative apiService select2 data
-                            this.apiService[apipath + 'Select'].push(response.data);
+                            // this.apiService[apipath + 'Select'].push(response.data);
 
                             // find the select element and update temporary id with the new assigned id
                             $('#' + name + ' select option[value="' + den + '"]').val(id).text(label);
@@ -306,7 +294,6 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
                             selectedValues.splice(i, 1, id);
 
                             this.model[name] = selectedValues.join(',');
-
 
                             // update select2 data
                             // $('#'+name+' select').select2('data',response.data, true);

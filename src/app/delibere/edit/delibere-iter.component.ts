@@ -21,12 +21,12 @@ export class DelibereIterComponent implements OnInit {
     @Input() canDelete: boolean;
 
     public tipo_registrazione_cc = [
-            { id: 1, text:'NO CORTE DEI CONTI'},
-            { id: 2, text:'PER CONOSCENZA'},
-            { id: 3, text:'RICUSATO VISTO'},
-            { id: 4, text:'RESTITUITA'},
-            { id: 5, text:'RITIRATA'},
-            { id: 6, text:'SUCCESSIVO'}
+            { id: 1, text:'NO CORTE DEI CONTI'}, //NON C'E' BISOGNO DI MANDARLA ALLA C.C.
+            { id: 2, text:'PER CONOSCENZA'}, // INVIO SOLO PER CONOSCENZA
+            { id: 3, text:'RICUSATO VISTO'}, // ITER INTERROTTO DALLA CC DEFINITIVAMENTE
+            { id: 4, text:'RESTITUITA'}, // ITER INTERROTTO CON POSSIBILITA' DI REVISIONE
+            { id: 5, text:'RITIRATA'}, // ITER INTERROTTO DAL DIPE
+            { id: 6, text:'SUCCESSIVO'} // INVIO ALLA C.C. PER VERIFICA, PUÒ ESSERE SUCCESSIVO ALLA PUBBLICAZIONE IN G.U.
     ];
 
     public firmatari$: Observable<Firmatari[]>;

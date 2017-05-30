@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { Registri } from '../../_models/registri';
-import { Titolari } from '../../_models/titolari';
-import { Amministrazioni } from '../../_models/amministrazioni';
 import { APICommonService } from '../../_services/index';
 import { AppConfig } from '../../app.config';
 import * as _ from 'lodash';
 
+import { Registri } from '../../_models/registri';
+import { Titolari } from '../../_models/titolari';
+import { Amministrazioni } from '../../_models/amministrazioni';
+import { Tags } from '../../_models/tags';
 
 @Component({
     templateUrl: 'fascicoli-edit.component.html'
@@ -32,6 +33,7 @@ export class FascicoliEditComponent implements OnInit {
     public titolari$: Observable<Titolari[]>;
     public amministrazioni$: Observable<Amministrazioni[]>;
     public registri$: Observable<Registri[]>;
+    public tags$: Observable<Tags[]>;
 
     public canEdit: boolean = false;
 
@@ -48,6 +50,7 @@ export class FascicoliEditComponent implements OnInit {
         this.titolari$ = this.apiService.subscribeToDataService('titolari');
         this.amministrazioni$ = this.apiService.subscribeToDataService('amministrazioni');
         this.registri$ = this.apiService.subscribeToDataService('registri');
+        this.tags$ = this.apiService.subscribeToDataService('tags');
     }
 
     ngOnInit() {
@@ -153,11 +156,11 @@ export class FascicoliEditComponent implements OnInit {
 
     mayBeCreateNewSelect2Values(name) {
 
-        console.log('trying to add new ' + name, '#' + name + ' select option[data-select2-tag="true"]');
+        // console.log('trying to add new ' + name, '#' + name + ' select option[data-select2-tag="true"]');
 
         const newValues = $('#' + name + ' select option[data-select2-tag="true"]');
 
-        console.log(newValues.length);
+        // console.log(newValues.length);
 
         if (newValues.length) {
 
@@ -165,7 +168,7 @@ export class FascicoliEditComponent implements OnInit {
 
             newValues.each((index: number, elem: HTMLInputElement) => {
 
-                console.log(name, newValues, elem);
+                // console.log(name, newValues, elem);
 
                 this.apiService.create(apipath, { 'denominazione': elem.value } )
                     .subscribe(

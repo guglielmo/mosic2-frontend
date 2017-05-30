@@ -30,7 +30,7 @@ export class PreCipeOdg {
         this.id_uffici = null;
         this.ordine = null;
         this.denominazione = null;
-        this.risultanza = null;
+        this.risultanza = 0;
         this.annotazioni = null;
         this.stato = null;
         this.allegati = {};

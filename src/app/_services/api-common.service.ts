@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -24,7 +25,7 @@ export class APICommonService {
     private _allData$: any = {};
     public dataEnum: any = {};
 
-    private currentStorageVersion = '111';
+    private currentStorageVersion = '134';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
@@ -46,7 +47,7 @@ export class APICommonService {
         'cipeargomentitipo',
         'users',
         'delibere',
-        'adempimenti'
+        'adempimenti',
     ];
 
     private commonData: string[] = [
@@ -71,9 +72,11 @@ export class APICommonService {
         'adempimenti'
     ];
 
-    constructor( private http: Http,
-                 public warehouse: Warehouse,
-                 config: AppConfig
+    constructor(
+                private http: Http,
+                private datePipe: DatePipe,
+                public warehouse: Warehouse,
+                config: AppConfig
     ) {
         this.config = config.getConfig();
         this.configFn = config;
@@ -96,6 +99,8 @@ export class APICommonService {
         this.warehouse.get('apiServiceLastInitTime').subscribe(data => {
             console.log('apiServiceLastInitTime', data);  // <-- returns null at first execution
         });
+
+        this.setUserCapabilities();
     }
 
     public subscribeToDataService( apipath: string ): Observable<any[]> {
@@ -180,6 +185,18 @@ export class APICommonService {
                         .catch((response: Response) => this.handleError(response));
     }
 
+    public isDataReady( apipaths: string[] ): boolean {
+        let checkIsReady = true;
+        _.each(apipaths, v => {
+            //console.log(v, this._allData);
+            if (!this._allData[v] || this._allData[v].length === 0) {
+                checkIsReady = false;
+                return false; // <-- note: this is the lodash way to break iteration;
+            }
+        });
+        return checkIsReady;
+    }
+
     public refreshCommonCache() {
 
         this.getLastUpdates().subscribe(response => {
@@ -233,15 +250,7 @@ export class APICommonService {
                             //
                             // checks if all cached api methods are loaded
                             //
-                            let checkIsReady = true;
-                            _.each(this.commonData, v => {
-                                //console.log(v, this._allData);
-                                if (this._allData[v].length === 0) {
-                                    checkIsReady = false;
-                                    return false; // <-- note: this is the lodash way to break iteration;
-                                }
-                            });
-                            this.commonDataready = checkIsReady;
+                            this.commonDataready = this.isDataReady(this.commonData);
 
                             //
                             // creates a data hashmap for a convenient and quick lookup access by id
@@ -284,13 +293,39 @@ export class APICommonService {
         return true;
     }
 
-    public setCapabilities () {
+    public setUserCapabilities () {
 
-        // gets and maps user capabilities to object for fast evaluation
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if(currentUser && Array.isArray(currentUser.capabilities)) {
-            this.userCapabilities = _.zipObject(currentUser.capabilities, _.map(currentUser.capabilities, () => { return true } ));
+        let capabilities = [];
+
+        // get the current user object and group id
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+        //console.log('setUserCapabilities',currentUser);
+
+        if( currentUser ) {
+            const group = currentUser.id_group[0];
+
+            // check the capabilities by Group ID if the data was already loaded
+            if( this.dataEnum['groups'][group] && Array.isArray(this.dataEnum['groups'][group]['roles'])) {
+
+                capabilities = this.dataEnum['groups'][group]['roles'];
+
+                // otherwise uses the login time declared capabilities (from /api/authenticate response)
+            } else if(currentUser && Array.isArray(currentUser.capabilities)) {
+
+                capabilities = currentUser.capabilities;
+
+            } else {
+
+                this.notifyError("Impossibile determinare i permessi dell'utente");
+
+            }
         }
+
+        // maps user capabilities to object for fast evaluation
+        this.userCapabilities = _.zipObject(capabilities, _.map(capabilities, () => { return true } ));
+
+        //console.log(this.userCapabilities);
 
     }
 
@@ -379,6 +414,13 @@ export class APICommonService {
                 _.each(this._allData[apipath], item => { this.dataEnum[apipath][item.id] = item;  } );
 
                 //
+                // updates current user capabilities if we just loaded new groups capabilities
+                //
+                if( apipath === 'groups') {
+                    this.setUserCapabilities();
+                }
+
+                //
                 // notifies the subscribers with the new data
                 //
                 this._allData$[apipath].next(this._allData[apipath]);
@@ -398,14 +440,7 @@ export class APICommonService {
                 //
                 // checks if all cached api methods are loaded
                 //
-                let checkIsReady = true;
-                _.each(this.commonData, v => {
-                    if (this._allData[v].length === 0) {
-                        checkIsReady = false;
-                        return false; // <-- this is the lodash way to break iteration;
-                    }
-                });
-                this.commonDataready = checkIsReady;
+                this.commonDataready = this.isDataReady(this.commonData);
 
             },
             error => {
@@ -426,29 +461,30 @@ export class APICommonService {
             case 'amministrazioni':
                 _.each(data, (item) => { item.text = item['codice'] + ' - ' + item['denominazione']; item.id = String(item.id) });
                 break;
-            case 'mittenti':
-                _.each(data, (item) => { item.text = item['denominazione'] } );
-                break;
             case 'registri':
                 _.each(data, (item) => { item.text = item['id'] + ' - ' + item['oggetto'] } );
                 break;
-            case 'uffici':
-                _.each(data, (item) => { item.text = item['id'] + ' - ' + item['denominazione'] } );
-                break;
-            case 'ruoli_cipe':
-                _.each(data, (item) => { item.text = item['denominazione'] } );
-                break;
             case 'firmatari':
                 _.each(data, (item) => { item.text = item['denominazione_estesa'] } );
-                break;
-            case 'firmataritipo':
-                _.each(data, (item) => { item.text = item['denominazione'] } );
                 break;
             case 'users':
                 _.each(data, (item) => { item.text = item['denominazione'] = item['lastName'] + ' ' + item['firstName'] } );
                 break;
             case 'groups':
                 _.each(data, (item) => { item.text = item['name'] } );
+                break;
+            case 'delibere':
+                _.each(data, (item) => { item.text = item['numero'] + ' - ' + item['argomento'] } );
+                break;
+            case 'cipe':
+                _.each(data, (item) => { item.text = this.transformDate(item['data'],'dd/MM/yyyy') } );
+                break;
+            case 'uffici':
+            case 'mittenti':
+            case 'ruoli_cipe':
+            case 'firmataritipo':
+            case 'tags':
+                _.each(data, (item) => { item.text = item['denominazione'] } );
                 break;
         }
     }
@@ -463,5 +499,9 @@ export class APICommonService {
             const headers = new Headers({'Authorization': 'Bearer ' + currentUser.token});
             return new RequestOptions({headers: headers});
         }
+    }
+
+    public transformDate(date, format) {
+        return this.datePipe.transform(date, format);
     }
 }

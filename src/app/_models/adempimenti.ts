@@ -13,14 +13,14 @@ export class Adempimenti {
     constructor() {
         this.id = null;
         this.id_delibere = null;
-        this.descrizione = null;
+        this.descrizione = '';
         this.codice_descrizione = null;
         this.codice_fonte = null;
         this.codice_esito = null;
         this.fonti = null;
         this.data_scadenza = null;
         this.vincolo = null;
-        this.note = null;
+        this.note = '';
     }
 }
 
