@@ -33,13 +33,12 @@ export class DelibereListComponent implements OnInit {
         id_situazione: '',
         anno: null,
         data_cipe: null,
-        id_tags: null
+        id_tags: ''
     };
 
     private dateFilter: any;
 
     public keysGetter = Object.keys;
-    public Math = Math;
     public viewtype: string = 'list';
     
     public situazione = [
@@ -226,7 +225,8 @@ export class DelibereListComponent implements OnInit {
         }
     }
 
-    public resetFilters(): void {
+    public resetFilters(event): void {
+        event.stopPropagation();
         this.filter = {
             id: null,
             argomento: '',
@@ -236,12 +236,16 @@ export class DelibereListComponent implements OnInit {
             id_situazione: '',
             anno: null,
             data_cipe: null,
-            id_tags: null
+            id_tags: ''
         };
     }
 
     public countDaysFromToday(date: number): number {
         let days = Math.floor((this.today - date)/86400000);
         return days;
+    }
+
+    public limitRange(val) {
+        return Math.min(Math.max(val*2,14),500);
     }
 }

@@ -58,7 +58,8 @@ export class FirmatariListComponent implements OnInit {
         );
     }
 
-    public resetFilters(): void {
+    public resetFilters(event): void {
+        event.stopPropagation();
         this.filter = {
             denominazione_estesa: ''
         };

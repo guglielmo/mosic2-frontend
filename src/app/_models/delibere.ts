@@ -118,8 +118,8 @@ export class Delibere {
         this.numero_co_gu = null;
         this.pubblicazione_gu = null;
         this.note_gu = "";
-        this.id_uffici = null;
-        this.id_segretariato = null;
+        this.id_uffici = [];
+        this.id_segretariato = [];
         this.id_tags = "";
         this.allegati_MEF = [];
         this.allegati_CC = [];

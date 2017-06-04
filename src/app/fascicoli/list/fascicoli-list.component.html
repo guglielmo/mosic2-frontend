@@ -7,20 +7,20 @@
     <header>
         <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">fascicoli ...</span>
             <span *ngIf="filter.argomento.length > 2 ||
-                         filter.id_amministrazioni != -1 ||
-                         filter.id_titolari != -1 ||
+                         filter.id_amministrazioni ||
+                         filter.id_titolari ||
                          filter.numero_fascicolo ||
                          filter.id_tags" class="float-lg-right mr-3">
-                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters($event)">Rimuovi filtri</button>
             </span>
         </h5>
         <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">fascicoli ...</span>
             <span *ngIf="filter.argomento.length > 2 ||
-                         filter.id_amministrazioni != -1 ||
-                         filter.id_titolari != -1 ||
+                         filter.id_amministrazioni ||
+                         filter.id_titolari ||
                          filter.numero_fascicolo ||
                          filter.id_tags" class="float-lg-right mr-3">
-                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters($event)">Rimuovi filtri</button>
             </span>
         </h5>
         <div class="widget-controls m-t-1">
@@ -114,14 +114,12 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let fascicolo of mf.data" (click)="editId(fascicolo.id)" class="clickable">
-                        <td> {{apiService.dataEnum['titolari'][fascicolo.id_titolari]['denominazione']}}</td>
+                        <td>{{fascicolo.id_titolari | dataEnum : apiService.dataEnum : 'titolari': 'denominazione'}}</td>
                         <td>{{fascicolo.numero_fascicolo}}</td>
                         <td [innerHTML]="fascicolo.argomento | dataMark : filter.argomento"></td>
-                        <td>{{amministrazioniEnum(fascicolo.id_amministrazioni)}}</td>
+                        <td>{{fascicolo.id_amministrazioni | dataEnum : apiService.dataEnum : 'amministrazioni': 'denominazione'}}</td>
                         <td>
-                            <span class="ml-1 badge badge-default text-left line-height-lg badge-lg-limit"
-                                  [title]="fascicolo.id_tags | dataEnum : apiService.dataEnum : 'tags'"
-                                  [innerHTML]="fascicolo.id_tags | dataEnum : apiService.dataEnum : 'tags' : 'denominazione' : '<br/>'"></span>
+                            <div class="tag-container" [innerHTML]="fascicolo.id_tags | tagEnum : apiService.dataEnum : 'tags' : 'denominazione' : ''"></div>
                         </td>
                         <td *ngIf="apiService.userCan('DELETE_FASCICOLI')">
                             <a (click)="askDeleteFascicoli($event, myModal, fascicolo)"><i class="fa fa-trash-o"> </i></a>

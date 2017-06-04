@@ -1,15 +1,28 @@
-<accordion [closeOthers]="false" class="mb-lg show" id="debug[{{model.id}}]">
+<accordion [closeOthers]="false" class="mb-lg show" id="debug_monitor">
+    <accordion-group #accordionMonitorDebug [panelClass]="'accordion-danger'" [isOpen]="false">
+        <div accordion-heading>
+            <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug Monitor</strong>
+            <i class="fa float-right"
+               [ngClass]="{'fa-angle-down': accordionMonitorDebug?.isOpen, 'fa-angle-right': !accordionMonitorDebug?.isOpen}"></i>
+        </div>
+        <div>
+            <pre>monitor = {{monitor | json}}</pre>
+        </div>
+    </accordion-group>
+</accordion>
+<!--
+<accordion [closeOthers]="false" class="mb-lg show" id="debug_monitor_group">
     <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="false">
         <div accordion-heading>
-            <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
+            <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug Monitor Group</strong>
             <i class="fa float-right"
                [ngClass]="{'fa-angle-down': accordionGroupDebug?.isOpen, 'fa-angle-right': !accordionGroupDebug?.isOpen}"></i>
         </div>
         <div>
-            <pre>model = {{model | json}}</pre>
+            <pre>monitor_group = {{monitor_group | json}}</pre>
         </div>
     </accordion-group>
-</accordion>
+</accordion>-->
 
 
 <h3 class="page-title"><a [routerLink]="'/app/monitor/'+viewtype">Monitor</a> /
@@ -24,482 +37,498 @@
     </span>
 </h3>
 
-<section *ngIf="apiService.commonDataready" class="widget" widget data-widgster-collapsed="false">
-    <header>
-        <h5 data-widgster="expand" title="Apri"><i class="fa fa-search"></i> Periodo <span class="fw-semi-bold">monitoraggio ...</span>
-            <span *ngIf="filter.anno != null" class="float-lg-right mr-3">
-                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
-            </span>
-        </h5>
-        <h5 data-widgster="collapse" title="Chiudi"><i class="fa fa-search"></i> Periodo <span class="fw-semi-bold">monitoraggio ...</span>
-            <span *ngIf="filter.anno != null" class="float-lg-right mr-3">
-                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
-            </span>
-        </h5>
-        <div class="widget-controls m-t-1">
-            <a data-widgster="expand" title="Apri"><i class="glyphicon glyphicon-chevron-down"></i></a>
-            <a data-widgster="collapse" title="Chiudi"><i class="glyphicon glyphicon-chevron-up"></i></a>
-        </div>
-    </header>
-    <div class="widget-body">
-        <div class="row">
-            <div *ngIf="mode === 'group'" class="col-lg-2">
-                <div class="form-group">
-                    <label for="anno"><strong>Anno</strong></label>
-                    <select id="anno" name="anno" class="form-control" data-style="btn-secondary" data-width="auto"
-                            [ngModel]="filter.anno" (change)="onYearChanged($event.target.value)">
-                        <option value=""></option>
-                        <ng-container *ngFor="let year of years">
-                            <option value="{{year}}">{{year}}</option>
-                        </ng-container>
-                    </select>
-                </div>
+<div *ngIf="apiService.isDataReady(['delibere', 'monitor', 'monitor/group'])">
+
+    <section class="widget" widget data-widgster-collapsed="false">
+        <header>
+            <h5 data-widgster="expand" title="Apri"><i class="fa fa-search"></i> Periodo <span class="fw-semi-bold">monitoraggio ...</span>
+                <!--<span *ngIf="filter.anno != null" class="float-lg-right mr-3">
+                    <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters($event)">Rimuovi filtri</button>
+                </span>-->
+            </h5>
+            <h5 data-widgster="collapse" title="Chiudi"><i class="fa fa-search"></i> Periodo <span class="fw-semi-bold">monitoraggio ...</span>
+                <!--<span *ngIf="filter.anno != null" class="float-lg-right mr-3">
+                    <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters($event)">Rimuovi filtri</button>
+                </span>-->
+            </h5>
+            <div class="widget-controls m-t-1">
+                <a data-widgster="expand" title="Apri"><i class="glyphicon glyphicon-chevron-down"></i></a>
+                <a data-widgster="collapse" title="Chiudi"><i class="glyphicon glyphicon-chevron-up"></i></a>
             </div>
-            <div *ngIf="mode === 'detail'" class="col-lg-2">
-                <div class="form-group">
-                    <label for="data_cipe"><strong>Data CIPE</strong></label>
-                    <select id="data_cipe" name="data_cipe" class="form-control" data-style="btn-secondary" data-width="auto"
-                            [ngModel]="filter.data_cipe" (change)="onDataCipeChanged($event.target.value)">
-                        <option value=""></option>
-                        <ng-container *ngFor="let cipe of cipe$ | async">
-                            <option value="{{cipe.data | date: 'yyyy-MM-dd'}}">{{cipe.data | date: 'dd/MM/yyyy' }}</option>
-                        </ng-container>
-                    </select>
+        </header>
+        <div class="widget-body">
+            <div class="row">
+                <div *ngIf="mode === 'group'" class="col-lg-2">
+                    <div class="form-group">
+                        <label for="anno"><strong>Anno</strong></label>
+                        <select id="anno" name="anno" class="form-control" data-style="btn-secondary" data-width="auto"
+                                [ngModel]="filter.anno" (change)="onYearChanged($event.target.value)">
+                            <option value=""></option>
+                            <ng-container *ngFor="let year of years">
+                                <option value="{{year}}">{{year}}</option>
+                            </ng-container>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-10">
-                <div class="text-right">
-                    <div>
-                        <form #m="ngForm">
-                            <div class="form-group">
-                                <label for="anno"><strong>Vista</strong></label><br>
-                                <div class="btn-group">
-                                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="situazione" name="viewtype"
-                                           [tooltip]="'Situazione'" placement="top" (click)="onViewTypeChange('situazione')">
-                                        <i class="fa fa-lg fa-th-list"></i>
-                                    </label>
-                                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="statistica" name="viewtype"
-                                           [tooltip]="'Statistiche tempi'" placement="top" (click)="onViewTypeChange('statistica')">
-                                        <i class="fa fa-lg fa-calendar"></i>
-                                    </label>
-                                    <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="analisi" name="viewtype"
-                                           [tooltip]="'Analisi&nbsp;delle&nbsp;fasi'" placement="top" (click)="onViewTypeChange('analisi')">
-                                        <i class="fa fa-lg fa-search"></i>
-                                    </label>
+                <div *ngIf="mode === 'detail'" class="col-lg-2">
+                    <div class="form-group">
+                        <label for="data_cipe"><strong>Data CIPE</strong></label>
+                        <select id="data_cipe" name="data_cipe" class="form-control" data-style="btn-secondary" data-width="auto"
+                                [ngModel]="filter.data_cipe" (change)="onDataCipeChanged($event.target.value)">
+                            <option value=""></option>
+                            <ng-container *ngFor="let cipe of cipe$ | async">
+                                <option value="{{cipe.data}}">{{cipe.data | date: 'dd/MM/yyyy' }}</option>
+                            </ng-container>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-10">
+                    <div class="text-right">
+                        <div>
+                            <form #m="ngForm">
+                                <div class="form-group">
+                                    <label for="anno"><strong>Vista</strong></label><br>
+                                    <div class="btn-group">
+                                        <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="situazione" name="viewtype"
+                                               [tooltip]="'Situazione'" placement="top" (click)="onViewTypeChange('situazione')">
+                                            <i class="fa fa-lg fa-th-list"></i>
+                                        </label>
+                                        <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="statistica" name="viewtype"
+                                               [tooltip]="'Statistiche tempi'" placement="top" (click)="onViewTypeChange('statistica')">
+                                            <i class="fa fa-lg fa-calendar"></i>
+                                        </label>
+                                        <label class="btn btn-secondary" [(ngModel)]="viewtype" btnRadio="analisi" name="viewtype"
+                                               [tooltip]="'Analisi&nbsp;delle&nbsp;fasi'" placement="top" (click)="onViewTypeChange('analisi')">
+                                            <i class="fa fa-lg fa-search"></i>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </section>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="widget py-0" widget>
+                <div class="widget-body widget-table-overflow">
+                    <ng-container *ngIf="mode === 'group'">
+                        <ng-container *ngFor="let anno of monitor_group$ | async">
+                            <ng-container *ngIf="anno.id == filter.anno">
+                                <table *ngIf="viewtype === 'situazione'"
+                                       class="table table-hover table-condensed mb-0 table-bordered"
+                                       [mfData]="anno.group"
+                                       [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
+                                       #mf="mfDataTable" stickthead [offsetY]="0">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="3"></th>
+                                        <th colspan="2">Capo Dipartimento</th>
+                                        <th colspan="2">M.E.F.</th>
+                                        <th colspan="2">Segretario</th>
+                                        <th colspan="2">Presidente</th>
+                                        <th colspan="2">Corte dei Conti</th>
+                                        <th colspan="2">Gazzetta Ufficiale</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Nr.</th>
+                                        <th>Da acquisire Segretariato</th>
+                                        <th>da inviare</th>
+                                        <th>in firma</th>
+                                        <th>da inviare</th>
+                                        <th>in firma</th>
+                                        <th>da inviare</th>
+                                        <th>in firma</th>
+                                        <th>da inviare</th>
+                                        <th>in firma</th>
+                                        <th>da inviare</th>
+                                        <th>da registrare</th>
+                                        <th>da inviare</th>
+                                        <th>da pubblicare</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let delibera of mf.data">
+                                        <td><a [routerLink]="'/app/delibere/firme/'+(delibera.id | date : 'yyyy-MM-dd')">{{delibera.id | date : 'dd/MM/yyyy'}}</a></td>
+                                        <td>{{delibera.situazione.count}}</td>
+                                        <td>{{delibera.situazione.da_acquisire}}</td>
+                                        <td>{{delibera.situazione.CD_inviare}}</td>
+                                        <td>{{delibera.situazione.CD_firma}}</td>
+                                        <td>{{delibera.situazione.MEF_inviare}}</td>
+                                        <td>{{delibera.situazione.MEF_firma}}</td>
+                                        <td>{{delibera.situazione.SEG_inviare}}</td>
+                                        <td>{{delibera.situazione.SEG_firma}}</td>
+                                        <td>{{delibera.situazione.PRE_inviare}}</td>
+                                        <td>{{delibera.situazione.PRE_firma}}</td>
+                                        <td>{{delibera.situazione.CC_inviare}}</td>
+                                        <td>{{delibera.situazione.CC_firma}}</td>
+                                        <td>{{delibera.situazione.GU_inviare}}</td>
+                                        <td>{{delibera.situazione.GU_firma}}</td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr class="bg-sum fw-semi-bold">
+                                        <td>Totale</td>
+                                        <td>{{sumSeriesGroup(mf.data, 'situazione','count')}}</td>
+                                        <td>{{sumSeriesGroup(mf.data, 'situazione','da_acquisire')}}</td>
+                                        <td>{{sumSeriesGroup(mf.data, 'situazione','CD_inviare')}}</td>
+                                        <td>{{sumSeriesGroup(mf.data, 'situazione','CD_firma')}}</td>
+                                        <td>{{sumSeriesGroup(mf.data, 'situazione','MEF_inviare')}}</td>
+                                        <td>{{sumSeriesGroup(mf.data, 'situazione','MEF_firma')}}</td>
+                                        <td>{{sumSeriesGroup(mf.data, 'situazione','SEG_inviare')}}</td>
+                                        <td>{{sumSeriesGroup(mf.data, 'situazione','SEG_firma')}}</td>
+                                        <td>{{sumSeriesGroup(mf.data, 'situazione','PRE_inviare')}}</td>
+                                        <td>{{sumSeriesGroup(mf.data, 'situazione','PRE_firma')}}</td>
+                                        <td>{{sumSeriesGroup(mf.data, 'situazione','CC_inviare')}}</td>
+                                        <td>{{sumSeriesGroup(mf.data, 'situazione','CC_firma')}}</td>
+                                        <td>{{sumSeriesGroup(mf.data, 'situazione','GU_inviare')}}</td>
+                                        <td>{{sumSeriesGroup(mf.data, 'situazione','GU_firma')}}</td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                                <table *ngIf="viewtype === 'statistica'"
+                                       class="table table-hover table-condensed mb-0 table-bordered"
+                                       [mfData]="anno.group"
+                                       [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
+                                       #mf="mfDataTable" stickthead [offsetY]="0">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="3"></th>
+                                        <th colspan="4">Capo Dipartimento</th>
+                                        <th colspan="4">M.E.F.</th>
+                                        <th colspan="4">Segretario</th>
+                                        <th colspan="4">Presidente</th>
+                                        <th colspan="4">Corte dei Conti</th>
+                                        <th colspan="4">Gazzetta Ufficiale</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Tot.</th>
+                                        <th>Arrivo</th>
+                                        <th colspan="2">invio</th>
+                                        <th colspan="2">firma</th>
+                                        <th colspan="2">invio</th>
+                                        <th colspan="2">firma</th>
+                                        <th colspan="2">invio</th>
+                                        <th colspan="2">firma</th>
+                                        <th colspan="2">invio</th>
+                                        <th colspan="2">firma</th>
+                                        <th colspan="2">invio</th>
+                                        <th colspan="2">regis.</th>
+                                        <th colspan="2">invio</th>
+                                        <th colspan="2">pubbl.</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let delibera of mf.data">
+                                        <td><a [routerLink]="'/app/monitor/statistica/'+(delibera.id | date : 'yyyy-MM-dd')">{{delibera.id | date : 'dd/MM/yyyy'}}</a></td>
+                                        <td>({{delibera.statistica.count}})</td>
+                                        <td class="bg-oddcol">{{delibera.statistica.arrivo}}</td>
+                                        <td>{{delibera.statistica.cd_invio_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.statistica.cd_invio_giorni_tot}}</td>
+                                        <td>{{delibera.statistica.cd_ritorno_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.statistica.cd_ritorno_giorni_tot}}</td>
+                                        <td>{{delibera.statistica.mef_invio_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.statistica.mef_invio_giorni_tot}}</td>
+                                        <td>{{delibera.statistica.mef_ritorno_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.statistica.mef_ritorno_giorni_tot}}</td>
+                                        <td>{{delibera.statistica.seg_invio_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.statistica.seg_invio_giorni_tot}}</td>
+                                        <td>{{delibera.statistica.seg_ritorno_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.statistica.seg_ritorno_giorni_tot}}</td>
+                                        <td>{{delibera.statistica.pre_invio_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.statistica.pre_invio_giorni_tot}}</td>
+                                        <td>{{delibera.statistica.pre_ritorno_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.statistica.pre_ritorno_giorni_tot}}</td>
+                                        <td>{{delibera.statistica.cc_invio_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.statistica.cc_invio_giorni_tot}}</td>
+                                        <td>{{delibera.statistica.cc_ritorno_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.statistica.cc_ritorno_giorni_tot}}</td>
+                                        <td>{{delibera.statistica.gu_invio_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.statistica.gu_invio_giorni_tot}}</td>
+                                        <td>{{delibera.statistica.gu_ritorno_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.statistica.gu_ritorno_giorni_tot}}</td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr class="bg-sum fw-semi-bold">
+                                        <td>Media gg.</td>
+                                        <td>({{sumSeriesGroup(mf.data, 'statistica','count')}})</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'arrivo')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'cd_invio_giorni')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'cd_invio_giorni_tot')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'cd_ritorno_giorni')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'cd_ritorno_giorni_tot')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'mef_invio_giorni')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'mef_invio_giorni_tot')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'mef_ritorno_giorni')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'mef_ritorno_giorni_tot')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'seg_invio_giorni')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'seg_invio_giorni_tot')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'seg_ritorno_giorni')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'seg_ritorno_giorni_tot')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'pre_invio_giorni')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'pre_invio_giorni_tot')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'pre_ritorno_giorni')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'pre_ritorno_giorni_tot')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'cc_invio_giorni')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'cc_invio_giorni_tot')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'cc_ritorno_giorni')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'cc_ritorno_giorni_tot')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'gu_invio_giorni')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'gu_invio_giorni_tot')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'gu_ritorno_giorni')}}</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'statistica', 'gu_ritorno_giorni_tot')}}</td>
+                                    </tr>
+                                    </tfoot>
+                                    <caption class="p-2">
+                                        (*) Tra parentesi il numero totale di delibere <br>
+                                        (**) Le medie in giorni sono arrotondate all'unità
+                                    </caption>
+                                </table>
+                                <table *ngIf="viewtype === 'analisi'"
+                                       class="table table-hover table-condensed mb-0 table-bordered"
+                                       [mfData]="anno.group"
+                                       [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
+                                       #mf="mfDataTable" stickthead [offsetY]="0">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="2"></th>
+                                        <th colspan="2">Consegna</th>
+                                        <th colspan="2">Capo Dipartimento</th>
+                                        <th colspan="2">M.E.F.</th>
+                                        <th colspan="2">Segretario</th>
+                                        <th colspan="2">Presidente</th>
+                                        <th colspan="2">Corte dei Conti</th>
+                                        <th colspan="2">Gazzetta Ufficiale</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Nr.</th>
+                                        <th>nr.</th>
+                                        <th>gg. medi</th>
+                                        <th>nr.</th>
+                                        <th>gg. medi</th>
+                                        <th>nr.</th>
+                                        <th>gg. medi</th>
+                                        <th>nr.</th>
+                                        <th>gg. medi</th>
+                                        <th>nr.</th>
+                                        <th>gg. medi</th>
+                                        <th>nr.</th>
+                                        <th>gg. medi</th>
+                                        <th>nr.</th>
+                                        <th>gg. medi</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let delibera of mf.data">
+                                        <td><a [routerLink]="'/app/monitor/analisi/'+(delibera.id | date : 'yyyy-MM-dd')">{{delibera.id | date : 'dd/MM/yyyy'}}</a></td>
+                                        <td>{{delibera.analisi.count}}</td>
+                                        <td>{{delibera.analisi.consegna}}</td>
+                                        <td class="bg-yellow">{{delibera.analisi.consegna_media}}</td>
+                                        <td>{{delibera.analisi.cd}}</td>
+                                        <td class="bg-yellow">{{delibera.analisi.cd_media}}</td>
+                                        <td>{{delibera.analisi.mef}}</td>
+                                        <td class="bg-yellow">{{delibera.analisi.mef_media}}</td>
+                                        <td>{{delibera.analisi.seg}}</td>
+                                        <td class="bg-yellow">{{delibera.analisi.seg_media}}</td>
+                                        <td>{{delibera.analisi.pre}}</td>
+                                        <td class="bg-yellow">{{delibera.analisi.pre_media}}</td>
+                                        <td>{{delibera.analisi.cc}}</td>
+                                        <td class="bg-yellow">{{delibera.analisi.cc_media}}</td>
+                                        <td>{{delibera.analisi.gu}}</td>
+                                        <td class="bg-yellow">{{delibera.analisi.gu_media}}</td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr class="bg-sum fw-semi-bold">
+                                        <td>Totale gg.</td>
+                                        <td>({{sumSeriesGroup(mf.data, 'analisi','count')}})</td>
+                                        <td>({{sumSeriesGroup(mf.data, 'analisi','consegna')}})</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'analisi','consegna_media')}}</td>
+                                        <td>({{sumSeriesGroup(mf.data, 'analisi','cd')}})</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'analisi','cd_media')}}</td>
+                                        <td>({{sumSeriesGroup(mf.data, 'analisi','mef')}})</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'analisi','mef_media')}}</td>
+                                        <td>({{sumSeriesGroup(mf.data, 'analisi','seg')}})</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'analisi','seg_media')}}</td>
+                                        <td>({{sumSeriesGroup(mf.data, 'analisi','pre')}})</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'analisi','pre_media')}}</td>
+                                        <td>({{sumSeriesGroup(mf.data, 'analisi','cc')}})</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'analisi','cc_media')}}</td>
+                                        <td>({{sumSeriesGroup(mf.data, 'analisi','gu')}})</td>
+                                        <td>{{avgSeriesGroup(mf.data, 'analisi','gu_media')}}</td>
+                                    </tr>
+                                    </tfoot>
+                                    <caption class="p-2">
+                                        (*) Tra parentesi il numero di delibere conteggiate <br>
+                                        (**) La media giorni è arrotondata all'unità
+                                    </caption>
+                                </table>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="mode === 'detail'">
+                        <ng-container *ngFor="let cipe of monitor$ | async">
+                            <ng-container *ngIf="cipe.id == filter.data_cipe">
+                                <table *ngIf="viewtype === 'statistica'"
+                                       class="table table-hover table-condensed mb-0 table-bordered"
+                                       [mfData]="cipe.statistica"
+                                       [mfSortBy]="'nr'" [mfSortOrder]="'asc'"
+                                       #mf="mfDataTable" stickthead [offsetY]="0">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="2"></th>
+                                        <th colspan="4">Capo Dipartimento</th>
+                                        <th colspan="4">M.E.F.</th>
+                                        <th colspan="4">Segretario</th>
+                                        <th colspan="4">Presidente</th>
+                                        <th colspan="4">Corte dei Conti</th>
+                                        <th colspan="4">Gazzetta Ufficiale</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Nr. delibera</th>
+                                        <th>Arrivo</th>
+                                        <th colspan="2">invio</th>
+                                        <th colspan="2">firma</th>
+                                        <th colspan="2">invio</th>
+                                        <th colspan="2">firma</th>
+                                        <th colspan="2">invio</th>
+                                        <th colspan="2">firma</th>
+                                        <th colspan="2">invio</th>
+                                        <th colspan="2">firma</th>
+                                        <th colspan="2">invio</th>
+                                        <th colspan="2">regis.</th>
+                                        <th colspan="2">invio</th>
+                                        <th colspan="2">pubbl.</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let delibera of mf.data">
+                                        <td><a [routerLink]="'/app/delibere/edit/'+delibera.id">{{delibera.nr}}</a></td>
+                                        <td class="bg-oddcol">{{delibera.arrivo}}</td>
+                                        <td>{{delibera.cd_invio_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.cd_invio_giorni_tot}}</td>
+                                        <td>{{delibera.cd_ritorno_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.cd_ritorno_giorni_tot}}</td>
+                                        <td>{{delibera.mef_invio_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.mef_invio_giorni_tot}}</td>
+                                        <td>{{delibera.mef_ritorno_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.mef_ritorno_giorni_tot}}</td>
+                                        <td>{{delibera.seg_invio_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.seg_invio_giorni_tot}}</td>
+                                        <td>{{delibera.seg_ritorno_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.seg_ritorno_giorni_tot}}</td>
+                                        <td>{{delibera.pre_invio_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.pre_invio_giorni_tot}}</td>
+                                        <td>{{delibera.pre_ritorno_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.pre_ritorno_giorni_tot}}</td>
+                                        <td>{{delibera.cc_invio_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.cc_invio_giorni_tot}}</td>
+                                        <td>{{delibera.cc_ritorno_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.cc_ritorno_giorni_tot}}</td>
+                                        <td>{{delibera.gu_invio_giorni}}</td>
+                                        <td class="bg-oddcol">{{delibera.gu_invio_giorni_tot}}</td>
+                                        <td>{{delibera.gu_ritorno_giorni}}</td>
+                                        <td>{{delibera.gu_ritorno_giorni_tot}}</td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr class="bg-sum fw-semi-bold">
+                                        <td>Totale</td>
+                                        <td>{{avgSeries(mf.data, 'arrivo')}}</td>
+                                        <td>{{avgSeries(mf.data, 'cd_invio_giorni')}}</td>
+                                        <td>{{avgSeries(mf.data, 'cd_invio_giorni_tot')}}</td>
+                                        <td>{{avgSeries(mf.data, 'cd_ritorno_giorni')}}</td>
+                                        <td>{{avgSeries(mf.data, 'cd_ritorno_giorni_tot')}}</td>
+                                        <td>{{avgSeries(mf.data, 'mef_invio_giorni')}}</td>
+                                        <td>{{avgSeries(mf.data, 'mef_invio_giorni_tot')}}</td>
+                                        <td>{{avgSeries(mf.data, 'mef_ritorno_giorni')}}</td>
+                                        <td>{{avgSeries(mf.data, 'mef_ritorno_giorni_tot')}}</td>
+                                        <td>{{avgSeries(mf.data, 'seg_invio_giorni')}}</td>
+                                        <td>{{avgSeries(mf.data, 'seg_invio_giorni_tot')}}</td>
+                                        <td>{{avgSeries(mf.data, 'seg_ritorno_giorni')}}</td>
+                                        <td>{{avgSeries(mf.data, 'seg_ritorno_giorni_tot')}}</td>
+                                        <td>{{avgSeries(mf.data, 'pre_invio_giorni')}}</td>
+                                        <td>{{avgSeries(mf.data, 'pre_invio_giorni_tot')}}</td>
+                                        <td>{{avgSeries(mf.data, 'pre_ritorno_giorni')}}</td>
+                                        <td>{{avgSeries(mf.data, 'pre_ritorno_giorni_tot')}}</td>
+                                        <td>{{avgSeries(mf.data, 'cc_invio_giorni')}}</td>
+                                        <td>{{avgSeries(mf.data, 'cc_invio_giorni_tot')}}</td>
+                                        <td>{{avgSeries(mf.data, 'cc_ritorno_giorni')}}</td>
+                                        <td>{{avgSeries(mf.data, 'cc_ritorno_giorni_tot')}}</td>
+                                        <td>{{avgSeries(mf.data, 'gu_invio_giorni')}}</td>
+                                        <td>{{avgSeries(mf.data, 'gu_invio_giorni_tot')}}</td>
+                                        <td>{{avgSeries(mf.data, 'gu_ritorno_giorni')}}</td>
+                                        <td>{{avgSeries(mf.data, 'gu_ritorno_giorni_tot')}}</td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                                <table *ngIf="viewtype === 'analisi'"
+                                       class="table table-hover table-condensed mb-0 table-bordered"
+                                       [mfData]="cipe.analisi"
+                                       [mfSortBy]="'nr'" [mfSortOrder]="'asc'"
+                                       #mf="mfDataTable" stickthead [offsetY]="0">
+                                    <thead>
+                                    <tr>
+                                        <th>Nr.</th>
+                                        <th colspan="2">Consegna</th>
+                                        <th colspan="2">Capo Dipartimento</th>
+                                        <th colspan="2">M.E.F.</th>
+                                        <th colspan="2">Segretario</th>
+                                        <th colspan="2">Presidente</th>
+                                        <th colspan="2">Corte dei Conti</th>
+                                        <th colspan="2">Gazzetta Ufficiale</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let delibera of mf.data">
+                                        <td>{{delibera.nr}}</td>
+                                        <td colspan="2">{{delibera.consegna}}</td>
+                                        <td colspan="2">{{delibera.cd}}</td>
+                                        <td colspan="2">{{delibera.mef}}</td>
+                                        <td colspan="2">{{delibera.seg}}</td>
+                                        <td colspan="2">{{delibera.pre}}</td>
+                                        <td colspan="2">{{delibera.cc}}</td>
+                                        <td colspan="2">{{delibera.gu}}</td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr class="bg-sum fw-semi-bold">
+                                        <td>Totale gg.</td>
+                                        <td>{{sumSeries(mf.data, 'count')}}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </section>
+
+            <chart [options]="chartOptions" (load)="saveChartInstance($event.context)"></chart>
+        </div>
     </div>
-</section>
 
-<div *ngIf="apiService.commonDataready" class="row">
-    <div class="col-lg-12">
-        <div class="mb-1">Risultati: {{model.length}}</div>
-        <section class="widget py-0" widget>
-            <div class="widget-body widget-table-overflow">
-                <ng-container *ngIf="mode === 'group'">
-                    <table *ngIf="viewtype === 'situazione'"
-                           class="table table-hover table-condensed mb-0 table-bordered"
-                           [mfData]="model"
-                           [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
-                           #mf="mfDataTable" stickthead [offsetY]="0">
-                        <thead>
-                        <tr>
-                            <th colspan="3"></th>
-                            <th colspan="2">Capo Dipartimento</th>
-                            <th colspan="2">M.E.F.</th>
-                            <th colspan="2">Segretario</th>
-                            <th colspan="2">Presidente</th>
-                            <th colspan="2">Corte dei Conti</th>
-                            <th colspan="2">Gazzetta Ufficiale</th>
-                        </tr>
-                        <tr>
-                            <th>Data</th>
-                            <th>Nr.</th>
-                            <th>Da acquisire Segretariato</th>
-                            <th>da inviare</th>
-                            <th>in firma</th>
-                            <th>da inviare</th>
-                            <th>in firma</th>
-                            <th>da inviare</th>
-                            <th>in firma</th>
-                            <th>da inviare</th>
-                            <th>in firma</th>
-                            <th>da inviare</th>
-                            <th>da registrare</th>
-                            <th>da inviare</th>
-                            <th>da pubblicare</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let delibera of mf.data">
-                            <td><a [routerLink]="'/app/delibere/firme/'+(delibera.id | date : 'yyyy-MM-dd')">{{delibera.id | date : 'dd/MM/yyyy'}}</a></td>
-                            <td>{{delibera.situazione.count}}</td>
-                            <td>{{delibera.situazione.da_acquisire}}</td>
-                            <td>{{delibera.situazione.CD_inviare}}</td>
-                            <td>{{delibera.situazione.CD_firma}}</td>
-                            <td>{{delibera.situazione.MEF_inviare}}</td>
-                            <td>{{delibera.situazione.MEF_firma}}</td>
-                            <td>{{delibera.situazione.SEG_inviare}}</td>
-                            <td>{{delibera.situazione.SEG_firma}}</td>
-                            <td>{{delibera.situazione.PRE_inviare}}</td>
-                            <td>{{delibera.situazione.PRE_firma}}</td>
-                            <td>{{delibera.situazione.CC_inviare}}</td>
-                            <td>{{delibera.situazione.CC_firma}}</td>
-                            <td>{{delibera.situazione.GU_inviare}}</td>
-                            <td>{{delibera.situazione.GU_firma}}</td>
-                        </tr>
-                        </tbody>
-                        <tfoot>
-                        <tr class="bg-sum fw-semi-bold">
-                            <td>Totale</td>
-                            <td>{{sumSeries('situazione','count')}}</td>
-                            <td>{{sumSeries('situazione','da_acquisire')}}</td>
-                            <td>{{sumSeries('situazione','CD_inviare')}}</td>
-                            <td>{{sumSeries('situazione','CD_firma')}}</td>
-                            <td>{{sumSeries('situazione','MEF_inviare')}}</td>
-                            <td>{{sumSeries('situazione','MEF_firma')}}</td>
-                            <td>{{sumSeries('situazione','SEG_inviare')}}</td>
-                            <td>{{sumSeries('situazione','SEG_firma')}}</td>
-                            <td>{{sumSeries('situazione','PRE_inviare')}}</td>
-                            <td>{{sumSeries('situazione','PRE_firma')}}</td>
-                            <td>{{sumSeries('situazione','CC_inviare')}}</td>
-                            <td>{{sumSeries('situazione','CC_firma')}}</td>
-                            <td>{{sumSeries('situazione','GU_inviare')}}</td>
-                            <td>{{sumSeries('situazione','GU_firma')}}</td>
-                        </tr>
-                        </tfoot>
-                    </table>
-                    <table *ngIf="viewtype === 'statistica'"
-                           class="table table-hover table-condensed mb-0 table-bordered"
-                           [mfData]="model"
-                           [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
-                           #mf="mfDataTable" stickthead [offsetY]="0">
-                        <thead>
-                        <tr>
-                            <th colspan="3"></th>
-                            <th colspan="4">Capo Dipartimento</th>
-                            <th colspan="4">M.E.F.</th>
-                            <th colspan="4">Segretario</th>
-                            <th colspan="4">Presidente</th>
-                            <th colspan="4">Corte dei Conti</th>
-                            <th colspan="4">Gazzetta Ufficiale</th>
-                        </tr>
-                        <tr>
-                            <th>Data</th>
-                            <th>Tot.</th>
-                            <th>Arrivo</th>
-                            <th colspan="2">invio</th>
-                            <th colspan="2">firma</th>
-                            <th colspan="2">invio</th>
-                            <th colspan="2">firma</th>
-                            <th colspan="2">invio</th>
-                            <th colspan="2">firma</th>
-                            <th colspan="2">invio</th>
-                            <th colspan="2">firma</th>
-                            <th colspan="2">invio</th>
-                            <th colspan="2">regis.</th>
-                            <th colspan="2">invio</th>
-                            <th colspan="2">pubbl.</th>
-                        </tr>
-                        </thead>
-                        <!--http://testmosaicapi.tdrynx.info/api/monitor/2015-01-28-->
-                        <tbody>
-                        <tr *ngFor="let delibera of mf.data">
-                            <td><a [routerLink]="'/app/monitor/statistica/'+(delibera.id | date : 'yyyy-MM-dd')">{{delibera.id | date : 'dd/MM/yyyy'}}</a></td>
-                            <td>{{delibera.statistica.count}}</td>
-                            <td>{{delibera.statistica.statistica_arrivo}}</td>
-                            <td>{{delibera.statistica.statistica_cd_invio_giorni}}</td>
-                            <td>{{delibera.statistica.statistica_cd_invio_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_cd_ritorno_giorni}}</td>
-                            <td>{{delibera.statistica.statistica_cd_ritorno_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_mef_invio_giorni}}</td>
-                            <td>{{delibera.statistica.statistica_mef_invio_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_mef_ritorno_giorni}}</td>
-                            <td>{{delibera.statistica.statistica_mef_ritorno_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_seg_invio_giorni}}</td>
-                            <td>{{delibera.statistica.statistica_seg_invio_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_seg_ritorno_giorni}}</td>
-                            <td>{{delibera.statistica.statistica_seg_ritorno_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_pre_invio_giorni}}</td>
-                            <td>{{delibera.statistica.statistica_pre_invio_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_pre_ritorno_giorni}}</td>
-                            <td>{{delibera.statistica.statistica_pre_ritorno_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_cc_invio_giorni}}</td>
-                            <td>{{delibera.statistica.statistica_cc_invio_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_cc_ritorno_giorni}}</td>
-                            <td>{{delibera.statistica.statistica_cc_ritorno_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_gu_invio_giorni}}</td>
-                            <td>{{delibera.statistica.statistica_gu_invio_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_gu_ritorno_giorni}}</td>
-                            <td>{{delibera.statistica.statistica_gu_ritorno_giorni_tot}}</td>
-                        </tr>
-                        </tbody>
-                        <tfoot>
-                        <tr class="bg-sum fw-semi-bold">
-                            <td>Totale</td>
-                            <td>{{sumSeries('statistica','count')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_arrivo')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cd_invio_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cd_invio_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cd_ritorno_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cd_ritorno_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_mef_invio_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_mef_invio_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_mef_ritorno_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_mef_ritorno_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_seg_invio_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_seg_invio_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_seg_ritorno_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_seg_ritorno_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_pre_invio_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_pre_invio_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_pre_ritorno_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_pre_ritorno_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cc_invio_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cc_invio_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cc_ritorno_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cc_ritorno_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_gu_invio_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_gu_invio_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_gu_ritorno_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_gu_ritorno_giorni_tot')}}</td>
-
-                        </tr>
-                        </tfoot>
-                    </table>
-                    <table *ngIf="viewtype === 'analisi'"
-                           class="table table-hover table-condensed mb-0 table-bordered"
-                           [mfData]="model"
-                           [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
-                           #mf="mfDataTable" stickthead [offsetY]="0">
-                        <thead>
-                        <tr>
-                            <th colspan="2"></th>
-                            <th colspan="2">Consegna</th>
-                            <th colspan="2">Capo Dipartimento</th>
-                            <th colspan="2">M.E.F.</th>
-                            <th colspan="2">Segretario</th>
-                            <th colspan="2">Presidente</th>
-                            <th colspan="2">Corte dei Conti</th>
-                            <th colspan="2">Gazzetta Ufficiale</th>
-                        </tr>
-                        <tr>
-                            <th>Data</th>
-                            <th>Nr.</th>
-                            <th>nr.</th>
-                            <th>gg. medi</th>
-                            <th>nr.</th>
-                            <th>gg. medi</th>
-                            <th>nr.</th>
-                            <th>gg. medi</th>
-                            <th>nr.</th>
-                            <th>gg. medi</th>
-                            <th>nr.</th>
-                            <th>gg. medi</th>
-                            <th>nr.</th>
-                            <th>gg. medi</th>
-                            <th>nr.</th>
-                            <th>gg. medi</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let delibera of mf.data">
-                            <td><a [routerLink]="'/app/monitor/analisi/'+(delibera.id | date : 'yyyy-MM-dd')">{{delibera.id | date : 'dd/MM/yyyy'}}</a></td>
-                            <td>{{delibera.analisi.count}}</td>
-                            <td>{{delibera.analisi.consegna}}</td>
-                            <td>{{delibera.analisi.consegna_media}}</td>
-                            <td>{{delibera.analisi.cd}}</td>
-                            <td>{{delibera.analisi.cd_media}}</td>
-                            <td>{{delibera.analisi.mef}}</td>
-                            <td>{{delibera.analisi.mef_media}}</td>
-                            <td>{{delibera.analisi.seg}}</td>
-                            <td>{{delibera.analisi.seg_media}}</td>
-                            <td>{{delibera.analisi.pre}}</td>
-                            <td>{{delibera.analisi.pre_media}}</td>
-                            <td>{{delibera.analisi.cc}}</td>
-                            <td>{{delibera.analisi.cc_media}}</td>
-                            <td>{{delibera.analisi.gu}}</td>
-                            <td>{{delibera.analisi.gu_media}}</td>
-                        </tr>
-                        </tbody>
-                        <tfoot>
-                        <tr class="bg-sum fw-semi-bold">
-                            <td>Totale gg.</td>
-                            <td>{{sumSeries('analisi','count')}}</td>
-                            <td>{{sumSeries('analisi','consegna')}}</td>
-                            <td>{{sumSeries('analisi','consegna_media')}}</td>
-                            <td>{{sumSeries('analisi','cd')}}</td>
-                            <td>{{sumSeries('analisi','cd_media')}}</td>
-                            <td>{{sumSeries('analisi','mef')}}</td>
-                            <td>{{sumSeries('analisi','mef_media')}}</td>
-                            <td>{{sumSeries('analisi','seg')}}</td>
-                            <td>{{sumSeries('analisi','seg_media')}}</td>
-                            <td>{{sumSeries('analisi','pre')}}</td>
-                            <td>{{sumSeries('analisi','pre_media')}}</td>
-                            <td>{{sumSeries('analisi','cc')}}</td>
-                            <td>{{sumSeries('analisi','cc_media')}}</td>
-                            <td>{{sumSeries('analisi','gu')}}</td>
-                            <td>{{sumSeries('analisi','gu_media')}}</td>
-                        </tr>
-                        </tfoot>
-                    </table>
-                </ng-container>
-                <ng-container *ngIf="mode === 'detail'">
-                    <table *ngIf="viewtype === 'statistica'"
-                           class="table table-hover table-condensed mb-0 table-bordered"
-                           [mfData]="model"
-                           [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
-                           #mf="mfDataTable" stickthead [offsetY]="0">
-                        <thead>
-                        <tr>
-                            <th colspan="2"></th>
-                            <th colspan="4">Capo Dipartimento</th>
-                            <th colspan="4">M.E.F.</th>
-                            <th colspan="4">Segretario</th>
-                            <th colspan="4">Presidente</th>
-                            <th colspan="4">Corte dei Conti</th>
-                            <th colspan="4">Gazzetta Ufficiale</th>
-                        </tr>
-                        <tr>
-                            <th>Nr. delibera</th>
-                            <th>Arrivo</th>
-                            <th colspan="2">invio</th>
-                            <th colspan="2">firma</th>
-                            <th colspan="2">invio</th>
-                            <th colspan="2">firma</th>
-                            <th colspan="2">invio</th>
-                            <th colspan="2">firma</th>
-                            <th colspan="2">invio</th>
-                            <th colspan="2">firma</th>
-                            <th colspan="2">invio</th>
-                            <th colspan="2">regis.</th>
-                            <th colspan="2">invio</th>
-                            <th colspan="2">pubbl.</th>
-                        </tr>
-                        </thead>
-                        <!--http://testmosaicapi.tdrynx.info/api/monitor/2015-01-28-->
-                        <tbody>
-                        <tr *ngFor="let delibera of mf.data">
-                            <td><a [routerLink]="'/app/delibere/edit/'+delibera.id">{{delibera.statistica.statistica_nr}}</a></td>
-                            <td class="bg-oddcol">{{delibera.statistica.statistica_arrivo}}</td>
-                            <td>{{delibera.statistica.statistica_cd_invio_giorni}}</td>
-                            <td class="bg-oddcol">{{delibera.statistica.statistica_cd_invio_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_cd_ritorno_giorni}}</td>
-                            <td class="bg-oddcol">{{delibera.statistica.statistica_cd_ritorno_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_mef_invio_giorni}}</td>
-                            <td class="bg-oddcol">{{delibera.statistica.statistica_mef_invio_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_mef_ritorno_giorni}}</td>
-                            <td class="bg-oddcol">{{delibera.statistica.statistica_mef_ritorno_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_seg_invio_giorni}}</td>
-                            <td class="bg-oddcol">{{delibera.statistica.statistica_seg_invio_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_seg_ritorno_giorni}}</td>
-                            <td class="bg-oddcol">{{delibera.statistica.statistica_seg_ritorno_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_pre_invio_giorni}}</td>
-                            <td class="bg-oddcol">{{delibera.statistica.statistica_pre_invio_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_pre_ritorno_giorni}}</td>
-                            <td class="bg-oddcol">{{delibera.statistica.statistica_pre_ritorno_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_cc_invio_giorni}}</td>
-                            <td class="bg-oddcol">{{delibera.statistica.statistica_cc_invio_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_cc_ritorno_giorni}}</td>
-                            <td class="bg-oddcol">{{delibera.statistica.statistica_cc_ritorno_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_gu_invio_giorni}}</td>
-                            <td class="bg-oddcol">{{delibera.statistica.statistica_gu_invio_giorni_tot}}</td>
-                            <td>{{delibera.statistica.statistica_gu_ritorno_giorni}}</td>
-                            <td>{{delibera.statistica.statistica_gu_ritorno_giorni_tot}}</td>
-                        </tr>
-                        </tbody>
-                        <tfoot>
-                        <tr class="bg-sum fw-semi-bold">
-                            <td>Totale</td>
-                            <td>{{sumSeries('statistica', 'statistica_arrivo')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cd_invio_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cd_invio_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cd_ritorno_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cd_ritorno_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_mef_invio_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_mef_invio_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_mef_ritorno_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_mef_ritorno_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_seg_invio_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_seg_invio_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_seg_ritorno_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_seg_ritorno_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_pre_invio_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_pre_invio_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_pre_ritorno_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_pre_ritorno_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cc_invio_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cc_invio_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cc_ritorno_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_cc_ritorno_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_gu_invio_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_gu_invio_giorni_tot')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_gu_ritorno_giorni')}}</td>
-                            <td>{{sumSeries('statistica', 'statistica_gu_ritorno_giorni_tot')}}</td>
-
-                        </tr>
-                        </tfoot>
-                    </table>
-                    <table *ngIf="viewtype === 'analisi'"
-                           class="table table-hover table-condensed mb-0 table-bordered"
-                           [mfData]="model"
-                           [mfSortBy]="'codice'" [mfSortOrder]="'asc'"
-                           #mf="mfDataTable" stickthead [offsetY]="0">
-                        <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Nr.</th>
-                            <th colspan="2">Consegna</th>
-                            <th colspan="2">Capo Dipartimento</th>
-                            <th colspan="2">M.E.F.</th>
-                            <th colspan="2">Segretario</th>
-                            <th colspan="2">Presidente</th>
-                            <th colspan="2">Corte dei Conti</th>
-                            <th colspan="2">Gazzetta Ufficiale</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let delibera of mf.data">
-                            <td>{{delibera.id | date : 'dd/MM/yyyy'}}</td>
-                            <td>{{delibera.analisi.analisi_nr}}</td>
-                            <td colspan="2">{{delibera.analisi.analisi_consegna}}</td>
-                            <td colspan="2">{{delibera.analisi.analisi_cd}}</td>
-                            <td colspan="2">{{delibera.analisi.analisi_mef}}</td>
-                            <td colspan="2">{{delibera.analisi.analisi_seg}}</td>
-                            <td colspan="2">{{delibera.analisi.analisi_pre}}</td>
-                            <td colspan="2">{{delibera.analisi.analisi_cc}}</td>
-                            <td colspan="2">{{delibera.analisi.analisi_gu}}</td>
-                        </tr>
-                        </tbody>
-                        <tfoot>
-                        <tr class="bg-sum fw-semi-bold">
-                            <td>Totale gg.</td>
-                            <td>{{sumSeries('analisi','count')}}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        </tfoot>
-                    </table>
-                </ng-container>
-
-            </div>
-        </section>
-    </div>
 </div>
+
+
+

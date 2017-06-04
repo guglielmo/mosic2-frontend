@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Warehouse } from 'ngx-warehouse';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import * as _ from 'lodash';
+import {Injectable} from "@angular/core";
+import {DatePipe} from "@angular/common";
+import {Headers, Http, RequestOptions, Response, URLSearchParams} from "@angular/http";
+import {Observable} from "rxjs/Observable";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {Warehouse} from "ngx-warehouse";
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/catch";
+import * as _ from "lodash";
 
-import {AppConfig} from '../app.config';
+import {AppConfig} from "../app.config";
 
 @Injectable()
 export class APICommonService {
@@ -25,7 +25,7 @@ export class APICommonService {
     private _allData$: any = {};
     public dataEnum: any = {};
 
-    private currentStorageVersion = '134';
+    private currentStorageVersion = '140';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
@@ -48,6 +48,8 @@ export class APICommonService {
         'users',
         'delibere',
         'adempimenti',
+        'monitor',
+        'monitor/group'
     ];
 
     private commonData: string[] = [
@@ -69,7 +71,9 @@ export class APICommonService {
         'cipeargomentitipo',
         'users',
         'delibere',
-        'adempimenti'
+        'adempimenti',
+        'monitor',
+        'monitor/group'
     ];
 
     constructor(
@@ -199,77 +203,101 @@ export class APICommonService {
 
     public refreshCommonCache() {
 
-        this.getLastUpdates().subscribe(response => {
-
-            //
-            // retrieve new and last stored updates
-            //
-            const storedLastUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
-            const lastupdates = response.data;
-            const storageVersion = localStorage.getItem('storageVersion');
-
-            //
-            // for every cached API method
-            //
-            for (let i = 0; i < this.cachedApiDataMetods.length; i++) {
-                const apipath = this.cachedApiDataMetods[i];
+        this.getLastUpdates().subscribe(
+            response => {
 
                 //
-                // if storage version didn't change or data is not stored or fresher on the backend
+                // retrieve new and last stored updates
                 //
-                if (storageVersion !== this.currentStorageVersion
-                    || !storedLastUpdates[apipath]
-                    || lastupdates[apipath] > storedLastUpdates[apipath]
-                ) {
+                const storedLastUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
+                const lastupdates = response.data;
+                const storageVersion = localStorage.getItem('storageVersion');
+
+
+                //console.log(lastupdates,storedLastUpdates);
+
+                //
+                // for every cached API method
+                //
+                for (let i = 0; i < this.cachedApiDataMetods.length; i++) {
+                    const apipath = this.cachedApiDataMetods[i];
+                    const apipathLU = apipath.replace(/\//g,'_');
+
+                    //console.log(apipath,apipathLU);
 
                     //
-                    // initiate a cache priming
+                    // if storage version didn't change or data is not stored or fresher on the backend
                     //
-                    this.cacheCommonIDB(apipath, lastupdates[apipath]);
+                    if (storageVersion !== this.currentStorageVersion
+                        || !storedLastUpdates[apipathLU]
+                        || lastupdates[apipathLU] > storedLastUpdates[apipathLU]
+                    ) {
 
-                } else {
+                        //
+                        // initiate a cache priming
+                        //
+                        this.cacheCommonIDB(apipath, lastupdates[apipathLU]);
 
-                    //
-                    // get it from local data warehouse
-                    //
-                    this.warehouse.get('stored_' + apipath).subscribe(
-                        data => {
-                            if(!Array.isArray(data)) {
-                                this.notifyError("I dati registrati nella memoria locale per " + apipath + " non sono validi. Sarà effettuato un" +
-                                    " nuovo tentativo di ricaricamento dal server.");
-                                localStorage.setItem('lastupdates', JSON.stringify({}));
-                                this.cacheCommonIDB(apipath, lastupdates[apipath]);
-                                return;
-                            }
+                    } else {
 
-                            //
-                            // stores data in memory
-                            //
-                            this._allData[apipath] = data;
+                        //
+                        // get it from local data warehouse
+                        //
+                        this.loadDataFromWareHouse(apipath, lastupdates);
 
-                            //
-                            // checks if all cached api methods are loaded
-                            //
-                            this.commonDataready = this.isDataReady(this.commonData);
+                    }
+                }
 
-                            //
-                            // creates a data hashmap for a convenient and quick lookup access by id
-                            //
-                            _.each(this._allData[apipath], item => { this.dataEnum[apipath][item.id] = item; });
+                localStorage.setItem('storageVersion', this.currentStorageVersion);
+            },
+            error => {
 
-                            //
-                            // notifies the subscribers with the new data
-                            //
-                            this._allData$[apipath].next(this._allData[apipath]);
-                        },
-                        error => { console.log(error); }
-                    );
+                this.notifyError('Impossibile caricare gli ultimi aggiornamenti dal server');
+
+                const emptyLastUpdates = { data: {} };
+
+                for (let i = 0; i < this.cachedApiDataMetods.length; i++) {
+                    const apipath = this.cachedApiDataMetods[i];
+                    this.loadDataFromWareHouse(apipath, emptyLastUpdates);
                 }
             }
+        );
 
-            localStorage.setItem('storageVersion', this.currentStorageVersion);
-        });
+    }
 
+    private loadDataFromWareHouse ( apipath: string, lastupdates ) {
+        this.warehouse.get('stored_' + apipath).subscribe(
+            data => {
+                if(!Array.isArray(data)) {
+                    this.notifyError("I dati registrati nella memoria locale per " + apipath + " non sono validi. Sarà effettuato un" +
+                        " nuovo tentativo di ricaricamento dal server.");
+                    localStorage.setItem('lastupdates', JSON.stringify({}));
+                    this.cacheCommonIDB(apipath, lastupdates[apipath]);
+                    return;
+                }
+
+                //
+                // stores data in memory
+                //
+                this._allData[apipath] = data;
+
+                //
+                // checks if all cached api methods are loaded
+                //
+                this.commonDataready = this.isDataReady(this.commonData);
+
+                //
+                // creates a data hashmap for a convenient and quick lookup access by id
+                //
+                _.each(this._allData[apipath], item => { this.dataEnum[apipath][item.id] = item; });
+
+                //
+                // notifies the subscribers with the new data
+                //
+                this._allData$[apipath].next(this._allData[apipath]);
+            },
+            error => { console.log(error); }
+        );
     }
 
     public notifyError (msg: any) {
@@ -434,7 +462,8 @@ export class APICommonService {
                 // retrives and update lastupdates for the apipath with the received timestamp
                 //
                 const storedUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
-                storedUpdates[apipath] = lastupdate;
+                const apipathLU = apipath.replace(/\//g,'_');
+                storedUpdates[apipathLU] = lastupdate;
                 localStorage.setItem('lastupdates', JSON.stringify(storedUpdates));
 
                 //

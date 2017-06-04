@@ -23,14 +23,14 @@ export class RegistriListComponent implements OnInit {
     public filter = {
         id: '',
         oggetto: '',
-        id_titolari: null,
-        id_mittenti: null,
-        id_fascicoli: null,
+        id_titolari: '',
+        id_mittenti: '',
+        id_fascicoli: '',
         protocollo_mittente: '',
         protocollo_arrivo: '',
         data_arrivo_da: '',
         data_arrivo_a: '',
-        id_tags: null
+        id_tags: ''
     };
     deletingRegistri: Registri = new Registri;
 
@@ -101,18 +101,19 @@ export class RegistriListComponent implements OnInit {
         this.filter[name] = e.value;
     }
 
-    public resetFilters(): void {
+    public resetFilters(event): void {
+        event.stopPropagation();
         this.filter = {
             id: '',
             oggetto: '',
-            id_titolari: null,
-            id_mittenti: null,
-            id_fascicoli: null,
+            id_titolari: '',
+            id_mittenti: '',
+            id_fascicoli: '',
             protocollo_mittente: '',
             protocollo_arrivo: '',
             data_arrivo_da: '',
             data_arrivo_a: '',
-            id_tags: null
+            id_tags: ''
         };
     }
 }

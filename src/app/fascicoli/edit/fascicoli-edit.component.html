@@ -8,12 +8,12 @@
         <span *ngIf="mode == 'update'" class="fw-semi-bold">
 
             <ng-template #titolariTooltip>
-                <div [innerHtml]="apiService.dataEnum['titolari'][model.id_titolari]['text']"></div>
+                <div [innerHtml]="model.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'text'"></div>
             </ng-template>
 
             <a [routerLink]=" ['/app/titolari/edit/'+model.id_titolari ]"
                [tooltip]="titolariTooltip" placement="bottom"
-            >{{apiService.dataEnum['titolari'][model.id_titolari]['codice']}} </a>
+            >{{model.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'codice'}} </a>
             . {{model.numero_fascicolo}}
         </span>
     </h3>
@@ -152,6 +152,7 @@
             <h3 class="fw-semi-bold">Registri contenuti nel fascicolo</h3>
             Risultati: {{filteredCount?.count}}
         </div>
+
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">
                 <table class="table table-hover table-condensed table-bordered mb-0"

@@ -16,7 +16,7 @@
             filter.data_cipe ||
             filter.id_tags"
                   class="float-lg-right mr-3">
-                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters($event)">Rimuovi filtri</button>
             </span>
         </h5>
         <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Cerca <span
@@ -31,7 +31,7 @@
             filter.data_cipe ||
             filter.id_tags"
                   class="float-lg-right mr-3">
-                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters($event)">Rimuovi filtri</button>
             </span>
         </h5>
         <div class="widget-controls m-t-1">
@@ -242,9 +242,7 @@
                         </td>
                         <td>{{situazioneEnum[delibera.situazione]}}</td>
                         <td>
-                            <span class="ml-1 badge badge-default text-left line-height-lg badge-lg-limit"
-                                  [title]="delibera.id_tags | dataEnum : apiService.dataEnum : 'tags'"
-                                  [innerHTML]="delibera.id_tags | dataEnum : apiService.dataEnum : 'tags' : 'denominazione' : '<br/>'"></span>
+                            <div class="tag-container" [innerHTML]="delibera.id_tags | tagEnum : apiService.dataEnum : 'tags' : 'denominazione' : ''"></div>
                         </td>
                         <td *ngIf="apiService.userCan('DELETE_DELIBERE')"><p class="text-center"><a (click)="askDeleteDelibere($event, myModal, delibera)"><i class="fa fa-trash-o"> </i></a></p>
                         </td>
@@ -304,7 +302,7 @@
                                     <div class="progress progress-lg rel-t-l6">
                                         <ng-template ngFor let-key [ngForOf]="keysGetter(delibera.giorni_iter)">
                                             <div *ngIf="delibera.giorni_iter[key] > 0" class="progress-bar bg-{{key}}" role="progressbar"
-                                                 [style.width]="Math.max((delibera.giorni_iter[key]*2),14)+'px'"
+                                                 [style.width]="limitRange(delibera.giorni_iter[key])+'px'"
                                                  [attr.aria-valuenow]="delibera.giorni_iter[key]" aria-valuemin="0" aria-valuemax="360">
                                                 <strong>{{delibera.giorni_iter[key]}}</strong>
                                             </div>

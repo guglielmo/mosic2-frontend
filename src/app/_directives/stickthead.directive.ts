@@ -18,21 +18,23 @@ export class StickThead implements OnInit, OnDestroy {
 
     ngOnInit(): void {
 
-        let tableOffset = this.$el.offset().top+80;
+
         let $header = this.$el.find('thead');
         let $fixedHeader = jQuery("#header-fixed").empty().append($header.clone());
 
         jQuery(window).on('scroll.stickthead', () => {
 
             let offset = jQuery(window).scrollTop();
+            let tableOffsetTop = this.$el.offset().top;
+            let tableOffsetBottom = tableOffsetTop + this.$el.height();
 
-            if (offset >= tableOffset && $fixedHeader.is(":hidden")) {
+            if (offset >= tableOffsetTop && $fixedHeader.is(":hidden") && offset < tableOffsetBottom) {
 
                 let $fixedHeader = jQuery("#header-fixed").empty().append($header.clone());
                 this.copyHeaderWidths($header, $fixedHeader);
                 $fixedHeader.show();
             }
-            else if (offset < tableOffset) {
+            else if (offset < tableOffsetTop || offset > tableOffsetBottom) {
                 //console.log('hide');
                 $fixedHeader.hide();
             }

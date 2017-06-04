@@ -108,23 +108,6 @@ export class TitolariEditComponent implements OnInit {
         this.router.navigate(['/app/fascicoli/edit/' + id]);
     }
 
-    //todo: this should be in apiService but couldn't find yet how to call injected classes methods from templates
-    public amministrazioniEnum(val:string):string {
-
-        let e = this.apiService.dataEnum['amministrazioni'];
-        if (-1 != String(val).indexOf(',') ) {
-            let ret = [];
-            String(val).split(',').forEach( item => {
-                ret.push(e[item]['denominazione']);
-            });
-            return ret.join(', ');
-
-        } else if (val) {
-
-            return e[val] ? e[val]['denominazione'] : '';
-        }
-    }
-
     select2Changed(e: any, name: string): void {
         this.model[name] = typeof e.value === 'object' ? e.value.join(',') : Number(e.value);
     }

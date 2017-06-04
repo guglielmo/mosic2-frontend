@@ -105,7 +105,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
         this.canEdit = isNaN(this.id) ? this.apiService.userCan('CREATE_REGISTRI') : this.apiService.userCan('EDIT_REGISTRI');
         this.canDelete = this.apiService.userCan('DELETE_REGISTRI');
 
-        console.log('canedit:',this.canEdit);
+        //console.log('canedit:',this.canEdit);
 
         switch (this.mode) {
             case 'create':

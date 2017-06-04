@@ -675,8 +675,12 @@ i.square {
 
 .bg-sum { background-color: #aaccff; color: darken(#aaccff, 60); }
 .bg-oddcol { background-color: #E1F0FF; color: darken(#E1F0FF, 70); }
+.bg-yellow { background-color: #FFFFB3; }
 
 .badge-lg-limit { max-width: 140px; white-space: normal; }
+.badge-tag { /*background-color: #694565;*/ font-weight: normal; background-color: #E6E6E6; color: #333; font-size: 13px; }
+.tag-container {
+}
 
 table.align-middle {
   td { vertical-align: middle; }

@@ -78,7 +78,7 @@
             <div class="widget-body widget-table-overflow">
                 <table class="table table-hover table-condensed mb-0 table-bordered"
                        #mf="mfDataTable"
-                       [mfData]="fascicoli$ | async | fascicoliDataFilter : '' : model.id : null : '' : null : filteredCount"
+                       [mfData]="fascicoli$ | async | fascicoliDataFilter : '' : model.id : '' : '' : '' : filteredCount"
                        [mfRowsOnPage]="100"
                        stickthead [offsetY]="0">
                     <thead>
@@ -91,10 +91,10 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let fascicolo of mf.data" (click)="editFascicoliId(fascicolo.id)" class="clickable">
-                        <td> {{apiService.dataEnum['titolari'][fascicolo.id_titolari]['denominazione']}}</td>
+                        <td>{{fascicolo.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'denominazione' }}</td>
                         <td>{{fascicolo.numero_fascicolo}}</td>
                         <td [innerHTML]="fascicolo.argomento"></td>
-                        <td>{{amministrazioniEnum(fascicolo.id_amministrazioni)}}</td>
+                        <td>{{fascicolo.id_amministrazioni | dataEnum : apiService.dataEnum : 'amministrazioni' : 'denominazione'}}</td>
                     </tr>
                     </tbody>
                     <tfoot>

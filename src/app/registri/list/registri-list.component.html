@@ -10,32 +10,32 @@
             <span *ngIf="
             filter.id ||
             filter.oggetto.length > 2 ||
-            filter.id_titolari != null ||
-            filter.id_mittenti != null ||
-            filter.id_fascicoli != null ||
+            filter.id_titolari ||
+            filter.id_mittenti ||
+            filter.id_fascicoli ||
             filter.protocollo_mittente ||
             filter.protocollo_arrivo ||
             filter.data_arrivo_da ||
             filter.data_arrivo_a ||
             filter.id_tags"
                   class="float-lg-right mr-3">
-                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters($event)">Rimuovi filtri</button>
             </span>
         </h5>
         <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">registri ...</span>
             <span *ngIf="
             filter.id ||
             filter.oggetto.length > 2 ||
-            filter.id_titolari != null ||
-            filter.id_mittenti != null ||
-            filter.id_fascicoli != null ||
+            filter.id_titolari ||
+            filter.id_mittenti ||
+            filter.id_fascicoli ||
             filter.protocollo_mittente ||
             filter.protocollo_arrivo ||
             filter.data_arrivo_da ||
             filter.data_arrivo_a ||
             filter.id_tags"
                   class="float-lg-right mr-3">
-                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters($event)">Rimuovi filtri</button>
             </span>
         </h5>
         <div class="widget-controls m-t-1">
@@ -66,7 +66,7 @@
                              [cssImport]="false"
                              (valueChanged)="select2Changed($event,'id_titolari')"
                              [data]="titolari$ | async"></select2></div>
-                            <!--id_titolari: {{filter.id_titolari}}-->
+                            <!-- id_titolari: {{filter.id_titolari}} -->
                 </div>
 
                 <div class="form-group">
@@ -205,9 +205,7 @@
                         <td>{{registro.protocollo_mittente}}</td>
                         <td class="nowrap">{{registro.data_mittente | date: 'dd/MM/yyyy' : 'UTC' }}</td>
                         <td>
-                            <span class="ml-1 badge badge-default text-left line-height-lg badge-lg-limit"
-                                  [title]="registro.id_tags | dataEnum : apiService.dataEnum : 'tags'"
-                                  [innerHTML]="registro.id_tags | dataEnum : apiService.dataEnum : 'tags' : 'denominazione' : '<br/>'"></span>
+                            <div class="tag-container" [innerHTML]="registro.id_tags | tagEnum : apiService.dataEnum : 'tags' : 'denominazione' : ''"></div>
                         </td>
                         <td><p class="text-center"><a [routerLink]="['/app/registri/edit/'+registro.id]" fragment="allegati"><i class="fa fa-files-o text-muted"> </i></a></p></td>
                         <td *ngIf="apiService.userCan('DELETE_REGISTRI')"><p class="text-center"><a (click)="askDeleteRegistri($event, myModal, registro)"><i class="fa fa-trash-o"> </i></a></p></td>

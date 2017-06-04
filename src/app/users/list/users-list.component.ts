@@ -83,7 +83,8 @@ export class UsersListComponent {
         this.filter[name] = e.value;
     }
 
-    public resetFilters(): void {
+    public resetFilters(event): void {
+        event.stopPropagation();
         this.filter = {
             denominazione: '',
             id_groups: '',

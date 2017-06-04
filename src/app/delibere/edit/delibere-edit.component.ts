@@ -105,8 +105,7 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
 
         switch (this.mode) {
             case 'create':
-                this.model = {
-                };
+                this.model =  new Delibere();
                 break;
 
             case 'update':
@@ -169,7 +168,7 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
     submit(event: any, modal: any) {
         this.loading = true;
 
-        console.log(new Delibere());
+        //console.log(new Delibere());
 
         let post = $.extend(true, new Delibere(), this.model);
         let tz = new Date().getTimezoneOffset();

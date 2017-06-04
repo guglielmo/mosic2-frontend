@@ -10,6 +10,7 @@ export * from './tags-data-filter.pipe';
 export * from './file-size.pipe';
 export * from './data-mark.pipe';
 export * from './data-enum.pipe';
+export * from './tag-enum.pipe';
 export * from './if-empty';
 export * from './array-length';
 export * from './cast-to-string';

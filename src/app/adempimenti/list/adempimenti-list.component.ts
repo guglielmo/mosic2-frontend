@@ -222,7 +222,8 @@ export class AdempimentiListComponent implements OnInit {
         this.filter[type] = value;
     }
 
-    public resetFilters(): void {
+    public resetFilters(event): void {
+        event.stopPropagation();
         this.filter = {
             id: null,
             descrizione: '',

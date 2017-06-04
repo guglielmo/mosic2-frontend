@@ -12,6 +12,14 @@ import { PipesDirectivesSharedModule } from '../_shared/index'
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
+import { ChartModule } from 'angular2-highcharts';
+import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
+import * as highcharts from 'highcharts'
+
+export function highchartsFactory() {
+  return highcharts;
+}
+
 import { MonitorListComponent } from './list/monitor-list.component';
 
 export const routes = [
@@ -19,6 +27,8 @@ export const routes = [
   {path: ':viewtype', component: MonitorListComponent},
   {path: ':viewtype/:dateFilter', component: MonitorListComponent},
 ];
+
+
 
 
 @NgModule({
@@ -32,10 +42,17 @@ export const routes = [
     DataTableModule,
     PipesDirectivesSharedModule,
     TooltipModule.forRoot(),
+    ChartModule,
     RouterModule.forChild(routes)
   ],
   declarations: [
       MonitorListComponent
+  ],
+  providers: [
+    {
+      provide: HighchartsStatic,
+      useFactory: highchartsFactory
+    }
   ]
 })
 export class MonitorModule {

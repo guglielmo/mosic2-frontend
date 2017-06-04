@@ -40,7 +40,6 @@ export class PreCipeOdgItemComponent implements OnInit {
     public odgItemForm: FormGroup;
     public hasErrors = false;
 
-
     constructor(
                 config: AppConfig,
                 public apiService: APICommonService,

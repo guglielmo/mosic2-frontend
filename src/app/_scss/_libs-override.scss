@@ -616,8 +616,16 @@ input[type="text"].form-control-lg {
 
 }
 
+chart {
+  width: 100% !important;
+  /*height: 620px;*/
+  margin: 0;
+  display: block;
+}
 
-
+.highcharts-container {
+  height: 100% !important;
+}
 
 
 

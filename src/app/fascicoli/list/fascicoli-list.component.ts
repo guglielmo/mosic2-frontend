@@ -19,10 +19,10 @@ export class FascicoliListComponent implements OnInit {
 
     public filter = {
         argomento: '',
-        id_titolari: null,
-        id_amministrazioni: null,
+        id_titolari: '',
+        id_amministrazioni: '',
         numero_fascicolo: '',
-        id_tags: null
+        id_tags: ''
     };
     public deletingFascicoli: Fascicoli = new Fascicoli;
     public fascicoli: Observable<Fascicoli[]>;
@@ -84,30 +84,14 @@ export class FascicoliListComponent implements OnInit {
         this.filter[name] = e.value;
     }
 
-    public resetFilters(): void {
+    public resetFilters(event): void {
+        event.stopPropagation();
         this.filter = {
             argomento: '',
-            id_titolari: -1,
-            id_amministrazioni: -1,
+            id_titolari: '',
+            id_amministrazioni: '',
             numero_fascicolo: '',
-            id_tags: null
+            id_tags: ''
         };
-    }
-
-    // todo: this should be in apiService but couldn't find yet how to call injected classes methods from templates
-    public amministrazioniEnum(val: string): string {
-
-        const e = this.apiService.dataEnum['amministrazioni'];
-        if (-1 !== String(val).indexOf(',') ) {
-            const ret = [];
-            String(val).split(',').forEach( item => {
-                ret.push(e[item]['denominazione']);
-            });
-            return ret.join(', ');
-
-        } else if (val) {
-
-            return e[val] ? e[val]['denominazione'] : '';
-        }
     }
 }
