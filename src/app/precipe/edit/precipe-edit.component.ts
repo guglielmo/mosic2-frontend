@@ -41,7 +41,9 @@ export class PreCipeEditComponent implements OnInit {
     public status_msg: null;
 
     public canEdit: boolean = false;
+    public canPublish: boolean = false;
     public canDelete: boolean = false;
+    public canRenewPublish: boolean = false;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
@@ -79,6 +81,8 @@ export class PreCipeEditComponent implements OnInit {
         this.id = +this.route.snapshot.params['id'];
         this.mode = isNaN(this.id) ? 'create' : 'update';
         this.canEdit = isNaN(this.id) ? this.apiService.userCan('CREATE_PRECIPE') : this.apiService.userCan('EDIT_PRECIPE');
+        this.canPublish = this.apiService.userCan('CREATE_AREARISERVATA_PRECIPE');
+        this.canRenewPublish = this.apiService.userCan('EDIT_AREARISERVATA_PRECIPE');
         this.canDelete = this.apiService.userCan('DELETE_PRECIPE');
 
         switch ( this.mode ) {

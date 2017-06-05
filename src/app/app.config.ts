@@ -24,7 +24,7 @@ export class AppConfig {
 	// baseAPIURL: 'http://localhost:8080/mosic2-service',
 
 	// staging tdrynx.com
-	// baseAPIURL: 'http://mosicapi.tdrynx.info',
+	//baseAPIURL: 'http://mosicapi.tdrynx.info',
 	
 	// staging celata.com
 	baseAPIURL: 'http://mosic2.celata.com/service',

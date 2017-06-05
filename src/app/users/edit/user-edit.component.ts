@@ -74,7 +74,9 @@ export class UserEditComponent implements OnInit {
     }
 
     select2Changed(e: any, name: string): void {
-        this.model[name] = typeof e.value === 'object' ? e.value.join(',') : e.value;
+        if(e.value !== null) {
+            this.model[name] = typeof e.value === 'object' ? e.value.join(',') : e.value;
+        }
     }
 
     cancel( event ) {

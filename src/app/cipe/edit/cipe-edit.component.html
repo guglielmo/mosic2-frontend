@@ -32,6 +32,7 @@
                   <datetime id="data" name="data"
                             [datepicker]="datePickerOptions"
                             [timepicker]="false"
+                            [readonly]="!canEdit"
                             [(ngModel)]="model.data" #data="ngModel" required></datetime>
                </div>
             </div>
@@ -44,8 +45,8 @@
                                class="ios"
                                [checked]="model.ufficiale_riunione == '1'"
                                (change)="model.ufficiale_riunione = $event.target.checked ? '1' : '0'"
-                               (click)="canEdit && askOfficializeCipe($event, officializeCipeModal, model)"
-                               [disabled]="officializingCipe != null || model.ufficiale_riunione === '1'"
+                               (click)="canPublish && askOfficializeCipe($event, officializeCipeModal, model)"
+                               [disabled]="!canPublish && officializingCipe != null || model.ufficiale_riunione === '1'"
                         ><i></i>
                      </label>&nbsp;&nbsp;
                      <span *ngIf="model.ufficiale_riunione === '0' && officializingCipe === null"
@@ -54,14 +55,14 @@
                      <span *ngIf="model.ufficiale_riunione === '1' && status === null || status === 'error'">
                                 <span class="d-inline-block text-center rel-t-m4 float-right">
 
-                                    <button *ngIf="canEdit && model.public_reserved_url"
+                                    <button *ngIf="canRenewPublish && model.public_reserved_url"
                                             class="btn btn-secondary ml-2 btn-xs" role="button"
                                             (click)="askUpdateCipe($event, updateCipeModal, model)"
                                     > <i class="fa fa-lg fa-refresh"></i> &nbsp; Aggiorna </button>
 
                                     <button *ngIf="!model.public_reserved_url"
                                             class="btn btn-secondary ml-2 btn-xs" role="button"
-                                            (click)="canEdit && askPublishCipe($event, publishCipeModal, model)"
+                                            (click)="canPublish && askPublishCipe($event, publishCipeModal, model)"
                                     > <i class="fa fa-lg fa-repeat"></i> &nbsp; Pubblica </button>
 
 

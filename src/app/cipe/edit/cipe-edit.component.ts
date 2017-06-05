@@ -42,7 +42,9 @@ export class CipeEditComponent implements OnInit {
     public status_msg: null;
 
     public canEdit: boolean = false;
+    public canPublish: boolean = false;
     public canDelete: boolean = false;
+    public canRenewPublish: boolean = false;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
@@ -80,6 +82,8 @@ export class CipeEditComponent implements OnInit {
         this.id = +this.route.snapshot.params['id'];
         this.mode = isNaN(this.id) ? 'create' : 'update';
         this.canEdit = isNaN(this.id) ? this.apiService.userCan('CREATE_CIPE') : this.apiService.userCan('EDIT_CIPE');
+        this.canPublish = this.apiService.userCan('CREATE_AREARISERVATA_CIPE');
+        this.canRenewPublish = this.apiService.userCan('EDIT_AREARISERVATA_CIPE');
         this.canDelete = this.apiService.userCan('DELETE_CIPE');
 
         switch ( this.mode ) {

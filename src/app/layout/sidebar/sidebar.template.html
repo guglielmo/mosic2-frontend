@@ -114,6 +114,7 @@
             </ul>
         </li>
         <li *ngIf="apiService.userCan('EDIT_USERS') || apiService.userCan('EDIT_GROUPS') || apiService.userCan('EDIT_RUOLI_CIPE')">
+            <!-- show the user menu only for edit enabled users-->
             <a class="collapsed" data-target="#sidebar-users" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="simpleicon icon-people"></i></span>
                 Utenti
