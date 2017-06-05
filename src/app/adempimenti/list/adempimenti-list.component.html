@@ -96,7 +96,7 @@
     <div sticktoolbar>
         <div class="row">
             <div class="col-lg-12">
-                <div *ngIf="this.apiService.commonDataready" class="py-2 text-center">
+                <div *ngIf="apiService.isDataReady(['adempimenti','delibere','cipe'])" class="py-2 text-center">
                     <i class="square bg-attivo"> </i> attivo
                     <i class="square bg-in_scadenza"> </i> in scadenza
                     <i class="square bg-scaduto"> </i> scaduto

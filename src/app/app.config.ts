@@ -35,7 +35,7 @@ export class AppConfig {
         /**
          * Whether to print and alert some log information
          */
-        debug: true,
+        debug: false,
         /**
          * In-app constants
          */

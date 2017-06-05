@@ -16,7 +16,7 @@ import { ScrollToService } from 'ng2-scroll-to-el';
 
 export class CipeEditComponent implements OnInit {
 
-    private config: any;
+    public config: any;
     public model: any = {};
 
     public _: any;

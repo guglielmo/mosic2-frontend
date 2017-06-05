@@ -7,6 +7,8 @@ import { HighChartStyles } from './highcharts-styles';
 import { Cipe } from '../../_models/cipe';
 import { APICommonService } from '../../_services/index';
 
+import { AppConfig } from "../../app.config";
+
 import * as _ from 'lodash';
 
 
@@ -15,6 +17,7 @@ import * as _ from 'lodash';
 })
 export class MonitorListComponent implements OnInit {
 
+    public config: any;
     chart: any;
     chartOptions: Object;
 
@@ -46,7 +49,10 @@ export class MonitorListComponent implements OnInit {
     constructor(public apiService: APICommonService,
                 private router: Router,
                 private route: ActivatedRoute,
+                config: AppConfig
     ) {
+
+        this.config = config.getConfig();
 
         this.cipe$ = this.apiService.subscribeToDataService('cipe');
         this.monitor$ = this.apiService.subscribeToDataService('monitor');
@@ -168,7 +174,7 @@ export class MonitorListComponent implements OnInit {
         const HCS = new HighChartStyles();
         let dataSeries = [];
 
-        console.log('getChartOptions',this.mode, this.viewtype, this.filter.data_cipe);
+        //console.log('getChartOptions',this.mode, this.viewtype, this.filter.data_cipe);
 
         switch (this.mode) {
             case 'group':

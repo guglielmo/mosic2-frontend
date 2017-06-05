@@ -212,6 +212,10 @@ export class PreCipeOdgItemComponent implements OnInit {
         console.log(name, e.value);
     }
 
+    mytype(value: any) {
+        return (typeof value + ' ' + value);
+    }
+
     getAllegatiRegistri(item, id_registri: number[]) {
 
         id_registri.forEach( id => {

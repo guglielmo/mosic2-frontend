@@ -16,7 +16,7 @@ import * as _ from "lodash";
 })
 export class AdempimentiEditComponent implements OnInit {
 
-    private config: any;
+    public config: any;
     public model: any = {};
     public error = '';
     public mode: string;
@@ -209,13 +209,13 @@ public filter = {
             return;
         }
 
-        if(name === 'id_cipe') {
+        if(name === 'id_cipe' && e.value !== null) {
             this.select2Debounce = true;
             const id = e.value;
             const data_cipe = _.get( this.apiService.dataEnum, 'cipe["' + id + '"]data', '');
             this.filter.data_cipe = data_cipe;
 
-            console.log(e.value, data_cipe);
+            //console.log(e.value, data_cipe);
         }
 
         this.model[name] = e.value;

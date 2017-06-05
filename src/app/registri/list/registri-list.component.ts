@@ -98,7 +98,10 @@ export class RegistriListComponent implements OnInit {
             this.filter.id_fascicoli = null;
         }
 
-        this.filter[name] = e.value;
+        if (e.value !== null) {
+            this.filter[name] = e.value;
+        }
+
     }
 
     public resetFilters(event): void {

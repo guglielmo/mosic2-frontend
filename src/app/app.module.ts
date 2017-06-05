@@ -38,7 +38,7 @@ const APP_PROVIDERS = [
 ];
 
 const WH_CONFIG: WarehouseConfig = {
-    driver: DRIVER_TYPE.DEFAULT,
+    driver: DRIVER_TYPE.INDEXEDDB,
     name: 'Mosic',
     version: 2.0,
     storeName: 'key_value_pairs', // Should be alphanumeric, with underscores.

@@ -1,4 +1,4 @@
-<accordion [closeOthers]="false" class="mb-lg show" id="debug[{{model.id}}]">
+<accordion *ngIf="config.debug" [closeOthers]="false" class="mb-lg show" id="debug[{{model.id}}]">
    <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="false">
       <div accordion-heading>
          <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>

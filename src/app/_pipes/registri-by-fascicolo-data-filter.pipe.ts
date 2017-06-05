@@ -13,9 +13,9 @@ export class RegistriByFascicoloDataFilterPipe implements PipeTransform {
             return array;
         }
 
+
         return _.filter(array, row => {
             // todo: change back to strict equality operator when fascicoli getAll returns a numeric id
-
             if (row.id_fascicoli != id_fascicoli) {
                 return false;
             }

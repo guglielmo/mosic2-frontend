@@ -25,7 +25,7 @@ export class APICommonService {
     private _allData$: any = {};
     public dataEnum: any = {};
 
-    private currentStorageVersion = '140';
+    private currentStorageVersion = '147';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
@@ -193,7 +193,7 @@ export class APICommonService {
         let checkIsReady = true;
         _.each(apipaths, v => {
             //console.log(v, this._allData);
-            if (!this._allData[v] || this._allData[v].length === 0) {
+            if (!this._allData[v] || !Array.isArray(this._allData[v])) {
                 checkIsReady = false;
                 return false; // <-- note: this is the lodash way to break iteration;
             }
@@ -282,11 +282,6 @@ export class APICommonService {
                 this._allData[apipath] = data;
 
                 //
-                // checks if all cached api methods are loaded
-                //
-                this.commonDataready = this.isDataReady(this.commonData);
-
-                //
                 // creates a data hashmap for a convenient and quick lookup access by id
                 //
                 _.each(this._allData[apipath], item => { this.dataEnum[apipath][item.id] = item; });
@@ -295,6 +290,11 @@ export class APICommonService {
                 // notifies the subscribers with the new data
                 //
                 this._allData$[apipath].next(this._allData[apipath]);
+
+                //
+                // checks if all cached api methods are loaded
+                //
+                this.commonDataready = this.isDataReady(this.commonData);
             },
             error => { console.log(error); }
         );

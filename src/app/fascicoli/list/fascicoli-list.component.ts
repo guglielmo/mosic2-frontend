@@ -81,7 +81,10 @@ export class FascicoliListComponent implements OnInit {
     }
 
     public select2Changed(e: any, name: string): void {
-        this.filter[name] = e.value;
+
+        if(e.value !== null) {
+            this.filter[name] = e.value;
+        }
     }
 
     public resetFilters(event): void {

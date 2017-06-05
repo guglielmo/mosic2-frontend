@@ -113,7 +113,7 @@
                 <li><a [routerLink]=" ['monitor/analisi'] ">Analisi delle fasi</a></li>
             </ul>
         </li>
-        <li *ngIf="apiService.userCan('READ_USERS') || apiService.userCan('CREATE_USERS') || apiService.userCan('READ_GROUPS') || apiService.userCan('READ_RUOLI_CIPE')">
+        <li *ngIf="apiService.userCan('EDIT_USERS') || apiService.userCan('EDIT_GROUPS') || apiService.userCan('EDIT_RUOLI_CIPE')">
             <a class="collapsed" data-target="#sidebar-users" data-toggle="collapse" data-parent="#sidebar">
                 <span class="icon"><i class="simpleicon icon-people"></i></span>
                 Utenti

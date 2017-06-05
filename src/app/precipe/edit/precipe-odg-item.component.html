@@ -182,6 +182,7 @@
                                             <!--<pre>{{fascicoli$ | async | fascicoliByTitolarioDataFilter : item.id_titolari | json}}</pre>-->
                                             <!--todo: ng2-select2 no form control value accessor workaround-->
                                             <input type="hidden" [formControl]="odgItemForm.controls['id_fascicoli']" [disableCond]="!edit">
+                                            {{mytype(item.id_fascicoli)}}
                                         </div>
                                         <!-- EDIT + NO TITOLARI -->
                                         <div *ngIf="edit && item.id_titolari === null">
@@ -218,6 +219,8 @@
                                                     (valueChanged)="select2Changed($event, item, 'id_registri')"
                                                     [cssImport]="false"
                                                     [data]="registri$ | async | registriByFascicoloDataFilter : item.id_fascicoli"></select2>
+
+                                            {{mytype(item.id_registri)}}
 
                                             <!--todo: ng2-select2 no form control value accessor workaround-->
                                             <input type="hidden" [formControl]="odgItemForm.controls['id_registri']" [disableCond]="!edit">
