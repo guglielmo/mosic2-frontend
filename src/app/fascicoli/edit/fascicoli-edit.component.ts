@@ -99,7 +99,7 @@ export class FascicoliEditComponent implements OnInit {
                 this.apiService.create('fascicoli', post)
                     .subscribe(
                         data => {
-                            console.log(data);
+                            // console.log(data);
                             this.model = data;
                             modal.open();
                             // this.router.navigate(['/app/fascicoli/list']);
@@ -136,7 +136,7 @@ export class FascicoliEditComponent implements OnInit {
 
         if (V.length > selectedCount) {
             // Value added
-            console.log('value added');
+            // console.log('value added');
             this.mayBeCreateNewSelect2Values(name);
 
         } else if (V.length < selectedCount) {

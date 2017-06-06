@@ -177,7 +177,7 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
         // convert every date to milliseconds
         _.forEach(post, (value, key) => {
             if(key && key.indexOf('data') !== -1) {
-                console.log(key, typeof value, value);
+                // console.log(key, typeof value, value);
                 if(value) {
                     post[key] = new Date(value.getTime() - tz*60000);
                 }

@@ -195,7 +195,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
                 this.apiService.create('registri', post)
                     .subscribe(
                         data => {
-                            console.log(data);
+                            // console.log(data);
                             this.model = data;
                             modal.open();
                         },
@@ -344,7 +344,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
         this.apiService.deleteFile('registri', this.id, allegato.id)
             .subscribe(
                 data => {
-                    console.log('deleted', data.id_allegati);
+                    // console.log('deleted', data.id_allegati);
                     this.model.allegati = this.model.allegati.filter(function( obj ) {
                         return obj.id !== data.id_allegati;
                     });
@@ -362,12 +362,12 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
      */
 
     startUpload(e) {
-        console.log(e);
+        // console.log(e);
         this.inputUploadEvents.emit('startUpload');
     }
 
     rejectUpload(e) {
-        console.log(e);
+        // console.log(e);
         this.errorMessage = 'Il file è troppo grande. (Max: 25MB)';
     }
 
@@ -384,7 +384,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
             // upload error
 
             this.apiService.notifyError('Si è verificato un errore nel caricamento del file. Consultare la console per ulteriori informazioni.');
-            console.log(data);
+            // console.log(data);
 
         } else if (data && data.response && data.response.indexOf('error') !== -1) {
 

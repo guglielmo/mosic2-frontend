@@ -130,7 +130,7 @@ public filter = {
     submit(event: any, modal: any) {
         this.loading = true;
 
-        console.log(new Adempimenti());
+        // console.log(new Adempimenti());
 
         let post = $.extend(true, new Adempimenti(), this.model);
 

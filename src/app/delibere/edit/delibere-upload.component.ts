@@ -77,12 +77,12 @@ export class DelibereUploadComponent implements OnInit {
      */
 
     startUpload(e) {
-        console.log(e);
+        // console.log(e);
         this.inputUploadEvents.emit('startUpload');
     }
 
     rejectUpload(e) {
-        console.log(e);
+        // console.log(e);
         this.errorMessage = 'Il file è troppo grande. (Max: 25MB)';
     }
 
@@ -166,7 +166,7 @@ export class DelibereUploadComponent implements OnInit {
         this.apiService.deleteFile('delibere', this.id + '/' + this.type, allegato.id)
             .subscribe(
                 data => {
-                    console.log('deleted', data.id_allegati);
+                    // console.log('deleted', data.id_allegati);
                     this.allegati = this.allegati.filter(function( obj ) {
                         return obj.id !== data.id_allegati;
                     });

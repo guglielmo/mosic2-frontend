@@ -219,18 +219,18 @@ export class PreCipeOdgItemComponent implements OnInit {
     getAllegatiRegistri(item, id_registri: number[]) {
 
         id_registri.forEach( id => {
-            console.log('checking id', id);
+            //console.log('checking id', id);
             if(id && !item.allegati[id] || item.allegati[id].length === 0) {
                 this.apiService.getById('registri', id)
                     .subscribe( response => {
                             if(response && response.data && Array.isArray(response.data.allegati)) {
-                                console.log('LOADED ALLEGATI', response.data.allegati);
+                                //console.log('LOADED ALLEGATI', response.data.allegati);
 
-                                console.log(item.allegati);
+                                //console.log(item.allegati);
 
                                 item.allegati[id] = _.compact(response.data.allegati);
 
-                                console.log(item.allegati);
+                                //console.log(item.allegati);
                                 /*
                                  console.log(item.id_registri, id, item.id_registri.indexOf(id));
                                  */
@@ -241,7 +241,7 @@ export class PreCipeOdgItemComponent implements OnInit {
                                 // todo: ng2-select2 doesn't implement formControl accessors...
                                 this.odgItemForm.controls['id_registri'].setValue(item.id_registri);
                             } else {
-                                console.log('struttura allegati non valida', response);
+                                //console.log('struttura allegati non valida', response);
                             }
 
                         },
