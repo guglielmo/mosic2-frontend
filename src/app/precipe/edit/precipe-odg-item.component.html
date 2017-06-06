@@ -220,7 +220,7 @@
                                                     [cssImport]="false"
                                                     [data]="registri$ | async | registriByFascicoloDataFilter : item.id_fascicoli"></select2>
 
-                                            {{mytype(item.id_registri)}}
+                                            <!--{{mytype(item.id_registri)}}-->
 
                                             <!--todo: ng2-select2 no form control value accessor workaround-->
                                             <input type="hidden" [formControl]="odgItemForm.controls['id_registri']" [disableCond]="!edit">
