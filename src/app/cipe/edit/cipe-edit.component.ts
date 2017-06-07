@@ -101,10 +101,6 @@ export class CipeEditComponent implements OnInit {
                             this.model = response.data;
                             this.model.data = new Date(this.model.data);
 
-                            // todo: chiedere ad alessando di aggiungere i campi
-                            //this.model.public_reserved_url =
-                            // "http://www.google.it/bceykber6hiub8nbn8@#gdyuevcuhluickjdbuycgdkyhbckuydgcbdbvuykgwlsxvh";
-
                             this.loading = false;
                             this.allowUpload = true;
 
@@ -262,10 +258,22 @@ export class CipeEditComponent implements OnInit {
                         _self.status_msg = response.data.message;
                     }
 
+
+                    if(response.data.public_reserved_url) {
+                        _self.model.public_reserved_url = response.data.public_reserved_url;
+                    }
+
+                    if(response.data.files_uploaded && response.data.files_total) {
+                        if (response.data.files_uploaded === response.data.files_total) {
+                            _self.status = null;
+                            return;
+                        }
+                    }
+
                     if ( repeat ) {
                         setTimeout(function () {
                                 _self.pollStatus();
-                        }, 5000);
+                        }, 2000);
                     }
 
 
@@ -302,16 +310,28 @@ export class CipeEditComponent implements OnInit {
     }
 
     startRemove(){
+        let _self = this;
         this.apiService.delete('areariservata/cipe', this.id)
             .subscribe(
                 response => {
-                    console.log(response);
+                    if(response.data.message) {
+                        _self.status_msg = response.data.message;
+                        _self.model.public_reserved_url = null;
+                        _self.status = null;
+                    }
                 },
                 error => {
-                    console.log(error);
-
+                    if(error.error) {
+                        _self.status = 'error';
+                        if(error.error.message) {
+                            _self.status_msg = error.error.message;
                 }
-            );
+                        if(error.error.url) {
+                            _self.model.public_reserved_url = error.error.url;
+                        }
+                    }
+                }
+            )
     }
 
 
