@@ -221,6 +221,8 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
 
     select2Changed(e: any, name: string): void {
 
+        // console.log(e, name);
+
         if (this.select2Debounce) {
             this.select2Debounce = false;
             return;
@@ -228,6 +230,7 @@ export class RegistriEditComponent implements OnInit, AfterViewChecked, OnDestro
 
         // converts value to arrays to handle multi-selects and selects in the same way
         const V = typeof e.value === 'string' ? e.value.split(',') : e.value;
+        if (!V) return;
 
         const selectedCount = this.model[name] ? this.model[name].split(',').length : 0;
 
