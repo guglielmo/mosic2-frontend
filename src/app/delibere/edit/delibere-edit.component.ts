@@ -21,7 +21,7 @@ import * as _ from 'lodash';
 })
 export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestroy {
 
-    private config: any;
+    public config: any;
     public model: any = {};
     public error = '';
     public mode: string;
@@ -213,11 +213,13 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
 
     select2Changed(e: any, name: string): void {
 
-        // console.log(name, typeof e.value, e.value);
+        console.log(name, typeof e.value, e.value);
 
         // converts value to arrays to handle multi-selects and selects in the same way
         const V = typeof e.value === 'string' ? e.value.split(',') : e.value;
+        //if (!V) return;
 
+        // console.log(this.model);
         const selectedCount = this.model[name] ? this.model[name].split(',').length : 0;
 
         if (V.length > selectedCount) {
