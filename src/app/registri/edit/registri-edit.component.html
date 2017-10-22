@@ -187,7 +187,7 @@
                 <div class="widget-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !id_titolari.valid }">
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_titolari }">
                                 <label for="id_titolari"><strong>Titolario</strong></label>
                                 <div class="select2-H-keeper"><select2 id="id_titolari"
                                          #id_titolari
@@ -200,7 +200,7 @@
                                          (valueChanged)="select2Changed($event,'id_titolari')"
                                          [data]="titolari$ | async" required></select2></div>
                             </div>
-                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !id_fascicoli.valid }">
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_fascicoli }">
                                 <label for="id_fascicoli"><strong>Fascicolo</strong></label>
                                 <div class="select2-H-keeper"><select2 id="id_fascicoli"
                                          #id_fascicoli
