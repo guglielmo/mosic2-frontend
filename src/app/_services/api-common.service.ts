@@ -1,21 +1,21 @@
-import {Injectable} from "@angular/core";
-import {DatePipe} from "@angular/common";
-import {Headers, Http, RequestOptions, Response, URLSearchParams} from "@angular/http";
-import {Observable} from "rxjs/Observable";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Warehouse} from "ngx-warehouse";
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/catch";
-import * as _ from "lodash";
+import {Injectable} from '@angular/core';
+import {DatePipe} from '@angular/common';
+import {Headers, Http, RequestOptions, Response, URLSearchParams} from '@angular/http';
+import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Warehouse} from 'ngx-warehouse';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import * as _ from 'lodash';
 
-import {AppConfig} from "../app.config";
+import {AppConfig} from '../app.config';
 
 @Injectable()
 export class APICommonService {
     public config: any;
     public configFn: any;
 
-    private userCapabilities: any = null;
+    public userCapabilities: any = null;
 
     public commonDataready = false;
     public activeRequests = 0;
@@ -25,7 +25,9 @@ export class APICommonService {
     private _allData$: any = {};
     public dataEnum: any = {};
 
-    private currentStorageVersion = '147';
+    public currentUserID: number;
+    public currentUserGroup: number;
+    private currentStorageVersion = '56';
     private storageVersion: string = localStorage.getItem('storageVersion');
 
     private cachedApiDataMetods: string[] = [
@@ -85,18 +87,8 @@ export class APICommonService {
         this.config = config.getConfig();
         this.configFn = config;
 
-        //console.log(this.userCapabilities);
-
-        // creates containers for local in memory storage and Observable data arrays
-        this.cachedApiDataMetods.forEach( apipath => {
-            if ( !this._allData$[apipath] ) {
-                // creates data containers
-                this._allData[apipath] = [];
-                this.dataEnum[apipath] = {};
-                // creates Observables subjects
-                this._allData$[apipath] = <BehaviorSubject<any[]>> new BehaviorSubject([]);
-            }
-        });
+        // console.log(this.userCapabilities);
+        this.createInMemoryStorage();
 
         this.warehouse.set('apiServiceLastInitTime', Date.now() );
 
@@ -107,14 +99,41 @@ export class APICommonService {
         this.setUserCapabilities();
     }
 
+    private createInMemoryStorage() {
+
+        // console.log('createInMemoryStorage', this.cachedApiDataMetods);
+
+        // creates containers for local in memory storage and Observable data arrays
+        this.cachedApiDataMetods.forEach( apipath => {
+            if ( !this._allData$[apipath] ) {
+                // creates data containers
+                this._allData[apipath] = null;
+                this.dataEnum[apipath] = {};
+                // creates Observables subjects
+                this._allData$[apipath] = <BehaviorSubject<any[]>> new BehaviorSubject([]);
+            }
+        });
+    }
+
     public subscribeToDataService( apipath: string ): Observable<any[]> {
+
+        // if data is not cached by default
+        if ( !this._allData$[apipath] ) {
+            // create in memory container, enum container and observable subject
+            this._allData[apipath] = [];
+            this.dataEnum[apipath] = {};
+            this._allData$[apipath] = <BehaviorSubject<any[]>> new BehaviorSubject([]);
+            // loads the subscribed data
+            this.cacheCommonIDB(apipath, 0);
+        }
         return this._allData$[apipath].asObservable();
+
     }
 
     // PUBLIC helper methods
     public getAll(apipath: string, params?: URLSearchParams): Observable<any> {
 
-        if( this.apiCan('READ_'+apipath.toUpperCase() ) ) {
+        if ( this.apiCan( 'READ_'+apipath.toUpperCase() ) ) {
 
             this.startingRequest(apipath);
             const query = params ? '?' + params.toString() : '';
@@ -123,12 +142,12 @@ export class APICommonService {
                 .catch((response: Response) => this.handleError(response));
         }
 
-        return Observable.of<any>({data:[]});
+        return Observable.of<any>({data: []});
     }
 
     public getById(apipath: string, id: number | string): Observable<any> {
 
-        if( this.apiCan('READ_'+apipath.toUpperCase() ) ) {
+        if ( this.apiCan( 'READ_'+apipath.toUpperCase() ) ) {
 
             this.startingRequest(apipath);
             return this.http.get(this.config.baseAPIURL + '/api/' + apipath + '/' + id, this.jwt())
@@ -136,12 +155,12 @@ export class APICommonService {
                 .catch((response: Response) => this.handleError(response));
         }
 
-        return Observable.of<any>({data:[]});
+        return Observable.of<any>({data: []});
     }
 
     public create(apipath: string, data: any) {
 
-        if( this.apiCan('CREATE_'+apipath.toUpperCase() ) ) {
+        if ( this.apiCan( 'CREATE_'+apipath.toUpperCase() ) ) {
 
             this.startingRequest(apipath);
             this.setDirty(apipath);
@@ -150,12 +169,12 @@ export class APICommonService {
                 .catch((response: Response) => this.handleError(response));
         }
 
-        return Observable.of<any>({data:[]});
+        return Observable.of<any>({data: []});
     }
 
     public update(apipath: string, data: any) {
 
-        if( this.apiCan('EDIT_'+apipath.toUpperCase() ) ) {
+        if ( this.apiCan( 'EDIT_'+apipath.toUpperCase() ) ) {
 
             this.startingRequest(apipath);
             this.setDirty(apipath);
@@ -164,12 +183,12 @@ export class APICommonService {
                 .catch((response: Response) => this.handleError(response));
         }
 
-        return Observable.of<any>({data:[]});
+        return Observable.of<any>({data: []});
     }
 
     public delete(apipath: string, id: number | string) {
 
-        if( this.apiCan('DELETE_'+apipath.toUpperCase() ) ) {
+        if ( this.apiCan( 'DELETE_'+apipath.toUpperCase() ) ) {
 
             this.startingRequest(apipath);
             this.setDirty(apipath);
@@ -178,7 +197,7 @@ export class APICommonService {
                 .catch((response: Response) => this.handleError(response));
         }
 
-        return Observable.of<any>({data:[]});
+        return Observable.of<any>({data: []});
     }
 
     public deleteFile(apipath: string, idContainer: number | string, idFile: number) {
@@ -201,6 +220,44 @@ export class APICommonService {
         return checkIsReady;
     }
 
+    public getDataArray(apipath): any[] {
+        return this._allData[apipath];
+    }
+
+    public addCachedApiDataMethods(apipath: string) {
+        if (this.cachedApiDataMetods.indexOf(apipath) === -1) {
+            this.cachedApiDataMetods.push(apipath);
+        }
+
+        if ( !this._allData$[apipath] ) {
+            // creates data containers
+            this._allData[apipath] = null;
+            this.dataEnum[apipath] = {};
+            // creates Observables subjects
+            this._allData$[apipath] = <BehaviorSubject<any[]>> new BehaviorSubject([]);
+        }
+    }
+
+    public purgeCache() {
+
+        localStorage.removeItem('lastupdates');
+        this._allData = {};
+        this._allData$ = {};
+        this.dataEnum = {};
+        this.createInMemoryStorage();
+
+/*        this.warehouse.destroy().subscribe(
+            (success) => {
+                console.log('cache svuotata');
+                // do something on success
+            },
+            (error) => {
+                console.log('errore nella pulizia della cache: ' + error);
+                // handle the error
+            }
+        );*/
+    }
+
     public refreshCommonCache() {
 
         this.getLastUpdates().subscribe(
@@ -214,14 +271,14 @@ export class APICommonService {
                 const storageVersion = localStorage.getItem('storageVersion');
 
 
-                //console.log(lastupdates,storedLastUpdates);
+                // console.log(lastupdates,storedLastUpdates);
 
                 //
                 // for every cached API method
                 //
                 for (let i = 0; i < this.cachedApiDataMetods.length; i++) {
                     const apipath = this.cachedApiDataMetods[i];
-                    const apipathLU = apipath.replace(/\//g,'_');
+                    const apipathLU = apipath.replace(/\//g,'_' );
 
                     //console.log(apipath,apipathLU);
 
@@ -268,9 +325,10 @@ export class APICommonService {
     private loadDataFromWareHouse ( apipath: string, lastupdates ) {
         this.warehouse.get('stored_' + apipath).subscribe(
             data => {
-                if(!Array.isArray(data)) {
-                    this.notifyError("I dati registrati nella memoria locale per " + apipath + " non sono validi. Sarà effettuato un" +
-                        " nuovo tentativo di ricaricamento dal server.");
+                if (!Array.isArray(data)) {
+                    this.notifyError('I dati registrati nella memoria locale per ' +
+                        apipath + ' non sono validi. Sarà effettuato un' +
+                        ' nuovo tentativo di ricaricamento dal server.');
                     localStorage.setItem('lastupdates', JSON.stringify({}));
                     this.cacheCommonIDB(apipath, lastupdates[apipath]);
                     return;
@@ -285,6 +343,13 @@ export class APICommonService {
                 // creates a data hashmap for a convenient and quick lookup access by id
                 //
                 _.each(this._allData[apipath], item => { this.dataEnum[apipath][item.id] = item; });
+
+                //
+                // updates current user capabilities if we just loaded new groups capabilities
+                //
+                if ( apipath === 'groups') {
+                    this.setUserCapabilities();
+                }
 
                 //
                 // notifies the subscribers with the new data
@@ -311,11 +376,13 @@ export class APICommonService {
 
     private apiCan (capability: string): boolean {
 
-        capability = capability.replace(/\//g,'_');
+        capability = capability.replace(/\//g, '_');
 
-        if( this.userCapabilities && !this.userCapabilities['ROLE_'+capability] ) {
+        // console.log(this.userCapabilities);
 
-            this.notifyError('Permesso negato: non disponi delle autorizzazioni per '+capability);
+        if ( this.userCapabilities && !this.userCapabilities['ROLE_'+capability] ) {
+
+            this.notifyError('Permesso negato: non disponi delle autorizzazioni per ' + capability);
             return false;
         }
         return true;
@@ -328,24 +395,24 @@ export class APICommonService {
         // get the current user object and group id
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-        //console.log('setUserCapabilities',currentUser);
+        // console.log('setUserCapabilities', currentUser);
 
-        if( currentUser ) {
+        if ( currentUser ) {
             const group = currentUser.id_group[0];
 
             // check the capabilities by Group ID if the data was already loaded
-            if( this.dataEnum['groups'][group] && Array.isArray(this.dataEnum['groups'][group]['roles'])) {
+            if ( this.dataEnum['groups'][group] && Array.isArray(this.dataEnum['groups'][group]['roles'])) {
 
                 capabilities = this.dataEnum['groups'][group]['roles'];
 
                 // otherwise uses the login time declared capabilities (from /api/authenticate response)
-            } else if(currentUser && Array.isArray(currentUser.capabilities)) {
+            } else if (currentUser && Array.isArray(currentUser.capabilities)) {
 
                 capabilities = currentUser.capabilities;
 
             } else {
 
-                this.notifyError("Impossibile determinare i permessi dell'utente");
+                this.notifyError('Impossibile determinare i permessi dell\'utente');
 
             }
         }
@@ -353,7 +420,7 @@ export class APICommonService {
         // maps user capabilities to object for fast evaluation
         this.userCapabilities = _.zipObject(capabilities, _.map(capabilities, () => { return true } ));
 
-        //console.log(this.userCapabilities);
+        // console.log(this.userCapabilities);
 
     }
 
@@ -392,12 +459,16 @@ export class APICommonService {
 
     private handleError (error: Response | any) {
 
-        console.log('handle',error);
+        // console.log('handle', error);
 
         let errMsg: string;
         if (error instanceof Response) {
 
+            console.log(error);
+
             const body = error.json() || '';
+
+            // console.log('body:', body);
             const err = body.error || JSON.stringify(body);
             errMsg = `${error.status} - ${error.statusText || ''} ${err.message}`;
 
@@ -420,7 +491,7 @@ export class APICommonService {
         this.getAll(apipath, params).subscribe(
             response => {
 
-                if(!Array.isArray(response.data)) {
+                if (!Array.isArray(response.data)) {
                     this.notifyError('La risposta del server per la API ' + apipath + ' non è valida');
                     return;
                 }
@@ -444,7 +515,7 @@ export class APICommonService {
                 //
                 // updates current user capabilities if we just loaded new groups capabilities
                 //
-                if( apipath === 'groups') {
+                if ( apipath === 'groups') {
                     this.setUserCapabilities();
                 }
 
@@ -462,7 +533,7 @@ export class APICommonService {
                 // retrives and update lastupdates for the apipath with the received timestamp
                 //
                 const storedUpdates = JSON.parse(localStorage.getItem('lastupdates')) || {};
-                const apipathLU = apipath.replace(/\//g,'_');
+                const apipathLU = apipath.replace(/\//g, '_');
                 storedUpdates[apipathLU] = lastupdate;
                 localStorage.setItem('lastupdates', JSON.stringify(storedUpdates));
 
@@ -524,6 +595,8 @@ export class APICommonService {
     private jwt() {
         // create authorization header with jwt token
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.currentUserID = currentUser.id;
+        this.currentUserGroup = currentUser.group;
         if (currentUser && currentUser.token) {
             const headers = new Headers({'Authorization': 'Bearer ' + currentUser.token});
             return new RequestOptions({headers: headers});

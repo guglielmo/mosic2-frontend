@@ -32,6 +32,7 @@ export class AuthenticationService {
 
     public logout() {
         // remove user from local storage to log user out
+        this.apiService.purgeCache();
         localStorage.removeItem('currentUser');
     }
 }
