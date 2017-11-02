@@ -81,11 +81,12 @@ export class PreCipeOdgItemComponent implements OnInit {
 
         if (this.edit && !FG.valid) {
             this.hasErrors = true;
-            console.log(FG);
+            // console.log(FG);
         } else {
             this.edit = !this.edit;
         }
 
+        this.item.edit = this.edit;
     }
 
     deleteOdg($event, id){
@@ -150,7 +151,7 @@ export class PreCipeOdgItemComponent implements OnInit {
     public select2Changed(e: any, item: any, name: string): void {
 
         if (this.select2Debounce) {
-            console.log('debounce', name, e.value);
+            // console.log('debounce', name, e.value);
             this.select2Debounce = false;
             return;
         }
@@ -204,12 +205,12 @@ export class PreCipeOdgItemComponent implements OnInit {
                     //console.log('allegato found');
                 } else {
                     this.getAllegatiRegistri(item, selected_registri);
-                    console.log('no allegato found');
+                    // console.log('no allegato found');
                 }
                 break;
         }
-        //console.log(name, e.value, item, this.odgItemForm);
-        console.log(name, e.value);
+        // console.log(name, e.value, item, this.odgItemForm);
+        // console.log(name, e.value);
     }
 
     mytype(value: any) {

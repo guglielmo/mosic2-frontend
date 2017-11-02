@@ -119,6 +119,10 @@ export class PreCipeEditComponent implements OnInit {
             $event.stopPropagation();
         }
 
+        if(!Array.isArray(this.model.precipe_odg)) {
+            this.model.precipe_odg = [];
+        }
+
         this.model.precipe_odg.push(new PreCipeOdg());
 
         if(element) {
@@ -175,13 +179,23 @@ export class PreCipeEditComponent implements OnInit {
         this.loading = true;
 
         let post = $.extend(true, {}, this.model);
+
+        for (let i=0; i<post.precipe_odg.length; i++) {
+            if(post.precipe_odg[i].edit) {
+                this.apiService.notifyError('Completa tutti i punti ODG o elimina quelli incompleti prima di salvare');
+                //console.log('beccato!');
+                return;
+            }
+        }
+
+
         let tz = new Date().getTimezoneOffset();
 
         // convert every date to milliseconds
         _.forEach(post, (value, key) => {
             if(key && key.indexOf('data') !== -1) {
                 if(value) {
-                    post[key] = new Date(value.getTime() - tz*60000);
+                    post[key] = new Date(value.getTime());
                 }
             }
         });

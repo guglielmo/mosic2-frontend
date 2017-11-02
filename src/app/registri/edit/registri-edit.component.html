@@ -1,3 +1,16 @@
+<accordion *ngIf="config.debug" [closeOthers]="false" class="mb-lg show" id="debug[{{model.id}}]">
+    <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="false">
+        <div accordion-heading>
+            <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
+            <i class="fa float-right"
+               [ngClass]="{'fa-angle-down': accordionGroupDebug?.isOpen, 'fa-angle-right': !accordionGroupDebug?.isOpen}"></i>
+        </div>
+        <div>
+            <pre>model = {{model | json}}</pre>
+        </div>
+    </accordion-group>
+</accordion>
+
 <form *ngIf="apiService.isDataReady(['registri','titolari','fascicoli','mittenti','amministrazioni','tags']) && (model.id || mode === 'create')" name="form" (ngSubmit)="f.form.valid && submit($event, myModal)" #f="ngForm" novalidate>
     <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
@@ -74,9 +87,9 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !oggetto.valid }">
-                                <label for="oggetto"><strong>Oggetto</strong></label>
+                                <label for="oggetto"><strong>Oggetto</strong>*</label>
                                 <textarea id="oggetto" name="oggetto"
-                                          rows="6" class="autogrow form-control transition-height"
+                                          rows="7" class="autogrow form-control transition-height"
                                           placeholder="Scrivi l'oggetto del registro..."
                                           [disabled]="!canEdit"
                                           [(ngModel)]="model.oggetto" #oggetto="ngModel" required></textarea>
@@ -99,7 +112,7 @@
                             <div class="row">
                                 <div class="col-sm-7">
                                     <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !protocollo_arrivo.valid }">
-                                        <label for="protocollo_arrivo">Numero</label>
+                                        <label for="protocollo_arrivo">Numero*</label>
                                         <input id="protocollo_arrivo" name="protocollo_arrivo"
                                                type="text" class="form-control"
                                                placeholder="numero del protocollo"
@@ -109,7 +122,7 @@
                                 </div>
                                 <div class="col-sm-5">
                                     <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !data_arrivo.valid }">
-                                        <label for="data_arrivo">Data</label>
+                                        <label for="data_arrivo">Data*</label>
                                         <datetime id="data_arrivo" name="data_arrivo"
                                                   [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                                   [timepicker]="false"
@@ -118,10 +131,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <label><strong>Invio</strong></label>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="id_amministrazioni"><strong>Amministrazione</strong></label>
+                                        <label for="id_amministrazioni">Amministrazione</label>
                                         <div class="select2-H-keeper"><select2 id="id_amministrazioni"
                                                                                class="full-width-select"
                                                                                [options]="select2WithAddOptionsMulti"
@@ -134,7 +148,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="id_mittenti"><strong>Mittente</strong></label>
+                                        <label for="id_mittenti">Mittente</label>
                                         <div class="select2-H-keeper"><select2 id="id_mittenti"
                                                  class="full-width-select"
                                                  [options]="select2WithAddOptions"
@@ -188,7 +202,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_titolari }">
-                                <label for="id_titolari"><strong>Titolario</strong></label>
+                                <label for="id_titolari"><strong>Titolario</strong>*</label>
                                 <div class="select2-H-keeper"><select2 id="id_titolari"
                                          #id_titolari
                                          name="id_titolari"
@@ -201,7 +215,7 @@
                                          [data]="titolari$ | async" required></select2></div>
                             </div>
                             <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_fascicoli }">
-                                <label for="id_fascicoli"><strong>Fascicolo</strong></label>
+                                <label for="id_fascicoli"><strong>Fascicolo</strong>*</label>
                                 <div class="select2-H-keeper"><select2 id="id_fascicoli"
                                          #id_fascicoli
                                          name="id_fascicoli"

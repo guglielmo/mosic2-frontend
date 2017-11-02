@@ -693,42 +693,44 @@ table.align-center {
 
 @media only screen and (max-width: 992px) {
 
-  /* Force table to not be like tables anymore */
-  table, thead, tbody, th, td, tr {
-    display: block;
-  }
+  #app {
+    /* Force table to not be like tables anymore */
+    table, thead, tbody, th, td, tr {
+      display: block;
+    }
 
-  /* Hide table headers (but not display: none;, for accessibility) */
-  thead tr {
-    position: absolute;
-    top: -9999px;
-    left: -9999px;
-  }
+    /* Hide table headers (but not display: none;, for accessibility) */
+    thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
 
-  tr { border: 1px solid #555; }
+    tr { border: 1px solid #555; }
 
-  td {
-    /* Behave  like a "row" */
-    border: none;
-    border-bottom: 1px solid #eee;
-    position: relative;
-    padding-left: 180px !important;
-    min-height: 38px;
-  }
+    td {
+      /* Behave  like a "row" */
+      border: none;
+      border-bottom: 1px solid #EEE;
+      position: relative;
+      padding-left: 180px !important;
+      min-height: 38px;
+    }
 
-  td, td.text-center {
-    text-align: left !important;
-    p, p.text-center { text-align: left !important; }
-  }
+    td, td.text-center {
+      text-align: left !important;
+      p, p.text-center { text-align: left !important; }
+    }
 
-  td:before {
-    /* Now like a table header */
-    position: absolute;
-    /* Top/left values mimic padding */
-    top: 6px;
-    left: 6px;
-    width: 180px;
-    padding-right: 10px;
-    font-weight: 600;
+    td:before {
+      /* Now like a table header */
+      position: absolute;
+      /* Top/left values mimic padding */
+      top: 6px;
+      left: 6px;
+      width: 180px;
+      padding-right: 10px;
+      font-weight: 600;
+    }
   }
 }

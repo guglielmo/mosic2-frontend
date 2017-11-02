@@ -8,8 +8,10 @@ import { ModalModule } from 'ngx-modal';
 import { DataTableModule } from 'angular2-datatable';
 import { PipesDirectivesSharedModule } from '../_shared/index';
 import { Select2Module } from 'ng2-select2';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { LOCALE_ID } from '@angular/core';
 
 
 import { FascicoliListComponent } from './list/fascicoli-list.component';
@@ -36,13 +38,17 @@ export const routes = [
     NKDatetimeModule,
     Select2Module,
     PipesDirectivesSharedModule,
+    AccordionModule.forRoot(),
     TooltipModule.forRoot(),
     RouterModule.forChild(routes)
   ],
   declarations: [
       FascicoliListComponent,
       FascicoliEditComponent
-  ]
+  ],
+  providers: [
+      { provide: LOCALE_ID, useValue: "it-IT" }
+  ],
 })
 export class FascicoliModule {
   static routes = routes;

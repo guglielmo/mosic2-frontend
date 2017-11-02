@@ -49,9 +49,9 @@ export class APICommonService {
         'cipeargomentitipo',
         'users',
         'delibere',
-        'adempimenti',
-        'monitor',
-        'monitor/group'
+        /*        'adempimenti',
+                'monitor',
+                'monitor/group'*/
     ];
 
     private commonData: string[] = [
@@ -73,9 +73,9 @@ export class APICommonService {
         'cipeargomentitipo',
         'users',
         'delibere',
-        'adempimenti',
-        'monitor',
-        'monitor/group'
+        /*        'adempimenti',
+                'monitor',
+                'monitor/group'*/
     ];
 
     constructor(

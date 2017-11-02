@@ -9,6 +9,7 @@ import { DataTableModule }                      from 'angular2-datatable';
 
 import { PipesDirectivesSharedModule }          from '../_shared/index'
 import { Select2Module } from 'ng2-select2';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 
 
 
@@ -31,7 +32,7 @@ export const routes = [
     ReactiveFormsModule,
     Select2Module,
     ModalModule,
-
+    AccordionModule.forRoot(),
     DataTableModule,
     PipesDirectivesSharedModule,
     RouterModule.forChild(routes)

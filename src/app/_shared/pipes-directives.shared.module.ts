@@ -20,7 +20,8 @@ import {
     ArrayLengthPipe,
     DelibereDataFilterPipe,
     AdempimentiDataFilterPipe,
-    Cast2String
+    Cast2String,
+    LodashDataFilterPipe
 
 } from '../_pipes/index';
 
@@ -56,7 +57,8 @@ import 'moment/locale/it';
         StickToolbar,
         Scroll2Bottom,
         Widget,
-        DisableFormControlDirective
+        DisableFormControlDirective,
+        LodashDataFilterPipe
     ],
     providers: [
     ],
@@ -84,7 +86,8 @@ import 'moment/locale/it';
         StickToolbar,
         Scroll2Bottom,
         Widget,
-        DisableFormControlDirective
+        DisableFormControlDirective,
+        LodashDataFilterPipe
     ]
 })
 export class PipesDirectivesSharedModule {}

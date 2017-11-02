@@ -1,3 +1,16 @@
+<accordion *ngIf="config.debug" [closeOthers]="false" class="mb-lg show" id="debug[{{model.id}}]">
+    <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="false">
+        <div accordion-heading>
+            <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
+            <i class="fa float-right"
+               [ngClass]="{'fa-angle-down': accordionGroupDebug?.isOpen, 'fa-angle-right': !accordionGroupDebug?.isOpen}"></i>
+        </div>
+        <div>
+            <pre>model = {{model | json}}</pre>
+        </div>
+    </accordion-group>
+</accordion>
+
 <form *ngIf="apiService.isDataReady(['registri','titolari','amministrazioni','tags']) && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event, myModal)" #f="ngForm" novalidate>
     <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
@@ -43,7 +56,7 @@
                 </header>
                 <div class="widget-body">
                     <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_titolari }">
-                        <label for="id_titolari"><strong>Titolario</strong></label>
+                        <label for="id_titolari"><strong>Titolario</strong>*</label>
                         <div class="select2-H-keeper"><select2 id="id_titolari"
                                  class="form-control full-width-select"
                                  [options]="select2Options"
@@ -66,7 +79,7 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !data_magazzino.valid }">
-                                <label for="data_magazzino"><strong>Data magazzino</strong></label>
+                                <label for="data_magazzino"><strong>Data magazzino</strong>*</label>
                                 <datetime id="data_magazzino" name="data_magazzino"
                                           [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
                                           [timepicker]="false"
@@ -77,7 +90,7 @@
                     </div>
 
                     <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !argomento.valid }">
-                        <label for="argomento"><strong>Argomento</strong></label>
+                        <label for="argomento"><strong>Argomento</strong>*</label>
                         <textarea id="argomento" name="argomento"
                                   rows="4" class="autogrow form-control transition-height"
                                   autosize
@@ -85,8 +98,8 @@
                                   [disabled]="!canEdit"
                                   [(ngModel)]="model.argomento" #argomento="ngModel" required></textarea>
                     </div>
-                    <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !id_amministrazioni.valid }">
-                        <label for="id_amministrazioni"><strong>Amministrazione</strong></label>
+                    <div class="form-group">
+                        <label for="id_amministrazioni"><strong>Amministrazioni</strong></label>
                         <div class="select2-H-keeper">
                             <select2 id="id_amministrazioni"
                                  #id_amministrazioni

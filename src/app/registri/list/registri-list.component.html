@@ -203,9 +203,9 @@
                             <!--<br/> id_fascicoli:&nbsp;{{registro.id_fascicoli}}-->
                         </td>
                         <td>{{registro.protocollo_arrivo}}</td>
-                        <td class="nowrap">{{registro.data_arrivo | date: 'dd/MM/yyyy': 'UTC' }}</td>
+                        <td class="nowrap">{{registro.data_arrivo | date: 'dd/MM/yyyy' }}</td>
                         <td>{{registro.protocollo_mittente}}</td>
-                        <td class="nowrap">{{registro.data_mittente | date: 'dd/MM/yyyy' : 'UTC' }}</td>
+                        <td class="nowrap">{{registro.data_mittente | date: 'dd/MM/yyyy' }}</td>
                         <td>
                             <div class="tag-container" [innerHTML]="registro.id_tags | tagEnum : apiService.dataEnum : 'tags' : 'denominazione' : ''"></div>
                         </td>

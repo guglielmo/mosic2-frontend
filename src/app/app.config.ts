@@ -24,10 +24,10 @@ export class AppConfig {
 	// baseAPIURL: 'http://localhost:8080/mosic2-service',
 
 	// staging tdrynx.com
-	// baseAPIURL: 'http://mosicapi.tdrynx.info',
+	baseAPIURL: 'http://mosicapi.tdrynx.info',
 	
 	// staging celata.com
-	baseAPIURL: 'http://mosic2.celata.com/service',
+	// baseAPIURL: 'http://mosic2.celata.com/service',
 
 	// production
 	// baseAPIURL: 'http://mosic2.pcm.it/service',
@@ -35,7 +35,7 @@ export class AppConfig {
         /**
          * Whether to print and alert some log information
          */
-        debug: false,
+        debug: true,
         /**
          * In-app constants
          */

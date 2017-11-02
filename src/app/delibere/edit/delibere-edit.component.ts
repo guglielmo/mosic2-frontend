@@ -124,7 +124,7 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
                             _.forEach(this.model, (value, key) => {
                                 if(key && key.indexOf('data') !== -1) {
                                     if(value) {
-                                        this.model[key] = new Date(value + tz*60000);
+                                        this.model[key] = new Date(value);
                                     }
                                 }
                             });
@@ -179,7 +179,7 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
             if(key && key.indexOf('data') !== -1) {
                 // console.log(key, typeof value, value);
                 if(value) {
-                    post[key] = new Date(value.getTime() - tz*60000);
+                    post[key] = new Date(value.getTime());
                 }
             }
         });
@@ -213,19 +213,25 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
 
     select2Changed(e: any, name: string): void {
 
-        console.log(name, typeof e.value, e.value);
+        //console.log(name, typeof e.value, e.value);
 
         // converts value to arrays to handle multi-selects and selects in the same way
-        const V = typeof e.value === 'string' ? e.value.split(',') : e.value;
-        //if (!V) return;
+        let V = typeof e.value === 'string' ? e.value.split(',') : e.value;
+        if (!V) { V = [] }
 
         // console.log(this.model);
-        const selectedCount = this.model[name] ? this.model[name].split(',').length : 0;
+        let selectedCount = 0;
+        if ( Array.isArray(this.model[name]) ) {
+            selectedCount = this.model[name].length;
+        } else {
+            selectedCount = this.model[name] ? this.model[name].split(',').length : 0;
+        }
+
 
         if (V.length > selectedCount) {
             // Value added
             console.log('value added');
-            this.mayBeCreateNewSelect2Values(name);
+            this.mayBeCreateNewSelect2Values(name, V);
 
         } else if (V.length < selectedCount) {
             // Value removed
@@ -233,21 +239,37 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
 
         } else if (V.join(',') !== this.model[name]) {
             // console.log('value changed');
-            this.mayBeCreateNewSelect2Values(name);
+            this.mayBeCreateNewSelect2Values(name, V);
         }
 
         // go back to comma separated strings in the model value as the server handles
         // both single and multi selects as strings
-        this.model[name] = typeof e.value === 'object' && e.value != null ? e.value.join(',') : e.value;
+
+        if (Array.isArray( this.model[name] )) {
+            this.model[name] = Array.isArray(e.value) ? e.value : e.value != null ? e.value.split(',') : e.value;
+        } else {
+            this.model[name] = typeof e.value === 'object' && e.value != null ? e.value.join(',') : e.value;
+        }
+
 
     }
 
 
-    mayBeCreateNewSelect2Values(name) {
+    mayBeCreateNewSelect2Values(name, V) {
+
+        let newValues = [];
+        const apiPath = name.split('_')[1];
+        for(let i=0; i<V.length; i++) {
+            if(V[i] != '' && !this.apiService.dataEnum[apiPath][V[i]]) {
+                // value doesn't exist
+                console.log("Value '"+V[i]+"' doesn't exist");
+                newValues.push(V[i]);
+            }
+        }
 
         // console.log('trying to add new ' + name, '#' + name + ' select option[data-select2-tag="true"]');
 
-        const newValues = $('#' + name + ' select option[data-select2-tag="true"]');
+        // const newValues = $('#' + name + ' select option[data-select2-tag="true"]');
 
         // console.log(newValues.length);
 
@@ -255,13 +277,16 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
 
             const apipath = name.split('_')[1];
 
-            newValues.each((index: number, elem: HTMLInputElement) => {
+            newValues.forEach((elem) => {
 
                 // console.log(name, newValues, elem);
 
-                this.apiService.create(apipath, { 'denominazione': elem.value } )
+                this.apiService.create(apipath, { 'denominazione': elem } )
                     .subscribe(
                         response => {
+
+                            this.apiService.refreshCommonCache();
+
                             const id = response.data.id,
                                 den = response.data.denominazione;
 
@@ -278,9 +303,14 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
                             const selectedValues = this.model[name].split(',');
 
                             const i = _.indexOf(selectedValues, _.find(selectedValues, den));
-                            selectedValues.splice(i, 1, id);
+                            selectedValues.splice(i, 1, String(id));
 
-                            this.model[name] = selectedValues.join(',');
+                            if( Array.isArray(this.model[name])) {
+                                this.model[name] = selectedValues;
+                            } else {
+                                this.model[name] = selectedValues.join(',');
+                            }
+
 
                             // update select2 data
                             // $('#'+name+' select').select2('data',response.data, true);

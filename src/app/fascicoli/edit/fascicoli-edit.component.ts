@@ -24,6 +24,7 @@ export class FascicoliEditComponent implements OnInit {
     selected: any;
 
     public filteredCount = {count: 0};
+    public config: any;
 
     public select2Options: Select2Options;
     public select2WithAddOptions: Select2Options;
@@ -40,7 +41,9 @@ export class FascicoliEditComponent implements OnInit {
     constructor(private router: Router,
                 private route: ActivatedRoute,
                 public apiService: APICommonService,
-                private config: AppConfig) {
+                config: AppConfig) {
+
+        this.config = config.getConfig();
 
         this.select2Options = config.select2Options;
         this.select2WithAddOptions = config.select2WithAddOptions;
@@ -72,7 +75,7 @@ export class FascicoliEditComponent implements OnInit {
                         response => {
                             let tz = new Date().getTimezoneOffset();
                             this.model = response.data;
-                            this.model.data_magazzino = new Date(this.model.data_magazzino + tz*60000);
+                            this.model.data_magazzino = new Date(this.model.data_magazzino);
                         },
                         error => {
                             this.error = error; console.log(error);
@@ -92,7 +95,7 @@ export class FascicoliEditComponent implements OnInit {
 
         let post = $.extend(true, {}, this.model);
         let tz = new Date().getTimezoneOffset();
-        post.data_magazzino = new Date(post.data_magazzino - tz*60000);
+        post.data_magazzino = new Date(post.data_magazzino);
 
         switch (this.mode) {
             case 'create':
@@ -100,8 +103,14 @@ export class FascicoliEditComponent implements OnInit {
                     .subscribe(
                         data => {
                             // console.log(data);
+                            let tz = new Date().getTimezoneOffset();
                             this.model = data;
-                            modal.open();
+                            this.model.data_magazzino = new Date(this.model.data_magazzino);
+
+
+                            if(this.model.numero_fascicolo) {
+                                modal.open();
+                            }
                             // this.router.navigate(['/app/fascicoli/list']);
                         },
                         error => {
@@ -130,15 +139,15 @@ export class FascicoliEditComponent implements OnInit {
         // console.log(name, typeof e.value, e.value);
 
         // converts value to arrays to handle multi-selects and selects in the same way
-        const V = typeof e.value === 'string' ? e.value.split(',') : e.value;
-        if (!V) return;
+        let V = typeof e.value === 'string' ? e.value.split(',') : e.value;
+        if (!V) { V = [] }
 
         const selectedCount = this.model[name] ? this.model[name].split(',').length : 0;
 
         if (V.length > selectedCount) {
             // Value added
             // console.log('value added');
-            this.mayBeCreateNewSelect2Values(name);
+            this.mayBeCreateNewSelect2Values(name, V);
 
         } else if (V.length < selectedCount) {
             // Value removed
@@ -146,7 +155,7 @@ export class FascicoliEditComponent implements OnInit {
 
         } else if (V.join(',') !== this.model[name]) {
             // console.log('value changed');
-            this.mayBeCreateNewSelect2Values(name);
+            this.mayBeCreateNewSelect2Values(name, V);
         }
 
         // go back to comma separated strings in the model value as the server handles
@@ -155,11 +164,21 @@ export class FascicoliEditComponent implements OnInit {
 
     }
 
-    mayBeCreateNewSelect2Values(name) {
+    mayBeCreateNewSelect2Values(name, V) {
 
         // console.log('trying to add new ' + name, '#' + name + ' select option[data-select2-tag="true"]');
 
-        const newValues = $('#' + name + ' select option[data-select2-tag="true"]');
+        let newValues = [];
+        const apiPath = name.split('_')[1];
+        for(let i=0; i<V.length; i++) {
+            if(V[i] != '' && !this.apiService.dataEnum[apiPath][V[i]]) {
+                // value doesn't exist
+                console.log("Value '"+V[i]+"' doesn't exist");
+                newValues.push(V[i]);
+            }
+        }
+
+        // const newValues = $('#' + name + ' select option[data-select2-tag="true"]');
 
         // console.log(newValues.length);
 
@@ -167,13 +186,16 @@ export class FascicoliEditComponent implements OnInit {
 
             const apipath = name.split('_')[1];
 
-            newValues.each((index: number, elem: HTMLInputElement) => {
+            newValues.forEach((elem) => {
 
                 // console.log(name, newValues, elem);
 
-                this.apiService.create(apipath, { 'denominazione': elem.value } )
+                this.apiService.create(apipath, { 'denominazione': elem } )
                     .subscribe(
                         response => {
+
+                            this.apiService.refreshCommonCache();
+
                             const id = response.data.id,
                                  den = response.data.denominazione;
 
@@ -190,7 +212,7 @@ export class FascicoliEditComponent implements OnInit {
                             const selectedValues = this.model[name].split(',');
 
                             const i = _.indexOf(selectedValues, _.find(selectedValues, den));
-                            selectedValues.splice(i, 1, id);
+                            selectedValues.splice(i, 1, String(id));
 
                             this.model[name] = selectedValues.join(',');
 

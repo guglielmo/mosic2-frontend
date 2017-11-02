@@ -59,19 +59,19 @@ export class CipeEditComponent implements OnInit {
         this.datePickerOptions = config.datePickerOptions;
 
         dragulaService.drag.subscribe((value) => {
-            console.log(`drag: ${value[0]}`);
+            // console.log(`drag: ${value[0]}`);
             this.onDrag(value.slice(1));
         });
         dragulaService.drop.subscribe((value) => {
-            console.log(`drop: ${value[0]}`);
+            // console.log(`drop: ${value[0]}`);
             this.onDrop(value.slice(1));
         });
         dragulaService.over.subscribe((value) => {
-            console.log(`over: ${value[0]}`);
+            // console.log(`over: ${value[0]}`);
             this.onOver(value.slice(1));
         });
         dragulaService.out.subscribe((value) => {
-            console.log(`out: ${value[0]}`);
+            // console.log(`out: ${value[0]}`);
             this.onOut(value.slice(1));
         });
     }
@@ -121,6 +121,10 @@ export class CipeEditComponent implements OnInit {
             $event.stopPropagation();
         }
 
+        if(!Array.isArray(this.model.cipe_odg)) {
+            this.model.cipe_odg = [];
+        }
+
         this.model.cipe_odg.push(new CipeOdg());
 
         if(element) {
@@ -132,7 +136,7 @@ export class CipeEditComponent implements OnInit {
         //event.stopPropagation();
         //event.preventDefault();
         this.deletingPuntoOdg = _.find(this.model.cipe_odg, o => { return o.id === id });
-        console.log(id,this.deletingPuntoOdg);
+        // console.log(id,this.deletingPuntoOdg);
         modal.open();
         return false;
     }
@@ -155,8 +159,9 @@ export class CipeEditComponent implements OnInit {
             this.apiService.delete('cipeodg', id)
                 .subscribe(
                     response => {
-                        console.log(response);
+                        // console.log(response);
                         this.model.cipe_odg = _.filter(this.model.cipe_odg, o => { return o.id !== id; });
+                        // console.log(this.model.cipe_odg);
                     },
                     error => {
                         console.log(error);
@@ -177,13 +182,23 @@ export class CipeEditComponent implements OnInit {
         this.loading = true;
 
         let post = $.extend(true, {}, this.model);
+
+        for (let i=0; i<post.cipe_odg.length; i++) {
+            if(post.cipe_odg[i].edit) {
+                this.apiService.notifyError('Completa tutti i punti ODG o elimina quelli incompleti prima di salvare');
+                //console.log('beccato!');
+                return;
+            }
+        }
+
+        // convert every date to milliseconds
         let tz = new Date().getTimezoneOffset();
 
         // convert every date to milliseconds
         _.forEach(post, (value, key) => {
             if(key && key.indexOf('data') !== -1) {
                 if(value) {
-                    post[key] = new Date(value.getTime() - tz*60000);
+                    post[key] = new Date(value.getTime());
                 }
             }
         });
@@ -240,7 +255,7 @@ export class CipeEditComponent implements OnInit {
             .subscribe(
                 response => {
                     this.pollStatus();
-                    console.log(response);
+                    // console.log(response);
                 },
                 error => {
                     console.log(error);
@@ -277,7 +292,7 @@ export class CipeEditComponent implements OnInit {
                     }
 
 
-                    console.log(response);
+                    // console.log(response);
                 },
                 error => {
 

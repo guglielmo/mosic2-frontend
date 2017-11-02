@@ -10,7 +10,9 @@ import { IfEmptyPipe } from '../_pipes/index';
 import { PipesDirectivesSharedModule } from '../_shared/index';
 import { Select2Module } from 'ng2-select2';
 import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { LOCALE_ID } from '@angular/core';
 
 // ngx-uploader
 import { NgUploaderModule } from 'ngx-uploader';
@@ -40,13 +42,17 @@ export const routes = [
         NgUploaderModule,
         PipesDirectivesSharedModule,
         TooltipModule.forRoot(),
+        AccordionModule.forRoot(),
         RouterModule.forChild(routes)
     ],
     declarations: [
         RegistriListComponent,
         RegistriEditComponent,
         IfEmptyPipe
-    ]
+    ],
+    providers: [
+        { provide: LOCALE_ID, useValue: "it-IT" }
+    ],
 })
 export class RegistriModule {
     static routes = routes;

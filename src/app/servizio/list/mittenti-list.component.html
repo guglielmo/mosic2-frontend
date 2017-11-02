@@ -51,7 +51,7 @@
                        #mf="mfDataTable" stickthead [offsetY]="0">
                     <thead>
                     <tr>
-                        <th><mfDefaultSorter by="codice">#</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="id">#</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="denominazione">Denominazione</mfDefaultSorter></th>
                         <th *ngIf="apiService.userCan('DELETE_MITTENTI')">Azioni</th>
                     </tr>

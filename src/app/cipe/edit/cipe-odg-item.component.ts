@@ -84,6 +84,8 @@ export class CipeOdgItemComponent implements OnInit {
             this.edit = !this.edit;
         }
 
+        this.item.edit = this.edit;
+
     }
 
     deleteOdg($event, id){

@@ -15,7 +15,7 @@ import { AppConfig } from '../../app.config';
 
 export class TitolariEditComponent implements OnInit {
 
-    private config: any;
+    public config: any;
     public model: Titolari = new Titolari;
     public error = '';
     public mode: string;
@@ -109,6 +109,6 @@ export class TitolariEditComponent implements OnInit {
     }
 
     select2Changed(e: any, name: string): void {
-        this.model[name] = typeof e.value === 'object' ? e.value.join(',') : Number(e.value);
+        this.model[name] = typeof e.value === 'object' ? e.value.join(',') : String(e.value);
     }
 }
