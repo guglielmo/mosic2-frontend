@@ -100,6 +100,10 @@ export class PreCipeEditComponent implements OnInit {
                             this.model = response.data;
                             this.model.data = new Date(this.model.data);
 
+                            if (this.model.allegati_TLX === '') { this.model.allegati_TLX = []; }
+                            if (this.model.allegati_APG === '') { this.model.allegati_APG = []; }
+                            if (this.model.allegati_OSS === '') { this.model.allegati_OSS = []; }
+
                             this.loading = false;
                             this.allowUpload = true;
 
@@ -130,18 +134,19 @@ export class PreCipeEditComponent implements OnInit {
         }
     }
 
-    askDeletePuntoOdg(id: number, modal: any) {
+    askDeletePuntoOdg(item: any, modal: any) {
         //event.stopPropagation();
         //event.preventDefault();
-        this.deletingPuntoOdg = _.find(this.model.precipe_odg, o => { return o.id === id });
-        console.log(id,this.deletingPuntoOdg);
+        //this.deletingPuntoOdg = _.find(this.model.precipe_odg, o => { return o.id === id });
+        this.deletingPuntoOdg = item;
+        // console.log(id,this.deletingPuntoOdg);
         modal.open();
         return false;
     }
 
     confirmDeletePuntoOdg(modal: any) {
         modal.close();
-        this.deletePuntoOdg(this.deletingPuntoOdg.id);
+        this.deletePuntoOdg(this.deletingPuntoOdg);
     }
 
     cancelDeletePuntoOdg(modal: any) {
@@ -149,10 +154,12 @@ export class PreCipeEditComponent implements OnInit {
         this.deletingPuntoOdg = null;
     }
 
-    deletePuntoOdg(id: number) {
+    deletePuntoOdg(item: any) {
+
+        const id = item.id;
         
         if(id === null) {
-            this.model.precipe_odg = _.filter(this.model.precipe_odg, o => { return o.id !== id; });
+            this.model.precipe_odg = _.filter(this.model.precipe_odg, o => { return o !== item; });
         } else {
             this.apiService.delete('precipeodg', id)
                 .subscribe(

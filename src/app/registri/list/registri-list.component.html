@@ -173,10 +173,10 @@
                         <th colspan="3"></th>
                     </tr>
                     <tr>
-                        <th><mfDefaultSorter by="codice">Codice</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="id">Codice</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="oggetto">Oggetto</mfDefaultSorter></th>
-                        <th><mfDefaultSorter by="mittenti">Mittente</mfDefaultSorter></th>
-                        <th><mfDefaultSorter by="repertorio">Repertorio</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="id_mittenti">Mittente</mfDefaultSorter></th>
+                        <th><mfDefaultSorter by="id_titolari">Repertorio</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="protocollo_arrivo">Numero</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="data_arrivo">Data</mfDefaultSorter></th>
                         <th><mfDefaultSorter by="protocollo_mittente">Numero</mfDefaultSorter></th>
@@ -192,8 +192,7 @@
                         <td><a [routerLink]="[ '/app/registri/edit/' + registro.id ]"
                               [innerHTML]="registro.oggetto | dataMark : filter.oggetto"></a>
                         </td>
-                        <!-- todo: find a better way to implement enum -->
-                        <td><span *ngIf="registro.id_mittenti">{{apiService.dataEnum.mittenti[registro.id_mittenti]['text']}}</span></td>
+                        <td>{{registro.id_mittenti | dataEnum : apiService.dataEnum : 'mittenti' : 'text'}}</td>
                         <td>
                             {{registro.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'codice'}}.
                             {{registro.id_fascicoli | dataEnum : apiService.dataEnum : 'fascicoli' : 'numero_fascicolo'}}<br>

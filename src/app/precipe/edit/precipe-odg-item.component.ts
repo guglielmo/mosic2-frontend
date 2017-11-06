@@ -89,8 +89,8 @@ export class PreCipeOdgItemComponent implements OnInit {
         this.item.edit = this.edit;
     }
 
-    deleteOdg($event, id){
-            this.deleteitem.emit(id);
+    deleteOdg($event, item){
+            this.deleteitem.emit(item);
     }
 
     toggleAllegato(item:any, allegato_id: number) {

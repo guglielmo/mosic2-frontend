@@ -213,11 +213,23 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
 
     select2Changed(e: any, name: string): void {
 
-        //console.log(name, typeof e.value, e.value);
-
         // converts value to arrays to handle multi-selects and selects in the same way
         let V = typeof e.value === 'string' ? e.value.split(',') : e.value;
         if (!V) { V = [] }
+
+        // breaks the process if the value didn't change (select2 produces false positives)
+        if(typeof this.model[name] === 'string') {
+            if(V.join(',') === this.model[name]) {
+                return;
+            }
+        } else if (Array.isArray(this.model[name])) {
+
+            if(V.join(',') === this.model[name].join(',')) {
+                return;
+            }
+        }
+
+        // console.log(name, e.value, this.model[name]);
 
         // console.log(this.model);
         let selectedCount = 0;
@@ -246,12 +258,10 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
         // both single and multi selects as strings
 
         if (Array.isArray( this.model[name] )) {
-            this.model[name] = Array.isArray(e.value) ? e.value : e.value != null ? e.value.split(',') : e.value;
+            this.model[name] = V;
         } else {
-            this.model[name] = typeof e.value === 'object' && e.value != null ? e.value.join(',') : e.value;
+            this.model[name] = V.join(',');
         }
-
-
     }
 
 

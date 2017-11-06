@@ -15,14 +15,14 @@ export class FascicoliDataFilterPipe implements PipeTransform {
         // pre-compute some conditions to execute checks outside the loop
         let qL = query.length > 2;
         let tL = id_titolari !== '';
-        let aL = id_amministrazioni !== '';
+        let aL = id_amministrazioni !== null && id_amministrazioni !== '';
         let fL = numero_fascicolo.length > 0;
-        let iT = id_tags !== '';
+        let iT = id_tags !== null && id_tags !== '';
 
         let results = _.filter(array, row => {
 
             if (tL && row.id_titolari != id_titolari) return false;
-            if (aL && row.id_amministrazioni.split(',').indexOf(id_amministrazioni) == -1) return false;
+            if (aL && String(row.id_amministrazioni).split(',').indexOf(id_amministrazioni) == -1) return false;
             if (fL && row.numero_fascicolo != numero_fascicolo) return false;
             if (iT && row.id_tags.indexOf(Number(id_tags)) === -1) return false;
             if (qL) {

@@ -44,7 +44,7 @@ export class CipeUploadComponent implements OnInit {
         @Inject(NgZone) private zone: NgZone
     ){
         this.config = config.getConfig();
-        this.baseAPIURL =  this.config.baseAPIURL + '/api/precipe/';
+        this.baseAPIURL =  this.config.baseAPIURL + '/api/cipe/';
     }
 
     ngOnInit(){
@@ -54,7 +54,7 @@ export class CipeUploadComponent implements OnInit {
         const baseNGUPoptions = {
             filterExtensions: false,
             maxSize: 250000000,
-            data: {id_precipe: this.id},
+            data: {id_cipe: this.id},
             autoUpload: true,
             fieldName: 'file',
             fieldReset: true,
@@ -160,7 +160,7 @@ export class CipeUploadComponent implements OnInit {
     }
 
     deleteFile(allegato: Allegati) {
-        this.apiService.deleteFile('precipe', this.id + '/' + this.type, allegato.id)
+        this.apiService.deleteFile('cipe', this.id + '/' + this.type, allegato.id)
             .subscribe(
                 data => {
                     // console.log('deleted', data.id_allegati);

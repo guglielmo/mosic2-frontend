@@ -1,15 +1,15 @@
-<accordion *ngIf="config.debug" [closeOthers]="false" class="mb-lg show" id="debug[{{model.id}}]">
+<!--<accordion *ngIf="config.debug" [closeOthers]="false" class="mb-lg show" id="debug[{{model.id}}]">
     <accordion-group #accordionGroupDebug [panelClass]="'accordion-danger'" [isOpen]="false">
         <div accordion-heading>
             <i class="fa fa-bug fa-lg"></i> &nbsp; <strong>Debug</strong>
             <i class="fa float-right"
                [ngClass]="{'fa-angle-down': accordionGroupDebug?.isOpen, 'fa-angle-right': !accordionGroupDebug?.isOpen}"></i>
         </div>
-        <div>
+        <div *ngIf="accordionGroupDebug?.isOpen">
             <pre>model = {{model | json}}</pre>
         </div>
     </accordion-group>
-</accordion>
+</accordion>-->
 
 <form *ngIf="apiService.isDataReady(['firmatari','uffici','tags']) && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event)" #f="ngForm" novalidate>
     <div *ngIf="canEdit" class="pull-right">

@@ -101,6 +101,11 @@ export class CipeEditComponent implements OnInit {
                             this.model = response.data;
                             this.model.data = new Date(this.model.data);
 
+                            if (this.model.allegati_TLX === '') { this.model.allegati_TLX = []; }
+                            if (this.model.allegati_APG === '') { this.model.allegati_APG = []; }
+                            if (this.model.allegati_OSS === '') { this.model.allegati_OSS = []; }
+                            if (this.model.allegati_EST === '') { this.model.allegati_EST = []; }
+
                             this.loading = false;
                             this.allowUpload = true;
 
@@ -132,10 +137,13 @@ export class CipeEditComponent implements OnInit {
         }
     }
 
-    askDeletePuntoOdg(id: number, modal: any) {
+    askDeletePuntoOdg(item: any, modal: any) {
         //event.stopPropagation();
         //event.preventDefault();
-        this.deletingPuntoOdg = _.find(this.model.cipe_odg, o => { return o.id === id });
+        //const id = item.id;
+        //this.deletingPuntoOdg = _.find(this.model.cipe_odg, o => { return o.id === id });
+        this.deletingPuntoOdg = item;
+
         // console.log(id,this.deletingPuntoOdg);
         modal.open();
         return false;
@@ -143,7 +151,7 @@ export class CipeEditComponent implements OnInit {
 
     confirmDeletePuntoOdg(modal: any) {
         modal.close();
-        this.deletePuntoOdg(this.deletingPuntoOdg.id);
+        this.deletePuntoOdg(this.deletingPuntoOdg);
     }
 
     cancelDeletePuntoOdg(modal: any) {
@@ -151,10 +159,11 @@ export class CipeEditComponent implements OnInit {
         this.deletingPuntoOdg = null;
     }
 
-    deletePuntoOdg(id: number) {
+    deletePuntoOdg(item: any) {
+        const id = item.id;
 
         if(id === null) {
-            this.model.cipe_odg = _.filter(this.model.cipe_odg, o => { return o.id !== id; });
+            this.model.cipe_odg = _.filter(this.model.cipe_odg, o => { return o !== item; });
         } else {
             this.apiService.delete('cipeodg', id)
                 .subscribe(
