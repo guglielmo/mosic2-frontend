@@ -49,7 +49,8 @@ export class DelibereListComponent implements OnInit {
         {id: 5, text: 'In firma Segretario Cipe'},
         {id: 6, text: 'In firma Presidente Cipe'},
         {id: 7, text: 'Alla Corte dei Conti'},
-        {id: 8, text: 'Alla Gazzetta Ufficiale'}
+        {id: 8, text: 'Alla Gazzetta Ufficiale'},
+        {id: 9, text: 'Pubblicata in Gazzetta Ufficiale'}
     ];
 
     public situazioneEnum = {
@@ -60,7 +61,8 @@ export class DelibereListComponent implements OnInit {
         5: 'In firma Segretario Cipe',
         6: 'In firma Presidente Cipe',
         7: 'Alla Corte dei Conti',
-        8: 'Alla Gazzetta Ufficiale'        
+        8: 'Alla Gazzetta Ufficiale',
+        9: 'Pubblicata in Gazzetta Ufficiale'
     };
 
     public osservazioneEnum = {

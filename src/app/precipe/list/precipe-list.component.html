@@ -43,8 +43,8 @@
                             <p class="fw-semi-bold text-capitalize">{{precipe.data | date: 'EEEE, dd MMMM yyyy' }}</p>
                         </td>
                         <td>
-                            <span *ngIf="precipe.ufficiale_riunione === '0'" class="badge badge-danger">Bozza</span>
-                            <span *ngIf="precipe.ufficiale_riunione === '1'" class="badge badge-success">Ufficiale</span>
+                            <span *ngIf="precipe.ufficiale_riunione == 0" class="badge badge-danger">Bozza</span>
+                            <span *ngIf="precipe.ufficiale_riunione == 1" class="badge badge-success">Ufficiale</span>
                             <i *ngIf="officializingPreCipe" class="">Ufficiale</i>
 
                         </td>

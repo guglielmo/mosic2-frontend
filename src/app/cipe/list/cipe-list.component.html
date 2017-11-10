@@ -45,8 +45,8 @@
                             <p class="fw-semi-bold text-capitalize">{{cipe.data | date: 'EEEE, dd MMMM yyyy' }}</p>
                         </td>
                         <td>
-                            <span *ngIf="cipe.ufficiale_riunione === '0'" class="badge badge-danger">Bozza</span>
-                            <span *ngIf="cipe.ufficiale_riunione === '1'" class="badge badge-success">Ufficiale</span>
+                            <span *ngIf="cipe.ufficiale_riunione == 0" class="badge badge-danger">Bozza</span>
+                            <span *ngIf="cipe.ufficiale_riunione == 1" class="badge badge-success">Ufficiale</span>
                             <i *ngIf="officializingCipe" class="">Ufficiale</i>
 
                         </td>

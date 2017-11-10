@@ -34,7 +34,7 @@ export class DelibereIterComponent implements OnInit {
     public select2Options: Select2Options;
     public select2OptionsMulti: Select2Options;
 
-    constructor(config: AppConfig,
+    constructor(public config: AppConfig,
                 public apiService: APICommonService,
                 private scrollService: ScrollToService) {
         this.select2Options = config.select2Options;

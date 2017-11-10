@@ -26,7 +26,7 @@
                             <div class="form-group">
                                 <label for="data_consegna"><strong>Data consegna</strong></label>
                                 <datetime id="data_consegna"
-                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [datepicker]="config.dateTimeOptions"
                                           [timepicker]="false"
                                           [readonly]="!canEdit"
                                           [(ngModel)]="model.data_consegna" #data_consegna="ngModel" required></datetime>
@@ -70,7 +70,7 @@
                                 <label for="data_direttore_invio"><strong>Data invio</strong></label>
                                 <div class="float-right"><br><br><i class="fa fa-lg fa-arrow-right text-muted float-right"></i></div>
                                 <datetime id="data_direttore_invio"
-                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [datepicker]="config.dateTimeOptions"
                                           [timepicker]="false"
                                           [readonly]="!canEdit"
                                           [(ngModel)]="model.data_direttore_invio" #data_direttore_invio="ngModel" required></datetime>
@@ -81,7 +81,7 @@
                             <div class="form-group">
                                 <label for="data_direttore_ritorno"><strong>Data ritorno</strong></label>
                                 <datetime id="data_direttore_ritorno"
-                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [datepicker]="config.dateTimeOptions"
                                           [timepicker]="false"
                                           [readonly]="!canEdit"
                                           [(ngModel)]="model.data_direttore_ritorno" #data_direttore_ritorno="ngModel" required></datetime>
@@ -123,7 +123,7 @@
                                 <label for="data_mef_pec"><strong>Data invio</strong></label>
                                 <div class="float-right"><br><br><i class="fa fa-lg fa-arrow-right text-muted float-right"></i></div>
                                 <datetime id="data_mef_pec"
-                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [datepicker]="config.dateTimeOptions"
                                           [timepicker]="false"
                                           [readonly]="!canEdit"
                                           [(ngModel)]="model.data_mef_pec" #data_mef_pec="ngModel" required></datetime>
@@ -133,7 +133,7 @@
                             <div class="form-group">
                                 <label for="data_mef_ritorno"><strong>Data ritorno</strong></label>
                                 <datetime id="data_mef_ritorno"
-                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [datepicker]="config.dateTimeOptions"
                                           [timepicker]="false"
                                           [readonly]="!canEdit"
                                           [(ngModel)]="model.data_mef_ritorno" #data_mef_ritorno="ngModel" required></datetime>
@@ -182,7 +182,7 @@
                                 <label for="data_segretario_invio"><strong>Data invio</strong></label>
                                 <div class="float-right"><br><br><i class="fa fa-lg fa-arrow-right text-muted float-right"></i></div>
                                 <datetime id="data_segretario_invio"
-                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [datepicker]="config.dateTimeOptions"
                                           [timepicker]="false"
                                           [readonly]="!canEdit"
                                           [(ngModel)]="model.data_segretario_invio" #data_segretario_invio="ngModel" required></datetime>
@@ -192,7 +192,7 @@
                             <div class="form-group">
                                 <label for="data_segretario_ritorno"><strong>Data ritorno</strong></label>
                                 <datetime id="data_segretario_ritorno"
-                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [datepicker]="config.dateTimeOptions"
                                           [timepicker]="false"
                                           [readonly]="!canEdit"
                                           [(ngModel)]="model.data_segretario_ritorno" #data_segretario_ritorno="ngModel" required></datetime>
@@ -236,7 +236,7 @@
                                 <label for="data_presidente_invio"><strong>Data invio</strong></label>
                                 <div class="float-right"><br><br><i class="fa fa-lg fa-arrow-right text-muted float-right"></i></div>
                                 <datetime id="data_presidente_invio"
-                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [datepicker]="config.dateTimeOptions"
                                           [timepicker]="false"
                                           [readonly]="!canEdit"
                                           [(ngModel)]="model.data_presidente_invio" #data_presidente_invio="ngModel" required></datetime>
@@ -246,7 +246,7 @@
                             <div class="form-group">
                                 <label for="data_presidente_ritorno"><strong>Data ritorno</strong></label>
                                 <datetime id="data_presidente_ritorno"
-                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [datepicker]="config.dateTimeOptions"
                                           [timepicker]="false"
                                           [readonly]="!canEdit"
                                           [(ngModel)]="model.data_presidente_ritorno" #data_presidente_ritorno="ngModel" required></datetime>
@@ -278,7 +278,7 @@
                             <div class="form-group">
                                 <label for="data_invio_cc"><strong>Data invio</strong></label>
                                 <datetime id="data_invio_cc"
-                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [datepicker]="config.dateTimeOptions"
                                           [timepicker]="false"
                                           [readonly]="!canEdit"
                                           [(ngModel)]="model.data_invio_cc" #data_invio_cc="ngModel" required></datetime>
@@ -346,7 +346,7 @@
                             <div class="form-group">
                                 <label for="data_registrazione_cc"><strong>Data registrazione</strong></label>
                                 <datetime id="data_registrazione_cc"
-                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [datepicker]="config.dateTimeOptions"
                                           [timepicker]="false"
                                           [readonly]="!canEdit"
                                           [(ngModel)]="model.data_registrazione_cc" #data_registrazione_cc="ngModel" required></datetime>
@@ -387,7 +387,7 @@
                             <div class="form-group">
                                 <label for="data_invio_p"><strong>Data invio</strong></label>
                                 <datetime id="data_invio_p"
-                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [datepicker]="config.dateTimeOptions"
                                           [timepicker]="false"
                                           [readonly]="!canEdit"
                                           [(ngModel)]="model.data_invio_p" #data_invio_p="ngModel" required></datetime>
@@ -428,7 +428,7 @@
                             <div class="form-group">
                                 <label for="data_invio_gu"><strong>Data invio</strong></label>
                                 <datetime id="data_invio_gu"
-                                          [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                          [datepicker]="config.dateTimeOptions"
                                           [timepicker]="false"
                                           [readonly]="!canEdit"
                                           [(ngModel)]="model.data_invio_gu" #data_invio_gu="ngModel" required></datetime>
@@ -502,7 +502,7 @@
                                     <div class="form-group">
                                         <label for="data_gu">Data pubblicazione</label>
                                         <datetime id="data_gu"
-                                                  [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                                  [datepicker]="config.dateTimeOptions"
                                                   [timepicker]="false"
                                                   [readonly]="!canEdit"
                                                   [(ngModel)]="model.data_gu" #data_gu="ngModel" required></datetime>
@@ -527,7 +527,7 @@
                                     <div class="form-group">
                                         <label for="data_ec_gu">Data pubblicazione</label>
                                         <datetime id="data_ec_gu"
-                                                  [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                                  [datepicker]="config.dateTimeOptions"
                                                   [timepicker]="false"
                                                   [readonly]="!canEdit"
                                                   [(ngModel)]="model.data_ec_gu" #data_ec_gu="ngModel" required></datetime>
@@ -552,7 +552,7 @@
                                     <div class="form-group">
                                         <label for="data_co_gu">Data comunicato</label>
                                         <datetime id="data_co_gu"
-                                                  [datepicker]="{language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true }"
+                                                  [datepicker]="config.dateTimeOptions"
                                                   [timepicker]="false"
                                                   [readonly]="!canEdit"
                                                   [(ngModel)]="model.data_co_gu" #data_co_gu="ngModel" required></datetime>

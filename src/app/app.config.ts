@@ -35,7 +35,7 @@ export class AppConfig {
         /**
          * Whether to print and alert some log information
          */
-        debug: true,
+        debug: false,
         /**
          * In-app constants
          */
@@ -82,7 +82,7 @@ export class AppConfig {
     };
 
     dateTimeOptions = {
-        language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true
+        language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true, clearBtn: true
     };
 
     // basic Select2 options
