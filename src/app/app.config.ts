@@ -18,19 +18,19 @@ export class AppConfig {
     config = {
         name: 'mosic 2.0',
         title: 'Mo.Si.C. - Monitoraggio Sistema CIPE',
-	version: '2.0.0-alpha.3',
+	version: '2.0.0-beta.1',
 
 	// development
 	// baseAPIURL: 'http://localhost:8080/mosic2-service',
 
 	// staging tdrynx.com
-	baseAPIURL: 'http://mosicapi.tdrynx.info',
+	// baseAPIURL: 'http://mosicapi.tdrynx.info',
 	
 	// staging celata.com
 	// baseAPIURL: 'http://mosic2.celata.com/service',
 
 	// production
-	// baseAPIURL: 'http://mosic2.pcm.it/service',
+	baseAPIURL: 'http://mosic2.pcm.it/service',
 
         /**
          * Whether to print and alert some log information
