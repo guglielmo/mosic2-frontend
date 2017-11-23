@@ -14,7 +14,7 @@
 <form *ngIf="apiService.isDataReady(['firmatari','uffici','tags']) && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event)" #f="ngForm" novalidate>
     <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
-        <button type="submit" class="btn btn-primary btn-save">Salva</button>
+        <button type="button" (click)="submit($event)" class="btn btn-primary btn-save">Salva</button>
     </div>
     <h3 class="page-title"><a [routerLink]=" ['/app/delibere/list'] ">Delibere</a> /
         <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuova</span>
@@ -209,29 +209,11 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
-            </div>
-            <div class="col-lg-6">
-                <section class="widget">
-                    <header>
-                        <h4><span class="fw-semi-bold">Delibera</span></h4>
-                    </header>
-                    <div class="widget-body">
-                        <delibere-upload [type]="'DEL'" [allegati]="model.allegati_DEL" [allowUpload]="allowUpload" [canEdit]="canEdit" [canDelete]="canDelete"></delibere-upload>
-                    </div>
-                </section>
-            </div>
-        </div>
-        <div class="row" myMatchHeight="widget">
-            <div class="col-lg-6">
-                <section class="widget">
-                    <header>
-                        <h4><span class="fw-semi-bold">Note</span></h4>
-                    </header>
-                    <div class="widget-body">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-12">
+                                <header>
+                                    <h4><span class="fw-semi-bold">Note</span></h4>
+                                </header>
                                 <div class="form-group">
                                     <label for="note" class="hidden"><strong>Annotazioni</strong></label>
                                     <textarea id="note" name="note"
@@ -241,10 +223,6 @@
                                               [disabled]="!canEdit"
                                               [(ngModel)]="model.note" #note="ngModel"></textarea>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="note_servizio" class="hidden"><strong>Appunti di servizio</strong></label>
                                     <textarea id="note_servizio" name="note_servizio"
@@ -258,12 +236,17 @@
                         </div>
                     </div>
                 </section>
-
             </div>
             <div class="col-lg-6">
                 <section class="widget">
                     <header>
-                        <h4><span class="fw-semi-bold">Allegati</span></h4>
+                        <h4><span class="fw-semi-bold">Delibera</span></h4>
+                    </header>
+                    <div class="widget-body">
+                        <delibere-upload [type]="'DEL'" [allegati]="model.allegati_DEL" [allowUpload]="allowUpload" [canEdit]="canEdit" [canDelete]="canDelete"></delibere-upload>
+                    </div>
+                    <header>
+                        <h4><span class="fw-semi-bold">Allegati alla delibera</span></h4>
                     </header>
                     <div class="widget-body">
                         <delibere-upload [type]="'ALL'" [allegati]="model.allegati_ALL" [allowUpload]="allowUpload" [canEdit]="canEdit" [canDelete]="canDelete"></delibere-upload>
@@ -271,14 +254,36 @@
                 </section>
             </div>
         </div>
+        <div class="row">
+            <div class="col-12">
+                <section class="widget">
+                    <header>
+                        <h4><span class="fw-semi-bold">Documenti di istruttoria</span></h4>
+                    </header>
+                    <div class="widget-body">
+<pre>
+{{model.cipe_delibere | json}}
+</pre>
 
+                        <div *ngFor="let cipe of model.cipe_delibere">
+<!--                            <td>{{fascicolo.id_titolari | dataEnum : apiService.dataEnum : 'titolari': 'denominazione'}}</td>
+                            <td>{{fascicolo.numero_fascicolo}}</td>-->
+
+                            {{cipe.id_fascicoli | dataEnum : apiService.dataEnum : 'fascicoli' : 'id_titolari'
+                                                | dataEnum : apiService.dataEnum : 'titolari' : 'codice' }}.
+                            {{cipe.id_fascicoli | dataEnum : apiService.dataEnum : 'fascicoli' : 'text'}}
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
         <delibere-iter  [model]="model" [allowUpload]="allowUpload" [canEdit]="canEdit" [canDelete]="canDelete"></delibere-iter>
     </div>
     <div class="row">
         <div class="col-12 mb-4">
             <div class="pull-right">
                 <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
-                <button type="submit" class="btn btn-primary btn-save">Salva</button>
+                <button type="button" (click)="submit($event)" class="btn btn-primary btn-save">Salva</button>
             </div>
         </div>
     </div>

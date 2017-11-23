@@ -14,7 +14,7 @@
 <form *ngIf="apiService.isDataReady(['registri','titolari','amministrazioni','tags']) && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event, myModal)" #f="ngForm" novalidate>
     <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
-        <button type="submit" class="btn btn-primary btn-save">Salva</button>
+        <button type="button" (click)="submit($event)" class="btn btn-primary btn-save">Salva</button>
     </div>
     <h3 class="page-title"><a [routerLink]=" ['/app/fascicoli/list'] ">Fascicoli</a> /
         <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>

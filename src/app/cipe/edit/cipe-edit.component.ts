@@ -194,7 +194,7 @@ export class CipeEditComponent implements OnInit {
 
         for (let i=0; i<post.cipe_odg.length; i++) {
             if(post.cipe_odg[i].edit) {
-                this.apiService.notifyError('Completa tutti i punti ODG o elimina quelli incompleti prima di salvare');
+                this.apiService.notifyError('Completa e chiudi tutti i punti ODG o elimina quelli incompleti prima di salvare');
                 //console.log('beccato!');
                 return;
             }

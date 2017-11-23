@@ -59,6 +59,7 @@ export class CipeOdgItemComponent implements OnInit {
             ordine: [{value:'', disabled: true}, Validators.required],
             denominazione: [{value:'', disabled: true}, Validators.required],
             risultanza: [{value:'', disabled: true}],
+            numero_delibera: [{value:'', disabled: true}],
             annotazioni: [{value:'', disabled: true}]
         });
 

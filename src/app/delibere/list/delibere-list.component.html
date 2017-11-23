@@ -56,9 +56,9 @@
             </div>
             <div class="col-lg-3">
                 <div class="form-group">
-                    <label for="id_segretario"><strong>Situazione</strong></label>
+                    <label for="id_situazione"><strong>Fase procedurale</strong></label>
                     <div class="select2-H-keeper">
-                        <select2 id="id_segretario"
+                        <select2 id="id_situazione"
                                  class="full-width-select"
                                  [options]="select2Options"
                                  [value]="filter.id_situazione"
@@ -178,7 +178,7 @@
         td:nth-of-type(2):before { content: "Data"; }
         td:nth-of-type(3):before { content: "Argomento"; }
         td:nth-of-type(4):before { content: "Uffici"; }
-        td:nth-of-type(5):before { content: "Situazione"; }
+        td:nth-of-type(5):before { content: "Fase procedurale"; }
         td:nth-of-type(6):before { content: "Azioni"; }
     }
 </style>
@@ -209,7 +209,7 @@
                             <mfDefaultSorter by="repertorio">Uffici</mfDefaultSorter>
                         </th>
                         <th>
-                            <mfDefaultSorter by="situazione">Situazione</mfDefaultSorter>
+                            <mfDefaultSorter by="situazione">Fase procedurale</mfDefaultSorter>
                         </th>
                         <th><mfDefaultSorter by="id_tags">Etichette</mfDefaultSorter></th>
                         <th *ngIf="apiService.userCan('DELETE_DELIBERE')">Azioni</th>
@@ -219,11 +219,12 @@
                     <tr *ngFor="let delibera of mf.data as Delibera">
                         <td><h5><strong><a [routerLink]="[ '/app/delibere/edit/' + delibera.id ]">{{delibera.numero}}</a></strong></h5></td>
                         <td>
+<!--
+                            {{delibera.data | date: 'dd/MM/yyyy' }}
                             <h5><strong>{{delibera.data | amTimeAgo }}</strong></h5>
                             <p class="fw-semi-bold text-capitalize">{{delibera.data | date: 'EEEE, dd MMMM yyyy' }}</p>
-<!--
-                            <p>{{delibera.data}} > {{delibera.data | date : 'medium'}}</p>
 -->
+                            <p>{{delibera.data | date : 'dd/MM/yyyy'}}</p>
                         </td>
                         <td>
                             <p><a [routerLink]="[ '/app/delibere/edit/' + delibera.id ]"
@@ -278,7 +279,7 @@
                             <mfDefaultSorter by="repertorio">Uffici</mfDefaultSorter>
                         </th>
                         <th>
-                            <mfDefaultSorter by="situazione">Situazione</mfDefaultSorter>
+                            <mfDefaultSorter by="situazione">Fase procedurale</mfDefaultSorter>
                         </th>
                     </tr>
                     </thead>

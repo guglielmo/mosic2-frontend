@@ -15,7 +15,7 @@
 
    <div *ngIf="canEdit" class="float-right">
       <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
-      <button type="submit" class="btn btn-primary btn-save">Salva</button>
+      <button type="button" (click)="submit($event)" class="btn btn-primary btn-save">Salva</button>
    </div>
 
    <h3 class="page-title"><a [routerLink]=" ['/app/cipe/list'] ">Cipe</a> /

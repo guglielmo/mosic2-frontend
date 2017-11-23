@@ -18,9 +18,20 @@
                         <span *ngIf="item.risultanza === 2" class="badge badge-lg badge-warning rel-t-l2">Rinviato</span>
                         <span *ngIf="item.risultanza === 1" class="badge badge-lg badge-success rel-t-l2">Positivo</span>
                     </h6>
+                    <div *ngIf="item.risultanza === 1">
+                        <div *ngIf="!item.numero_delibera; else show_numero_delibera">
+                            <span class="badge badge-lg badge-danger rel-t-l2">Numero delibera<br>non specificato</span>
+                        </div>
+                        <ng-template #show_numero_delibera>
+                            <br>
+                            <strong>Delibera N°</strong>
+                            <h4 class="ml-2"><strong>{{item.numero_delibera}}</strong>&nbsp;</h4>
+                        </ng-template>
+                    </div>
                 </div>
 
                 <!-- EDIT -->
+                <label *ngIf="edit"><strong>Punto OdG</strong></label>
                 <input *ngIf="edit" type="text" class="form-control form-control-lg"
                        placeholder="..."
                        [disableCond]="!edit"
@@ -80,6 +91,14 @@
                         </label>
                     </div>
                     <br/>
+                    <div *ngIf="item.risultanza === 1">
+                        <label *ngIf="edit"><strong>Numero delibera</strong></label>
+                        <input type="number" class="form-control form-control-lg"
+                               id="numero_delibera"
+                               placeholder="..."
+                               [disableCond]="!edit"
+                               [formControl]="odgItemForm.controls['numero_delibera']">
+                    </div>
                 </div>
             </div>
         </div>

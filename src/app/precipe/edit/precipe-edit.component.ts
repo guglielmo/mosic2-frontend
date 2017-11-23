@@ -189,7 +189,7 @@ export class PreCipeEditComponent implements OnInit {
 
         for (let i=0; i<post.precipe_odg.length; i++) {
             if(post.precipe_odg[i].edit) {
-                this.apiService.notifyError('Completa tutti i punti ODG o elimina quelli incompleti prima di salvare');
+                this.apiService.notifyError('Completa e chiudi tutti i punti ODG o elimina quelli incompleti prima di salvare');
                 //console.log('beccato!');
                 return;
             }

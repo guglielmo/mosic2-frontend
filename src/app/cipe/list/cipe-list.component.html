@@ -41,8 +41,9 @@
                     <tbody>
                     <tr *ngFor="let cipe of mf.data" (click)="editId(cipe.id)" class="clickable">
                         <td>
-                            <h5><strong>{{cipe.data | amTimeAgo }}</strong></h5>
-                            <p class="fw-semi-bold text-capitalize">{{cipe.data | date: 'EEEE, dd MMMM yyyy' }}</p>
+<!--                            <h5><strong>{{cipe.data | amTimeAgo }}</strong></h5>
+                            <p class="fw-semi-bold text-capitalize">{{cipe.data | date: 'EEEE, dd MMMM yyyy' }}</p>-->
+                            <p>{{cipe.data | date : 'dd/MM/yyyy'}}</p>
                         </td>
                         <td>
                             <span *ngIf="cipe.ufficiale_riunione == 0" class="badge badge-danger">Bozza</span>
