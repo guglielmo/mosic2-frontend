@@ -16,7 +16,10 @@ import { Firmatari } from '../../_models/index';
 })
 export class DelibereRilievoComponent implements OnInit {
     @Input() model: any;
+    @Input() canEdit: boolean;
+    @Input() canDelete: boolean;
 
+    public allowUpload = false;
     public select2Options: Select2Options;
     public select2OptionsMulti: Select2Options;
 
@@ -26,7 +29,6 @@ export class DelibereRilievoComponent implements OnInit {
     ) {
         this.select2Options = config.select2Options;
         this.select2OptionsMulti = config.select2OptionsMulti;
-
     }
 
     ngOnInit() {
@@ -38,6 +40,8 @@ export class DelibereRilievoComponent implements OnInit {
                 }
             }
         });
+
+        this.allowUpload = this.model.id > 0;
     }
 
     public select2Changed(e: any, name: string): void {

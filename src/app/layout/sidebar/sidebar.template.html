@@ -99,6 +99,10 @@
             <ul id="sidebar-adempimenti" class="collapse">
                 <li *ngIf="apiService.userCan('READ_ADEMPIMENTI')"><a [routerLink]=" ['adempimenti/list'] ">Tutti gli adempimenti</a></li>
                 <li *ngIf="apiService.userCan('CREATE_ADEMPIMENTI')"><a [routerLink]=" ['adempimenti/edit'] ">Crea nuovo</a></li>
+                <li *ngIf="apiService.userCan('CREATE_ADEMPIMENTI')"><a [routerLink]=" ['adempimenti_ambiti/list'] ">Ambiti</a></li>
+                <li *ngIf="apiService.userCan('CREATE_ADEMPIMENTI')"><a [routerLink]=" ['adempimenti_azioni/list'] ">Azioni</a></li>
+                <li *ngIf="apiService.userCan('CREATE_ADEMPIMENTI')"><a [routerLink]=" ['adempimenti_soggetti/list'] ">Soggetti</a></li>
+                <li *ngIf="apiService.userCan('CREATE_ADEMPIMENTI')"><a [routerLink]=" ['adempimenti_tipologie/list'] ">Tipologie</a></li>
             </ul>
         </li>
         <li *ngIf="apiService.userCan('READ_MONITOR')">

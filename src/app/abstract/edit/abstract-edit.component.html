@@ -1,0 +1,67 @@
+<form *ngIf="apiService.isDataReady(data_dependencies) && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
+    <div class="pull-right">
+        <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
+        <button type="submit" class="btn btn-primary btn-save">Salva</button>
+    </div>
+    <h3 class="page-title"><a [routerLink]=" ['/app/' + apipath + '/list'] ">{{TPLModel.labels[1]}}</a> -
+        <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
+        <span *ngIf="mode == 'update'" class="fw-semi-bold">{{model.denominazione}}</span>
+    </h3>
+    <div class="row clearfix">
+        <div class="col-xl-12">
+<!--
+            <pre>{{model | json}}</pre>
+-->
+            <section class="widget">
+                <div class="widget-body">
+                    <div class="row">
+                        <div *ngFor="let column of columns" class="col-{{column.edit_width}}">
+                            <div *ngIf="!column.rel" class="form-group" [ngClass]="{ 'has-danger': f.submitted && !isValid(column) }">
+                                <label [for]="column.field"><strong>{{column.text}}</strong></label>
+                                <input type="text" class="form-control" [id]="column.field" [name]="column.field"
+                                       [(ngModel)]="model[column.field]" #[column.field]="ngModel" [disabled]="column.disabled" [required]="column.required">
+                            </div>
+                            <div *ngIf="column.rel">
+                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !isValid(column) }">
+                                    <label [for]="column.field"><strong>{{column.text}}</strong></label>
+                                    <div class="select2-H-keeper">
+                                        <select2 [id]="column.field"
+                                                 class="full-width-select"
+                                                 [options]="config.select2OptionsClear"
+                                                 [value]="model[column.field]"
+                                                 (valueChanged)="select2Changed($event, column.field)"
+                                                 [cssImport]="false"
+                                                 [data]="data_dependencies$[column.rel] | async | lodashDataFilter : parseFilter(column.rel_filter)"></select2>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+<!--                        <div class="col-sm-3">
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !codice.valid }">
+                                <label for="codice">Codice</label>
+                                <input type="text" class="form-control" id="codice" name="codice"
+                                       placeholder="Scrivi la codice del tag..."
+                                       [(ngModel)]="model.codice" #codice="ngModel" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !denominazione.valid }">
+                                <label for="denominazione">Denominazione</label>
+                                <input type="text" class="form-control" id="denominazione" name="denominazione"
+                                       placeholder="Scrivi la denominazione del tag..."
+                                       [(ngModel)]="model.text" #denominazione="ngModel" required>
+                            </div>
+                        </div>-->
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div *ngIf="error" class="alert alert-danger" role="alert">{{error}}</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</form>
+

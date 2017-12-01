@@ -20,7 +20,8 @@ export const routes: Routes = [
         { path: 'amministrazioni', loadChildren: '../servizio/amministrazioni.module#AmministrazioniModule', canActivate: [AuthGuard] },
         { path: 'uffici', loadChildren: '../servizio/uffici.module#UfficiModule', canActivate: [AuthGuard] },
         { path: 'tags', loadChildren: '../servizio/tags.module#TagsModule', canActivate: [AuthGuard] },
-        { path: 'firmatari', loadChildren: '../servizio/firmatari.module#FirmatariModule', canActivate: [AuthGuard] }
+        { path: 'firmatari', loadChildren: '../servizio/firmatari.module#FirmatariModule', canActivate: [AuthGuard] },
+        { path: ':apipath', loadChildren: '../abstract/abstract.module#AbstractModule', canActivate: [AuthGuard] }
     ]}
 ];
 

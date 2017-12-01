@@ -1,0 +1,88 @@
+<section *ngIf="TPLModel">
+    <div *ngIf="TPLModel.new_label" class="pull-right">
+        <a [routerLink]=" ['/app/' + apipath + '/edit'] " class="btn btn-primary btn-save">{{TPLModel.new_label}} {{TPLModel.labels[0]}}</a>
+    </div>
+    <h3 class="page-title">{{TPLModel.labels[1]}} <span *ngIf="TPLModel.intro" class="fw-semi-bold">- {{TPLModel.intro}} {{TPLModel.labels[1]}}</span></h3>
+</section>
+
+<section *ngIf="TPLModel && !TPLModel.hide_search" class="widget" widget data-widgster-collapsed="false">
+    <header>
+        <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">{{TPLModel.labels[0]}} ...</span>
+            <span *ngIf="filter.text.length > 2" class="float-lg-right mr-3">
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+            </span>
+        </h5>
+        <h5 data-widgster="collapse" title="Chiudi" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">{{TPLModel.labels[1]}} ...</span>
+            <span *ngIf="filter.text.length > 2" class="float-lg-right mr-3">
+                <button class="btn btn-success btn-xs mb-xs" (click)="resetFilters()">Rimuovi filtri</button>
+            </span>
+        </h5>
+        <div class="widget-controls m-t-1">
+            <a data-widgster="expand" title="Apri"><i class="glyphicon glyphicon-chevron-down"></i></a>
+            <a data-widgster="collapse" title="Chiudi"><i class="glyphicon glyphicon-chevron-up"></i></a>
+        </div>
+    </header>
+    <div class="widget-body">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="form-group">
+                    <label for="denominazione"><strong>Denominazione</strong></label>
+                    <input id="denominazione" name="denominazione" class="form-control" [(ngModel)]="filter.text" placeholder="Digita almeno 3 caratteri..."/>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div *ngIf="TPLModel && !loading && apiService.isDataReady(data_dependencies)" class="row">
+    <div class="col-xl-12">
+        <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
+        <section class="widget py-0" widget>
+            <div class="widget-body widget-table-overflow">
+                <!--| textDataFilter : filter.text : filteredCount-->
+                <table class="table table-hover table-condensed mb-0 table-bordered"
+                       [mfData]="data$ | async | textDataFilter : filter.text : filteredCount"
+                       [mfSortBy]="TPLModel.sort_by" [mfSortOrder]="TPLModel.sort_order"
+                       #mf="mfDataTable" stickthead>
+                    <thead>
+                    <tr>
+                        <ng-container *ngFor="let column of columns">
+                            <th *ngIf="!column.hide_list_view"><mfDefaultSorter [by]="column.field">{{column.text}}</mfDefaultSorter></th>
+                        </ng-container>
+                        <th *ngIf="apiService.userCan('DELETE_'+apipath.toUpperCase())">Azioni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let item of mf.data" (click)="TPLModel.editable && editId(item.id)" [ngClass]="{ 'clickable': TPLModel.editable }">
+                        <ng-container *ngFor="let column of columns">
+                            <td *ngIf="!column.hide_list_view">
+                                <div *ngIf="!column.rel && column.type !== 'date'" [innerHTML]="item[column.field] | dataMark : filter.text"></div>
+                                <div *ngIf="!column.rel && column.type === 'date'" [innerHTML]="item[column.field] | date : 'dd/MM/y'"></div>
+                                <div *ngIf="column.rel">{{item[column.field] | dataEnum : apiService.dataEnum : column.rel : 'text'}}</div>
+                            </td>
+                        </ng-container>
+                        <td *ngIf="apiService.userCan('DELETE_'+apipath.toUpperCase())">
+                            <a (click)="askDelete($event, myModal, item)"><i class="fa fa-trash-o"> </i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <footer>
+            </footer>
+        </section>
+    </div>
+</div>
+
+<modal #myModal cancelButtonLabel="Annulla" submitButtonLabel="Conferma" [hideCloseButton]="true" (onSubmit)="confirmDelete(myModal)">
+    <modal-header>
+        <h4 class="modal-title text-center fw-bold mt">Conferma cancellazione {{TPLModel.labels[0]}}</h4>
+    </modal-header>
+    <modal-content>
+        <h4 class="text-center mt-sm">
+            Vuoi eliminare la voce {{deleting?.id}} - {{deleting?.text}} ?
+        </h4>
+    </modal-content>
+    <modal-footer>
+    </modal-footer>
+</modal>

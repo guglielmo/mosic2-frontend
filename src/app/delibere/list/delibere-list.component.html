@@ -238,8 +238,8 @@
                         </td>
                         <td>
                             <span class="ml-1 badge badge-default text-left line-height-lg badge-lg-limit"
-                                  [title]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici'"
-                                  [innerHTML]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
+                                  [title]="delibera.id_uffici | dataEnum : 'uffici'"
+                                  [innerHTML]="delibera.id_uffici | dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
                         </td>
                         <td>{{situazioneEnum[delibera.situazione]}}</td>
                         <td>
@@ -316,8 +316,8 @@
                         </td>
                         <td>
                             <span class="ml-1 badge badge-default text-left line-height-lg badge-lg-limit"
-                                  [title]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici'"
-                                  [innerHTML]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
+                                  [title]="delibera.id_uffici | dataEnum : 'uffici'"
+                                  [innerHTML]="delibera.id_uffici | dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
                         </td>
                         <td>{{situazioneEnum[delibera.situazione]}}</td>
                     </tr>
@@ -368,8 +368,8 @@
                             </td>
                             <td rowspan="2">
                                 <span class="ml-1 badge badge-default text-left line-height-lg badge-lg-limit"
-                                      [title]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici'"
-                                      [innerHTML]="delibera.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
+                                      [title]="delibera.id_uffici | dataEnum : 'uffici'"
+                                      [innerHTML]="delibera.id_uffici | dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
                             </td>
                             <td rowspan="2">{{delibera.firme.uff_a | date : 'dd/M/y'}}</td>
                             <td>{{delibera.firme.cd_i | date : 'dd/MM/y'}}</td>

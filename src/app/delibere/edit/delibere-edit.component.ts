@@ -30,6 +30,8 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
     public allowUpload = false;
     private id: number;
 
+    public cipeODG: any = {};
+
     private routeFragmentSubscription: any;
 
     public NGUPoptions: NgUploaderOptions;
@@ -112,12 +114,7 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
                 this.apiService.getById('delibere', this.id)
                     .subscribe(
                         response => {
-                            if(Array.isArray(response.data)) {
-                                this.model = response.data[0];
-                            } else {
-                                this.model = response.data;
-                            }
-
+                            this.model = response.data;
 
                             // instantiate every date
                             let tz = new Date().getTimezoneOffset();
@@ -127,6 +124,15 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
                                         this.model[key] = new Date(value);
                                     }
                                 }
+                            });
+
+                            _.forEach(this.model.cipe_delibere, (cipe_odg, key) => {
+                                //console.log('cipe_odg', cipe_odg, key );
+                                if(cipe_odg.id_cipe_odg) {
+                                    this.loadCipeOdg(cipe_odg.id_cipe_odg);
+                                }
+                                //id_cipe_odg
+                                //
                             });
 
                             if(!this.model.data_mef_pec && this.model.data_mef_invio) {
@@ -141,6 +147,20 @@ export class DelibereEditComponent implements OnInit, AfterViewChecked, OnDestro
                         });
                 break;
         }
+    }
+
+    loadCipeOdg(id) {
+        this.apiService.getById('cipeodg', id)
+            .subscribe(
+                response => {
+                    this.cipeODG[id] = response.data;
+
+                    console.log(this.cipeODG);
+                },
+                error => {
+
+                }
+            );
     }
 
     ngAfterViewChecked() {

@@ -39,7 +39,6 @@ export class DelibereIterComponent implements OnInit {
                 private scrollService: ScrollToService) {
         this.select2Options = config.select2Options;
         this.select2OptionsMulti = config.select2OptionsMulti;
-
         this.firmatari$ = this.apiService.subscribeToDataService('firmatari');
     }
 

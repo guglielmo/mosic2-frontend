@@ -21,16 +21,16 @@
 
         <span *ngIf="mode == 'update'" class="fw-semi-bold">
             <ng-template #titolariTooltip>
-                <div [innerHtml]="model.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'text'"></div>
+                <div [innerHtml]="model.id_titolari | dataEnum : 'titolari' : 'text'"></div>
             </ng-template>
             <a [routerLink]=" ['/app/titolari/edit/'+model.id_titolari ]"
-               [tooltip]="titolariTooltip" placement="bottom">{{model.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'codice'}}</a> .
+               [tooltip]="titolariTooltip" placement="bottom">{{model.id_titolari | dataEnum : 'titolari' : 'codice'}}</a> .
 
             <ng-template #fascicoliTooltip>
-                <div [innerHtml]="model.id_fascicoli | dataEnum : apiService.dataEnum : 'fascicoli' : 'text'"></div>
+                <div [innerHtml]="model.id_fascicoli | dataEnum : 'fascicoli' : 'text'"></div>
             </ng-template>
             <a [routerLink]=" ['/app/fascicoli/edit/'+model.id_fascicoli ]"
-               [tooltip]="fascicoliTooltip" placement="bottom">{{model.id_fascicoli | dataEnum : apiService.dataEnum : 'fascicoli' : 'numero_fascicolo'}}</a> /
+               [tooltip]="fascicoliTooltip" placement="bottom">{{model.id_fascicoli | dataEnum : 'fascicoli' : 'numero_fascicolo'}}</a> /
             {{model.id}}
         </span>
     </h3>

@@ -19,3 +19,4 @@ export * from './delibere-data-filter.pipe';
 export * from './adempimenti-data-filter.pipe';
 export * from './delibere-by-date-data-filter.pipe';
 export * from './lodash-data-filter.pipe';
+export * from './text-data-filter.pipe';

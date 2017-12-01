@@ -104,10 +104,10 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let fascicolo of mf.data" (click)="editFascicoliId(fascicolo.id)" class="clickable">
-                        <td>{{fascicolo.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'denominazione' }}</td>
+                        <td>{{fascicolo.id_titolari | dataEnum : 'titolari' : 'denominazione' }}</td>
                         <td>{{fascicolo.numero_fascicolo}}</td>
                         <td [innerHTML]="fascicolo.argomento"></td>
-                        <td>{{fascicolo.id_amministrazioni | dataEnum : apiService.dataEnum : 'amministrazioni' : 'denominazione'}}</td>
+                        <td>{{fascicolo.id_amministrazioni | dataEnum : 'amministrazioni' : 'denominazione'}}</td>
                     </tr>
                     </tbody>
                     <tfoot>

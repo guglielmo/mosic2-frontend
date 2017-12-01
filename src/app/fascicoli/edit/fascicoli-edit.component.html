@@ -21,12 +21,12 @@
         <span *ngIf="mode == 'update'" class="fw-semi-bold">
 
             <ng-template #titolariTooltip>
-                <div [innerHtml]="model.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'text'"></div>
+                <div [innerHtml]="model.id_titolari | dataEnum : 'titolari' : 'text'"></div>
             </ng-template>
 
             <a [routerLink]=" ['/app/titolari/edit/'+model.id_titolari ]"
                [tooltip]="titolariTooltip" placement="bottom"
-            >{{model.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'codice'}} </a>
+            >{{model.id_titolari | dataEnum : 'titolari' : 'codice'}} </a>
             . {{model.numero_fascicolo}}
         </span>
     </h3>
@@ -215,10 +215,10 @@
                         <td>{{registro.id}}</td>
                         <td [innerHTML]="registro.oggetto"></td>
                         <!-- todo: find a better way to implement enum -->
-                        <td><span *ngIf="registro.id_mittenti">{{registro.id_mittenti | dataEnum : apiService.dataEnum : 'mittenti' : 'text'}}</span></td>
+                        <td><span *ngIf="registro.id_mittenti">{{registro.id_mittenti | dataEnum : 'mittenti' : 'text'}}</span></td>
                         <td>
                             <span *ngIf="registro.id_titolari">{{apiService.dataEnum.titolari[registro.id_titolari]['codice']}}</span>.{{registro.numero_fascicolo}}<br>
-                            {{registro.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'codice'}}.{{registro.id_fascicoli | dataEnum : apiService.dataEnum : 'fascicoli' : 'codice'}}.
+                            {{registro.id_titolari | dataEnum : 'titolari' : 'codice'}}.{{registro.id_fascicoli | dataEnum : 'fascicoli' : 'codice'}}.
                         </td>
                         <td>{{registro.protocollo_arrivo}}</td>
                         <td class="nowrap">{{registro.data_arrivo | date: 'dd/MM/yyyy' }}</td>

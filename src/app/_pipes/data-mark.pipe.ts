@@ -13,12 +13,16 @@ export class DataMarkPipe implements PipeTransform {
     }
 
     markMatch(text: string, term: string): any {
-        let res, reg, words = [], val = $.trim(term.replace(/[<>]?/g, ""));
-        if (val.length > 0) {
-            words = val.split(" ");
-            reg = new RegExp("(?![^<]+>)(" + words.join("|") + ")", "ig");
-            res = text.replace(reg, "<strong><u>$&</u></strong>");
+        if(typeof text === 'string') {
+            let res, reg, words = [], val = $.trim(term.replace(/[<>]?/g, ""));
+            if (val.length > 0) {
+                words = val.split(" ");
+                reg = new RegExp("(?![^<]+>)(" + words.join("|") + ")", "ig");
+                res = text.replace(reg, "<strong><u>$&</u></strong>");
+            }
+            return res;
+        } else {
+            return text;
         }
-        return res;
     }
 }

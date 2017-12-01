@@ -144,9 +144,9 @@
                         <td>{{user.userName}}</td>
                         <td>{{user.eMail}}</td>
                         <td>{{user.registrationDate | date: 'dd/MM/yyyy HH:mm'}}</td>
-                        <td>{{user.id_groups | dataEnum : apiService.dataEnum : 'groups' : 'name' }}</td>
-                        <td>{{user.id_ruoli_cipe | dataEnum : apiService.dataEnum : 'ruoli_cipe' : 'denominazione' }}</td>
-                        <td>{{user.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' }}</td>
+                        <td>{{user.id_groups | dataEnum : 'groups' : 'name' }}</td>
+                        <td>{{user.id_ruoli_cipe | dataEnum : 'ruoli_cipe' : 'denominazione' }}</td>
+                        <td>{{user.id_uffici | dataEnum : 'uffici' : 'denominazione' }}</td>
 <!--                        <td>{{user.ip}}</td>
                         <td>{{user.stazione}}</td>-->
                         <td>

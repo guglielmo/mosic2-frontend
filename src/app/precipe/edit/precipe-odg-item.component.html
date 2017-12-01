@@ -10,8 +10,8 @@
                 </div>
                 <div>
                      <span class="ml-1 badge badge-lg badge-default text-left line-height-lg"
-                           [title]="item.id_uffici | dataEnum : apiService.dataEnum : 'uffici'"
-                           [innerHTML]="item.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
+                           [title]="item.id_uffici | dataEnum : 'uffici'"
+                           [innerHTML]="item.id_uffici | dataEnum : 'uffici' : 'denominazione' : '<br/>'"></span>
                 </div>
                 <h6 class="ml-1">
                     <span *ngIf="item.risultanza !== 1 && item.risultanza !== 2" class="badge badge-lg badge-default rel-t-l2">N/D</span>
@@ -159,8 +159,8 @@
                                         <textarea disabled="disabled" readonly
                                                   rows="1" class="form-control single-row"
                                                   placeholder="Click su 'Modifica' per selezionare..."
-                                                  title="{{ item.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'text' }}"
-                                        >{{ item.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'text' }}</textarea>
+                                                  title="{{ item.id_titolari | dataEnum : 'titolari' : 'text' }}"
+                                        >{{ item.id_titolari | dataEnum : 'titolari' : 'text' }}</textarea>
                                         </div>
                                         <!--{{item.id_titolari}}-->
                                     </div>
@@ -194,8 +194,8 @@
                                         <textarea disabled="disabled" readonly
                                                   rows="1" class="form-control single-row"
                                                   placeholder="Click su 'Modifica' per selezionare..."
-                                                  title="{{ item.id_fascicoli | dataEnum : apiService.dataEnum : 'fascicoli' : 'text' }}"
-                                        >{{ item.id_fascicoli | dataEnum : apiService.dataEnum : 'fascicoli' : 'text' }}</textarea>
+                                                  title="{{ item.id_fascicoli | dataEnum : 'fascicoli' : 'text' }}"
+                                        >{{ item.id_fascicoli | dataEnum : 'fascicoli' : 'text' }}</textarea>
                                         </div>
 
                                         <!--{{item.id_fascicoli}}-->
@@ -237,8 +237,8 @@
                                         <textarea disabled="disabled" readonly
                                                   rows="1" class="form-control"
                                                   placeholder="Click su 'Modifica' per selezionare..." autosize
-                                                  title="{{item.id_registri | dataEnum : apiService.dataEnum : 'registri' : 'text'}}"
-                                        >{{item.id_registri | dataEnum : apiService.dataEnum : 'registri' : 'text' : '\n\n'}}</textarea>
+                                                  title="{{item.id_registri | dataEnum : 'registri' : 'text'}}"
+                                        >{{item.id_registri | dataEnum : 'registri' : 'text' : '\n\n'}}</textarea>
                                         </div>
 
                                         <!--{{item.id_registri}}-->

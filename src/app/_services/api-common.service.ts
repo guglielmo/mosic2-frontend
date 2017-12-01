@@ -420,7 +420,7 @@ export class APICommonService {
         // maps user capabilities to object for fast evaluation
         this.userCapabilities = _.zipObject(capabilities, _.map(capabilities, () => { return true } ));
 
-        // console.log(this.userCapabilities);
+        //console.log(this.userCapabilities);
 
     }
 
@@ -584,6 +584,10 @@ export class APICommonService {
             case 'ruoli_cipe':
             case 'firmataritipo':
             case 'tags':
+            case 'adempimenti_tipologie':
+            case 'adempimenti_ambiti':
+            case 'adempimenti_soggetti':
+            case 'adempimenti_azioni':
                 _.each(data, (item) => { item.text = item['denominazione'] } );
                 break;
         }

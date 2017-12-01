@@ -21,7 +21,8 @@ import {
     DelibereDataFilterPipe,
     AdempimentiDataFilterPipe,
     Cast2String,
-    LodashDataFilterPipe
+    LodashDataFilterPipe,
+    TextDataFilterPipe
 
 } from '../_pipes/index';
 
@@ -58,7 +59,8 @@ import 'moment/locale/it';
         Scroll2Bottom,
         Widget,
         DisableFormControlDirective,
-        LodashDataFilterPipe
+        LodashDataFilterPipe,
+        TextDataFilterPipe
     ],
     providers: [
     ],
@@ -87,7 +89,8 @@ import 'moment/locale/it';
         Scroll2Bottom,
         Widget,
         DisableFormControlDirective,
-        LodashDataFilterPipe
+        LodashDataFilterPipe,
+        TextDataFilterPipe
     ]
 })
 export class PipesDirectivesSharedModule {}

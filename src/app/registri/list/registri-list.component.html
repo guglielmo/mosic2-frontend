@@ -192,11 +192,10 @@
                         <td><a [routerLink]="[ '/app/registri/edit/' + registro.id ]"
                               [innerHTML]="registro.oggetto | dataMark : filter.oggetto"></a>
                         </td>
-                        <td>{{registro.id_mittenti | dataEnum : apiService.dataEnum : 'mittenti' : 'text'}}</td>
-                        <td>
-                            {{registro.id_titolari | dataEnum : apiService.dataEnum : 'titolari' : 'codice'}}.
-                            {{registro.id_fascicoli | dataEnum : apiService.dataEnum : 'fascicoli' : 'numero_fascicolo'}}<br>
-
+                        <td>{{registro.id_mittenti | dataEnum : 'mittenti' : 'text'}}</td>
+                        <td><a [routerLink]="['/app/fascicoli/edit/' + registro.id_fascicoli]"
+                        >{{registro.id_titolari | dataEnum : 'titolari' : 'codice'}}.{{registro.id_fascicoli | dataEnum : 'fascicoli' : 'numero_fascicolo'}}
+                        </a><br>
                             <small style="text-wrap: avoid">{{registro.denominazione_sottofascicolo}}</small>
                             <!--<br/>id_titolari:&nbsp;{{registro.id_titolari}}-->
                             <!--<br/> id_fascicoli:&nbsp;{{registro.id_fascicoli}}-->

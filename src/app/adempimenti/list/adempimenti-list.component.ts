@@ -94,6 +94,10 @@ export class AdempimentiListComponent implements OnInit {
     deletingAdempimenti: Adempimenti = new Adempimenti;
 
     public adempimenti$: Observable<Adempimenti[]>;
+    public adempimenti_ambiti$: Observable<any[]>;
+    public adempimenti_azioni$: Observable<any[]>;
+    public adempimenti_soggetti$: Observable<any[]>;
+    public adempimenti_tipologie$: Observable<any[]>;
     public uffici$: Observable<Uffici[]>;
     public cipe$: Observable<Cipe[]>;
 
@@ -117,6 +121,11 @@ export class AdempimentiListComponent implements OnInit {
         }
 
         this.adempimenti$ = this.apiService.subscribeToDataService('adempimenti').map( adempimenti => this.decorateData(adempimenti) );
+        this.adempimenti_ambiti$ = this.apiService.subscribeToDataService('adempimenti_ambiti');
+        this.adempimenti_azioni$ = this.apiService.subscribeToDataService('adempimenti_azioni');
+        this.adempimenti_soggetti$ = this.apiService.subscribeToDataService('adempimenti_soggetti');
+        this.adempimenti_tipologie$ = this.apiService.subscribeToDataService('adempimenti_tipologie');
+
         this.uffici$ = this.apiService.subscribeToDataService('uffici');
         this.cipe$ = this.apiService.subscribeToDataService('cipe');
     }
@@ -153,6 +162,10 @@ export class AdempimentiListComponent implements OnInit {
 
     editId(id: number) {
         this.router.navigate(['/app/adempimenti/edit/' + id]);
+    }
+
+    editDelibereId(id:number) {
+        this.router.navigate(['/app/delibere/edit/' + id]);
     }
 
     confirmDeleteAdempimenti(modal: any) {

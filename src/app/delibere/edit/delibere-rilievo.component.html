@@ -101,6 +101,11 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-12">
+            <delibere-upload [type]="'CC/'+model.id" [allegati]="model.allegati" [allowUpload]="allowUpload" [canEdit]="canEdit" [canDelete]="canDelete"></delibere-upload>
+        </div>
+    </div>
 </div>
 <div class="iter_divider_box text-center">
     <i class="fa fa-lg fa-arrow-down text-muted"></i>

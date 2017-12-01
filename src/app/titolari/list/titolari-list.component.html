@@ -35,7 +35,7 @@
                         <td>{{titolario.codice}}</td>
                         <td>{{titolario.denominazione}}</td>
                         <td>{{titolario.descrizione}}</td>
-                        <td><span *ngIf="titolario.id_uffici" class="badge badge-lg badge-default">{{titolario.id_uffici | dataEnum : apiService.dataEnum : 'uffici' : 'denominazione' }}</span> </td>
+                        <td><span *ngIf="titolario.id_uffici" class="badge badge-lg badge-default">{{titolario.id_uffici | dataEnum : 'uffici' : 'denominazione' }}</span> </td>
                         <td *ngIf="apiService.userCan('DELETE_TITOLARI')">
                             <a (click)="askDeleteTitolari($event, myModal, titolario)"><i class="fa fa-trash-o"> </i></a>
                         </td>

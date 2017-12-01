@@ -40,6 +40,10 @@ export class GroupsEditComponent implements OnInit {
         'USERS',
         'DELIBERE',
         'ADEMPIMENTI',
+        'ADEMPIMENTI_AMBITI',
+        'ADEMPIMENTI_AZIONI',
+        'ADEMPIMENTI_SOGGETTI',
+        'ADEMPIMENTI_TIPOLOGIE',
         'MONITOR',
         'MONITOR_GROUP'
     ];

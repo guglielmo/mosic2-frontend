@@ -71,7 +71,7 @@
                         <td>{{firmatario.chiave}}</td>
                         <td>{{firmatario.denominazione}}</td>
                         <td [innerHTML]="firmatario.denominazione_estesa | dataMark : filter.denominazione_estesa"></td>
-                        <td>{{firmatario.tipo}} - {{ firmatario.tipo | dataEnum : apiService.dataEnum : 'firmataritipo' : 'denominazione' }}</td>
+                        <td>{{firmatario.tipo}} - {{ firmatario.tipo | dataEnum : 'firmataritipo' : 'denominazione' }}</td>
                         <td>
                             <span *ngIf="firmatario.disattivato === 0" class="badge badge-success">Attivo</span>
                             <span *ngIf="firmatario.disattivato === 1" class="badge badge-danger">Non attivo</span>

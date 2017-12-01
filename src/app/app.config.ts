@@ -18,13 +18,13 @@ export class AppConfig {
     config = {
         name: 'mosic 2.0',
         title: 'Mo.Si.C. - Monitoraggio Sistema CIPE',
-	version: '2.0.0-beta.1',
+	    version: '2.0.0-beta.1',
 
 	// development
 	// baseAPIURL: 'http://localhost:8080/mosic2-service',
 
 	// staging tdrynx.com
-	baseAPIURL: 'http://mosicapi.tdrynx.info',
+	    baseAPIURL: 'http://mosicapi.tdrynx.info',
 	
 	// staging celata.com
 	// baseAPIURL: 'http://mosic2.celata.com/service',
@@ -80,6 +80,82 @@ export class AppConfig {
             'nav-static': false
         }
     };
+
+    supportedAPIPaths = [
+        {
+            apipath: 'adempimenti_ambiti',
+            labels: ['Ambito', 'Ambiti'],
+            sort_by: 'denominazione', sort_order: 'asc', intro: 'Tutti gli',
+            new_label: 'Nuovo',
+            editable: true,
+            columns: [
+                ////{field: 'id', text: '#'},
+                // {field: 'codice', text: 'Codice', edit_width: 2 },
+                {field: 'denominazione', text: 'Denominazione', edit_width: 12, required: true},
+                {field: 'note', text: 'Note', edit_width: 12, required: false}
+            ]
+        },
+        {
+            apipath: 'adempimenti_azioni',
+            labels: ['Azione', 'Azioni'],
+            sort_by: 'denominazione', sort_order: 'asc', intro: 'Tutte le',
+            new_label: 'Nuova',
+            editable: true,
+            columns: [
+                //{field: 'id', text: '#'},
+                // {field: 'codice', text: 'Codice', edit_width: 2 },
+                {field: 'denominazione', text: 'Denominazione', edit_width: 12, required: true},
+                {field: 'note', text: 'Note', edit_width: 12, required: false}
+            ]
+        },
+        {
+            apipath: 'adempimenti_tipologie',
+            labels: ['Tipologia', 'Tipologie'],
+            sort_by: 'denominazione', sort_order: 'asc', intro: 'Tutte le',
+            new_label: 'Nuova',
+            editable: true,
+            columns: [
+                ////{field: 'id', text: '#'},
+                // {field: 'codice', text: 'Codice', edit_width: 2 },
+                {field: 'denominazione', text: 'Denominazione', edit_width: 12, required: true},
+                {field: 'note', text: 'Note', edit_width: 12, required: false}
+            ]
+        },
+        {
+            apipath: 'adempimenti_soggetti',
+            labels: ['Soggetto', 'Soggetti'],
+            sort_by: 'denominazione', sort_order: 'asc', intro: 'Tutti i',
+            new_label: 'Nuovo',
+            editable: true,
+            columns: [
+                //{field: 'id', text: '#'},
+                // {field: 'codice', text: 'Codice', edit_width: 2 },
+                {field: 'denominazione', text: 'Denominazione', edit_width: 12, required: true},
+                {field: 'note', text: 'Note', edit_width: 12, required: false}
+            ]
+        }
+    ];
+
+    public isPathSupported(apipath: string): number {
+
+        let found = -1;
+        if (apipath.indexOf('/') !== -1) {
+            apipath = apipath.split('/')[2]
+        }
+
+        // console.log('check', apipath);
+        for (let i = 0, l = this.supportedAPIPaths.length; i < l; i++) {
+            // console.log('checking', this.supportedAPIPaths[i].apipath);
+            // console.log('url: ' + apipath, 'supported: ' + this.supportedAPIPaths[i].apipath );
+            if (this.supportedAPIPaths[i].apipath === apipath) {
+                found = i;
+                // console.log(apipath, '>>>>>>> Supported!', found);
+                break;
+            }
+        }
+
+        return found;
+    }
 
     dateTimeOptions = {
         language: 'it', icon: 'fa fa-calendar', todayBtn: 'linked', todayHighlight: true, placeholder:'Scegli data', autoclose: true, clearBtn: true

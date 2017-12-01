@@ -141,8 +141,8 @@
                     <thead>
                     <tr>
                         <!--<th colspan="2"></th>-->
-                        <th colspan="3">Delibera</th>
-                        <th colspan="8"></th>
+                        <th colspan="1">Delibera</th>
+                        <th colspan="8">Adempimento</th>
                     </tr>
                     <tr>
 <!--                        <th>
@@ -152,34 +152,28 @@
                             <mfDefaultSorter by="codice">Codice</mfDefaultSorter>
                         </th>-->
                         <th>
-                            <mfDefaultSorter by="id_delibere">Data</mfDefaultSorter>
+                            <mfDefaultSorter by="id_delibere">Nr. / Data / Argomento</mfDefaultSorter>
                         </th>
                         <th>
-                            <mfDefaultSorter by="id_delibere">Nr.</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="id_delibere">Argomento</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="descrizione">Adempimento</mfDefaultSorter>
+                            <mfDefaultSorter by="descrizione">Descrizione</mfDefaultSorter>
                         </th>
                         <th>
                             <mfDefaultSorter by="codice_descrizione">Tipologia</mfDefaultSorter>
                         </th>
                         <th>
-                            <mfDefaultSorter by="codice_fonte">Fonte</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="vincolo">Vincolo</mfDefaultSorter>
+                            <mfDefaultSorter by="azione">Azione<br>prevista</mfDefaultSorter>
                         </th>
                         <th>
                             <mfDefaultSorter by="data_scadenza">Scadenza</mfDefaultSorter>
                         </th>
                         <th>
-                            <mfDefaultSorter by="codice_esito">Stato</mfDefaultSorter>
+                            <mfDefaultSorter by="ambito">Ambito</mfDefaultSorter>
                         </th>
                         <th>
-                            <mfDefaultSorter by="utente">Referente</mfDefaultSorter>
+                            <mfDefaultSorter by="ambito">Soggetti<br>Adempimento</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="codice_esito">Stato</mfDefaultSorter>
                         </th>
                         <th *ngIf="canDelete">Azioni</th>
                     </tr>
@@ -188,19 +182,21 @@
                     <tr *ngFor="let adempimento of mf.data as Adempimento">
 <!--                        <td>{{adempimento.id}}</td>
                         <td><h5><strong><a [routerLink]="[ '/app/adempimenti/edit/' + adempimento.id ]">{{adempimento.codice}}</a></strong></h5></td>-->
-                        <td>{{adempimento.data_delibera | date : 'dd/MM/yyyy' }}</td>
-                        <td>{{adempimento.numero_delibera}}</td>
-                        <td>{{adempimento.argomento_delibera}}</td>
-                        <td>
-                            <p><a [routerLink]="[ '/app/adempimenti/edit/' + adempimento.id ]"
-                                  [innerHTML]="adempimento.descrizione | dataMark : filter.descrizione"></a></p>
+
+                        <td (click)="editDelibereId(adempimento.id_delibere)" tooltip="Apri delibera" container="body" placement="bottom" class="clickable">
+                            <span class="badge badge-default badge-lg">{{adempimento.id_delibere | dataEnum : 'delibere' : 'numero'}}/{{adempimento.id_delibere | dataEnum : 'delibere' : 'data' | date : 'y'}}</span>
+                            del {{adempimento.id_delibere | dataEnum : 'delibere' : 'data' | date : 'dd/MM/y'}}<br>
+                            {{adempimento.id_delibere | dataEnum : 'delibere' : 'argomento'}}
                         </td>
-                        <td>{{codiceDescrizioneEnum[adempimento.codice_descrizione]}}</td>
-                        <td>{{fonteEnum[adempimento.codice_fonte]}}</td>
-                        <td>{{vincoloEnum[adempimento.vincolo]}}</td>
-                        <td>{{adempimento.data_scadenza | date : 'dd/MM/yyyy'}}</td>
+                        <td (click)="editId(adempimento.id)" tooltip="Apri adempimento" container="body" placement="bottom" class="clickable">
+                            <p>{{adempimento.descrizione | dataMark : filter.descrizione}}</p>
+                        </td>
+                        <td>{{adempimento.tipologia | dataEnum : 'adempimenti_tipologie' : 'text'}}</td>
+                        <td>{{adempimento.azione | dataEnum : 'adempimenti_azioni' : 'text'}}</td>
+                        <td>{{adempimento.scadenza | date : 'dd/MM/yyyy'}}</td>
+                        <td>{{adempimento.ambito | dataEnum : 'adempimenti_ambiti' : 'text'}}</td>
+                        <td>{{adempimento.id_soggetti | dataEnum : 'adempimenti_soggetti' : 'text'}}</td>
                         <td class="{{codiceEsitoEnum[adempimento.codice_esito].class}}">{{codiceEsitoEnum[adempimento.codice_esito].label}}</td>
-                        <td>{{adempimento.utente | dataEnum : apiService.dataEnum : 'users' : 'denominazione'}}</td>
                         <td *ngIf="canDelete"><p class="text-center"><a (click)="askDeleteAdempimenti($event, myModal, adempimento)"><i class="fa fa-trash-o"> </i></a></p>
                         </td>
                     </tr>

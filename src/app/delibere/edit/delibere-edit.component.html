@@ -258,20 +258,37 @@
             <div class="col-12">
                 <section class="widget">
                     <header>
-                        <h4><span class="fw-semi-bold">Documenti di istruttoria</span></h4>
+                        <h4><span class="fw-semi-bold">Documenti istruttoria</span></h4>
                     </header>
                     <div class="widget-body">
-<pre>
+<!--<pre>
 {{model.cipe_delibere | json}}
-</pre>
+</pre>-->
 
                         <div *ngFor="let cipe of model.cipe_delibere">
-<!--                            <td>{{fascicolo.id_titolari | dataEnum : apiService.dataEnum : 'titolari': 'denominazione'}}</td>
-                            <td>{{fascicolo.numero_fascicolo}}</td>-->
-
-                            {{cipe.id_fascicoli | dataEnum : apiService.dataEnum : 'fascicoli' : 'id_titolari'
-                                                | dataEnum : apiService.dataEnum : 'titolari' : 'codice' }}.
-                            {{cipe.id_fascicoli | dataEnum : apiService.dataEnum : 'fascicoli' : 'text'}}
+                            <div class="mb-4">
+                                <h5 class="fw-semi-bold">
+                                    <a [routerLink]="['/app/cipe/edit/' + cipe.id_cipe]">CIPE del {{cipe.id_cipe | dataEnum : 'cipe' : 'data' | date : 'dd/MM/yyyy'}}</a>
+                                    - punto o.d.g. {{cipe.ordine}}
+                                </h5>
+                            </div>
+                            <div class="mb-2">
+                                <h5 class="fw-semi-bold mb-2">
+                                    {{cipe.id_fascicoli | dataEnum : 'fascicoli' : 'id_titolari'
+                                    | dataEnum : 'titolari' : 'codice' }}.{{cipe.id_fascicoli | dataEnum : 'fascicoli' : 'numero_fascicolo'}}
+                                    <a [routerLink]="['/app/fascicoli/edit/' + cipe.id_fascicoli]"
+                                    >{{cipe.id_fascicoli | dataEnum : 'fascicoli' : 'argomento'}}</a>
+                                </h5>
+                            </div>
+                            <ul>
+                                <ng-container *ngFor="let registro of cipe.id_registri">
+                                    <li *ngIf="registro">
+                                        <p>
+                                            {{registro}} - <a routerLink="['/app/registri/edit/' + registro]" class="fw-semi-bold">{{registro | dataEnum : 'registri' : 'oggetto'}}</a>
+                                        </p>
+                                    </li>
+                                </ng-container>
+                            </ul>
                         </div>
                     </div>
                 </section>

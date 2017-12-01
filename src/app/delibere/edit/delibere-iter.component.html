@@ -315,7 +315,7 @@
                     <i class="fa fa-lg fa-arrow-down text-muted"></i>
                 </div>
                 <div class="item_step_box" *ngFor="let rilievo of model.rilievi_CC">
-                    <delibere-rilievo [model]="rilievo"></delibere-rilievo>
+                    <delibere-rilievo [model]="rilievo" [canEdit]="canEdit" [canDelete]="canDelete"></delibere-rilievo>
                 </div>
                 <div class="iter_divider_box text-center">
                     <button *ngIf="canEdit" type="button" class="btn btn-outline-primary rel-t-l4 clickable"
