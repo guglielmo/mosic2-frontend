@@ -3,7 +3,7 @@
 </div>
 <h3 class="page-title">Adempimenti / <span class="fw-semi-bold">Tutti gli adempimenti</span></h3>
 
-<section *ngIf="apiService.isDataReady(['adempimenti','delibere','cipe'])"
+<section *ngIf="apiService.isDataReady(['adempimenti','delibere','cipe', 'adempimenti_ambiti', 'adempimenti_tipologie', 'adempimenti_soggetti', 'adempimenti_scadenze'])"
          class="widget" widget data-widgster-collapsed="false">
     <header>
         <h5 data-widgster="expand" title="Apri" class="clickable"><i class="fa fa-search"></i> Cerca <span class="fw-semi-bold">adempimenti ...</span>
@@ -113,31 +113,29 @@
     @media only screen and (max-width: 992px) {
 /*        td:nth-of-type(1):before { content: "Id"; }
         td:nth-of-type(2):before { content: "Codice"; }*/
-        td:nth-of-type(1):before { content: "Delibera data"; }
-        td:nth-of-type(2):before { content: "Delibera n°"; }
-        td:nth-of-type(3):before { content: "Delibera Argomento"; }
-        td:nth-of-type(4):before { content: "Adempimento"; }
-        td:nth-of-type(5):before { content: "Tipologia"; }
-        td:nth-of-type(6):before { content: "Fonte"; }
-        td:nth-of-type(7):before { content: "Vincolo"; }
-        td:nth-of-type(8):before { content: "Scadenza"; }
-        td:nth-of-type(9):before { content: "Stato"; }
-        td:nth-of-type(10):before { content: "Referente"; }
-        td:nth-of-type(11):before { content: "Azioni"; }
+        td:nth-of-type(1):before { content: "Delibera"; }
+        td:nth-of-type(2):before { content: "Adempimento"; }
+        td:nth-of-type(3):before { content: "Tipologia"; }
+        td:nth-of-type(4):before { content: "Azione prevista"; }
+        td:nth-of-type(5):before { content: "Scadenza"; }
+        td:nth-of-type(6):before { content: "Ambito"; }
+        td:nth-of-type(7):before { content: "Soggetti adempimento"; }
+        td:nth-of-type(8):before { content: "Stato"; }
+        td:nth-of-type(9):before { content: "Azioni"; }
     }
 </style>
 
-<div class="row" *ngIf="apiService.commonDataready && this.prepareData()">
+    <div class="row" *ngIf="apiService.isDataReady(['adempimenti_scadenze', 'adempimenti','delibere','cipe', 'adempimenti_ambiti', 'adempimenti_tipologie', 'adempimenti_soggetti'])">
     <div class="col-lg-12">
         <div class="mb-1">Risultati: {{filteredCount?.count}}</div>
         <section class="widget py-0" widget>
             <div class="widget-body widget-table-overflow">
                 <table
                        class="table table-hover table-condensed table-bordered mb-0"
-                       [mfData]="adempimenti$ | async | adempimentiDataFilter : filter.data_da : filter.data_a : filter.numero_delibera : filter.descrizione : filter.codice_esito : filteredCount"
-                       [mfSortBy]="'id_delibere'" [mfSortOrder]="'asc'"
+                       [mfData]="adempimenti_V$ | async | adempimentiDataFilter : filter.data_da : filter.data_a : filter.numero_delibera : filter.descrizione : filter.codice_esito : filteredCount"
+                       [mfSortBy]="'time_diff'" [mfSortOrder]="'asc'"
                        [mfRowsOnPage]="100"
-                       #mf="mfDataTable" stickthead [offsetY]="35">
+                       #mf="mfDataTable" stickthead>
                     <thead>
                     <tr>
                         <!--<th colspan="2"></th>-->
@@ -152,7 +150,13 @@
                             <mfDefaultSorter by="codice">Codice</mfDefaultSorter>
                         </th>-->
                         <th>
-                            <mfDefaultSorter by="id_delibere">Nr. / Data / Argomento</mfDefaultSorter>
+                            <mfDefaultSorter by="id_delibere">Nr./Anno - Argomento</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="ambito">Ambito</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="localizzazione">Localizzazione</mfDefaultSorter>
                         </th>
                         <th>
                             <mfDefaultSorter by="descrizione">Descrizione</mfDefaultSorter>
@@ -161,42 +165,52 @@
                             <mfDefaultSorter by="codice_descrizione">Tipologia</mfDefaultSorter>
                         </th>
                         <th>
-                            <mfDefaultSorter by="azione">Azione<br>prevista</mfDefaultSorter>
-                        </th>
-                        <th>
                             <mfDefaultSorter by="data_scadenza">Scadenza</mfDefaultSorter>
-                        </th>
-                        <th>
-                            <mfDefaultSorter by="ambito">Ambito</mfDefaultSorter>
                         </th>
                         <th>
                             <mfDefaultSorter by="ambito">Soggetti<br>Adempimento</mfDefaultSorter>
                         </th>
                         <th>
-                            <mfDefaultSorter by="codice_esito">Stato</mfDefaultSorter>
+                            <mfDefaultSorter by="time_diff">Stato</mfDefaultSorter>
                         </th>
                         <th *ngIf="canDelete">Azioni</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr *ngFor="let adempimento of mf.data as Adempimento">
+                    <tr *ngFor="let adempimento of mf.data as Adempimento" (click)="editId(adempimento.id)" class="clickable">
 <!--                        <td>{{adempimento.id}}</td>
                         <td><h5><strong><a [routerLink]="[ '/app/adempimenti/edit/' + adempimento.id ]">{{adempimento.codice}}</a></strong></h5></td>-->
 
-                        <td (click)="editDelibereId(adempimento.id_delibere)" tooltip="Apri delibera" container="body" placement="bottom" class="clickable">
-                            <span class="badge badge-default badge-lg">{{adempimento.id_delibere | dataEnum : 'delibere' : 'numero'}}/{{adempimento.id_delibere | dataEnum : 'delibere' : 'data' | date : 'y'}}</span>
-                            del {{adempimento.id_delibere | dataEnum : 'delibere' : 'data' | date : 'dd/MM/y'}}<br>
-                            {{adempimento.id_delibere | dataEnum : 'delibere' : 'argomento'}}
+                        <td>
+                            <span class="badge badge-default badge-lg">{{adempimento.numero_delibera}}/{{adempimento.data_delibera | date : 'y'}}</span>
+                            del {{adempimento.data_delibera | date : 'dd/MM/y'}}<br>
+                            {{adempimento.argomento_delibera}}
                         </td>
-                        <td (click)="editId(adempimento.id)" tooltip="Apri adempimento" container="body" placement="bottom" class="clickable">
-                            <p>{{adempimento.descrizione | dataMark : filter.descrizione}}</p>
+                        <td>{{adempimento.ambito | dataEnum : 'adempimenti_ambiti' : 'text'}}</td>
+                        <td>{{adempimento.localizzazione}}</td>
+                        <td>
+                            <p [innerHTML]="adempimento.descrizione | dataMark : filter.descrizione"></p>
                         </td>
                         <td>{{adempimento.tipologia | dataEnum : 'adempimenti_tipologie' : 'text'}}</td>
-                        <td>{{adempimento.azione | dataEnum : 'adempimenti_azioni' : 'text'}}</td>
-                        <td>{{adempimento.scadenza | date : 'dd/MM/yyyy'}}</td>
-                        <td>{{adempimento.ambito | dataEnum : 'adempimenti_ambiti' : 'text'}}</td>
+                        <td><p>{{adempimento.data_scadenza | date : 'dd/MM/yyyy'}}</p>
+                            <p>Periodicità: <br>{{periodicitaEnum[adempimento.periodicita]}}</p>
+                            <p>Anni: <br>{{adempimento.pluriennalita}}</p>
+<!--                            <p><strong>Passati:</strong> {{adempimenti_scaduti[adempimento.id] | date : 'dd/MM/y'}}</p>
+                            <p><strong>Imminenti:</strong> {{adempimenti_imminenti[adempimento.id]  | date : 'dd/MM/y'}}</p>
+                            <p><strong>Futuri:</strong> {{adempimenti_futuri[adempimento.id]  | date : 'dd/MM/y'}}</p>-->
+                        </td>
+
                         <td>{{adempimento.id_soggetti | dataEnum : 'adempimenti_soggetti' : 'text'}}</td>
-                        <td class="{{codiceEsitoEnum[adempimento.codice_esito].class}}">{{codiceEsitoEnum[adempimento.codice_esito].label}}</td>
+                        <td><span class="badge badge-lg badge-default" [ngClass]="codiceEsitoEnum[adempimento.codice_esito]?.class">
+                            {{codiceEsitoEnum[adempimento.codice_esito]?.label}}
+                                <ng-container *ngIf="adempimento.time_diff">
+                                     ({{adempimento.time_diff}}gg)
+                                </ng-container>
+                            </span>
+                            <br>
+                            <ng-container *ngIf="adempimento.scaduti">{{adempimento.ottemperati/adempimento.scaduti*100}}%</ng-container>&nbsp;({{adempimento.ottemperati}}/{{adempimento.scaduti}}&nbsp;di&nbsp;{{adempimento.totale_scadenze}})
+
+                        </td>
                         <td *ngIf="canDelete"><p class="text-center"><a (click)="askDeleteAdempimenti($event, myModal, adempimento)"><i class="fa fa-trash-o"> </i></a></p>
                         </td>
                     </tr>

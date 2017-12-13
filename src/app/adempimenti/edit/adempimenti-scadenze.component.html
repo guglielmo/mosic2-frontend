@@ -1,0 +1,25 @@
+<td>{{model.id}}</td>
+<td>{{model.data | date : 'dd/M/y'}}</td>
+<td>
+    <div class="form-group">
+        <label for="stato" class="sr-only"><strong>Stato</strong></label>
+        <select id="stato" name="stato" class="form-control" data-style="btn-secondary" data-width="auto"
+                [(ngModel)]="model.stato" #stato="ngModel" (change)="model.modified = true">
+            <ng-container *ngFor="let stato of esitoSelect2">
+                <option value="{{stato.id}}">{{stato.text}}</option>
+            </ng-container>
+        </select>
+    </div>
+</td>
+<td>
+    <div class="form-group">
+        <label for="note" class="sr-only"><strong>Note</strong></label>
+        <input id="note" name="note"
+               (change)="model.modified = true"
+               type="text" class="form-control"
+               placeholder="inserisci NOTE"
+               [disabled]="!canEdit"
+               [(ngModel)]="model.note" #note="ngModel">
+    </div>
+</td>
+<td *ngIf="canDelete"><p class="text-center"><a (click)="deleteScadenza(model.id)"><i class="fa fa-trash-o"> </i></a></p></td>

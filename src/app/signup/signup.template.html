@@ -10,7 +10,7 @@
             <h3>Registrati</h3>
           </header>
           <div class="widget-body">
-            <form name="form" class="mt-lg" (ngSubmit)="f.form.valid && register()" #f="ngForm" novalidate>
+            <form name="form" class="mt-lg" (ngSubmit)="f.form.valid && register()" #f="ngForm" (keydown.enter)="$event.preventDefault()" novalidate>
 
               <div class="row">
                 <div class="col-12">

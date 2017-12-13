@@ -11,10 +11,10 @@
     </accordion-group>
 </accordion>-->
 
-<form *ngIf="apiService.isDataReady(['firmatari','uffici','tags']) && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event)" #f="ngForm" novalidate>
+<form *ngIf="apiService.isDataReady(['firmatari','uffici','tags']) && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event)" #f="ngForm" (keydown.enter)="$event.preventDefault()" novalidate>
     <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
-        <button type="button" (click)="submit($event)" class="btn btn-primary btn-save">Salva</button>
+        <button type="submit" class="btn btn-primary btn-save">Salva</button>
     </div>
     <h3 class="page-title"><a [routerLink]=" ['/app/delibere/list'] ">Delibere</a> /
         <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuova</span>
@@ -300,7 +300,7 @@
         <div class="col-12 mb-4">
             <div class="pull-right">
                 <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
-                <button type="button" (click)="submit($event)" class="btn btn-primary btn-save">Salva</button>
+                <button type="submit" class="btn btn-primary btn-save">Salva</button>
             </div>
         </div>
     </div>

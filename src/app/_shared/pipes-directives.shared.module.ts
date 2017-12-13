@@ -26,14 +26,14 @@ import {
 
 } from '../_pipes/index';
 
-import { MomentModule } from 'angular2-moment';
-import 'moment/locale/it';
+//import { MomentModule } from 'angular2-moment';
+//import 'moment/locale/it';
 
 
 @NgModule({
     imports: [
         CommonModule,
-        MomentModule
+        //MomentModule
     ],
     declarations: [
         FileSizePipe,
@@ -81,7 +81,7 @@ import 'moment/locale/it';
         DelibereDataFilterPipe,
         AdempimentiDataFilterPipe,
         Cast2String,
-        MomentModule,
+        //MomentModule,
         Autosize,
         MatchHeightDirective,
         StickThead,

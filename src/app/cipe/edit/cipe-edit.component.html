@@ -11,11 +11,11 @@
    </accordion-group>
 </accordion>
 
-<form *ngIf="model.id || mode == 'create'" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
+<form *ngIf="model.id || mode == 'create'" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" (keydown.enter)="$event.preventDefault()" novalidate>
 
    <div *ngIf="canEdit" class="float-right">
       <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
-      <button type="button" (click)="submit($event)" class="btn btn-primary btn-save">Salva</button>
+      <button type="submit" class="btn btn-primary btn-save">Salva</button>
    </div>
 
    <h3 class="page-title"><a [routerLink]=" ['/app/cipe/list'] ">Cipe</a> /
@@ -109,8 +109,8 @@
          <div>
             <div class="row" sticktoolbar>
                <div class="col-lg-6">
-                  <div *ngIf="canEdit" class="py-2">
-                     <button type="button" class="btn btn-outline-primary rel-t-l4"
+                  <div *ngIf="canEdit" class="py-2 ml-2">
+                     <button type="button" class="btn btn-outline-primary"
                              (click)="createPuntoOdg($event, page_bottom);">
                         <strong><i class="fa fa-lg fa-plus-square-o mr-2"></i> Nuovo punto o.d.g.</strong>
                      </button>

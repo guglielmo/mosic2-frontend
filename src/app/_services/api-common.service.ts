@@ -49,7 +49,13 @@ export class APICommonService {
         'cipeargomentitipo',
         'users',
         'delibere',
-        /*        'adempimenti',
+        'adempimenti',
+        'adempimenti_scadenze',
+        'adempimenti_tipologie',
+        'adempimenti_ambiti',
+        'adempimenti_soggetti',
+        'adempimenti_azioni',
+        /*
                 'monitor',
                 'monitor/group'*/
     ];
@@ -73,7 +79,13 @@ export class APICommonService {
         'cipeargomentitipo',
         'users',
         'delibere',
-        /*        'adempimenti',
+        'adempimenti',
+        'adempimenti_scadenze',
+        'adempimenti_tipologie',
+        'adempimenti_ambiti',
+        'adempimenti_soggetti',
+        'adempimenti_azioni',
+        /*
                 'monitor',
                 'monitor/group'*/
     ];

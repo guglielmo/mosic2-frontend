@@ -11,10 +11,11 @@
     </accordion-group>
 </accordion>
 
-<form *ngIf="apiService.isDataReady(['delibere','cipe']) && (model.id || mode == 'create')" name="form" (ngSubmit)="f.form.valid && submit($event)" #f="ngForm" novalidate>
+<form *ngIf="apiService.isDataReady(['delibere','cipe', 'adempimenti_ambiti', 'adempimenti_tipologie', 'adempimenti_soggetti', 'adempimenti_azioni']) && (model.id || mode == 'create')"
+      name="form" (ngSubmit)="f.form.valid && submit($event)" #f="ngForm" (keydown.enter)="$event.preventDefault()" novalidate>
     <div *ngIf="canEdit" class="pull-right">
-        <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
-        <button type="button" (click)="submit($event)" class="btn btn-primary btn-save">Salva</button>
+            <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
+            <button type="submit" class="btn btn-primary btn-save">Salva</button>
     </div>
     <h3 class="page-title"><a [routerLink]=" ['/app/adempimenti/list'] ">Adempimenti</a> /
         <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
@@ -27,54 +28,22 @@
 
 
     <div class="mb-2">
-        <div class="row" myMatchHeight="widget">
-            <div class="col-lg-6">
+        <div class="row">
+            <div class="col-12">
                 <section class="widget">
                     <header>
-                        <h4><span class="fw-semi-bold">Definizione</span></h4>
+                        <h4><span class="fw-semi-bold">Delibera di riferimento</span></h4>
                     </header>
                     <div class="widget-body">
                         <div class="row">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="codice_fonte"><strong>Fonte</strong></label>
-                                    <div class="select2-H-keeper"><select2 id="codice_fonte"
-                                                                           #codice_fonte
-                                                                           name="codice_fonte"
-                                                                           class="full-width-select"
-                                                                           [options]="select2Options"
-                                                                           [value]="model.codice_fonte"
-                                                                           [cssImport]="false"
-                                                                           [disabled]="!canEdit"
-                                                                           (valueChanged)="select2Changed($event,'codice_fonte')"
-                                                                           [data]="fonteSelect2"></select2></div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="codice_fonte"><strong>Descrizione codificata</strong></label>
-                                    <div class="select2-H-keeper"><select2 id="codice_descrizione"
-                                                                           #codice_descrizione
-                                                                           name="codice_descrizione"
-                                                                           class="full-width-select"
-                                                                           [options]="select2Options"
-                                                                           [value]="model.codice_descrizione"
-                                                                           [cssImport]="false"
-                                                                           [disabled]="!canEdit"
-                                                                           (valueChanged)="select2Changed($event,'codice_descrizione')"
-                                                                           [data]="descrizioneSelect2"></select2></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
+                            <div class="col-2">
                                 <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_cipe}">
                                     <label for="id_cipe"><strong>Data CIPE</strong></label>
                                     <div class="select2-H-keeper"><select2 id="id_cipe"
                                                                            #id_cipe
                                                                            name="id_cipe"
                                                                            class="full-width-select"
-                                                                           [options]="select2Options"
+                                                                           [options]="config.select2Options"
                                                                            [value]="getCipeIdByDate(getDeliberaDateById(model.id_delibere))"
                                                                            [cssImport]="false"
                                                                            [disabled]="!canEdit"
@@ -90,12 +59,12 @@
                             </div>
                             <div class="col-9">
                                 <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !model.id_delibere}">
-                                <label for="id_delibere"><strong>Delibera</strong></label>
+                                <label for="id_delibere"><strong>N° - Argomento</strong></label>
                                 <div class="select2-H-keeper"><select2 id="id_delibere"
                                                                        #id_delibere
                                                                        name="id_delibere"
                                                                        class="full-width-select"
-                                                                       [options]="select2Options"
+                                                                       [options]="config.select2Options"
                                                                        [value]="model.id_delibere"
                                                                        [cssImport]="false"
                                                                        [disabled]="!canEdit"
@@ -105,136 +74,229 @@
 
                                 <!--{{filter.data_cipe}}-->
                             </div>
+                            <div class="col-1">
+                                <ng-container *ngIf="canReadDelibere">
+                                    <div class="form-group mt-2">
+                                        <label>&nbsp;</label><br>
+                                    <a [routerLink]="['/app/delibere/edit/' + model.id_delibere]"><i class="fa fa-lg fa-share-square-o"> </i></a>
+                                    </div>
+                                </ng-container>
+                            </div>
                         </div>
+                    </div>
+                </section>
+            </div>
+            <div class="col-12">
+                <section class="widget">
+                    <header>
+                        <h4><span class="fw-semi-bold">Adempimento</span></h4>
+                    </header>
+                    <div class="widget-body">
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="ambito"><strong>Ambito</strong></label>
+                                    <div class="select2-H-keeper"><select2 id="ambito"
+                                                                           #ambito
+                                                                           name="ambito"
+                                                                           class="full-width-select"
+                                                                           [options]="config.select2Options"
+                                                                           [value]="model.ambito"
+                                                                           [cssImport]="false"
+                                                                           [disabled]="!canEdit"
+                                                                           (valueChanged)="select2Changed($event,'ambito')"
+                                                                           [data]="adempimenti_ambiti$ | async"></select2></div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="tipologia"><strong>Tipologia</strong></label>
+                                    <div class="select2-H-keeper"><select2 id="tipologia"
+                                                                           #tipologia
+                                                                           name="tipologia"
+                                                                           class="full-width-select"
+                                                                           [options]="config.select2Options"
+                                                                           [value]="model.tipologia"
+                                                                           [cssImport]="false"
+                                                                           [disabled]="!canEdit"
+                                                                           (valueChanged)="select2Changed($event,'tipologia')"
+                                                                           [data]="adempimenti_tipologie$ | async"></select2></div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="azione"><strong>Azione</strong></label>
+                                    <div class="select2-H-keeper"><select2 id="azione"
+                                                                           #azione
+                                                                           name="azione"
+                                                                           class="full-width-select"
+                                                                           [options]="config.select2Options"
+                                                                           [value]="model.azione"
+                                                                           [cssImport]="false"
+                                                                           [disabled]="!canEdit"
+                                                                           (valueChanged)="select2Changed($event,'azione')"
+                                                                           [data]="adempimenti_azioni$ | async"></select2></div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="id_soggetti"><strong>Soggetto adempiente</strong></label>
+                                    <div class="select2-H-keeper"><select2 id="id_soggetti"
+                                                                           #id_soggetti
+                                                                           name="id_soggetti"
+                                                                           class="full-width-select"
+                                                                           [options]="config.select2WithAddOptionsMulti"
+                                                                           [value]="model.id_soggetti"
+                                                                           [cssImport]="false"
+                                                                           [disabled]="!canEdit"
+                                                                           (valueChanged)="select2Changed($event,'id_soggetti')"
+                                                                           [data]="adempimenti_soggetti$ | async"></select2></div>
+                                </div>
+                            </div>
+                            <div class="col-6">
                                 <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !descrizione.valid }">
-                                    <label for="descrizione"><strong>Descrizione estesa</strong></label>
+                                    <label for="descrizione"><strong>Descrizione</strong></label>
                                     <textarea id="descrizione" name="descrizione"
                                               rows="3" class="autogrow form-control transition-height"
                                               placeholder="Scrivi l'descrizione della delibera..."
                                               [(ngModel)]="model.descrizione" #descrizione="ngModel" required autosize></textarea>
                                 </div>
+                                <div class="form-group">
+                                    <label for="localizzazione"><strong>Localizzazione</strong></label>
+                                    <input id="localizzazione" name="localizzazione"
+                                           type="text" class="form-control"
+                                           placeholder="inserisci localizzazione"
+                                           [disabled]="!canEdit"
+                                           [(ngModel)]="model.localizzazione" #localizzazione="ngModel">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="note"><strong>Note</strong></label>
+                                    <textarea id="note" name="note"
+                                              rows="7" class="autogrow form-control transition-height"
+                                              autosize
+                                              placeholder="..."
+                                              [(ngModel)]="model.note" #note="ngModel" autosize></textarea>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="struttura"><strong>Struttura di audit</strong></label>
+                                    <div class="select2-H-keeper"><select2 id="struttura"
+                                                                           #struttura
+                                                                           name="struttura"
+                                                                           class="full-width-select"
+                                                                           [options]="config.select2Options"
+                                                                           [value]="model.struttura"
+                                                                           [cssImport]="false"
+                                                                           [disabled]="!canEdit"
+                                                                           (valueChanged)="select2Changed($event,'struttura')"
+                                                                           [data]="uffici$ | async"></select2></div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="cup"><strong>CUP</strong></label>
+                                    <input id="cup" name="cup"
+                                           type="text" class="form-control"
+                                           placeholder="inserisci CUP"
+                                           [disabled]="!canEdit"
+                                           [(ngModel)]="model.cup" #cup="ngModel">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && checkScadenzaRequired() }">
+                                            <label for="data_scadenza"><strong>Data scadenza</strong></label>
+                                            <datetime id="data_scadenza" name="data_scadenza"
+                                                      [datepicker]="config.datePickerOptions"
+                                                      [timepicker]="false"
+                                                      [(ngModel)]="model.data_scadenza" #data_scadenza="ngModel" [required]="checkScadenzaRequired()"></datetime>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !periodicita.valid }">
+                                            <label for="periodicita"><strong>Periodicità</strong></label>
+                                            <select id="periodicita" name="periodicita" class="form-control" data-style="btn-secondary" data-width="auto"
+                                                    [(ngModel)]="model.periodicita" #periodicita="ngModel" required>
+                                                <ng-container *ngFor="let periodo of periodicitaSelect2">
+                                                    <option value="{{periodo.id}}">{{periodo.text}}</option>
+                                                </ng-container>
+                                            </select>
+                                        </div>
 
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && !pluriennalita.valid }">
+                                            <label for="pluriennalita"><strong>Pluriennalità</strong></label>
+                                            <input id="pluriennalita" name="pluriennalita"
+                                                   type="number" class="form-control"
+                                                   placeholder="inserisci pluriennalita"
+                                                   [disabled]="!canEdit"
+                                                   [(ngModel)]="model.pluriennalita" #pluriennalita="ngModel" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group abc-checkbox abc-checkbox-primary ml-1">
+                                            <input id="superato" name="superato" type="checkbox"
+                                                   [checked]="model.superato == 1"
+                                                   [disabled]="!canEdit"
+                                                   (change)="model.superato = $event.target.checked ? 1 : 0"
+                                            >
+                                            <label for="superato">
+                                                Superato per intevenuta modifica normativa
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
             </div>
-            <div class="col-lg-6">
+
+            <style>
+                @media only screen and (max-width: 992px) {
+                    td:nth-of-type(1):before { content: "id"; }
+                    td:nth-of-type(2):before { content: "Data di scadenza"; }
+                    td:nth-of-type(3):before { content: "Stato"; }
+                    td:nth-of-type(4):before { content: "Note"; }
+                    td:nth-of-type(5):before { content: "Azioni"; }
+                }
+            </style>
+
+            <div class="col-lg-12">
                 <section class="widget">
                     <header>
-                        <h4><span class="fw-semi-bold">Scadenza</span></h4>
+                        <h4><span class="fw-semi-bold">Scadenze</span></h4>
                     </header>
-                    <div class="widget-body">
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && checkScadenzaRequired() }">
-                                    <label for="data_scadenza"><strong>Data di scadenza</strong></label>
-                                    <datetime id="data_scadenza" name="data_scadenza"
-                                              [datepicker]="datePickerOptions"
-                                              [timepicker]="false"
-                                              [(ngModel)]="model.data_scadenza" #data_scadenza="ngModel" [required]="checkScadenzaRequired()"></datetime>
-                                </div>
-                            </div>
-                            <div class="col-8">
-                                <div class="mb-3"> </div>
-                                <div class="form-group abc-checkbox abc-checkbox-primary rel-t-m20">
-                                    <input id="vincolo" name="vincolo" type="checkbox"
-                                           [checked]="model.vincolo == 2"
-                                           [disabled]="!canEdit"
-                                           (change)="model.vincolo = $event.target.checked ? 2 : 1"
-                                    >
-                                    <label for="vincolo">
-                                        Adempimento vincolante
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <p class="mt-4 mb-2"><strong>Scadenza dalla data di pubblicazione in G.U. (alternativo)</strong></p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && checkScadenzaRequired() }">
-                                    <label for="giorni_scadenza">Giorni</label>
-                                    <input id="giorni_scadenza" name="giorni_scadenza"
-                                           type="text" class="form-control"
-                                           placeholder="numero del protocollo"
-                                           [disabled]="!canEdit"
-                                           [(ngModel)]="model.giorni_scadenza" #giorni_scadenza="ngModel" [required]="checkScadenzaRequired()">
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && checkScadenzaRequired() }">
-                                    <label for="mesi_scadenza">Mesi</label>
-                                    <input id="mesi_scadenza" name="mesi_scadenza"
-                                           type="text" class="form-control"
-                                           placeholder="numero del protocollo"
-                                           [disabled]="!canEdit"
-                                           [(ngModel)]="model.mesi_scadenza" #mesi_scadenza="ngModel" [required]="checkScadenzaRequired()">
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="form-group" [ngClass]="{ 'has-danger': f.submitted && checkScadenzaRequired() }">
-                                    <label for="anni_scadenza">Anni</label>
-                                    <input id="anni_scadenza" name="anni_scadenza"
-                                           type="text" class="form-control"
-                                           placeholder="numero del protocollo"
-                                           [disabled]="!canEdit"
-                                           [(ngModel)]="model.anni_scadenza" #anni_scadenza="ngModel" [required]="checkScadenzaRequired()">
-                                </div>
-                            </div>
-                        </div>
+                    <div class="widget-body widget-table-overflow">
+                    <table class="table table-hover table-condensed table-bordered mb-0" stickthead>
+                        <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>Data di scadenza</th>
+                                <th>Stato</th>
+                                <th>Note</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let scadenza of model.scadenze" adempimenti-scadenze [model]="scadenza" [canEdit]="canEdit" [canDelete]="canDelete" (deleteitem)="reload"></tr>
+                        </tbody>
+                    </table>
                     </div>
                 </section>
             </div>
         </div>
-        <div class="row" myMatchHeight="widget">
-            <div class="col-lg-6">
-                <section class="widget">
-                    <header>
-                        <h4><span class="fw-semi-bold">Note</span></h4>
-                    </header>
-                    <div class="widget-body">
-                        <div class="form-group">
-                            <label for="note" class="sr-only"><strong>Note</strong></label>
-                            <textarea id="note" name="note"
-                                      rows="3" class="autogrow form-control transition-height"
-                                      autosize
-                                      placeholder="..."
-                                      [(ngModel)]="model.note" #note="ngModel" autosize></textarea>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <div class="col-lg-6">
-                <section class="widget">
-                    <header>
-                        <h4><span class="fw-semi-bold">Esito</span></h4>
-                    </header>
-                    <div class="widget-body">
-                        <div class="form-group">
-                            <label for="codice_esito" class="sr-only"><strong>Esito adempimento</strong></label>
-                            <div class="select2-H-keeper"><select2 id="codice_esito"
-                                                                   #codice_esito
-                                                                   name="codice_esito"
-                                                                   class="full-width-select"
-                                                                   [options]="select2Options"
-                                                                   [value]="model.codice_esito"
-                                                                   [cssImport]="false"
-                                                                   [disabled]="!canEdit"
-                                                                   (valueChanged)="select2Changed($event,'codice_esito')"
-                                                                   [data]="esitoSelect2"></select2></div>
-                        </div>
-                    </div>
-                </section>
+        <div class="row">
+            <div class="col-12">
+                <div *ngIf="canEdit" class="pull-right">
+                    <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
+                    <button type="submit" class="btn btn-primary btn-save">Salva</button>
+                </div>
             </div>
         </div>
     </div>

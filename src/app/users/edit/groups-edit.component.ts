@@ -44,6 +44,7 @@ export class GroupsEditComponent implements OnInit {
         'ADEMPIMENTI_AZIONI',
         'ADEMPIMENTI_SOGGETTI',
         'ADEMPIMENTI_TIPOLOGIE',
+        'ADEMPIMENTI_SCADENZE',
         'MONITOR',
         'MONITOR_GROUP'
     ];

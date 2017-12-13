@@ -15,11 +15,9 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ScrollToModule } from 'ng2-scroll-to-el';
 
 // ngx-uploader
-import { NgUploaderModule } from 'ngx-uploader';
-import { TabsModule } from 'ngx-bootstrap/tabs';
-
 import { AdempimentiListComponent } from './list/adempimenti-list.component';
 import { AdempimentiEditComponent } from './edit/adempimenti-edit.component';
+import { AdempimentiScadenzeComponent } from './edit/adempimenti-scadenze.component'
 
 export const routes = [
     {path: '', redirectTo: 'list', pathMatch: 'full'},
@@ -33,17 +31,14 @@ export const routes = [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-
         ModalModule,
         DataTableModule,
         ButtonsModule,
         NKDatetimeModule,
         Select2Module,
-        NgUploaderModule,
         PipesDirectivesSharedModule,
         AccordionModule.forRoot(),
         ScrollToModule.forRoot(),
-        TabsModule.forRoot(),
         TooltipModule.forRoot(),
         RouterModule.forChild(routes)
     ],
@@ -52,7 +47,8 @@ export const routes = [
     ],
     declarations: [
         AdempimentiListComponent,
-        AdempimentiEditComponent
+        AdempimentiEditComponent,
+        AdempimentiScadenzeComponent
     ]
 })
 export class AdempimentiModule {

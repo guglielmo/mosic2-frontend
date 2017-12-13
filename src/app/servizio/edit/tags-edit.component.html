@@ -1,7 +1,7 @@
-<form *ngIf="model.id || mode == 'create'" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate>
+<form *ngIf="model.id || mode == 'create'" name="form" (ngSubmit)="f.form.valid && submit()" #f="ngForm" (keydown.enter)="$event.preventDefault()" novalidate>
     <div *ngIf="canEdit" class="pull-right">
         <button type="reset" class="btn btn-default btn-cancel" (click)="cancel($event)">Annulla</button>
-        <button type="button" (click)="submit($event)" class="btn btn-primary btn-save">Salva</button>
+        <button type="submit" class="btn btn-primary btn-save">Salva</button>
     </div>
     <h3 class="page-title"><a [routerLink]=" ['/app/tags/list'] ">Etichette</a> -
         <span *ngIf="mode == 'create'" class="fw-semi-bold">Crea nuovo</span>
